@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update () 
     {
         targetPosition = (followTarget.transform.position + offset);
         transform.position = transform.position + ((targetPosition + transform.forward * zoom) - transform.position) / (floatieness + 1);
