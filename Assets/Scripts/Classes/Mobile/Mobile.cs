@@ -12,13 +12,13 @@ public class Mobile : MonoBehaviour
     protected Vector3 direction;
     protected float velocity;
     // Use this for initialization
-    virtual void Start()
+    void Start()
     {
 	
 	}
 	
 	// Update is called once per frame
-    virtual void Update()
+    void Update()
     {
         Move();
 	}
