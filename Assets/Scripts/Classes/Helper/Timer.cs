@@ -3,8 +3,20 @@ using System.Collections;
 
 public class Timer : MonoBehaviour
 {
+    /* Written by Ruslan Kaybyshev, Middle 2013
+     * Purpose: Easily add a timer component to any game object.
+     * Example: // Declare a reference to the timer.
+     *          private Timer alarmClock;
+	 *          void Start ()
+     *          {
+     *             // Create and add it to the gameObject as a component
+     *             // while saving the reference to it in the script.
+     *             alarmClock = gameObject.AddComponent<Timer>();
+     *             alarmClock.SetTimer(1);
+	 *          }
+     */
     private float createdTime;
-    private float timeLength;
+    private float timeLeft;
     private float savedLength;
     private bool ticking;
     private bool done;
@@ -21,9 +33,9 @@ public class Timer : MonoBehaviour
     {
         if (ticking)
         {
-            timeLength -= Time.deltaTime;
+            timeLeft -= Time.deltaTime;
         }
-        if (timeLength < 0)
+        if (timeLeft < 0)
         {
             done = true;
             ticking = false;
@@ -54,34 +66,35 @@ public class Timer : MonoBehaviour
 
     public void SetTimer(float length)
     {
-        timeLength = length;
+        timeLeft = length;
         savedLength = length;
         Reset();
     }
 
-    public bool isDone()
+    public bool Done
     {
-        return done;
+        get { return done; }
     }
 
-    public bool isTicking()
+    public bool Ticking
     {
-        return ticking;
+        get { return ticking; }
+        set { ticking = value; }
     }
 
-    public float timeLeft()
+    public float TimeLeft
     {
-        return timeLength;
+        get { return timeLeft; }
     }
 
-    public float getSetLength()
+    public float StartTime
     {
-        return savedLength;
+        get { return savedLength; }
     }
 
-    public float getCreatedTime()
+    public float CreatedTime
     {
-        return createdTime;
+        get { return createdTime; }
     }
 }
 

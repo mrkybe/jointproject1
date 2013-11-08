@@ -21,7 +21,7 @@ public class Planet : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (timeToSpawn.isDone())
+        if (timeToSpawn.Done)
         {
             Debug.Log("TICK TOCK");
         }

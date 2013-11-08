@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerShipFlying : MonoBehaviour
+public class PlayerShipFlying : Mobile
 {
     private float throttle;
     [SerializeField]
@@ -17,8 +17,9 @@ public class PlayerShipFlying : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        if( throttle > 0 )
-        transform.position = transform.position + ((throttle * transform.forward) * Time.deltaTime * 5);
+        direction = transform.forward;
+        velocity = throttle;
+
         if (Input.GetKey(KeyCode.W))
         {
             throttle += 0.01f;

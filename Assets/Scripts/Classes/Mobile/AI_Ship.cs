@@ -3,6 +3,9 @@ using System.Collections;
 
 public class AI_Ship : MonoBehaviour
 {
+    /* Written by Ruslan Kaybyshev, Late 2013
+     * Purpose: Define the base class for all AI driven ships.
+     */
 
 	// Use this for initialization
 	void Start ()
