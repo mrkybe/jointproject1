@@ -15,10 +15,10 @@ public class PlayerShipFlying : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
         if( throttle > 0 )
-        transform.position = transform.position + ((throttle * transform.forward) / 10);
+        transform.position = transform.position + ((throttle * transform.forward) * Time.deltaTime * 5);
         if (Input.GetKey(KeyCode.W))
         {
             throttle += 0.01f;
