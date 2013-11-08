@@ -3,12 +3,12 @@ using System.Collections;
 
 public class Timer : MonoBehaviour
 {
-    float createdTime;
-    float timeLength;
-    float savedLength;
-    bool ticking;
-    bool done;
-    bool loop = false;
+    private float createdTime;
+    private float timeLength;
+    private float savedLength;
+    private bool ticking;
+    private bool done;
+    private bool loop = false;
 
 	void Start()
     {
@@ -27,6 +27,8 @@ public class Timer : MonoBehaviour
         {
             done = true;
             ticking = false;
+
+            Debug.Log("TICKIn");
             if (loop)
             {
                 SetTimer(savedLength);
