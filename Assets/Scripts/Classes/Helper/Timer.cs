@@ -40,7 +40,6 @@ public class Timer : MonoBehaviour
             done = true;
             ticking = false;
 
-            Debug.Log("TICKIn");
             if (loop)
             {
                 SetTimer(savedLength);

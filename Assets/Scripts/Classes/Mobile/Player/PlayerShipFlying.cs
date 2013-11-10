@@ -17,16 +17,17 @@ public class PlayerShipFlying : Mobile
 	// Update is called once per frame
 	void FixedUpdate ()
     {
+        base.Update();
         direction = transform.forward;
         velocity = throttle;
 
         if (Input.GetKey(KeyCode.W))
         {
-            throttle += 0.01f;
+            throttle += 0.005f;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            throttle -= 0.01f;
+            throttle -= 0.005f;
         }
         if (Input.GetKey(KeyCode.A))
         {
