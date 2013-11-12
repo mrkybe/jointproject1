@@ -21,76 +21,12 @@ namespace EntityParts
      *          a1.  CargoBays do not actually store instances of CargoItem.
      *     b. CargoHold contains multiple CargoBays.
      */
-    public static class CargoItemTypes
-    {
-        private static List<CargoItem> availableItemTypes;
-
-        static CargoItemTypes()
-        {
-            // private constructor ensures no instances of this class are created
-            availableItemTypes = new List<CargoItem>();
-        }
-
-        public CargoItem GetItemOfType(string type)
-        {
-            CargoItem wantedCargo = null;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type)
-                {
-                    wantedCargo = availableItemTypes[i];
-                    Debug.Log(wantedCargo.Name);
-                }
-            }
-            return wantedCargo;
-        }
-
-        public static bool Contains(CargoItem type)
-        {
-            bool contains = false;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type.Name)
-                {
-                    contains = true;
-                }
-            }
-            return contains;
-        }
-
-        public static bool Contains(String type)
-        {
-            bool contains = false;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type)
-                {
-                    contains = true;
-                }
-            }
-            return contains;
-        }
-
-        public static bool AddCargoItemType(CargoItem type)
-        {
-            if (!Contains(type))
-            {
-                availableItemTypes.Add(type);
-                Debug.Log("-NOTE: Created CargoItemType(" + type.Name + ")!");
-                return true;
-            }
-            else
-            {
-                Debug.Log("-WARNING: could not addHoldType(" + type.Name + ") as it already exists!");
-                return false;
-            }
-        }
-    }
+    
 
     public class CargoHold
     {
-        int _maxHold;
-        List<CargoBay> _cargoBays;
+        private int _maxHold;
+        private List<CargoBay> _cargoBays;
 
         // CargoHolds should always be declared with the maximum amount of space they contain in units.
         public CargoHold(int maxHold_in)
@@ -119,7 +55,9 @@ namespace EntityParts
             {
                 Debug.Log("addHoldType(String type): Yes '" + type + "' exists as a CargoItemType;");
                 Debug.Log(CargoItemTypes.GetItemOfType("Fish").Name);
-                _cargoBays.Add(new CargoBay(CargoItemTypes.GetItemOfType(type)));
+                CargoBay x = new CargoBay(CargoItemTypes.GetItemOfType(type));
+
+                _cargoBays.Add(x);
             }
             else
             {
@@ -174,6 +112,76 @@ namespace EntityParts
         public string Name
         {
             get { return _name; }
+        }
+    }
+
+    public static class CargoItemTypes
+    {
+        private static List<CargoItem> availableItemTypes;
+
+        static CargoItemTypes()
+        {
+            // private constructor ensures no instances of this class are created
+            availableItemTypes = new List<CargoItem>();
+        }
+
+        public static CargoItem GetItemOfType(string type)
+        {
+            CargoItem wantedCargo = null;
+            for (int i = 0; i < availableItemTypes.Count; i++)
+            {
+                if (availableItemTypes[i].Name == type)
+                {
+                    wantedCargo = availableItemTypes[i];
+                    Debug.Log(wantedCargo.Name);
+                }
+            }
+            if (wantedCargo == null)
+            {
+                Debug.Log("WARNING - GetItemOfType() returned null!  Item of type '" + type + "' not found!");
+            }
+            return wantedCargo;
+        }
+
+        public static bool Contains(CargoItem type)
+        {
+            bool contains = false;
+            for (int i = 0; i < availableItemTypes.Count; i++)
+            {
+                if (availableItemTypes[i].Name == type.Name)
+                {
+                    contains = true;
+                }
+            }
+            return contains;
+        }
+
+        public static bool Contains(String type)
+        {
+            bool contains = false;
+            for (int i = 0; i < availableItemTypes.Count; i++)
+            {
+                if (availableItemTypes[i].Name == type)
+                {
+                    contains = true;
+                }
+            }
+            return contains;
+        }
+
+        public static bool AddCargoItemType(CargoItem type)
+        {
+            if (!Contains(type))
+            {
+                availableItemTypes.Add(type);
+                Debug.Log("-NOTE: Created CargoItemType(" + type.Name + ")!");
+                return true;
+            }
+            else
+            {
+                Debug.Log("-WARNING: could not addHoldType(" + type.Name + ") as it already exists!");
+                return false;
+            }
         }
     }
 }

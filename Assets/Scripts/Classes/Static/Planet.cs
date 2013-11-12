@@ -32,6 +32,7 @@ public class Planet : Static
         timeToSpawn.SetTimer(1);
         timeToSpawn.Loop(true);
 
+        CargoItemTypes.AddCargoItemType(new CargoItem("Fish"));
         myStorage = new CargoHold(50);
         myStorage.addHoldType("Fish");
         myStorage.printHold();
