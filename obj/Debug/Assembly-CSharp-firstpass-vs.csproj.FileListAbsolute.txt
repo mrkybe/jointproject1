@@ -1,0 +1,10 @@
+D:\Unity\JointProject1\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+D:\Unity\JointProject1\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+D:\Unity\JointProject1\Temp\bin\Debug\UnityEditor.dll
+D:\Unity\JointProject1\Temp\bin\Debug\UnityEngine.dll
+D:\Unity\JointProject1\Temp\bin\Debug\Mono.Cecil.dll
+D:\Unity\JointProject1\Temp\bin\Debug\nunit.framework.dll
+D:\Unity\JointProject1\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass.dll
+D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass.pdb
