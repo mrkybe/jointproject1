@@ -1,35 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using EntityParts;
 
 public class Planet : Static
 {
     int population;
+    int rawMaterial;
     [SerializeField]
     private GameObject workerShip;
     [SerializeField]
     private Timer timeToSpawn;
     [SerializeField]
-    int maxFriends = 3;
+    int maxFriends;
+    string faction;
+    private CargoHold myStorage;
 
     private List<GameObject> closeBuddies;
 	// Use this for initialization
 	void Start ()
     {
+        CargoItemTypes.AddCargoItemType(new CargoItem("Fish"));
+        CargoItemTypes.AddCargoItemType(new CargoItem("Cow"));
+        CargoItemTypes.AddCargoItemType(new CargoItem("Milk"));
+        CargoItemTypes.AddCargoItemType(new CargoItem("Ammo"));
+        CargoItemTypes.AddCargoItemType(new CargoItem("Carrots"));
+
+        maxFriends = 3;
+
         timeToSpawn = gameObject.AddComponent<Timer>();
         timeToSpawn.SetTimer(1);
-        //timeToSpawn.
         timeToSpawn.Loop(true);
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
-        makeFriends();
+
+        myStorage = new CargoHold(50);
+        myStorage.addHoldType("Fish");
+        myStorage.printHold();
 	}
 	
 	// Update is called once per frame
@@ -40,7 +45,7 @@ public class Planet : Static
             //Debug.Log("TICK TOCK");
         }
         
-        drawFriends();
+        //drawFriends();
 
 	}
 
