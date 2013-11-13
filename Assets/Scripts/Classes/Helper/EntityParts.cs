@@ -65,7 +65,7 @@ namespace EntityParts
         {
             foreach (CargoItem item in _cargoItems)
             {
-                Debug.Log(item.Name + " : " + item.Amount);
+                Debug.Log(item.Name + " : " + item.Count);
             }
         }
         
@@ -73,10 +73,10 @@ namespace EntityParts
 
     public class CargoItem
     {
-        string _name; // use something better than a string for this, data driven ideally, ie: xml file somewhere that has all of the resource definitions and is parsed into cargo item types.
-        int _size;
-        int baseValue;
-        int count;
+        private string _name; // use something better than a string for this, data driven ideally, ie: xml file somewhere that has all of the resource definitions and is parsed into cargo item types.
+        private int _size;
+        private int baseValue;
+        private int count;
 
         public CargoItem(string name_in)
         {
@@ -86,6 +86,7 @@ namespace EntityParts
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
 
         public int Count
