@@ -26,12 +26,13 @@ namespace EntityParts
     public class CargoHold
     {
         private int _maxHold;
-        private List<CargoBay> _cargoBays;
+        private List<CargoItem> _cargoItems;
 
         // CargoHolds should always be declared with the maximum amount of space they contain in units.
         public CargoHold(int maxHold_in)
         {
             _maxHold = maxHold_in;
+            _cargoItems = new List<CargoItem>();
         }
 
         public void addHoldType(CargoItem type)
@@ -39,7 +40,7 @@ namespace EntityParts
             // Check that CargoItems of this type exist.
             if (CargoItemTypes.Contains(type))
             {
-                _cargoBays.Add(new CargoBay(type));
+                _cargoItems.Add(CargoItemTypes.GetItemOfType(type.Name));
             }
             else
             {
@@ -50,14 +51,9 @@ namespace EntityParts
         public void addHoldType(String type)
         {
             // Check that CargoItems of this type exist.
-            Debug.Log("addHoldType(String type): Trying to add: " + type);
             if (CargoItemTypes.Contains(type))
             {
-                Debug.Log("addHoldType(String type): Yes '" + type + "' exists as a CargoItemType;");
-                Debug.Log(CargoItemTypes.GetItemOfType("Fish").Name);
-                CargoBay x = new CargoBay(CargoItemTypes.GetItemOfType(type));
-
-                _cargoBays.Add(x);
+                _cargoItems.Add(CargoItemTypes.GetItemOfType(type));
             }
             else
             {
@@ -67,35 +63,12 @@ namespace EntityParts
 
         public void printHold()
         {
-            foreach (CargoBay bay in _cargoBays)
+            foreach (CargoItem item in _cargoItems)
             {
-                Debug.Log(bay.TypeName + " : " + bay.Amount);
+                Debug.Log(item.Name + " : " + item.Amount);
             }
         }
         
-    }
-
-    public class CargoBay
-    {
-        int _amount;
-        CargoItem _type;
-
-        public CargoBay(CargoItem type_in)
-        {
-            Debug.Log("CREATED A CARGO BAY OF " + type_in.Name);
-            _type = type_in;
-        }
-
-        public string TypeName
-        {
-            get { return _type.Name; }
-        }
-
-        public int Amount
-        {
-            get { return _amount; }
-            set { _amount = value; }
-        }
     }
 
     public class CargoItem
@@ -103,6 +76,7 @@ namespace EntityParts
         string _name; // use something better than a string for this, data driven ideally, ie: xml file somewhere that has all of the resource definitions and is parsed into cargo item types.
         int _size;
         int baseValue;
+        int count;
 
         public CargoItem(string name_in)
         {
@@ -112,6 +86,11 @@ namespace EntityParts
         public string Name
         {
             get { return _name; }
+        }
+
+        public int Count
+        {
+            get { return count; }
         }
     }
 
