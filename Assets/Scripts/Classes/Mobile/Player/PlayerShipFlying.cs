@@ -6,6 +6,10 @@ public class PlayerShipFlying : Mobile
     private float throttle;
     [SerializeField]
     private float maxThrottle;
+    [SerializeField]
+    private float enginePower;
+    [SerializeField]
+    private float maxSpeed;
 
 	// Use this for initialization
 	void Start ()
