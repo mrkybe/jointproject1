@@ -10,7 +10,7 @@ public class AI_Ship : Mobile
 	// Use this for initialization
 	new void Start ()
     {
-        base.Start;
+        base.Start();
 	}
 	
 	// Update is called once per frame
