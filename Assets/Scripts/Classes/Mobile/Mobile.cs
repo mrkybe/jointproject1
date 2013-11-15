@@ -12,7 +12,7 @@ public class Mobile : MonoBehaviour
     protected Vector3 direction;
     protected float velocity;
     // Use this for initialization
-    void Start()
+    protected void Start()
     {
 	
 	}
