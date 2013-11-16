@@ -11,16 +11,20 @@ public class Mobile : MonoBehaviour
      */
     protected Vector3 direction;
     protected float velocity;
+    static public bool inTime;
     // Use this for initialization
     protected void Start()
     {
-	
+        inTime = true;
 	}
 	
 	// Update is called once per frame
-    protected void Update()
+    protected void FixedUpdate()
     {
-        Move();
+        if (inTime)
+        {
+            Move();
+        }
 	}
 
     private void Move()

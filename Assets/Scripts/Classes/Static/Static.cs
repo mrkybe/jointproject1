@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Static : MonoBehaviour
 {
+    [SerializeField]
+    protected float interactionRange;
+
 	void Start ()
     {
         

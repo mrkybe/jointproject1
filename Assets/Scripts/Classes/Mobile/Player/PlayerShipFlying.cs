@@ -14,34 +14,42 @@ public class PlayerShipFlying : Mobile
 	// Use this for initialization
 	void Start ()
     {
+        base.Start();
         throttle = 0;
         maxThrottle = 1;
 	}
+
+    void Update()
+    {
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        base.Update();
-        direction = transform.forward;
-        velocity = throttle;
-
-        if (Input.GetKey(KeyCode.W))
+        if (inTime)
         {
-            throttle += 0.005f;
+            base.FixedUpdate();
+            direction = transform.forward;
+            velocity = throttle;
+            if (Input.GetKey(KeyCode.W))
+            {
+                throttle += 0.005f;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                throttle -= 0.005f;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.Rotate(Vector3.up * -2 * getVelocityPercentage());
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                transform.Rotate(Vector3.up * 2 * getVelocityPercentage());
+            }
+            throttle = Mathf.Clamp(throttle, 0, maxThrottle);
         }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            throttle -= 0.005f;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(Vector3.up * -2 * getVelocityPercentage());
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(Vector3.up * 2 * getVelocityPercentage());
-        }
-        throttle = Mathf.Clamp(throttle, 0, maxThrottle);
 	}
 
     private float getVelocityPercentage()
