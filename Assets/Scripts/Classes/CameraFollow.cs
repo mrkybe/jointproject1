@@ -10,28 +10,26 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private float floatieness;  // floats... for floatieness
     [SerializeField]
+    private float zoomMax;
+    [SerializeField]
     private float zoom;
     private Vector3 targetPosition;
+    [SerializeField]
+    private float zoomSpeed;
 	// Use this for initialization
 	void Start ()
     {
-	    
+        zoomSpeed = zoomSpeed / 500;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () 
     {
         targetPosition = (followTarget.transform.position + offset);
-        transform.position = transform.position + ((targetPosition + transform.forward * zoom) - transform.position) / (floatieness + 1);
-        if(Input.GetKey(KeyCode.E))
-        {
-            zoom += 0.2f;
-        }
-        else if (Input.GetKey(KeyCode.Q))
-        {
-            zoom -= 0.2f;
-        }
-        zoom = Mathf.Clamp(zoom, -8, 8);
+        transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1);
+
+        zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;
+        zoom = Mathf.Clamp(zoom, 10, zoomMax);
         //transform.position = followTarget.transform.position + offset;
 	}
 }
