@@ -20,21 +20,14 @@ public class Planet : Static
 	// Use this for initialization
 	void Start ()
     {
-        CargoItemTypes.AddCargoItemType(new CargoItem("Fish"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Cow"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Milk"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Ammo"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Carrots"));
-
         maxFriends = 3;
 
         timeToSpawn = gameObject.AddComponent<Timer>();
         timeToSpawn.SetTimer(1);
         timeToSpawn.Loop(true);
 
-        CargoItemTypes.AddCargoItemType(new CargoItem("Fish"));
         myStorage = new CargoHold(50);
-        myStorage.addHoldType("Fish");
+        myStorage.addHoldType("Rock");
         myStorage.printHold();
 	}
 	

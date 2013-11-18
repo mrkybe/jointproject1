@@ -12,7 +12,7 @@ public class PlayerShipFlying : Mobile
     private float maxSpeed;
 
 	// Use this for initialization
-	void Start ()
+	new void Start ()
     {
         base.Start();
         throttle = 0;
@@ -25,7 +25,7 @@ public class PlayerShipFlying : Mobile
     }
 	
 	// Update is called once per frame
-	void FixedUpdate ()
+	new void FixedUpdate ()
     {
         if (inTime)
         {

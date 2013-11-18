@@ -14,7 +14,7 @@ public class AI_Ship : Mobile
 	}
 	
 	// Update is called once per frame
-	new void Update ()
+	void Update ()
     {
 	
 	}

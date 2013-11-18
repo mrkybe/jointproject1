@@ -61,26 +61,111 @@ namespace EntityParts
             }
         }
 
+        public void addToHold(String type, int count)
+        {
+            // Check that CargoItems of this type exist.
+            if (CargoItemTypes.Contains(type) && this.Contains(type))
+            {
+                for (int i = 0; i < _cargoItems.Count; i++)
+                {
+                    if (_cargoItems[i].Name == type)
+                    {
+                        _cargoItems[i].Count = _cargoItems[i].Count + count;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("-WARNING: could not addToHold(" + type + ") as it does not exist in this instace!");
+            }
+        }
+
+        public bool Contains(String type)
+        {
+            bool contains = false;
+            for (int i = 0; i < _cargoItems.Count; i++)
+            {
+                if (_cargoItems[i].Name == type)
+                {
+                    contains = true;
+                }
+            }
+            return contains;
+        }
+
+        public int getTotalHold()
+        {
+            int total = 0;
+            foreach (CargoItem item in _cargoItems)
+            {
+                total += item.Count;
+            }
+            return total;
+        }
+
+        public int getAmountInHold(String type)
+        {
+            foreach (CargoItem item in _cargoItems)
+            {
+                if (item.Name == type)
+                {
+                    return item.Count;
+                }
+            }
+
+            Debug.Log("-WARNING: getAmountInHold(" + type + ") failed!  Could not find in available holds!");
+            return -1;
+        }
+
         public void printHold()
         {
             foreach (CargoItem item in _cargoItems)
             {
                 Debug.Log(item.Name + " : " + item.Count);
             }
+            Debug.Log("Total: " + getTotalHold() + " / " + _maxHold);
         }
+
         
     }
 
     public class CargoItem
     {
-        private string _name; // use something better than a string for this, data driven ideally, ie: xml file somewhere that has all of the resource definitions and is parsed into cargo item types.
+        private string _name;
         private int _size;
-        private int baseValue;
-        private int count;
+        private int _baseValue;
+        private int _count;
 
         public CargoItem(string name_in)
         {
             _name = name_in;
+            _baseValue = 1;
+            _count = 0;
+            _size = 1;
+        }
+
+        public CargoItem(string name_in, int baseValue_in)
+        {
+            _name = name_in;
+            _baseValue = baseValue_in;
+            _count = 0;
+            _size = 1;
+        }
+
+        public CargoItem(string name_in, int baseValue_in, int size_in)
+        {
+            _name = name_in;
+            _baseValue = baseValue_in;
+            _size = size_in;
+            _count = 0;
+        }
+
+        public CargoItem(string name_in, int baseValue_in, int size_in, int count_in)
+        {
+            _name = name_in;
+            _baseValue = baseValue_in;
+            _count = count_in;
+            _size = size_in;
         }
 
         public string Name
@@ -91,7 +176,8 @@ namespace EntityParts
 
         public int Count
         {
-            get { return count; }
+            get { return _count; }
+            set { _count += value; }
         }
     }
 
@@ -113,7 +199,6 @@ namespace EntityParts
                 if (availableItemTypes[i].Name == type)
                 {
                     wantedCargo = availableItemTypes[i];
-                    Debug.Log(wantedCargo.Name);
                 }
             }
             if (wantedCargo == null)

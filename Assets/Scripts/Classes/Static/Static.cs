@@ -3,16 +3,24 @@ using System.Collections;
 
 public class Static : MonoBehaviour
 {
+    static public bool inTime = true;
+    protected int loadPriority = 0;
+    protected int loadPriorityInital = 5;
     [SerializeField]
-    protected float interactionRange;
+    protected float interactionRange = 1;
 
 	void Start ()
     {
-        
+        loadPriority = loadPriorityInital;
 	}
+
+    protected virtual void DelayedLoad()
+    {
+        
+    }
 	
 	// Update is called once per frame
-	void Update ()
+	protected void FixedUpdate ()
     {
         
 	}
