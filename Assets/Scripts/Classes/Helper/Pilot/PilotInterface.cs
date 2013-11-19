@@ -13,7 +13,7 @@ public class PilotInterface : MonoBehaviour
 
     protected void Update()
     {
-	
+
 	}
 
     public Vector3 Direction
@@ -23,11 +23,11 @@ public class PilotInterface : MonoBehaviour
 
     public float Throttle
     {
-        get { return control_stickDirection.y; }
+        get { return Mathf.Clamp(control_stickDirection.y, -1f, 1f); }
     }
 
     public float Turning
     {
-        get { return control_stickDirection.x; }
+        get { return Mathf.Clamp(control_stickDirection.x, -1f, 1f); }
     }
 }

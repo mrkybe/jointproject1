@@ -10,7 +10,7 @@ public class AI_Gather : PilotInterface
 	void Start ()
     {
         _missions = new List<TravelTo>();
-        _missions.Add(new TravelTo(gameObject, new Vector2(10, 10)));
+        _missions.Add(new TravelTo(gameObject, new Vector3(10, transform.position.y, 10)));
 	}
 	
 	// Update is called once per frame
