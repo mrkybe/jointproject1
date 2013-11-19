@@ -11,11 +11,19 @@ public class Mobile : MonoBehaviour
      */
     protected Vector3 direction;
     protected float velocity;
+    [SerializeField]
+    bool isPlayer;
+    protected PilotInterface pilot;
     static public bool inTime;
     // Use this for initialization
     protected void Start()
     {
         inTime = true;
+        if (pilot == null && isPlayer)
+        {
+            pilot = gameObject.AddComponent<PlayerPilot>();
+            Debug.Log("LOLOLOOOOOOOOOOOOOOOOOOL");
+        }
 	}
 	
 	// Update is called once per frame
