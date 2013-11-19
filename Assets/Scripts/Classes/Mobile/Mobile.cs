@@ -13,6 +13,8 @@ public class Mobile : MonoBehaviour
     protected float velocity;
     [SerializeField]
     bool isPlayer;
+    [SerializeField]
+    bool isAI;
     protected PilotInterface pilot;
     static public bool inTime;
     // Use this for initialization
@@ -22,7 +24,10 @@ public class Mobile : MonoBehaviour
         if (pilot == null && isPlayer)
         {
             pilot = gameObject.AddComponent<PlayerPilot>();
-            Debug.Log("LOLOLOOOOOOOOOOOOOOOOOOL");
+        }
+        else if(pilot == null && isAI)
+        {
+            pilot = gameObject.AddComponent<AI_Gather>();
         }
 	}
 	

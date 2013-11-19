@@ -46,7 +46,6 @@ public class Spaceship : Mobile
 
             engineRunSpeed = Mathf.Clamp(maxSpeed, -(maxSpeed / 15), engineRunSpeed);
             transform.Rotate(Vector3.up * getVelocityPercentage() * (pilot.Turning * turningSpeed));
-            Debug.Log(engineRunSpeed);
         }
 	}
 
