@@ -5,6 +5,7 @@ using EntityParts;
 
 public class AsteroidField : Static
 {
+    public static List<AsteroidField> listOfAsteroidFields;
     int rawMaterial;
     [SerializeField]
     private CargoHold myStorage;
@@ -13,7 +14,10 @@ public class AsteroidField : Static
 	// Use this for initialization
 	void Start ()
     {
+        base.Start();
         myStorage = new CargoHold(maxStorage);
+        listOfAsteroidFields = new List<AsteroidField>();
+        listOfAsteroidFields.Add(this);
 	}
 
     new protected void DelayedLoad()
@@ -28,9 +32,9 @@ public class AsteroidField : Static
         myStorage.addToHold("Iron", 500000);
         myStorage.addToHold("Titanium", 90000);
         myStorage.addToHold("Gold", 15000);
-        Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
-        myStorage.printHold();
-        Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");
+        //Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
+        //myStorage.printHold();
+        //Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");
     }
 	// Update is called once per frame
 	new void FixedUpdate ()

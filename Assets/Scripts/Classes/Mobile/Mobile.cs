@@ -12,9 +12,9 @@ public class Mobile : MonoBehaviour
     protected Vector3 direction;
     protected float velocity;
     [SerializeField]
-    bool isPlayer;
+    protected bool isPlayer;
     [SerializeField]
-    bool isAI;
+    protected bool isAI;
     protected PilotInterface pilot;
     static public bool inTime;
     // Use this for initialization
@@ -42,6 +42,6 @@ public class Mobile : MonoBehaviour
 
     private void Move()
     {
-        transform.position = transform.position + ((velocity * direction.normalized) * Time.deltaTime * 5);
+        transform.position = transform.position + ((velocity * direction.normalized) * Time.deltaTime);
     }
 }

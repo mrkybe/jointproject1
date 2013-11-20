@@ -13,6 +13,70 @@ namespace EntityParts
      *          entities that are implimented later and need shared data types.
      */
 
+    /* How SensorArray should work in theory:
+     * 1.  I have a class that needs to be intimately aware of its surroundings
+     *     and own abilities.
+     * 2.  I attach a SensorArray to that class
+     * 3.  I set up Sensors on the array.
+     * 4.  It populates data that it can determine based on the sensor
+     *     a. Example Sensor:
+     *        i. near by objects
+     *           1. can search for specific type &&|| range &&|| size
+     *              &&|| faction &&|| threat_level &&|| health
+     */
+
+    public class SensorArray
+    {
+        GameObject _owner;
+        Spaceship myShipScript;
+        
+        public SensorArray(GameObject owner_in)
+        {
+            _owner = owner_in;
+            myShipScript = _owner.transform.GetComponent<Spaceship>();
+        }
+
+        public float StoppingDistance
+        {
+            //d = (vf^2 +  vi^2) / 2a
+            get
+            {
+                //Debug.Log("GETTING STOPPING DISTANCE~");
+                float distance = ((myShipScript.EngineRunSpeed * myShipScript.EngineRunSpeed) / (2 * myShipScript.EngineAcceleration)) * Time.fixedDeltaTime;
+                Debug.Log("STOPPING DISTANCE IS: " + distance);
+                //Debug.Log("STOPPING TIME IS: " + stoppingTime);
+                return distance;
+            }
+        }
+
+        public float EngineRunSpeed
+        {
+            get { return myShipScript.EngineRunSpeed; }
+        }
+        public float EngineAcceleration
+        {
+            get { return myShipScript.EngineAcceleration; }
+        }
+        public float MaxSpeed
+        {
+            get { return myShipScript.MaxSpeed; }
+        }
+        public float TurningSpeed
+        {
+            get { return myShipScript.TurningSpeed; }
+        }
+
+        public float Manuverability
+        {
+            get { return myShipScript.Manuverability; }
+        }
+
+        public float TargetSpeed
+        {
+            get { return myShipScript.TargetSpeed; }
+        }
+    }
+
     /* How Cargo should work in theory:
      * 1.  I have a class that needs to store Cargo
      * 2.  I attach a CargoHold to that class

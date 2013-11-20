@@ -9,7 +9,7 @@ public class Static : MonoBehaviour
     [SerializeField]
     protected float interactionRange = 1;
 
-	void Start ()
+    public void Start()
     {
         loadPriority = loadPriorityInital;
 	}

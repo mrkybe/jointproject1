@@ -16,6 +16,5 @@ public class PlayerPilot : PilotInterface
         base.Update();
         control_stickDirection.x = Input.GetAxis("Horizontal"); // turning
         control_stickDirection.y = Input.GetAxis("Vertical");   // throttle
-        
 	}
 }
