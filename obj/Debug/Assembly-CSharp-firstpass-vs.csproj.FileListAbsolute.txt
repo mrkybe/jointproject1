@@ -8,3 +8,14 @@ D:\Unity\JointProject1\Temp\bin\Debug\ICSharpCode.NRefactory.dll
 D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
 D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass.dll
 D:\Unity\JointProject1\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\dfScriptLite.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\UnityEditor.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\UnityEngine.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\nunit.framework.dll
+C:\Users\rkaybyshev\Documents\jointproject1\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\rkaybyshev\Documents\jointproject1\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+C:\Users\rkaybyshev\Documents\jointproject1\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\rkaybyshev\Documents\jointproject1\obj\Debug\Assembly-CSharp-firstpass.pdb

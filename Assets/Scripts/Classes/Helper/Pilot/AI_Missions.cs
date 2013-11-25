@@ -17,15 +17,22 @@ namespace AI_Missions
         float targetSpeed;
         Vector2 stick;
         bool slowDown;
+        bool lastMovementNode;
         SensorArray mySensorArray;
+        bool done;
+        List<TravelTo> _myMissionList;
+
         public TravelTo(GameObject parent_in, Vector3 target1_in)
         {
+            lastMovementNode = false;
             _parent = parent_in;
+            _myMissionList = _parent.GetComponent<AI_Gather>().Missions;
             mySensorArray = _parent.GetComponent<AI_Gather>().SensorArray;
             _target1 = target1_in;
             _AI_State = AI_States.MISSION_START;
             targetSpeed = 0;
             slowDown = false;
+            done = false;
         }
 
         public void AI_Update()
@@ -41,28 +48,44 @@ namespace AI_Missions
                 case AI_States.EN_ROUTE:
                     {
                         float targetAngle = Vector3.Angle((_parent.transform.forward).normalized, (_target1-_parent.transform.position).normalized);
+                        ///////////////////////
                         if (isLeft(_parent.transform.position, _parent.transform.position + _parent.transform.forward * 500, _target1))
                         {
                             targetAngle = -targetAngle;
-                            if (targetAngle > 60 || targetAngle < -60)
-                            {
-                                targetSpeed = 0.6f;
-                            }
-                            else
-                            {
-                                targetSpeed = 3;
-                            }
                         }
-                        if (slowDown)
+                        ///////////////////////
+                        if (targetAngle > 60 || targetAngle < -60)
+                        {
+                            targetSpeed = 0.6f;
+                        }
+                        else
+                        {
+                            targetSpeed = 2;
+                        }
+                        ///////////////////////
+                        if (slowDown && !lastMovementNode)
+                        {
+                            targetSpeed = 1.5f;
+                            _AI_State = AI_States.ARRIVING;
+                        }
+                        else if (slowDown && lastMovementNode)
                         {
                             targetSpeed = 0;
                             _AI_State = AI_States.ARRIVING;
+                        }
+                        if (_myMissionList[1].GetType() != null && _myMissionList[1].GetType() != this.GetType())
+                        {
+                            lastMovementNode = true;
                         }
                         //Debug.Log(targetAngle);
                         Vector3 temp = _target1 - _parent.transform.position;
                         if (temp.magnitude < mySensorArray.StoppingDistance)
                         {
                             slowDown = true;
+                            if (!lastMovementNode)
+                            {
+                                _AI_State = AI_States.ARRIVED;
+                            }
                         }
                         //temp = temp.normalized + _parent.transform.forward;
                         stick = new Vector2(temp.x, temp.z);
@@ -75,15 +98,23 @@ namespace AI_Missions
                 case AI_States.ARRIVING:
                     {
                         Debug.Log("ARRIVING");
-                        _AI_State = AI_States.ARRIVED;
+                        Vector3 temp = _target1 - _parent.transform.position;
+                        if (temp.magnitude < 1)
+                        {
+                            _AI_State = AI_States.ARRIVED;
+                        }
+                        if (lastMovementNode)
+                        {
+
+                        }
                         stick.y = 0;
                         stick.x = 0;
                         break;
                     }
                 case AI_States.ARRIVED:
                     {
+                        done = true;
                         break;
-                        targetSpeed = 0;
                     }
             }
 
@@ -104,6 +135,11 @@ namespace AI_Missions
         public float TargetSpeed
         {
             get { return targetSpeed; }
+        }
+
+        public bool Done
+        {
+            get { return done; }
         }
     }
 }

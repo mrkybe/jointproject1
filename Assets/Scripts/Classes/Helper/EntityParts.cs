@@ -13,6 +13,14 @@ namespace EntityParts
      *          entities that are implimented later and need shared data types.
      */
 
+
+    /* PathSolver
+     * 1.  Good luck to me.
+     */
+
+
+
+
     /* How SensorArray should work in theory:
      * 1.  I have a class that needs to be intimately aware of its surroundings
      *     and own abilities.
