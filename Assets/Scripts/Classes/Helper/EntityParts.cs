@@ -43,7 +43,7 @@ namespace EntityParts
             {
                 //Debug.Log("GETTING STOPPING DISTANCE~");
                 float distance = ((myShipScript.EngineRunSpeed * myShipScript.EngineRunSpeed) / (2 * myShipScript.EngineAcceleration)) * Time.fixedDeltaTime;
-                Debug.Log("STOPPING DISTANCE IS: " + distance);
+                //Debug.Log("STOPPING DISTANCE IS: " + distance);
                 //Debug.Log("STOPPING TIME IS: " + stoppingTime);
                 return distance;
             }
@@ -99,25 +99,12 @@ namespace EntityParts
             _cargoItems = new List<CargoItem>();
         }
 
-        public void addHoldType(CargoItem type)
-        {
-            // Check that CargoItems of this type exist.
-            if (CargoItemTypes.Contains(type))
-            {
-                _cargoItems.Add(CargoItemTypes.GetItemOfType(type.Name));
-            }
-            else
-            {
-                Debug.Log("-WARNING: could not addHoldType(" + type.Name + ") as it does not exist!");
-            }
-        }
-
         public void addHoldType(String type)
         {
-            // Check that CargoItems of this type exist.
-            if (CargoItemTypes.Contains(type))
+            // Check that CargoItems of this type exist.  Or don't.  I'm a comment. Not a cop.
+            if (true)
             {
-                _cargoItems.Add(CargoItemTypes.GetItemOfType(type));
+                _cargoItems.Add(new CargoItem(type));
             }
             else
             {
@@ -128,13 +115,14 @@ namespace EntityParts
         public void addToHold(String type, int count)
         {
             // Check that CargoItems of this type exist.
-            if (CargoItemTypes.Contains(type) && this.Contains(type))
+            if (this.Contains(type))
             {
                 for (int i = 0; i < _cargoItems.Count; i++)
                 {
                     if (_cargoItems[i].Name == type)
                     {
-                        _cargoItems[i].Count = _cargoItems[i].Count + count;
+                        Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
+                        _cargoItems[i].Count = count;
                     }
                 }
             }
@@ -189,8 +177,6 @@ namespace EntityParts
             }
             Debug.Log("Total: " + getTotalHold() + " / " + _maxHold);
         }
-
-        
     }
 
     public class CargoItem
@@ -242,75 +228,6 @@ namespace EntityParts
         {
             get { return _count; }
             set { _count += value; }
-        }
-    }
-
-    public static class CargoItemTypes
-    {
-        private static List<CargoItem> availableItemTypes;
-
-        static CargoItemTypes()
-        {
-            // private constructor ensures no instances of this class are created
-            availableItemTypes = new List<CargoItem>();
-        }
-
-        public static CargoItem GetItemOfType(string type)
-        {
-            CargoItem wantedCargo = null;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type)
-                {
-                    wantedCargo = availableItemTypes[i];
-                }
-            }
-            if (wantedCargo == null)
-            {
-                Debug.Log("WARNING - GetItemOfType() returned null!  Item of type '" + type + "' not found!");
-            }
-            return wantedCargo;
-        }
-
-        public static bool Contains(CargoItem type)
-        {
-            bool contains = false;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type.Name)
-                {
-                    contains = true;
-                }
-            }
-            return contains;
-        }
-
-        public static bool Contains(String type)
-        {
-            bool contains = false;
-            for (int i = 0; i < availableItemTypes.Count; i++)
-            {
-                if (availableItemTypes[i].Name == type)
-                {
-                    contains = true;
-                }
-            }
-            return contains;
-        }
-
-        public static bool AddCargoItemType(CargoItem type)
-        {
-            if (!Contains(type))
-            {
-                availableItemTypes.Add(type);
-                Debug.Log("-NOTE: Created CargoItemType(" + type.Name + ")!");
-                return true;
-            }
-            else
-            {
-                Debug.Log("-WARNING: could not addHoldType(" + type.Name + ") as it already exists!");
-                return false;
-            }
         }
     }
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using EntityParts;
 
 public class Spaceship : Mobile
 {
@@ -16,6 +18,7 @@ public class Spaceship : Mobile
     private float targetSpeed;
     private float throttle_input;
     private float oldThrottle_input;
+    private CargoHold myStorage;
 
 	// Use this for initialization
 	new void Start ()
@@ -29,11 +32,16 @@ public class Spaceship : Mobile
         {
             targetSpeed = 0;
         }
+        myStorage = new CargoHold(50);
+        myStorage.addHoldType("Gold");
 	}
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            myStorage.printHold();
+        }
     }
 	
 	// Update is called once per frame
@@ -56,9 +64,9 @@ public class Spaceship : Mobile
             if (targetSpeed != -999)
             {
                 targetSpeed = pilot.TargetSpeed;
-                Debug.Log(targetSpeed);
+                //Debug.Log(targetSpeed);
                 engineRunSpeed += engineAcceleration * Mathf.Clamp((targetSpeed - engineRunSpeed) * 10000, -1f, 1f);
-                Debug.Log(engineRunSpeed);
+                //Debug.Log(engineRunSpeed);
                 if (Mathf.Abs(engineRunSpeed) < engineAcceleration )
                 {
                     engineRunSpeed = 0;
@@ -71,6 +79,19 @@ public class Spaceship : Mobile
             oldThrottle_input = throttle_input;
         }
 	}
+    
+    public List<Static> getAvailableTargets()
+    {
+        List<Static> targets = new List<Static>();
+        for (int i = 0; i < Static.listOfStaticObjects.Count; i++)
+        {
+            if (Vector3.Distance(transform.position, Static.listOfStaticObjects[i].transform.position) < 8)
+            {
+                targets.Add(Static.listOfStaticObjects[i]);
+            }
+        }
+        return targets;
+    }
 
     private float getVelocityPercentage()
     {
@@ -114,5 +135,10 @@ public class Spaceship : Mobile
     {
         get { return throttle_input; }
         set { throttle_input = value; }
+    }
+
+    public CargoHold GetCargoHold
+    {
+        get { return myStorage; }
     }
 }

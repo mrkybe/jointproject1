@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PilotInterface : MonoBehaviour
 {
+    protected Planet homePlanet;
     protected Vector2 control_stickDirection;
     protected float targetSpeed;
 

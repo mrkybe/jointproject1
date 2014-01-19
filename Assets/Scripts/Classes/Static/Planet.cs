@@ -8,27 +8,36 @@ public class Planet : Static
     int population;
     int rawMaterial;
     [SerializeField]
-    private GameObject workerShip;
+    private List<Object> workerShips;
     [SerializeField]
     private Timer timeToSpawn;
     [SerializeField]
     int maxFriends;
     string faction;
     private CargoHold myStorage;
+    [SerializeField]
+    GameObject workership1;
 
     private List<GameObject> closeBuddies;
 	// Use this for initialization
 	void Start ()
     {
+        Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
+        workerShips.Add(ship);
+
+
         maxFriends = 3;
 
         timeToSpawn = gameObject.AddComponent<Timer>();
         timeToSpawn.SetTimer(1);
         timeToSpawn.Loop(true);
 
-        myStorage = new CargoHold(50);
+        myStorage = new CargoHold(5000);
         myStorage.addHoldType("Rock");
-        myStorage.printHold();
+        myStorage.addHoldType("Gold");
+        myStorage.addHoldType("Food");
+        myStorage.addToHold("Rock", 3000);
+        //myStorage.printHold();
 	}
 	
 	// Update is called once per frame
@@ -42,6 +51,11 @@ public class Planet : Static
         //drawFriends();
 
 	}
+
+    void FixedUpdate()
+    {
+
+    }
 
     void drawFriends()
     {

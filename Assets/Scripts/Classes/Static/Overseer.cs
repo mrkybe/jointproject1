@@ -8,11 +8,6 @@ public class Overseer : Static
     //float timeScale;
     void Start()
     {
-        CargoItemTypes.AddCargoItemType(new CargoItem("Ice",1,1));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Rock"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Iron"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Titanium"));
-        CargoItemTypes.AddCargoItemType(new CargoItem("Gold"));
 
         timeScaleOriginal = Time.fixedDeltaTime;
         Debug.Log("-NOTE: OVERSEER LOADING COMPLETE");

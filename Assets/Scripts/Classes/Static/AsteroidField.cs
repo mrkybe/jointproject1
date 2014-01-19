@@ -5,40 +5,42 @@ using EntityParts;
 
 public class AsteroidField : Static
 {
-    public static List<AsteroidField> listOfAsteroidFields;
     int rawMaterial;
-    [SerializeField]
     private CargoHold myStorage;
-    [SerializeField]
-    private int maxStorage = 10000000;
+    private int maxStorage = 200;
 	// Use this for initialization
 	void Start ()
     {
         base.Start();
         myStorage = new CargoHold(maxStorage);
-        listOfAsteroidFields = new List<AsteroidField>();
-        listOfAsteroidFields.Add(this);
 	}
 
     new protected void DelayedLoad()
     {
-        myStorage.addHoldType("Ice");
-        myStorage.addHoldType("Rock");
-        myStorage.addHoldType("Iron");
-        myStorage.addHoldType("Titanium");
         myStorage.addHoldType("Gold");
-        myStorage.addToHold("Ice", 1000000);
-        myStorage.addToHold("Rock", 5000000);
-        myStorage.addToHold("Iron", 500000);
-        myStorage.addToHold("Titanium", 90000);
-        myStorage.addToHold("Gold", 15000);
+        myStorage.addToHold("Gold", 200);
         //Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
-        //myStorage.printHold();
+        
         //Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");
     }
+
+    public CargoHold GetCargoHold
+    { 
+        get { return myStorage; } 
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            myStorage.printHold();
+        }
+    }
+
 	// Update is called once per frame
 	new void FixedUpdate ()
     {
+        
         if (inTime)
         {
             base.FixedUpdate();
