@@ -58,6 +58,40 @@ namespace AI_Missions
             get { return stick; }
         }
     }
+
+    public class Wait : MissionGeneric
+    {
+        float timeToWaitFor = 0f;
+        float timeStartedWaitingAt;
+        public Wait(GameObject parent_in, float waitingLength) : base(parent_in)
+        {
+            timeToWaitFor = waitingLength;
+        }
+
+        public override void AI_Update()
+        {
+            if(myMissionIndex == _parentAI.GetMissionIndex())
+            {
+                switch(_AI_State)
+                {
+                    case AI_States.MISSION_START:
+                        timeStartedWaitingAt = Time.time;
+                        _AI_State = AI_States.WAITING;
+                        break;
+
+                    case AI_States.WAITING:
+                        if(Time.time + timeToWaitFor < Time.time)
+                        {
+                            _AI_State = AI_States.DONE;
+                        }
+                        break;
+
+                    case AI_States.DONE:
+                        break;
+                }
+            }
+        }
+    }
     
     public class Mine : MissionGeneric
     {
@@ -132,7 +166,6 @@ namespace AI_Missions
         bool slowDown;
         SensorArray mySensorArray;
 
-        
         public TravelTo(GameObject parent_in, Vector3 target1_in) : base(parent_in)
         {
             mySensorArray = _parent.GetComponent<AI_Gather>().SensorArray;
