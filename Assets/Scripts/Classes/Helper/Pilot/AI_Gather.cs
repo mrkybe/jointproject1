@@ -16,14 +16,19 @@ public class AI_Gather : PilotInterface
         mySensorArray = new SensorArray(gameObject);
         _missions = new List<MissionGeneric>();
         _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
-        _missions.Add(new Mine(gameObject, "Ice"));
-        _missions.Add(new TravelTo(gameObject, new Vector3(1119.1f, transform.position.y, -2.4f)));
+        _missions.Add(new Mine(gameObject, "Gold"));
+        _missions.Add(new Wait(gameObject, 100f));
+        _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
+        _missions.Add(new TravelTo(gameObject, new Vector3(0f, transform.position.y, -2.4f)));
+        _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
+        _missions.Add(new TravelTo(gameObject, new Vector3(0f, transform.position.y, -2.4f)));
+        _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
-        base.Update();
+        //base.FixedUpdate();
         if (_missions.Count >= 1 && _missions.Count > missionIndex)
         {
             //Debug.Log(missionIndex);
