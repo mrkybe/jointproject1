@@ -10,9 +10,15 @@ public class Static : MonoBehaviour
     [SerializeField]
     protected float interactionRange = 1;
     public static List<Static> listOfStaticObjects;
+    Overseer BossScript;
 
     public void Start()
     {
+        BossScript = GameObject.Find("Overseer").GetComponent<Overseer>();
+        if(BossScript != null)
+        {
+
+        }
         loadPriority = loadPriorityInital;
         listOfStaticObjects = new List<Static>();
         listOfStaticObjects.Add(this);

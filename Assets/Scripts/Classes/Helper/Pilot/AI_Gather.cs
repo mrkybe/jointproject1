@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
-using EntityParts;
+using ShipInternals;
 
 public class AI_Gather : PilotInterface
 {

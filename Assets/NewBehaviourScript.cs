@@ -14,6 +14,6 @@ public class NewBehaviourScript : MonoBehaviour
 	void FixedUpdate ()
     {
 
-        transform.rigidbody.AddForce(new Vector3(Mathf.Sin(Time.time)*12.5f, 0, Mathf.Cos(Time.time)*Mathf.Cos(Time.time)*12.5f*12.5f));
+        transform.GetComponent<Rigidbody>().AddForce(new Vector3(Mathf.Sin(Time.time)*12.5f, 0, Mathf.Cos(Time.time)*Mathf.Cos(Time.time)*12.5f*12.5f));
 	}
 }
