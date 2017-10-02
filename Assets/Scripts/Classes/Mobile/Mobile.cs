@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using AI_Missions;
 
 public class Mobile : MonoBehaviour
 {
@@ -12,36 +14,89 @@ public class Mobile : MonoBehaviour
     protected Vector3 direction;
     protected float velocity;
     [SerializeField]
-    protected bool isPlayer;
-    [SerializeField]
     protected bool isAI;
+    [SerializeField]
+    protected bool isAffectedByGravity;
     protected PilotInterface pilot;
     static public bool inTime;
+    private Vector3 gravityVector;
     // Use this for initialization
     protected void Start()
     {
         inTime = true;
-        if (pilot == null && isPlayer)
+    }
+
+    public void SetPilot(AI_Type wanted)
+    {
+        switch (wanted)
         {
-            pilot = gameObject.AddComponent<PlayerPilot>();
+            case AI_Type.GATHER:
+                pilot = gameObject.AddComponent<AI_Gather>();
+                isAI = true;
+                break;
+            case AI_Type.PATROL:
+                pilot = gameObject.AddComponent<AI_Patrol>();
+                isAI = true;
+                break;
+            case AI_Type.PLAYER:
+                pilot = gameObject.AddComponent<PlayerPilot>();
+                isAI = false;
+                break;
+            default:
+                Debug.Log("NO PILOT SET!!!");
+                break;
         }
-        else if(pilot == null && isAI)
-        {
-            pilot = gameObject.AddComponent<AI_Gather>();
-        }
-	}
-	
-	// Update is called once per frame
+    }
+
+    // Update is called once per frame
     protected void FixedUpdate()
     {
         if (inTime)
         {
+            CalculateGravityVector();
             Move();
         }
 	}
 
+    private void CalculateGravityVector()
+    {
+        Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);
+        gravityVector = Vector3.zero;
+        
+        foreach (var x in Planet.listOfPlanetObjects)
+        {
+            //List<Vector3> planetPositions = new List<Vector3>();
+            //List<double> planetMasses = new List<double>();
+
+            if (x.hasGravity)
+            {
+                Vector3 offset = x.transform.position - transform.position;
+                double g = x.MassKilotons / offset.sqrMagnitude;
+                if (offset.magnitude < 6)
+                {
+                    g = 0;
+                }
+                Vector3 norm = offset.normalized;
+                norm.Scale(new Vector3((float)g, 0, (float)g));
+                gravityVector = gravityVector + norm;
+                //Debug.Log(g);
+                //planetPositions.Add(offset);
+                //planetMasses.Add(x.MassKilotons);
+            }
+        }
+    }
+
     private void Move()
     {
-        transform.position = transform.position + ((velocity * direction.normalized) * Time.deltaTime);
+        Vector3 engineVel = (velocity * direction.normalized);
+        Vector3 gravityVel = Vector3.zero;
+        if (isAffectedByGravity)
+        {
+            gravityVel = gravityVector / Mathf.Pow(10,30);
+            Debug.DrawLine(this.transform.position, this.transform.position + gravityVel);
+        }
+        Vector3 finalVel = (gravityVel + engineVel) * Time.deltaTime;
+
+        transform.position = transform.position + finalVel;
     }
 }

@@ -1,13 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using AI_Missions;
+using ShipInternals;
 
-public class PilotInterface : MonoBehaviour
+public abstract class PilotInterface : MonoBehaviour
 {
+    protected SensorArray mySensorArray;
     protected Planet homePlanet;
     protected Vector2 control_stickDirection;
     protected float targetSpeed;
+    protected int missionIndex;
+    protected List<MissionGeneric> _missions = new List<MissionGeneric>();
+    protected AI_Type ai_type = AI_Type.PLAYER;
 
-	// Use this for initialization
+    public SensorArray SensorArray
+    {
+        get { return mySensorArray; }
+    }
+
+    public List<MissionGeneric> GetMissionList()
+    {
+        return _missions;
+    }
+
+    public int GetMissionIndex()
+    {
+        return missionIndex;
+    }
+
+    // Use this for initialization
     protected void Start()
     {
         control_stickDirection = new Vector2();
@@ -42,4 +64,5 @@ public class PilotInterface : MonoBehaviour
             return targetSpeed;
         }
     }
+
 }

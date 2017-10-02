@@ -6,15 +6,12 @@ using ShipInternals;
 
 public class AI_Gather : PilotInterface
 {
-    private List<MissionGeneric> _missions;
-    private SensorArray mySensorArray;
-    private int missionIndex;
 	// Use this for initialization
 	void Start ()
     {
         base.Start();
+        ai_type = AI_Type.GATHER;
         mySensorArray = new SensorArray(gameObject);
-        _missions = new List<MissionGeneric>();
         _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
         _missions.Add(new Mine(gameObject, "Gold"));
         _missions.Add(new Wait(gameObject, 100f));
@@ -47,25 +44,5 @@ public class AI_Gather : PilotInterface
     public SensorArray SensorArray
     {
         get { return mySensorArray; }
-    }
-
-    public int GetMissionCount()
-    {
-        return _missions.Count;
-    }
-
-    public int GetMissionIndex()
-    {
-        return missionIndex;
-    }
-
-    public MissionGeneric GetMission(int x)
-    {
-        return _missions[x];
-    }
-
-    public List<MissionGeneric> GetMissionList()
-    {
-        return _missions;
     }
 }

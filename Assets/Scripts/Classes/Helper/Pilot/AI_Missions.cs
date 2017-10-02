@@ -7,11 +7,13 @@ using ShipInternals;
 
 namespace AI_Missions
 {
+    public enum AI_Type { GATHER, PATROL, PLAYER }
+
     public enum AI_States { MISSION_START, EN_ROUTE, ARRIVED, ARRIVING, DONE, MINING, WAITING};
 
     public class MissionGeneric
     {
-        protected AI_Gather _parentAI;
+        protected PilotInterface _parentAI;
         protected int myMissionIndex;
         protected List<MissionGeneric> MissionList;
         protected AI_States _AI_State;
@@ -23,7 +25,7 @@ namespace AI_Missions
         {
             _parent = parent_in;
             shipScript = _parent.transform.GetComponent<Spaceship>();
-            _parentAI = _parent.transform.GetComponent<AI_Gather>();
+            _parentAI = _parent.transform.GetComponent<PilotInterface>();
             
             MissionList = _parentAI.GetMissionList();
             _AI_State = AI_States.MISSION_START;
@@ -56,6 +58,11 @@ namespace AI_Missions
         public Vector3 Stick
         {
             get { return stick; }
+        }
+
+        public virtual void Reset()
+        {
+            _AI_State = AI_States.MISSION_START;
         }
     }
 
@@ -168,10 +175,10 @@ namespace AI_Missions
 
         public TravelTo(GameObject parent_in, Vector3 target1_in) : base(parent_in)
         {
-            mySensorArray = _parent.GetComponent<AI_Gather>().SensorArray;
+            mySensorArray = _parent.GetComponent<PilotInterface>().SensorArray;
             _target1 = target1_in;
             
-            _parentAI = _parent.GetComponent<AI_Gather>();
+            _parentAI = _parent.GetComponent<PilotInterface>();
             targetSpeed = 0;
             slowDown = false;
         }
@@ -229,7 +236,7 @@ namespace AI_Missions
                 case AI_States.ARRIVED:
                     {
                         Debug.Log("TravelTo.ARRIVED");
-                        if (MissionList[myMissionIndex + 1].GetType() == this.GetType() )
+                        if (MissionList.Count < myMissionIndex && MissionList[myMissionIndex + 1].GetType() == this.GetType() )
                         {
                             targetSpeed = 0;
                         }
@@ -256,6 +263,13 @@ namespace AI_Missions
         public Vector3 Stick
         {
             get { return stick; }
+        }
+
+        public new void Reset()
+        {
+            base.Reset();
+            targetSpeed = 0;
+            slowDown = false;
         }
     }
 }

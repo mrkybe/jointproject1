@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using AI_Missions;
 using ShipInternals;
 
 public class Spaceship : Mobile
 {
-
     private float engineRunSpeed;
     [SerializeField]
     private float engineAcceleration;
@@ -15,15 +15,21 @@ public class Spaceship : Mobile
     private float turningSpeed;
     [SerializeField]
     private float manuverability;
+    [SerializeField]
+    private AI_Type desired_AI_Type;
     private float targetSpeed;
     private float throttle_input;
     private float oldThrottle_input;
     private CargoHold myStorage;
-
-	// Use this for initialization
-	new void Start ()
+    // Use this for initialization
+    new void Start ()
     {
         base.Start();
+        if(pilot == null)
+        {
+            SetPilot(desired_AI_Type);
+        }
+
         engineRunSpeed = 0;
         targetSpeed = -999;
         throttle_input = 0;

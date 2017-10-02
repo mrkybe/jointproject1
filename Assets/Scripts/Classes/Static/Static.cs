@@ -7,9 +7,8 @@ public class Static : MonoBehaviour
     static public bool inTime = true;
     protected int loadPriority = 0;
     protected int loadPriorityInital = 5;
-    [SerializeField]
     protected float interactionRange = 1;
-    public static List<Static> listOfStaticObjects;
+    public static List<Static> listOfStaticObjects = new List<Static>();
     Overseer BossScript;
 
     public void Start()
@@ -20,7 +19,6 @@ public class Static : MonoBehaviour
 
         }
         loadPriority = loadPriorityInital;
-        listOfStaticObjects = new List<Static>();
         listOfStaticObjects.Add(this);
 	}
 
