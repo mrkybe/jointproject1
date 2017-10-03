@@ -24,13 +24,12 @@ public class Overseer : Static
         FactionNames = new List<string>();
         FactionNames.Add("Reds");
         FactionNames.Add("Freemans");
-        FactionNames.Add("Loters");
+        FactionNames.Add("Looters");
         FactionNames.Add("Greens");
 
 
         // Initialize Stuff Above
         timeScaleOriginal = Time.fixedDeltaTime;
-        Debug.Log("-NOTE: OVERSEER LOADING COMPLETE");
         Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
         RootNode = GameObject.FindWithTag("RootNode");
         if(RootNode != null)
@@ -41,6 +40,7 @@ public class Overseer : Static
         CreatePlanetNodes();
         CreateSky();
         //TODO: AssignPlanetFactions();
+        Debug.Log("--OVERSEER LOADING COMPLETE");
     }
 
     bool CreateSky()
@@ -52,7 +52,8 @@ public class Overseer : Static
     void CreateSaturnSystem()
     {
         Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(0, 0, 0), Quaternion.identity);
-        Saturn.transform.localScale += new Vector3(30,30,30);
+        Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
+        Saturn.name = "Saturn";
         int numMoons = 25;
         for (int i = 0; i < numMoons; i++)
         {
@@ -62,6 +63,8 @@ public class Overseer : Static
             if (CheckForReject(x, z))
             {
                 GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(x, 0, z), Quaternion.identity);
+                moon.name = "Moon" + i;
+                moon.GetComponent<Planet>().RandomizeSize();
                 Moons.Add(moon);
             }
             else

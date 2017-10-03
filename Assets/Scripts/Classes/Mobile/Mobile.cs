@@ -60,7 +60,7 @@ public class Mobile : MonoBehaviour
 
     private void CalculateGravityVector()
     {
-        Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);
+        //Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);
         gravityVector = Vector3.zero;
         
         foreach (var x in Planet.listOfPlanetObjects)
@@ -71,8 +71,8 @@ public class Mobile : MonoBehaviour
             if (x.hasGravity)
             {
                 Vector3 offset = x.transform.position - transform.position;
-                double g = x.MassKilotons / offset.sqrMagnitude;
-                if (offset.magnitude < 6)
+                double g = x.Mass / offset.sqrMagnitude;
+                if (offset.magnitude < (x.Radius + 1))
                 {
                     g = 0;
                 }

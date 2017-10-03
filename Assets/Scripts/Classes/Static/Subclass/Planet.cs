@@ -17,7 +17,10 @@ public class Planet : Static
     private Timer TimeToSpawn;
 
     [SerializeField]
-    public double MassKilotons = 3.402*(Mathf.Pow(10,31));
+    public float Mass = 1;
+
+    [SerializeField]
+    public float Radius = 1;
 
     [SerializeField]
     int MaxFriends;
@@ -37,21 +40,17 @@ public class Planet : Static
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
     // Use this for initialization
 
-    private float mul;
-
     void Start ()
     {
         //Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
         //WorkerShips.Add(ship);
         listOfPlanetObjects.Add(this);
         MaxFriends = 3;
-        System.Random random = new System.Random(GetInstanceID());
-        mul = (float) (Math.Sqrt(random.NextDouble()) * 15) - transform.localScale.magnitude;
 
         TimeToSpawn = gameObject.AddComponent<Timer>();
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
-        transform.localScale += new Vector3(mul, mul, mul);
+
         //this.GetComponent<Transform>().localScale.Scale(new Vector3(mul, mul, mul));
         myStorage = new CargoHold(5000);
         myStorage.addHoldType("Rock");
@@ -60,6 +59,15 @@ public class Planet : Static
         myStorage.addToHold("Rock", 3000);
         //myStorage.printHold();
 	}
+
+    public void RandomizeSize()
+    {
+        System.Random random = new System.Random(GetInstanceID());
+
+        Radius = (float)(random.NextDouble() * 13) + 2f;
+        Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));
+        transform.localScale += (new Vector3(Radius * 2f, Radius * 2f, Radius * 2f) - transform.localScale);
+    }
 	
 	// Update is called once per frame
 	void Update ()
