@@ -72,7 +72,7 @@ public class Overseer : Static
                 i--;
             }
         }
-        int numAsteroidFields = 125;
+        int numAsteroidFields = 4000;
         for (int i = 0; i < numAsteroidFields; i++)
         {
             float x = (Random.value * worldSize) - (worldSize / 2);
@@ -81,6 +81,7 @@ public class Overseer : Static
             if (CheckForRejectAsteroids(x, z))
             {
                 GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), new Vector3(x, 0, z), Quaternion.identity);
+                asteroidField.name = "AsteroidField" + i;
                 AsteroidFields.Add(asteroidField);
             }
             else

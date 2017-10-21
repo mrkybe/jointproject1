@@ -63,9 +63,13 @@ public class Spaceship : Mobile
             {
                 engineRunSpeed += engineAcceleration * pilot.Throttle;
             }
-            else if (pilot.Throttle < 0)
+            else if (pilot.Throttle < 0 && engineRunSpeed > 0)
             {
                 engineRunSpeed += engineAcceleration * pilot.Throttle;
+            }
+            else if (engineRunSpeed < 0)
+            {
+                engineRunSpeed = 0;
             }
             if (targetSpeed != -999)
             {

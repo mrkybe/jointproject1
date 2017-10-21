@@ -81,7 +81,7 @@ public class Planet : Static
             Debug.DrawLine(transform.position,f.transform.position,Color.white,5f, false);
         }
         //drawFriends();
-
+        transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}
 
     void FixedUpdate()

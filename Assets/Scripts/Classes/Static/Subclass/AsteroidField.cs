@@ -7,6 +7,7 @@ public class AsteroidField : Static
 {
     int rawMaterial;
     private CargoHold myStorage;
+    private float rotationSpeed = 1f;
     private int maxStorage = 200;
     List<Vector3> vertices = new List<Vector3>();
     // Use this for initialization
@@ -15,7 +16,12 @@ public class AsteroidField : Static
         base.Start();
         myStorage = new CargoHold(maxStorage);
         //GenerateMesh();
-        var m = GenerateAsteroid(1);
+        System.Random r = new System.Random(this.GetInstanceID());
+        float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
+        rotationSpeed = (1 / size)*10f;
+        transform.position += Vector3.up;
+        transform.position -= (Vector3.up * size);
+        var m = GenerateAsteroid((float)size, Vector3.zero);
         GetComponent<MeshFilter>().mesh = m;
     }
 
@@ -39,13 +45,41 @@ public class AsteroidField : Static
         {
             myStorage.printHold();
         }
+
+        transform.Rotate(Vector3.up, Time.deltaTime * rotationSpeed * -1f);
     }
 
-    Mesh GenerateAsteroid(float size)
+    Mesh GenerateAsteroidField()
     {
         System.Random r = new System.Random(this.GetInstanceID());
         Mesh mesh = new Mesh();
-        vertices.Add(new Vector3(0, 0, 0));
+        List<Mesh> subAsteroids = new List<Mesh>();
+        for (int i = 0; i < 2; i++)
+        {
+            float size = 1f;///((float)r.NextDouble() + 0.2f) * 1f;
+            float offset_x = ((float)r.NextDouble() - 0.5f) * 10f;
+            float offset_y = ((float)r.NextDouble() - 0.5f) * 10f;
+            float offset_z = ((float)r.NextDouble() - 0.5f) * 10f;
+            Vector3 offset = new Vector3(offset_x,offset_y,offset_z);
+            Mesh asteroid = GenerateAsteroid(size, offset);
+            subAsteroids.Add(asteroid);
+        }
+        CombineInstance[] combine = new CombineInstance[subAsteroids.Count];
+        for (int i = 0; i < subAsteroids.Count; i++)
+        {
+            combine[i].mesh = subAsteroids[i];
+            combine[i].transform = Matrix4x4.identity;
+        }
+        mesh.CombineMeshes(combine);
+        mesh.name = subAsteroids[0].name;
+        return mesh;
+    }
+
+    Mesh GenerateAsteroid(float size, Vector3 displacement)
+    {
+        System.Random r = new System.Random(this.GetInstanceID());
+        Mesh mesh = new Mesh();
+        vertices.Add(displacement);
         float vertsTotal = 3+(size/2);
         for (int i = -((int)vertsTotal); i < vertsTotal; i++)
         {
@@ -54,6 +88,7 @@ public class AsteroidField : Static
                                   Mathf.Cos(Mathf.PI * ((float)i / vertsTotal)));
             float offset = (float)(r.NextDouble() * size + (size));
             vec *= offset;
+            vec += displacement;
             vertices.Add(vec);
         }
         mesh.vertices = vertices.ToArray();
