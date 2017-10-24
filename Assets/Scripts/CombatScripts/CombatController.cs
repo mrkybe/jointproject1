@@ -13,6 +13,7 @@ public class CombatController : MonoBehaviour {
 	public float waveWait;
 	// Use this for initialization
 	void Start () {
+		
 		StartCoroutine (SpawnWaves ());
 
 
@@ -27,7 +28,8 @@ public class CombatController : MonoBehaviour {
 			{
 
 				GameObject hazard = hazards[Random.Range(0, hazards.Length)];
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z));
+				//Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRptation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRptation);
 
