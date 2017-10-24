@@ -21,3 +21,10 @@
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEngine.UIAutomation.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEngine.GoogleAudioSpatializer.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEngine.SpatialTracking.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEngine.Purchasing.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.Pdb.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.Mdb.dll

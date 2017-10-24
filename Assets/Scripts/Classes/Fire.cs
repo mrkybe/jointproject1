@@ -8,9 +8,9 @@ public class Fire : MonoBehaviour {
 	public GameObject ammo;
 	private GameObject bulletClone;
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
-
+		bulletClone = new GameObject ();
 	}
 
 	// Update is called once per frame
@@ -19,7 +19,7 @@ public class Fire : MonoBehaviour {
 			if (bulletClone == true) {
 				Destroy (bulletClone);
 			}
-			Shoot ();
+			bulletClone = Shoot ();
 		}
 		bulletClone.transform.Translate (transform.forward * Time.deltaTime * speed * -1);
 
@@ -31,10 +31,10 @@ public class Fire : MonoBehaviour {
 
 	}
 
-	void Shoot()
+	GameObject Shoot()
 	{
 		float dist  = transform.position.z + 6f;
-		bulletClone = Instantiate(ammo, new Vector3(transform.position.x, transform.position.y, dist), transform.rotation);
-
+		GameObject clone = Instantiate(ammo, new Vector3(transform.position.x, transform.position.y, dist), transform.rotation);
+		return clone;
 	}
 }
