@@ -12,7 +12,6 @@ public class Planet : Static
     [SerializeField]
     private List<Object> WorkerShips;
 
-
     [SerializeField]
     private Timer TimeToSpawn;
 
