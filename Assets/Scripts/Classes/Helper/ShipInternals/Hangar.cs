@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Hangar : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
 		
@@ -13,4 +12,14 @@ public class Hangar : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void StoreShip(GameObject ship)
+    {
+        
+    }
+
+    public void DeployShip()
+    {
+        
+    }
 }
