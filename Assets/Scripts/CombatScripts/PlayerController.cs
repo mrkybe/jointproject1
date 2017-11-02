@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate()  // called each physics steps
 	{
 		
-		if (Input.GetKey (KeyCode.C)&&flag ==false) {
+		if (Input.GetButtonDown("Y")&&flag ==false) {
 			flag = true;
 			transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
 
