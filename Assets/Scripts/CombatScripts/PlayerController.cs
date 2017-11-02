@@ -10,7 +10,11 @@ public class PlayerController : MonoBehaviour {
 	public GameObject cameraObject;
 	public GameObject combatField;
 	public float speed = 10f;
+<<<<<<< HEAD
 	private bool flag = false;
+=======
+	public float rotateSpeed = .05f;
+>>>>>>> origin/combat
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
@@ -19,8 +23,12 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
+<<<<<<< HEAD
 	void Update()  // called each physics steps
 
+=======
+	void FixedUpdate()  // called each physics steps
+>>>>>>> origin/combat
 	{
 		
 		if (Input.GetKey (KeyCode.C)&&flag ==false) {
@@ -39,8 +47,9 @@ public class PlayerController : MonoBehaviour {
 		float rotateHorizontal = Input.GetAxis ("HorizontalR");
 		float rotateVertical = Input.GetAxis ("VerticalR");
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		transform.eulerAngles = new Vector3( 0, Mathf.Atan2( rotateVertical, rotateHorizontal) * Mathf.Rad2Deg, 0 );
-		//new vector3(char.transform.eulerAngles.x, Mathf.atan2(x, y) * Mathf.rad2deg, char.transform.eulerAngles.z);
+		transform.Rotate (0, Mathf.Atan2 (rotateHorizontal, rotateVertical) * Mathf.Rad2Deg * rotateSpeed, 0);
+
+
 		rb.velocity = movement*speed;
 
 
