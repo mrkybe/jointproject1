@@ -37,7 +37,7 @@ public class EnemySpawner : MonoBehaviour {
 			for (int i = 0; i < hazardCount; i++) 
 			{
 				GameObject hazard = hazards[Random.Range(0, hazards.Length)];
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x+transform.position.x, spawnValues.x+transform.position.x), 1, Random.Range (-spawnValues.z+transform.position.z, spawnValues.z+transform.position.z));
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x+transform.position.x, spawnValues.x+transform.position.x), transform.position.y, Random.Range (-spawnValues.z+transform.position.z, spawnValues.z+transform.position.z));
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
 				count = count+3;

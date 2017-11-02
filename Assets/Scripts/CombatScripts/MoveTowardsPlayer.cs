@@ -13,7 +13,7 @@ public class MoveTowardsPlayer : MonoBehaviour {
 
 	void Update () {
 		if (target == null) return;
-		Vector3 targetPosition = new Vector3(target.position.x, 1, target.position.z);
+		Vector3 targetPosition = new Vector3(target.position.x, target.position.y, target.position.z);
 		transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 	}
 
