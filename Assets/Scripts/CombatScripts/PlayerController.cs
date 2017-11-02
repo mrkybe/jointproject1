@@ -10,11 +10,10 @@ public class PlayerController : MonoBehaviour {
 	public GameObject cameraObject;
 	public GameObject combatField;
 	public float speed = 10f;
-<<<<<<< HEAD
 	private bool flag = false;
-=======
+
 	public float rotateSpeed = .05f;
->>>>>>> origin/combat
+
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
@@ -23,12 +22,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
-<<<<<<< HEAD
-	void Update()  // called each physics steps
-
-=======
 	void FixedUpdate()  // called each physics steps
->>>>>>> origin/combat
 	{
 		
 		if (Input.GetKey (KeyCode.C)&&flag ==false) {
