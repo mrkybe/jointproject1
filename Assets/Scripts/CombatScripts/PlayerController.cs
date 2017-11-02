@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
 
 	public Rigidbody rb;
 	public float speed = 10f;
+	public float rotateSpeed = .05f;
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
-	void Update()  // called each physics steps
+	void FixedUpdate()  // called each physics steps
 	{
 
 		float moveHorizontal = Input.GetAxis ("Horizontal"); // default axis : Horizontal, vertical
@@ -21,8 +22,9 @@ public class PlayerController : MonoBehaviour {
 		float rotateHorizontal = Input.GetAxis ("HorizontalR");
 		float rotateVertical = Input.GetAxis ("VerticalR");
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		transform.eulerAngles = new Vector3( 0, Mathf.Atan2( rotateVertical, rotateHorizontal) * Mathf.Rad2Deg, 0 );
-		//new vector3(char.transform.eulerAngles.x, Mathf.atan2(x, y) * Mathf.rad2deg, char.transform.eulerAngles.z);
+		transform.Rotate (0, Mathf.Atan2 (rotateHorizontal, rotateVertical) * Mathf.Rad2Deg * rotateSpeed, 0);
+
+
 		rb.velocity = movement*speed;
 
 
