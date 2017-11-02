@@ -19,17 +19,16 @@ public class Fire : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetButtonDown("Fire1") && bulletCount == 1) 
+		if (Input.GetButtonDown("Fire1") && bulletCount == 0) 
 		{
-			if (bulletClone == true) 
+			Shoot ();
+			if (bulletCount == 1) 
 			{
+				Destroy (bulletClone);
 				bulletCount--;
 			}
-			Shoot ();
-			rb.AddForce(new Vector3(transform.position.x, transform.position.y * speed, transform.position.z), ForceMode.Acceleration);
 		}
-			
-
+		rb.AddForce(new Vector3(transform.position.x, transform.position.y * speed, transform.position.z), ForceMode.Acceleration);	
 
 	}
 		
