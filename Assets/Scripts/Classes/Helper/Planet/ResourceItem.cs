@@ -2,9 +2,9 @@
 
 namespace AssemblyCSharp
 {
-	public class Planet
+	public class ResourceItem
 	{
-		public Planet ()
+		public ResourceItem ()
 		{
 		}
 	}
