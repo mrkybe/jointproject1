@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ShipInternals;
 
-public class Building : Static
+public class Building
 {
 	[SerializeField]
 	private List<Building> _buildings;
