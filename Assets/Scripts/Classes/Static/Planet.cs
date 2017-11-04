@@ -3,14 +3,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using ShipInternals;
-using Object = UnityEngine.Object;
 
 public class Planet : Static
 {
     int Population;
     int RawMaterial;
     [SerializeField]
-    private List<Object> WorkerShips;
+    private List<GameObject> WorkerShips;
 
     [SerializeField]
     private Timer TimeToSpawn;
