@@ -6,8 +6,6 @@ using ShipInternals;
 
 public class Building
 {
-	[SerializeField]
-	private List<Building> _buildings;
 	private List<CargoItem> _cargos;
 
 	private CargoHold resources;
@@ -31,22 +29,13 @@ public class Building
 
 	public void factoryProduce()
 	{
-		
 		resources.addHoldType("Iron");
-
-		_buildings.Add (cargoList);
-
-
 	}
 
 
 
 	void Update () {
-		if (Time.time > nextActionTime ) {
-			nextActionTime += period;
-			cargoList.AddRange (resourceType);
 
-		}
 	}
 
 

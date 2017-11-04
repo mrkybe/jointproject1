@@ -66,7 +66,7 @@ namespace AI_Missions
         }
     }
 
-    public class Wait : MissionGeneric
+    /*public class Wait : MissionGeneric
     {
         float timeToWaitFor = 0f;
         float timeStartedWaitingAt;
@@ -98,7 +98,7 @@ namespace AI_Missions
                 }
             }
         }
-    }
+    }*/
     
     public class Mine : MissionGeneric
     {
