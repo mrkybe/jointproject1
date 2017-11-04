@@ -10,6 +10,7 @@ public class AsteroidField : Static
     private float rotationSpeed = 1f;
     private int maxStorage = 200;
     List<Vector3> vertices = new List<Vector3>();
+    public static List<AsteroidField> listOfAsteroidFields = new List<AsteroidField>();
     // Use this for initialization
     void Start ()
     {
@@ -19,10 +20,11 @@ public class AsteroidField : Static
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
         rotationSpeed = (1 / size)*10f;
-        transform.position += Vector3.up;
-        transform.position -= (Vector3.up * size);
+        /*transform.position += Vector3.up;
+        transform.position -= (Vector3.up * size);*/
         var m = GenerateAsteroid((float)size, Vector3.zero);
         GetComponent<MeshFilter>().mesh = m;
+        listOfAsteroidFields.Add(this);
     }
 
     new protected void DelayedLoad()

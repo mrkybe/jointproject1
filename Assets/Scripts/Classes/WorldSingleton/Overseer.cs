@@ -72,7 +72,7 @@ public class Overseer : Static
                 i--;
             }
         }
-        int numAsteroidFields = 4000;
+        int numAsteroidFields = 100;
         for (int i = 0; i < numAsteroidFields; i++)
         {
             float x = (Random.value * worldSize) - (worldSize / 2);

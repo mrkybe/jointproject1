@@ -21,6 +21,7 @@ public class Spaceship : Mobile
     private float throttle_input;
     private float oldThrottle_input;
     private CargoHold myStorage;
+    private SensorArray mySensorArray;
     // Use this for initialization
     new void Start ()
     {
@@ -29,6 +30,8 @@ public class Spaceship : Mobile
         {
             SetPilot(desired_AI_Type);
         }
+
+        pilot.SensorArray = mySensorArray;
 
         engineRunSpeed = 0;
         targetSpeed = -999;
@@ -40,6 +43,8 @@ public class Spaceship : Mobile
         }
         myStorage = new CargoHold(50);
         myStorage.addHoldType("Gold");
+
+        mySensorArray = new SensorArray(gameObject);
 	}
 
     void Update()

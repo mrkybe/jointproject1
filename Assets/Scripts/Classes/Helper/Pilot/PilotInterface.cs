@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using NPBehave;
 using ShipInternals;
 
 public abstract class PilotInterface : MonoBehaviour
@@ -13,10 +14,12 @@ public abstract class PilotInterface : MonoBehaviour
     protected int missionIndex;
     protected List<MissionGeneric> _missions = new List<MissionGeneric>();
     protected AI_Type ai_type = AI_Type.PLAYER;
+    protected Root behaviorTree;
 
     public SensorArray SensorArray
     {
         get { return mySensorArray; }
+        set { mySensorArray = value; }
     }
 
     public List<MissionGeneric> GetMissionList()

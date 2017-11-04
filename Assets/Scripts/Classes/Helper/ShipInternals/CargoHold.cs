@@ -60,6 +60,18 @@
             }
         }
 
+        public int Credit(String type, CargoHold source, int amount)
+        {
+            if (this.Contains(type) && source.Contains(type))
+            {
+                int maxTransferable = Mathf.Min(GetRemainingSpace(), amount, source.getAmountInHold(type));
+                addToHold(type, maxTransferable);
+                source.addToHold(type, -maxTransferable);
+                return maxTransferable;
+            }
+            return 0;
+        }
+
         public bool Contains(String type)
         {
             bool contains = false;
@@ -81,6 +93,11 @@
                 total += item.Count;
             }
             return total;
+        }
+
+        public int GetRemainingSpace()
+        {
+            return _maxHold - getTotalHold();
         }
 
         public int getAmountInHold(String type)
