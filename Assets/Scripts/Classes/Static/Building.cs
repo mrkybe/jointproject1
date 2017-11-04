@@ -16,6 +16,7 @@ public class Building : Static
 	public float period = 1.0f;
 
 	string [] resourceType = new string[4];
+	List<CargoItem> cargoList= new List<CargoItem>();
 
 	void Start()
 	{
@@ -33,13 +34,13 @@ public class Building : Static
 		
 		resources.addHoldType("Iron");
 
-		_buildings.Add (resources);
+		_buildings.Add (cargoList);
 
 
 	}
 
 
-	List<CargoItem> cargoList= new List<CargoItem>();
+
 	void Update () {
 		if (Time.time > nextActionTime ) {
 			nextActionTime += period;
