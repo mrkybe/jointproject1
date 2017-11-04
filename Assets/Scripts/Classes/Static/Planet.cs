@@ -96,4 +96,9 @@ public class Planet : Static
     {
         AsteroidFields.Add(rootGameObject);
     }
+
+    public CargoHold GetCargoHold
+    {
+        get { return myStorage; }
+    }
 }

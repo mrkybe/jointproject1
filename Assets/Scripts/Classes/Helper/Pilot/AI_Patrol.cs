@@ -57,25 +57,33 @@ public class AI_Patrol : PilotInterface
                                    })
                             { Label = "Go to target asteroid field" }
                     ),
-                    new Action((bool shouldCancel) =>
+                    new Succeeder(new Repeater(new Cooldown(0.1f,
+                        new Action((bool shouldCancel) =>
+                                   {
+                                       control_stickDirection = new Vector2();
+                                       targetSpeed = 0;
+                                       int spaceRemaining = shipScript.GetCargoHold.GetRemainingSpace();
+                                       if (spaceRemaining == 0)
+                                       {
+                                           blackboard.Set("cargoHoldFull", true);
+                                       }
+                                       int mined = Mine("Gold");
+                                       if (mined > 0)
+                                       {
+                                           return Action.Result.SUCCESS;
+                                       }
+                                       else
+                                       {
+                                           return Action.Result.FAILED; // this should search for minable asteroid fields better
+                                       }
+                                   })
+                        { Label = "Mining"}
+                    ))),
+                    new Action(() =>
                                {
-                                   int spaceRemaining = shipScript.GetCargoHold.GetRemainingSpace();
-                                   if (spaceRemaining == 0)
-                                   {
-                                       return Action.Result.SUCCESS;
-                                   }
-                                   int mined = Mine("Gold");
-                                   if (mined > 0)
-                                   {
-                                       return Action.Result.PROGRESS;
-                                   }
-                                   else
-                                   {
-                                       return Action.Result.FAILED;
-                                   }
+                                   targetPosition = nearestPlanet.transform.position;
                                })
-                    { Label = "Mining"},
-                    new Action(() => FindNearestPlanet()),
+                    {Label = "Set target position to go home"},
                     new Service(0.5f, UpdateDistanceToTarget,
                         new Action((bool shouldCancel) =>
                                     {
@@ -94,7 +102,12 @@ public class AI_Patrol : PilotInterface
                                         }
                                     })
                             { Label = "Go to target planet" }
-                        )
+                        ),
+                    new Action(() =>
+                               {
+                                   DropOffResource("Gold");
+                               })
+                        { Label = "Dropping off resources" }
                     )
         );
     }
@@ -102,6 +115,7 @@ public class AI_Patrol : PilotInterface
     AsteroidField nearest = null;
     private void FindNearestAsteroidField()
     {
+        
         float nearestDistance = float.MaxValue;
         foreach(var one in AsteroidField.listOfAsteroidFields)
         {
@@ -111,7 +125,7 @@ public class AI_Patrol : PilotInterface
                 nearestDistance = (transform.position - one.transform.position).magnitude;
             }
         }
-
+        blackboard["nearestAsteroid"] = nearest;
         targetPosition = nearest.transform.position;
     }
 
@@ -209,6 +223,11 @@ public class AI_Patrol : PilotInterface
         }
 
         return minedAmount;
+    }
+
+    private int DropOffResource(String type)
+    {
+        return nearestPlanet.GetComponent<Planet>().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.getAmountInHold(type));
     }
 
     public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)
