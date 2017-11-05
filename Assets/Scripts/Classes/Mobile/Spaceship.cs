@@ -42,7 +42,7 @@ public class Spaceship : Mobile
             targetSpeed = 0;
         }
         myStorage = new CargoHold(50);
-        myStorage.addHoldType("Gold");
+        myStorage.AddHoldType("Gold");
 
         mySensorArray = new SensorArray(gameObject);
 	}
@@ -94,6 +94,16 @@ public class Spaceship : Mobile
             oldThrottle_input = throttle_input;
         }
 	}
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Boop");
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Unboop");
+    }
     
     public List<Static> getAvailableTargets()
     {

@@ -27,20 +27,30 @@
             _cargoItems = new List<CargoItem>();
         }
 
-        public void addHoldType(String type)
+        public void AddHoldType(String type)
         {
-            // Check that CargoItems of this type exist.  Or don't.  I'm a comment. Not a cop.
-            if (true)
+            // would be nice to have an authoriative list of cargoitems that exist
+            if (!Contains(type))
             {
                 _cargoItems.Add(new CargoItem(type));
             }
             else
             {
-                Debug.Log("-WARNING: could not addHoldType(" + type + ") as it does not exist!");
+                Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
             }
         }
 
-        public void addToHold(String type, int count)
+        public void AddToHold(CargoItem item)
+        {
+            AddToHold(item.Name, item.Count);
+        }
+
+        public void TakeFromHold(CargoItem item)
+        {
+            AddToHold(item.Name, -item.Count);
+        }
+
+        public void AddToHold(String type, int count)
         {
             // Check that CargoItems of this type exist.
             if (this.Contains(type))
@@ -49,27 +59,15 @@
                 {
                     if (_cargoItems[i].Name == type)
                     {
-                        Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
+                        //Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
                         _cargoItems[i].Count = count;
                     }
                 }
             }
             else
             {
-                Debug.Log("-WARNING: could not addToHold(" + type + ") as it does not exist in this instace!");
+                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instace!");
             }
-        }
-
-        public int Credit(String type, CargoHold source, int amount)
-        {
-            if (this.Contains(type) && source.Contains(type))
-            {
-                int maxTransferable = Mathf.Min(GetRemainingSpace(), amount, source.getAmountInHold(type));
-                addToHold(type, maxTransferable);
-                source.addToHold(type, -maxTransferable);
-                return maxTransferable;
-            }
-            return 0;
         }
 
         public bool Contains(String type)
@@ -100,7 +98,7 @@
             return _maxHold - getTotalHold();
         }
 
-        public int getAmountInHold(String type)
+        public int GetAmountInHold(String type)
         {
             foreach (CargoItem item in _cargoItems)
             {
@@ -110,7 +108,7 @@
                 }
             }
 
-            Debug.Log("-WARNING: getAmountInHold(" + type + ") failed!  Could not find in available holds!");
+            Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
             return -1;
         }
 
@@ -121,6 +119,18 @@
                 Debug.Log(item.Name + " : " + item.Count);
             }
             Debug.Log("Total: " + getTotalHold() + " / " + _maxHold);
+        }
+
+        public int Credit(String type, CargoHold source, int amount)
+        {
+            if (this.Contains(type) && source.Contains(type))
+            {
+                int maxTransferable = Mathf.Min(GetRemainingSpace(), amount, source.GetAmountInHold(type));
+                AddToHold(type, maxTransferable);
+                source.AddToHold(type, -maxTransferable);
+                return maxTransferable;
+            }
+            return 0;
         }
     }
 }

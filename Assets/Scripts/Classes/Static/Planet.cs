@@ -24,12 +24,10 @@ public class Planet : Static
     int MaxFriends;
     string Faction;
     private CargoHold myStorage;
+    private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
     public bool hasGravity;
-
-    [SerializeField]
-    GameObject workership1;
 
     [SerializeField]
     private List<GameObject> AsteroidFields = new List<GameObject>();
@@ -40,62 +38,62 @@ public class Planet : Static
 
     void Start ()
     {
-        //Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
-        //WorkerShips.Add(ship);
+        WorkerShips = new List<GameObject>();
+
         listOfPlanetObjects.Add(this);
-        MaxFriends = 3;
 
         TimeToSpawn = gameObject.AddComponent<Timer>();
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
-
-        //this.GetComponent<Transform>().localScale.Scale(new Vector3(mul, mul, mul));
-        myStorage = new CargoHold(5000);
-        myStorage.addHoldType("Rock");
-        myStorage.addHoldType("Gold");
-        myStorage.addHoldType("Food");
-        myStorage.addToHold("Rock", 3000);
+        
+        myStorage = new CargoHold(50000);
+        myStorage.AddHoldType("Rock");
+        myStorage.AddHoldType("Gold");
+        myStorage.AddHoldType("Food");
+        myStorage.AddToHold("Rock", 3000);
         //myStorage.printHold();
-	}
+
+        SetupBuildings();
+    }
+
+    public void SetupBuildings()
+    {
+        System.Random random = new System.Random(GetInstanceID());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+
+        string BuildingsNamed = "";
+        foreach (var building in myBuildings)
+        {
+            BuildingsNamed += building.Name + ", ";
+        }
+        Debug.Log(this.name + " | " + BuildingsNamed);
+    }
+
+    public void SpawnMiningShip()
+    {
+        var ship = Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+    }
 
     public void RandomizeSize()
     {
         System.Random random = new System.Random(GetInstanceID());
 
-        Radius = (float)(random.NextDouble() * 13) + 2f;
+        /*Radius = (float)(random.NextDouble() * 13) + 2f;
+        Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));*/
+        Radius = (float)(random.NextDouble() * 1) + 2f;
         Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));
+
         transform.localScale += (new Vector3(Radius * 2f, Radius * 2f, Radius * 2f) - transform.localScale);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (TimeToSpawn.Done)
-        {
-            //Debug.Log("TICK TOCK");
-        }
-        foreach (var f in AsteroidFields)
-        {
-            Debug.DrawLine(transform.position,f.transform.position,Color.white,5f, false);
-        }
-        //drawFriends();
         transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}
-
-    void FixedUpdate()
-    {
-
-    }
-
-    void MakeFriends()
-    {
-        
-    }
-
-    public void AddAsteroidField(GameObject rootGameObject)
-    {
-        AsteroidFields.Add(rootGameObject);
-    }
 
     public CargoHold GetCargoHold
     {
