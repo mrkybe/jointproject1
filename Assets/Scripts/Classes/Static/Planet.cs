@@ -24,6 +24,7 @@ public class Planet : Static
     int MaxFriends;
     string Faction;
     private CargoHold myStorage;
+    private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
     public bool hasGravity;
@@ -39,23 +40,36 @@ public class Planet : Static
     {
         WorkerShips = new List<GameObject>();
 
-
-        //Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
-        //WorkerShips.Add(ship);
         listOfPlanetObjects.Add(this);
-        MaxFriends = 3;
 
         TimeToSpawn = gameObject.AddComponent<Timer>();
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
-
-        //this.GetComponent<Transform>().localScale.Scale(new Vector3(mul, mul, mul));
-        myStorage = new CargoHold(5000);
+        
+        myStorage = new CargoHold(50000);
         myStorage.AddHoldType("Rock");
         myStorage.AddHoldType("Gold");
         myStorage.AddHoldType("Food");
         myStorage.AddToHold("Rock", 3000);
         //myStorage.printHold();
+
+        SetupBuildings();
+    }
+
+    public void SetupBuildings()
+    {
+        System.Random random = new System.Random(GetInstanceID());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+
+        string BuildingsNamed = "";
+        foreach (var building in myBuildings)
+        {
+            BuildingsNamed += building.Name + ", ";
+        }
+        Debug.Log(this.name + " | " + BuildingsNamed);
     }
 
     public void SpawnMiningShip()
@@ -78,32 +92,8 @@ public class Planet : Static
 	// Update is called once per frame
 	void Update ()
     {
-        if (TimeToSpawn.Done)
-        {
-            //Debug.Log("TICK TOCK");
-        }
-        /*foreach (var f in AsteroidFields)
-        {
-            Debug.DrawLine(transform.position,f.transform.position,Color.white,5f, false);
-        }*/
-        //drawFriends();
         transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}
-
-    void FixedUpdate()
-    {
-
-    }
-
-    void MakeFriends()
-    {
-        
-    }
-
-    public void AddAsteroidField(GameObject rootGameObject)
-    {
-        AsteroidFields.Add(rootGameObject);
-    }
 
     public CargoHold GetCargoHold
     {

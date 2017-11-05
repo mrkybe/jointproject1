@@ -8,6 +8,7 @@ namespace ShipInternals
 
     public class CargoItem
     {
+        public static List<String> types_in_use = new List<string>();
         private string _name;
         private int _size;
         private int _baseValue;
@@ -18,6 +19,7 @@ namespace ShipInternals
             _name = name_in;
             _size = 1;
             _count = 0;
+            types_in_use.Add(name_in);
         }
 
         public CargoItem(string name_in, int count_in)
@@ -25,6 +27,7 @@ namespace ShipInternals
             _name = name_in;
             _count = count_in;
             _size = 1;
+            types_in_use.Add(name_in);
         }
 
         public CargoItem(string name_in, int count_in, int size_in)
@@ -32,6 +35,7 @@ namespace ShipInternals
             _name = name_in;
             _size = size_in;
             _count = count_in;
+            types_in_use.Add(name_in);
         }
 
         public string Name

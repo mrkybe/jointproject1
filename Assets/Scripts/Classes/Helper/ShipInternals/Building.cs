@@ -12,7 +12,7 @@ public class Building
     private int spaceFreed = 0;
     private int spaceConsumed = 0;
 
-    public Building(string name, List<CargoItem> consume, List<CargoItem> produce)
+    private Building(string name, List<CargoItem> consume, List<CargoItem> produce)
     {
         Name = name ?? "Building";
         Consume = consume ?? new List<CargoItem>();
@@ -60,6 +60,10 @@ public class Building
         }
         return true;
     }
+
+    public delegate Building BasicEnviroment();
+    public static BasicEnviroment[] BasicEnviroments = {GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory};
+
 
     // most basic resources
     public static Building GetEnviromentDirtFactory()
@@ -158,7 +162,7 @@ public class Building
         return new Building("Titanium Smelter",
                             new List<CargoItem>()
                             {
-                                new CargoItem("Titanium Ore",5)
+                                new CargoItem("Titanium Ore", 5)
                             },
                             new List<CargoItem>()
                             {

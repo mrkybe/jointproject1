@@ -101,18 +101,6 @@ public class Overseer : Static
                     }
                 }
             }
-            foreach (var collider in hitCollidersMedium)
-            {
-                if (collider.gameObject.tag == "StaticInteractive")
-                {
-                    if (collider.transform.root.name.StartsWith("AsteroidField"))
-                    {
-                        //Debug.Log("ADDING NEARBY ASTEROID FIELD TO PLANET");
-                        Planet script = moon.GetComponent<Planet>();
-                        script.AddAsteroidField(collider.transform.root.gameObject);
-                    }
-                }
-            }
         }
         foreach (var asteroidField in AsteroidFields)
         {

@@ -29,6 +29,7 @@
 
         public void AddHoldType(String type)
         {
+            // would be nice to have an authoriative list of cargoitems that exist
             if (!Contains(type))
             {
                 _cargoItems.Add(new CargoItem(type));
