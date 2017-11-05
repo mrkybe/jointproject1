@@ -29,9 +29,6 @@ public class Planet : Static
     public bool hasGravity;
 
     [SerializeField]
-    GameObject workership1;
-
-    [SerializeField]
     private List<GameObject> AsteroidFields = new List<GameObject>();
 
     [SerializeField]
@@ -40,6 +37,9 @@ public class Planet : Static
 
     void Start ()
     {
+        WorkerShips = new List<GameObject>();
+
+
         //Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
         //WorkerShips.Add(ship);
         listOfPlanetObjects.Add(this);
@@ -56,7 +56,23 @@ public class Planet : Static
         myStorage.addHoldType("Food");
         myStorage.addToHold("Rock", 3000);
         //myStorage.printHold();
-	}
+
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+        SpawnMiningShip();
+    }
+
+    public void SpawnMiningShip()
+    {
+        var ship = Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+    }
 
     public void RandomizeSize()
     {

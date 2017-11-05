@@ -49,7 +49,7 @@
                 {
                     if (_cargoItems[i].Name == type)
                     {
-                        Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
+                        //Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
                         _cargoItems[i].Count = count;
                     }
                 }

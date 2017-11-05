@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.WorldSingleton;
 
 public class Overseer : Static
 {
@@ -8,7 +9,6 @@ public class Overseer : Static
     public static GameObject Sky;
     float timeScaleOriginal;
     public static GameObject RootNode;
-    public static List<string> FactionNames;
     private float worldSize = 1800f;
 
     private static GameObject Saturn;
@@ -19,15 +19,6 @@ public class Overseer : Static
     new void Start()
     {
         base.Start();
-
-        // Faction Names
-        FactionNames = new List<string>();
-        FactionNames.Add("Reds");
-        FactionNames.Add("Freemans");
-        FactionNames.Add("Looters");
-        FactionNames.Add("Greens");
-
-
         // Initialize Stuff Above
         timeScaleOriginal = Time.fixedDeltaTime;
         Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
@@ -94,9 +85,9 @@ public class Overseer : Static
             var hitCollidersNear = Physics.OverlapSphere(moon.transform.position, 50);
             var hitCollidersMedium = Physics.OverlapSphere(moon.transform.root.position, 250);
             var hitCollidersFar = Physics.OverlapSphere(moon.transform.position, 625);
-            Debug.Log("Near: " + hitCollidersNear.Length);
-            Debug.Log("Medi: " + hitCollidersMedium.Length);
-            Debug.Log("Far : " + hitCollidersFar.Length);
+            //Debug.Log("Near: " + hitCollidersNear.Length);
+            //Debug.Log("Medi: " + hitCollidersMedium.Length);
+            //Debug.Log("Far : " + hitCollidersFar.Length);
             foreach (var collider in hitCollidersNear)
             {
                 if (collider.gameObject.tag == "StaticInteractive")
