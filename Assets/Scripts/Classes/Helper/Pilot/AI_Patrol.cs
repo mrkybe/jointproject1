@@ -141,7 +141,7 @@ public class AI_Patrol : PilotInterface
                     if ((transform.position - one.transform.position).magnitude < nearestDistance)
                     {
                         string miningTarget = blackboard.Get<String>("miningTarget");
-                        if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                        if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
                         {
                             blackboard["nearestAsteroidField"] = one;
                             nearestDistance = (transform.position - one.transform.position).magnitude;
@@ -160,7 +160,7 @@ public class AI_Patrol : PilotInterface
                 if ((transform.position - one.transform.position).magnitude < nearestDistance)
                 {
                     string miningTarget = blackboard.Get<String>("miningTarget");
-                    if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                    if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
                     {
                         blackboard["nearestAsteroidField"] = one;
                         nearestDistance = (transform.position - one.transform.position).magnitude;
@@ -246,7 +246,7 @@ public class AI_Patrol : PilotInterface
                 {
                     finalTarget = targets[i] as AsteroidField;
                     if (finalTarget.GetCargoHold.Contains(miningTarget) &&
-                        finalTarget.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                        finalTarget.GetCargoHold.GetAmountInHold(miningTarget) > 0)
                     {
                         newTargets.Add((AsteroidField)targets[i]);
                     }
@@ -266,7 +266,7 @@ public class AI_Patrol : PilotInterface
 
     private int DropOffResource(String type)
     {
-        return blackboard.Get<Planet>("homePlanet").GetComponent<Planet>().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.getAmountInHold(type));
+        return blackboard.Get<Planet>("homePlanet").GetComponent<Planet>().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type));
     }
 
     public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)

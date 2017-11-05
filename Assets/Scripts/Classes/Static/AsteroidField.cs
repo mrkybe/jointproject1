@@ -30,8 +30,8 @@ public class AsteroidField : Static
 
     new protected void DelayedLoad()
     {
-        myStorage.addHoldType("Gold");
-        myStorage.addToHold("Gold", 200);
+        myStorage.AddHoldType("Gold");
+        myStorage.AddToHold("Gold", 200);
         //Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
         
         //Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");

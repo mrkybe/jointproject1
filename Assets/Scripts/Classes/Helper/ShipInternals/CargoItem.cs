@@ -56,5 +56,16 @@ namespace ShipInternals
             get { return _count; }
             set { _count += value; }
         }
+
+        public int Size
+        {
+            get { return _size; }
+            set { _size = value; }
+        }
+
+        public int Volume
+        {
+            get { return Size * Count; }
+        }
     }
 }

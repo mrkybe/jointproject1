@@ -51,10 +51,10 @@ public class Planet : Static
 
         //this.GetComponent<Transform>().localScale.Scale(new Vector3(mul, mul, mul));
         myStorage = new CargoHold(5000);
-        myStorage.addHoldType("Rock");
-        myStorage.addHoldType("Gold");
-        myStorage.addHoldType("Food");
-        myStorage.addToHold("Rock", 3000);
+        myStorage.AddHoldType("Rock");
+        myStorage.AddHoldType("Gold");
+        myStorage.AddHoldType("Food");
+        myStorage.AddToHold("Rock", 3000);
         //myStorage.printHold();
     }
 

@@ -42,7 +42,7 @@ public class Spaceship : Mobile
             targetSpeed = 0;
         }
         myStorage = new CargoHold(50);
-        myStorage.addHoldType("Gold");
+        myStorage.AddHoldType("Gold");
 
         mySensorArray = new SensorArray(gameObject);
 	}
