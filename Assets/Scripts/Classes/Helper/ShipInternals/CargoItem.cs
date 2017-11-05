@@ -16,33 +16,22 @@ namespace ShipInternals
         public CargoItem(string name_in)
         {
             _name = name_in;
-            _baseValue = 1;
-            _count = 0;
             _size = 1;
-        }
-
-        public CargoItem(string name_in, int baseValue_in)
-        {
-            _name = name_in;
-            _baseValue = baseValue_in;
-            _count = 0;
-            _size = 1;
-        }
-
-        public CargoItem(string name_in, int baseValue_in, int size_in)
-        {
-            _name = name_in;
-            _baseValue = baseValue_in;
-            _size = size_in;
             _count = 0;
         }
 
-        public CargoItem(string name_in, int baseValue_in, int size_in, int count_in)
+        public CargoItem(string name_in, int count_in)
         {
             _name = name_in;
-            _baseValue = baseValue_in;
             _count = count_in;
+            _size = 1;
+        }
+
+        public CargoItem(string name_in, int count_in, int size_in)
+        {
+            _name = name_in;
             _size = size_in;
+            _count = count_in;
         }
 
         public string Name
