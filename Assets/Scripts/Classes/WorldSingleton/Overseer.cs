@@ -25,13 +25,13 @@ public class Overseer : Static
         RootNode = GameObject.FindWithTag("RootNode");
         if(RootNode != null)
         {
-            Debug.Log("Found Root Node!");
+            //Debug.Log("Found Root Node!");
         }
         CreateSaturnSystem();
         CreatePlanetNodes();
         CreateSky();
         //TODO: AssignPlanetFactions();
-        Debug.Log("--OVERSEER LOADING COMPLETE");
+        //Debug.Log("--OVERSEER LOADING COMPLETE");
     }
 
     bool CreateSky()
@@ -107,7 +107,7 @@ public class Overseer : Static
                 {
                     if (collider.transform.root.name.StartsWith("AsteroidField"))
                     {
-                        Debug.Log("ADDING NEARBY ASTEROID FIELD TO PLANET");
+                        //Debug.Log("ADDING NEARBY ASTEROID FIELD TO PLANET");
                         Planet script = moon.GetComponent<Planet>();
                         script.AddAsteroidField(collider.transform.root.gameObject);
                     }
@@ -128,7 +128,7 @@ public class Overseer : Static
                         if (collider.gameObject.transform.root.gameObject != asteroidField)
                         {
                             Destroy(collider.gameObject.transform.root.gameObject);
-                            Debug.Log("DESTROY!");
+                            //Debug.Log("DESTROY!");
                         }
                     }
                 }

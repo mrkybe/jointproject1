@@ -20,6 +20,7 @@ public class AsteroidField : Static
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
         rotationSpeed = (1 / size)*10f;
+        GetComponent<SphereCollider>().radius = size/1.125f;
         /*transform.position += Vector3.up;
         transform.position -= (Vector3.up * size);*/
         var m = GenerateAsteroid((float)size, Vector3.zero);

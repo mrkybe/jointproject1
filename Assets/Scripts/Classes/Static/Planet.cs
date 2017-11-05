@@ -56,17 +56,6 @@ public class Planet : Static
         myStorage.addHoldType("Food");
         myStorage.addToHold("Rock", 3000);
         //myStorage.printHold();
-
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
-        SpawnMiningShip();
     }
 
     public void SpawnMiningShip()
@@ -78,8 +67,11 @@ public class Planet : Static
     {
         System.Random random = new System.Random(GetInstanceID());
 
-        Radius = (float)(random.NextDouble() * 13) + 2f;
+        /*Radius = (float)(random.NextDouble() * 13) + 2f;
+        Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));*/
+        Radius = (float)(random.NextDouble() * 1) + 2f;
         Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));
+
         transform.localScale += (new Vector3(Radius * 2f, Radius * 2f, Radius * 2f) - transform.localScale);
     }
 	
@@ -90,10 +82,10 @@ public class Planet : Static
         {
             //Debug.Log("TICK TOCK");
         }
-        foreach (var f in AsteroidFields)
+        /*foreach (var f in AsteroidFields)
         {
             Debug.DrawLine(transform.position,f.transform.position,Color.white,5f, false);
-        }
+        }*/
         //drawFriends();
         transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}

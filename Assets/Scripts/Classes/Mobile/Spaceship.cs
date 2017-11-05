@@ -94,6 +94,11 @@ public class Spaceship : Mobile
             oldThrottle_input = throttle_input;
         }
 	}
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Boop");
+    }
     
     public List<Static> getAvailableTargets()
     {

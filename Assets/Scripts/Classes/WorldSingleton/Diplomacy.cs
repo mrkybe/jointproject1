@@ -57,11 +57,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
             }
 
-            Debug.Log("Created Factions!");
+            //Debug.Log("Created Factions!");
 
             foreach (var link in Links)
             {
-                Debug.Log(link.ToString());
+                //Debug.Log(link.ToString());
             }
         }
 	
