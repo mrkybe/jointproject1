@@ -99,6 +99,11 @@ public class Spaceship : Mobile
     {
         Debug.Log("Boop");
     }
+
+    public void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Unboop");
+    }
     
     public List<Static> getAvailableTargets()
     {

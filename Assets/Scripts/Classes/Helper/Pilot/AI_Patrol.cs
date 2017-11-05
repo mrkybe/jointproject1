@@ -21,6 +21,8 @@ public class AI_Patrol : PilotInterface
         behaviorTree = CreateBehaviourTreeDumbMining();
         blackboard = behaviorTree.Blackboard;
 
+
+        // temporarily use this as the home base until we have a better system
         FindNearestPlanet();
         blackboard["miningTarget"] = "Gold";
 
@@ -34,7 +36,6 @@ public class AI_Patrol : PilotInterface
 
     private Root CreateBehaviourTreeDumbMining()
     {
-        // temporarily use this as the home base until we have a better system
 
         // we always need a root node
         return new Root(
@@ -124,16 +125,47 @@ public class AI_Patrol : PilotInterface
     private void FindNearestAsteroidField()
     {
         float nearestDistance = float.MaxValue;
-        foreach(var one in AsteroidField.listOfAsteroidFields)
+        bool found = false;
+
+        // faster to use optimized physics engine and narrow down our list of objects to check
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 100f, Vector3.up);
+
+        if (hits.Length > 0)
         {
-            if ((transform.position - one.transform.position).magnitude < nearestDistance)
+            Debug.Log("Checking Hits!");
+            foreach (var hit in hits)
             {
-                string miningTarget = blackboard.Get<String>("miningTarget");
-                if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                AsteroidField one = hit.transform.gameObject.GetComponent<AsteroidField>();
+                if (one)
                 {
-                    blackboard["nearestAsteroidField"] = one;
-                    nearestDistance = (transform.position - one.transform.position).magnitude;
-                    targetPosition = one.transform.position;
+                    if ((transform.position - one.transform.position).magnitude < nearestDistance)
+                    {
+                        string miningTarget = blackboard.Get<String>("miningTarget");
+                        if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                        {
+                            blackboard["nearestAsteroidField"] = one;
+                            nearestDistance = (transform.position - one.transform.position).magnitude;
+                            targetPosition = one.transform.position;
+                            found = true;
+                        }
+                    }
+                }
+            }
+        }
+        if(!found)
+        {
+            Debug.Log("Checking All Asteroids!");
+            foreach (var one in AsteroidField.listOfAsteroidFields)
+            {
+                if ((transform.position - one.transform.position).magnitude < nearestDistance)
+                {
+                    string miningTarget = blackboard.Get<String>("miningTarget");
+                    if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                    {
+                        blackboard["nearestAsteroidField"] = one;
+                        nearestDistance = (transform.position - one.transform.position).magnitude;
+                        targetPosition = one.transform.position;
+                    }
                 }
             }
         }
