@@ -90,7 +90,7 @@ public class Building
 
     public static Building GetEnviromentRockFactory()
     {
-        return new Building("Ice Mine",
+        return new Building("Rock Quarry",
                             new List<CargoItem>()
                             {
                             },

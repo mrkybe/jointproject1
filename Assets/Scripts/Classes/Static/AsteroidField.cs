@@ -46,7 +46,7 @@ public class AsteroidField : Static
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            myStorage.printHold();
+            myStorage.PrintHold();
         }
 
         transform.Rotate(Vector3.up, Time.deltaTime * rotationSpeed * -1f);

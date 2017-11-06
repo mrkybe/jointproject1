@@ -51,7 +51,7 @@ public class Spaceship : Mobile
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            myStorage.printHold();
+            myStorage.PrintHold();
         }
     }
 	

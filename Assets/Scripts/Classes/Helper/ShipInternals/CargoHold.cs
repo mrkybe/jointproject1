@@ -13,8 +13,8 @@
          *          a1.  CargoBays do not actually store instances of CargoItem.
          *     b. CargoHold contains multiple CargoBays.
          */
-
-
+    
+    [Serializable]
     public class CargoHold
     {
         private int _maxHold;
@@ -112,13 +112,20 @@
             return -1;
         }
 
-        public void printHold()
+        public override string ToString()
         {
+            string result = "";
             foreach (CargoItem item in _cargoItems)
             {
-                Debug.Log(item.Name + " : " + item.Count);
+                result += item.Name + " : " + item.Count + "\n";
             }
-            Debug.Log("Total: " + getTotalHold() + " / " + _maxHold);
+            result += "Total: " + getTotalHold() + " / " + _maxHold;
+            return result;
+        }
+
+        public void PrintHold()
+        {
+            Debug.Log(ToString());
         }
 
         public int Credit(String type, CargoHold source, int amount)

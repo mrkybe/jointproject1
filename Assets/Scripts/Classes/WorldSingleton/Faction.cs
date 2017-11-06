@@ -16,6 +16,30 @@ namespace Assets.Scripts.Classes.WorldSingleton
             Name = name;
             MyLinks = new List<FactionLink>();
         }
+
+        // adjust relations between myself and named faction by amount
+        public bool AddKarma(string name, float amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        // assess total value of my assets
+        public void CalculateEconomicStanding()
+        {
+            throw new NotImplementedException();
+        }
+
+        // assess total military strength
+        public void CalculateMilitaryStanding()
+        {
+            throw new NotImplementedException();
+        }
+
+        // assess military threat level, look at military strength of enemies compared to own military strength
+        public void CalculateDEFCONLevel()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class FactionLink

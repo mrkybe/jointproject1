@@ -6,6 +6,7 @@ namespace ShipInternals
     using System.Text;
     using UnityEngine;
 
+    [Serializable]
     public class CargoItem
     {
         public static List<String> types_in_use = new List<string>();

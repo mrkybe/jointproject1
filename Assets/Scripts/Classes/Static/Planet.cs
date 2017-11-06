@@ -6,8 +6,6 @@ using ShipInternals;
 
 public class Planet : Static
 {
-    int Population;
-    int RawMaterial;
     [SerializeField]
     private List<GameObject> WorkerShips;
 
@@ -22,19 +20,18 @@ public class Planet : Static
 
     [SerializeField]
     int MaxFriends;
-    string Faction;
+
+    [SerializeField]
     private CargoHold myStorage;
+
+    [SerializeField]
     private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
     public bool hasGravity;
 
     [SerializeField]
-    private List<GameObject> AsteroidFields = new List<GameObject>();
-
-    [SerializeField]
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
-    // Use this for initialization
 
     void Start ()
     {
@@ -47,10 +44,6 @@ public class Planet : Static
         TimeToSpawn.Loop(true);
         
         myStorage = new CargoHold(50000);
-        myStorage.AddHoldType("Rock");
-        myStorage.AddHoldType("Gold");
-        myStorage.AddHoldType("Food");
-        myStorage.AddToHold("Rock", 3000);
         //myStorage.printHold();
 
         SetupBuildings();
@@ -59,22 +52,20 @@ public class Planet : Static
     public void SetupBuildings()
     {
         System.Random random = new System.Random(GetInstanceID());
-        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
-        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
-        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
-        myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
-
-        string BuildingsNamed = "";
-        foreach (var building in myBuildings)
+        int startingCount = random.Next(8) + 3;
+        for (int i = 0; i < startingCount; i++)
         {
-            BuildingsNamed += building.Name + ", ";
+            myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
         }
-        Debug.Log(this.name + " | " + BuildingsNamed);
+        myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
+        Debug.Log(this.name + " | " + BuildingsToString(", "));
+        TickBuildings();
     }
 
     public void SpawnMiningShip()
     {
-        var ship = Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+        WorkerShips.Add(ship.gameObject);
     }
 
     public void RandomizeSize()
@@ -95,8 +86,34 @@ public class Planet : Static
         transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}
 
+    void FixedUpdate()
+    {
+        if (inTime)
+        {
+            
+        }
+    }
+
+    private void TickBuildings()
+    {
+        foreach (var building in myBuildings)
+        {
+            building.Tick(myStorage);
+        }
+    }
+
     public CargoHold GetCargoHold
     {
         get { return myStorage; }
+    }
+
+    public string BuildingsToString(string seperator = "\n")
+    {
+        string BuildingsNamed = "";
+        foreach (var building in myBuildings)
+        {
+            BuildingsNamed += building.Name + seperator;
+        }
+        return BuildingsNamed;
     }
 }
