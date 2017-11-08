@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour {
 		float rotateHorizontal = Input.GetAxis ("HorizontalR");
 		float rotateVertical = Input.GetAxis ("VerticalR");
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		transform.Rotate (0, Mathf.Atan2 (rotateHorizontal, rotateVertical) * Mathf.Rad2Deg * rotateSpeed, 0);
+		transform.rotation = Quaternion.Euler(0, Mathf.Atan2 (rotateHorizontal, rotateVertical) * Mathf.Rad2Deg * rotateSpeed, 0);
 
 
 		rb.velocity = movement*speed;

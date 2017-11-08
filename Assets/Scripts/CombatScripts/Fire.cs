@@ -12,33 +12,37 @@ public class Fire : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		bulletClone = new GameObject ();
-		rb = new Rigidbody ();
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetButtonDown("Fire1") && bulletCount == 0) 
+		if (Input.GetButtonDown("Fire1")) 
 		{
 			Shoot ();
+            /*
 			if (bulletCount == 1) 
 			{
 				Destroy (bulletClone);
 				bulletCount--;
 			}
+            */
 		}
-		rb.AddForce(new Vector3(transform.position.x, transform.position.y * speed, transform.position.z), ForceMode.Acceleration);	
+		
 
 	}
 		
 
 	void Shoot()
 	{
-		float dist  = transform.position.z + 6f;
-		bulletCount++;
-		bulletClone = Instantiate(ammo, new Vector3(transform.position.x, transform.position.y, dist), transform.rotation);
-        rb = bulletClone.GetComponent<Rigidbody>();
+		float dist  = transform.position.z + 3f;
 
-	}
+        bulletClone = Instantiate(ammo, new Vector3(transform.position.x, transform.position.y, dist), transform.rotation);
+        rb = bulletClone.GetComponent<Rigidbody>();
+       // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
+        rb.AddForce(rb.transform.forward * speed);
+        //rb.velocity = bulletClone.transform.forward * speed;
+
+        Destroy(bulletClone, 2.0f);
+    }
 }

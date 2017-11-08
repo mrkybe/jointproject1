@@ -3,21 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DestoyByContact : MonoBehaviour {
- 
 
+    public GameObject bullet;
 	// Use this for initialization
 	void Start () {
 		
 	}
-	void OnTriggerEnter(Collider other) {
-		gameObject.GetComponent<DestroyByTime>().enabled = false;
+	/*void OnTriggerEnter(Collider other) {
+		other.gameObject.GetComponent<DestroyByTime>().enabled = false;
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(other.gameObject);
+        }
+		Destroy (bullet);
+	}*/
 
-		Destroy(other.gameObject);
-		Destroy (gameObject);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    private void OnCollisionEnter(Collision collision)
+    {
+        collision.gameObject.GetComponent<DestroyByTime>().enabled = false;
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(collision.gameObject);
+        }
+        Destroy(bullet);
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }
