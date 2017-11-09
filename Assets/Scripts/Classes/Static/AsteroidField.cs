@@ -10,6 +10,7 @@ public class AsteroidField : Static
     private float rotationSpeed = 1f;
     private int maxStorage = 200;
     List<Vector3> vertices = new List<Vector3>();
+    public static List<AsteroidField> listOfAsteroidFields = new List<AsteroidField>();
     // Use this for initialization
     void Start ()
     {
@@ -19,16 +20,18 @@ public class AsteroidField : Static
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
         rotationSpeed = (1 / size)*10f;
-        transform.position += Vector3.up;
-        transform.position -= (Vector3.up * size);
+        GetComponent<SphereCollider>().radius = size/1.125f;
+        /*transform.position += Vector3.up;
+        transform.position -= (Vector3.up * size);*/
         var m = GenerateAsteroid((float)size, Vector3.zero);
         GetComponent<MeshFilter>().mesh = m;
+        listOfAsteroidFields.Add(this);
     }
 
     new protected void DelayedLoad()
     {
-        myStorage.addHoldType("Gold");
-        myStorage.addToHold("Gold", 200);
+        myStorage.AddHoldType("Gold");
+        myStorage.AddToHold("Gold", 200);
         //Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
         
         //Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");
@@ -43,7 +46,7 @@ public class AsteroidField : Static
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            myStorage.printHold();
+            myStorage.PrintHold();
         }
 
         transform.Rotate(Vector3.up, Time.deltaTime * rotationSpeed * -1f);

@@ -14,7 +14,6 @@ public class AI_Gather : PilotInterface
         mySensorArray = new SensorArray(gameObject);
         _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
         _missions.Add(new Mine(gameObject, "Gold"));
-        _missions.Add(new Wait(gameObject, 100f));
         _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));
         _missions.Add(new TravelTo(gameObject, new Vector3(0f, transform.position.y, -2.4f)));
         _missions.Add(new TravelTo(gameObject, new Vector3(19.1f, transform.position.y, -2.4f)));

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.WorldSingleton;
 
 public class Overseer : Static
 {
@@ -8,7 +9,6 @@ public class Overseer : Static
     public static GameObject Sky;
     float timeScaleOriginal;
     public static GameObject RootNode;
-    public static List<string> FactionNames;
     private float worldSize = 1800f;
 
     private static GameObject Saturn;
@@ -19,28 +19,19 @@ public class Overseer : Static
     new void Start()
     {
         base.Start();
-
-        // Faction Names
-        FactionNames = new List<string>();
-        FactionNames.Add("Reds");
-        FactionNames.Add("Freemans");
-        FactionNames.Add("Looters");
-        FactionNames.Add("Greens");
-
-
         // Initialize Stuff Above
         timeScaleOriginal = Time.fixedDeltaTime;
         Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
         RootNode = GameObject.FindWithTag("RootNode");
         if(RootNode != null)
         {
-            Debug.Log("Found Root Node!");
+            //Debug.Log("Found Root Node!");
         }
         CreateSaturnSystem();
         CreatePlanetNodes();
         CreateSky();
         //TODO: AssignPlanetFactions();
-        Debug.Log("--OVERSEER LOADING COMPLETE");
+        //Debug.Log("--OVERSEER LOADING COMPLETE");
     }
 
     bool CreateSky()
@@ -72,7 +63,7 @@ public class Overseer : Static
                 i--;
             }
         }
-        int numAsteroidFields = 4000;
+        int numAsteroidFields = 100;
         for (int i = 0; i < numAsteroidFields; i++)
         {
             float x = (Random.value * worldSize) - (worldSize / 2);
@@ -94,9 +85,9 @@ public class Overseer : Static
             var hitCollidersNear = Physics.OverlapSphere(moon.transform.position, 50);
             var hitCollidersMedium = Physics.OverlapSphere(moon.transform.root.position, 250);
             var hitCollidersFar = Physics.OverlapSphere(moon.transform.position, 625);
-            Debug.Log("Near: " + hitCollidersNear.Length);
-            Debug.Log("Medi: " + hitCollidersMedium.Length);
-            Debug.Log("Far : " + hitCollidersFar.Length);
+            //Debug.Log("Near: " + hitCollidersNear.Length);
+            //Debug.Log("Medi: " + hitCollidersMedium.Length);
+            //Debug.Log("Far : " + hitCollidersFar.Length);
             foreach (var collider in hitCollidersNear)
             {
                 if (collider.gameObject.tag == "StaticInteractive")
@@ -107,18 +98,6 @@ public class Overseer : Static
                         {
                             Destroy(collider.gameObject);
                         }
-                    }
-                }
-            }
-            foreach (var collider in hitCollidersMedium)
-            {
-                if (collider.gameObject.tag == "StaticInteractive")
-                {
-                    if (collider.transform.root.name.StartsWith("AsteroidField"))
-                    {
-                        Debug.Log("ADDING NEARBY ASTEROID FIELD TO PLANET");
-                        Planet script = moon.GetComponent<Planet>();
-                        script.AddAsteroidField(collider.transform.root.gameObject);
                     }
                 }
             }
@@ -137,7 +116,7 @@ public class Overseer : Static
                         if (collider.gameObject.transform.root.gameObject != asteroidField)
                         {
                             Destroy(collider.gameObject.transform.root.gameObject);
-                            Debug.Log("DESTROY!");
+                            //Debug.Log("DESTROY!");
                         }
                     }
                 }

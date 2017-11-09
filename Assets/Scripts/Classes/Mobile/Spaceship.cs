@@ -21,6 +21,7 @@ public class Spaceship : Mobile
     private float throttle_input;
     private float oldThrottle_input;
     private CargoHold myStorage;
+    private SensorArray mySensorArray;
     // Use this for initialization
     new void Start ()
     {
@@ -29,6 +30,8 @@ public class Spaceship : Mobile
         {
             SetPilot(desired_AI_Type);
         }
+
+        pilot.SensorArray = mySensorArray;
 
         engineRunSpeed = 0;
         targetSpeed = -999;
@@ -39,14 +42,16 @@ public class Spaceship : Mobile
             targetSpeed = 0;
         }
         myStorage = new CargoHold(50);
-        myStorage.addHoldType("Gold");
+        myStorage.AddHoldType("Gold");
+
+        mySensorArray = new SensorArray(gameObject);
 	}
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            myStorage.printHold();
+            myStorage.PrintHold();
         }
     }
 	
@@ -89,6 +94,16 @@ public class Spaceship : Mobile
             oldThrottle_input = throttle_input;
         }
 	}
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Boop");
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Unboop");
+    }
     
     public List<Static> getAvailableTargets()
     {

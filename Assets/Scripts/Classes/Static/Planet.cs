@@ -3,14 +3,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using ShipInternals;
-using Object = UnityEngine.Object;
 
 public class Planet : Static
 {
-    int Population;
-    int RawMaterial;
     [SerializeField]
-    private List<Object> WorkerShips;
+    private List<GameObject> WorkerShips;
 
     [SerializeField]
     private Timer TimeToSpawn;
@@ -23,78 +20,100 @@ public class Planet : Static
 
     [SerializeField]
     int MaxFriends;
-    string Faction;
+
+    [SerializeField]
     private CargoHold myStorage;
+
+    [SerializeField]
+    private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
     public bool hasGravity;
 
     [SerializeField]
-    GameObject workership1;
-
-    [SerializeField]
-    private List<GameObject> AsteroidFields = new List<GameObject>();
-
-    [SerializeField]
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
-    // Use this for initialization
 
     void Start ()
     {
-        //Object ship = Instantiate(workership1, transform.position + new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
-        //WorkerShips.Add(ship);
+        WorkerShips = new List<GameObject>();
+
         listOfPlanetObjects.Add(this);
-        MaxFriends = 3;
 
         TimeToSpawn = gameObject.AddComponent<Timer>();
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
-
-        //this.GetComponent<Transform>().localScale.Scale(new Vector3(mul, mul, mul));
-        myStorage = new CargoHold(5000);
-        myStorage.addHoldType("Rock");
-        myStorage.addHoldType("Gold");
-        myStorage.addHoldType("Food");
-        myStorage.addToHold("Rock", 3000);
+        
+        myStorage = new CargoHold(50000);
         //myStorage.printHold();
-	}
+
+        SetupBuildings();
+    }
+
+    public void SetupBuildings()
+    {
+        System.Random random = new System.Random(GetInstanceID());
+        int startingCount = random.Next(8) + 3;
+        for (int i = 0; i < startingCount; i++)
+        {
+            myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+        }
+        myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
+        Debug.Log(this.name + " | " + BuildingsToString(", "));
+        TickBuildings();
+    }
+
+    public void SpawnMiningShip()
+    {
+        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+        WorkerShips.Add(ship.gameObject);
+    }
 
     public void RandomizeSize()
     {
         System.Random random = new System.Random(GetInstanceID());
 
-        Radius = (float)(random.NextDouble() * 13) + 2f;
+        /*Radius = (float)(random.NextDouble() * 13) + 2f;
+        Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));*/
+        Radius = (float)(random.NextDouble() * 1) + 2f;
         Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));
+
         transform.localScale += (new Vector3(Radius * 2f, Radius * 2f, Radius * 2f) - transform.localScale);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (TimeToSpawn.Done)
-        {
-            //Debug.Log("TICK TOCK");
-        }
-        foreach (var f in AsteroidFields)
-        {
-            Debug.DrawLine(transform.position,f.transform.position,Color.white,5f, false);
-        }
-        //drawFriends();
         transform.Rotate(Vector3.up, Time.deltaTime * -1f);
 	}
 
     void FixedUpdate()
     {
-
+        if (inTime)
+        {
+            
+        }
     }
 
-    void MakeFriends()
+    private void TickBuildings()
     {
-        
+        foreach (var building in myBuildings)
+        {
+            building.Tick(myStorage);
+        }
     }
 
-    public void AddAsteroidField(GameObject rootGameObject)
+    public CargoHold GetCargoHold
     {
-        AsteroidFields.Add(rootGameObject);
+        get { return myStorage; }
+    }
+
+    public string BuildingsToString(string seperator = "\n")
+    {
+        string BuildingsNamed = "";
+        foreach (var building in myBuildings)
+        {
+            BuildingsNamed += building.Name + seperator;
+        }
+        return BuildingsNamed;
     }
 }
