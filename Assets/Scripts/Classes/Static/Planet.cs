@@ -33,6 +33,9 @@ public class Planet : Static
     [SerializeField]
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
 
+	[SerializeField]
+	public static List<CargoHold> availableStocks = new List<CargoHold> ();
+
     void Start ()
     {
         WorkerShips = new List<GameObject>();
@@ -47,6 +50,7 @@ public class Planet : Static
         //myStorage.printHold();
 
         SetupBuildings();
+		SetupMarket ();
     }
 
     public void SetupBuildings()
@@ -60,6 +64,14 @@ public class Planet : Static
         myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
         TickBuildings(random.Next(25) + 25);
     }
+
+	public void SetupMarket()
+	{
+		availableStocks.Add (GetCargoHold);
+		Debug.Log ("available stocks" + availableStocks[0]);
+
+
+	}
 
     public void SpawnMiningShip()
     {
