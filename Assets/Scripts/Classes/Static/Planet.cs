@@ -62,6 +62,13 @@ public class Planet : Static
         TickBuildings();
     }
 
+	public void SetupMarket()
+	{
+
+
+
+	}
+
     public void SpawnMiningShip()
     {
         var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
