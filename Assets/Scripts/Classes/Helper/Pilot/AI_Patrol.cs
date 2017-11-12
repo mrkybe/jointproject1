@@ -132,7 +132,7 @@ public class AI_Patrol : PilotInterface
 
         if (hits.Length > 0)
         {
-            Debug.Log("Checking Hits!");
+            //Debug.Log("Checking Hits!");
             foreach (var hit in hits)
             {
                 AsteroidField one = hit.transform.gameObject.GetComponent<AsteroidField>();
@@ -154,7 +154,7 @@ public class AI_Patrol : PilotInterface
         }
         if(!found)
         {
-            Debug.Log("Checking All Asteroids!");
+            //Debug.Log("Checking All Asteroids!");
             foreach (var one in AsteroidField.listOfAsteroidFields)
             {
                 if ((transform.position - one.transform.position).magnitude < nearestDistance)

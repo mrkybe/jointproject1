@@ -27,6 +27,12 @@
             _cargoItems = new List<CargoItem>();
         }
 
+        private CargoHold(List<CargoItem> items)
+        {
+            _cargoItems = items;
+            _maxHold = GetTotalHold();
+        }
+
         public void AddHoldType(String type)
         {
             // would be nice to have an authoriative list of cargoitems that exist
@@ -83,7 +89,7 @@
             return contains;
         }
 
-        public int getTotalHold()
+        public int GetTotalHold()
         {
             int total = 0;
             foreach (CargoItem item in _cargoItems)
@@ -95,7 +101,7 @@
 
         public int GetRemainingSpace()
         {
-            return _maxHold - getTotalHold();
+            return _maxHold - GetTotalHold();
         }
 
         public int GetAmountInHold(String type)
@@ -119,7 +125,7 @@
             {
                 result += item.Name + " : " + item.Count + "\n";
             }
-            result += "Total: " + getTotalHold() + " / " + _maxHold;
+            result += "Total: " + GetTotalHold() + " / " + _maxHold;
             return result;
         }
 
@@ -138,6 +144,37 @@
                 return maxTransferable;
             }
             return 0;
+        }
+
+        // 
+        public static CargoHold GetAsteroidFieldCargoHold()
+        {
+            List<CargoItem> items = new List<CargoItem>();
+            int hashcode = UnityEngine.Random.value.GetHashCode();
+            System.Random random = new System.Random(hashcode);
+
+            RandomAdder("Dirt"        , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Water"       , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Rock"        , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Iron Ore"    , random.Next(250) - 100                   , items);
+            RandomAdder("Copper Ore"  , random.Next(250) - 150                   , items);
+            RandomAdder("Titanium Ore", random.Next(250) - 200                   , items);
+            RandomAdder("Gold"        , random.Next(100) - 75                    , items);
+
+            return new CargoHold(items);
+        }
+
+        private static void RandomAdder(string itemName, int add, List<CargoItem> items)
+        {
+            if (add > 0)
+            {
+                items.Add(new CargoItem(itemName, add));
+            }
+        }
+
+        private static int Clamp01(int value)
+        {
+            return Mathf.Clamp(value, 0, int.MaxValue);
         }
     }
 }

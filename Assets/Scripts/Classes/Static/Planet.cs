@@ -58,8 +58,7 @@ public class Planet : Static
             myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
         }
         myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
-        Debug.Log(this.name + " | " + BuildingsToString(", "));
-        TickBuildings();
+        TickBuildings(random.Next(25) + 25);
     }
 
     public void SpawnMiningShip()
@@ -94,11 +93,14 @@ public class Planet : Static
         }
     }
 
-    private void TickBuildings()
+    private void TickBuildings(int multiplier = 1)
     {
-        foreach (var building in myBuildings)
+        for (int i = 0; i < multiplier; i++)
         {
-            building.Tick(myStorage);
+            foreach (var building in myBuildings)
+            {
+                building.Tick(myStorage);
+            }
         }
     }
 
