@@ -69,7 +69,7 @@ public class Planet : Static
 	public void SetupMarket()
 	{
 		availableStocks.Add (GetCargoHold);
-
+		Debug.Log ("available stocks" + availableStocks[0]);
 
 
 	}
