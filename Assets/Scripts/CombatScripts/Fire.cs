@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Fire : MonoBehaviour {
 
-	public float speed = 1;
+	public float speed = 2;
 	public GameObject ammo;
-	private GameObject bulletClone;
 	private int bulletCount = 0;
 	private Rigidbody rb;
 	// Use this for initialization
@@ -36,13 +35,12 @@ public class Fire : MonoBehaviour {
 	void Shoot()
 	{
 		float dist  = transform.position.z + 3f;
-
-        bulletClone = Instantiate(ammo, new Vector3(transform.position.x, transform.position.y, dist), transform.rotation);
+        GameObject bulletClone = Instantiate(ammo, transform.position, transform.rotation);
         rb = bulletClone.GetComponent<Rigidbody>();
        // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
-        rb.AddForce(rb.transform.forward * speed);
-        //rb.velocity = bulletClone.transform.forward * speed;
+        //rb.AddForce(rb.transform.forward * speed);
+        rb.velocity = bulletClone.transform.forward * speed;
 
-        Destroy(bulletClone, 2.0f);
+        Destroy(bulletClone, 1.5f);
     }
 }
