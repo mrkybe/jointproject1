@@ -44,6 +44,9 @@ public class Planet : Static
 	[SerializeField]
 	public static List<CargoHold> availableStocks = new List<CargoHold> ();
 
+	CargoHold availableCargoItems = new CargoHold();
+	Building items = new Building();
+
     void Start ()
     {
         WorkerShips = new List<GameObject>();
@@ -80,8 +83,9 @@ public class Planet : Static
 
 	public void SetupMarket()
 	{
-		availableStocks.Add (GetCargoHold);
-		Debug.Log ("available stocks" + availableStocks[0]);
+		List<string> availabeStocks = availableCargoItems.getCargoItems ();
+		List<string> itemConsumed = items.GetConsumed ();
+		List<string> itemProduced = items.GetProduced ();
 
 
 	}
