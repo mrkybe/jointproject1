@@ -66,7 +66,13 @@ public class Planet : Static
 
     public void SetFaction(Faction f)
     {
+        if (Faction != null)
+        {
+            Faction.Unown(this);
+        }
+
         Faction = f;
+        f.Own(this);
     }
 
     public void SetupBuildings()

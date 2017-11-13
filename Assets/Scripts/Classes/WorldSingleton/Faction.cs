@@ -10,11 +10,13 @@ namespace Assets.Scripts.Classes.WorldSingleton
     {
         public String Name;
         public List<FactionLink> MyLinks;
+        private List<Planet> OwnedPlanets;
 
         public Faction(String name)
         {
             Name = name;
             MyLinks = new List<FactionLink>();
+            OwnedPlanets = new List<Planet>();
         }
 
         // adjust relations between myself and named faction by amount
@@ -39,6 +41,19 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public void CalculateDEFCONLevel()
         {
             throw new NotImplementedException();
+        }
+
+        public void Unown(Planet planet)
+        {
+            OwnedPlanets.Remove(planet);
+        }
+
+        public void Own(Planet planet)
+        {
+            if (!OwnedPlanets.Contains(planet))
+            {
+                OwnedPlanets.Add(planet);
+            }
         }
     }
 
