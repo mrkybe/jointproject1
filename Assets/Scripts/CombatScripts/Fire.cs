@@ -19,22 +19,12 @@ public class Fire : MonoBehaviour {
 		if (Input.GetButtonDown("Fire1")) 
 		{
 			Shoot ();
-            /*
-			if (bulletCount == 1) 
-			{
-				Destroy (bulletClone);
-				bulletCount--;
-			}
-            */
 		}
-		
-
 	}
 		
-
 	void Shoot()
 	{
-		float dist  = transform.position.z + 3f;
+		//float dist  = transform.position.z + 3f;
         GameObject bulletClone = Instantiate(ammo, transform.position, transform.rotation);
         rb = bulletClone.GetComponent<Rigidbody>();
        // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
