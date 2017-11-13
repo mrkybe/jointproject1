@@ -9,15 +9,15 @@ public class DestoyByContact : MonoBehaviour {
 	void Start () {
 		
 	}
-	/*void OnTriggerEnter(Collider other) {
+	void OnTriggerEnter(Collider other) {
 		other.gameObject.GetComponent<DestroyByTime>().enabled = false;
         if (other.gameObject.CompareTag("Enemy"))
         {
             Destroy(other.gameObject);
         }
 		Destroy (bullet);
-	}*/
-
+	}
+    /*
     private void OnCollisionEnter(Collision collision)
     {
         collision.gameObject.GetComponent<DestroyByTime>().enabled = false;
@@ -27,9 +27,5 @@ public class DestoyByContact : MonoBehaviour {
         }
         Destroy(bullet);
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
+    */
 }
