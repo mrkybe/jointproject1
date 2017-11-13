@@ -76,18 +76,15 @@
             }
         }
 
-		public List<string> getCargoItems()
+		public List<string> GetCargoItems()
 		{
 			var availableStocks = new List<string> ();
 
 			foreach(var item in _cargoItems)
 			{
-				//string returnName = s;
-				item.Name
-				availableStocks.Add(item);
+				availableStocks.Add(item.Name);
 			}
 			return availableStocks;
-
 		}
 
         public bool Contains(String type)

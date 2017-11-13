@@ -19,6 +19,7 @@ namespace Assets.Editor {
             {
                 string holdString = hold.ToString();
 
+                EditorGUILayout.TextField("Faction: ", myTarget.Faction.Name);
                 EditorGUILayout.TextArea(holdString, GUILayout.MinHeight(40), GUILayout.MaxHeight(200), GUILayout.ExpandHeight(true));
                 EditorGUILayout.TextArea(myTarget.BuildingsToString(), GUILayout.MinHeight(40), GUILayout.MaxHeight(120), GUILayout.ExpandHeight(true));
             }

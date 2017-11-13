@@ -27,10 +27,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
             {
                 //Debug.Log("Found Root Node!");
             }
+            CreateFactions();
             CreateSaturnSystem();
             CreatePlanetNodes();
             CreateSky();
-            CreateFactions();
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
         }
@@ -58,6 +58,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                     moon.name = "Moon" + i;
                     var script = moon.GetComponent<Planet>();
                     script.RandomizeSize();
+                    script.SetFaction(GetRandomFaction());
                     Moons.Add(moon);
                 }
                 else

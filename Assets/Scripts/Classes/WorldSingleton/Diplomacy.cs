@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
@@ -25,6 +24,14 @@ namespace Assets.Scripts.Classes.WorldSingleton
             FactionNamesList.Add("Pirates");
             Factions = new List<Faction>();
             Links = new List<FactionLink>();
+        }
+
+        private Faction GetRandomFaction()
+        {
+            int numFactions = Factions.Count;
+            // -1 to exclude pirates
+            int val = Random.Range(0, numFactions-1);
+            return Factions[val];
         }
 
         private void CreateFactions()
