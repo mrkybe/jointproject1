@@ -12,7 +12,7 @@ public class Planet : Static
     private List<GameObject> WorkerShips;
 
     [SerializeField]
-    public Faction MyFaction;
+    public Faction Faction;
 
     [SerializeField]
     public Faction MyName;
@@ -66,7 +66,7 @@ public class Planet : Static
 
     public void SetFaction(Faction f)
     {
-        MyFaction = f;
+        Faction = f;
     }
 
     public void SetupBuildings()
