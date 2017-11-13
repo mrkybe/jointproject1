@@ -76,6 +76,20 @@
             }
         }
 
+		public List<string> getCargoItems()
+		{
+			var availableStocks = new List<string> ();
+
+			foreach(var item in _cargoItems)
+			{
+				//string returnName = s;
+				item.Name
+				availableStocks.Add(item);
+			}
+			return availableStocks;
+
+		}
+
         public bool Contains(String type)
         {
             bool contains = false;
