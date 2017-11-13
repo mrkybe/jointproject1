@@ -61,6 +61,16 @@ public class Building
         return true;
     }
 
+    public List<CargoItem> GetConsumed()
+    {
+        return Consume;
+    }
+
+    public List<CargoItem> GetProduced()
+    {
+        return Produce;
+    }
+
     public delegate Building BasicEnviroment();
     public static BasicEnviroment[] BasicEnviroments = {GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory};
 
