@@ -2,12 +2,20 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
 public class Planet : Static
 {
     [SerializeField]
     private List<GameObject> WorkerShips;
+
+    [SerializeField]
+    public Faction MyFaction;
+
+    [SerializeField]
+    public Faction MyName;
 
     [SerializeField]
     private Timer TimeToSpawn;
@@ -51,6 +59,11 @@ public class Planet : Static
 
         SetupBuildings();
 		SetupMarket ();
+    }
+
+    public void SetFaction(Faction f)
+    {
+        MyFaction = f;
     }
 
     public void SetupBuildings()

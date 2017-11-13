@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Scripts.Classes.Static;
 using NPBehave;
 using ShipInternals;
 using Action = NPBehave.Action;

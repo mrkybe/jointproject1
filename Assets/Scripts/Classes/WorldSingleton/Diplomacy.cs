@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
-    public class Diplomacy : MonoBehaviour
+    public partial class Overseer : Static.Static
     {
         [SerializeField]
         public static List<string> FactionNamesList;
@@ -15,8 +15,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         [SerializeField]
         public static List<FactionLink> Links;
 
-        // Use this for initialization
-        void Start ()
+        private void InitializeFactions()
         {
             FactionNamesList = new List<string>();
             FactionNamesList.Add("Red");
@@ -26,12 +25,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
             FactionNamesList.Add("Pirates");
             Factions = new List<Faction>();
             Links = new List<FactionLink>();
-
-            CreateFactions();
         }
 
         private void CreateFactions()
         {
+            InitializeFactions();
             foreach (var name in FactionNamesList)
             {
                 Faction f = new Faction(name);
@@ -63,12 +61,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
             {
                 //Debug.Log(link.ToString());
             }
-        }
-	
-        // Update is called once per frame
-        void Update ()
-        {
-		
         }
     }
 }
