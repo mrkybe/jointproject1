@@ -16,12 +16,15 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         private void InitializeFactions()
         {
-            FactionNamesList = new List<string>();
-            FactionNamesList.Add("Red");
-            FactionNamesList.Add("Green");
-            FactionNamesList.Add("Blue");
-            FactionNamesList.Add("Yellow");
-            FactionNamesList.Add("Pirates");
+            FactionNamesList = new List<string>
+            {
+                "Communist",
+                "Libertarian",
+                "Freedom",
+                "Duty",
+                "Independent",
+                "Pirates"
+            };
             Factions = new List<Faction>();
             Links = new List<FactionLink>();
         }
@@ -37,10 +40,15 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private void CreateFactions()
         {
             InitializeFactions();
+            int count = 0;
             foreach (var name in FactionNamesList)
             {
                 Faction f = new Faction(name);
+                float frac = count / (FactionNamesList.Count * 2f);
+                f.ColorPrimary = Color.HSVToRGB(frac, 0.8f, 1f);
+                f.ColorSecondary = Color.HSVToRGB(frac + 0.5f, 0.8f, 1f);
                 Factions.Add(f);
+                count++;
             }
 
             FactionLinkEqualityComparer comparer = new FactionLinkEqualityComparer();

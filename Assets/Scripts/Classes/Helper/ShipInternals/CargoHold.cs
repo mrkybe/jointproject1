@@ -132,6 +132,10 @@
         public override string ToString()
         {
             string result = "";
+            if (_cargoItems == null)
+            {
+                return "No CargoItem List Initialized Yet";
+            }
             foreach (CargoItem item in _cargoItems)
             {
                 result += item.Name + " : " + item.Count + "\n";

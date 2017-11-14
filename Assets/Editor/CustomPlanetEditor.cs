@@ -13,13 +13,22 @@ namespace Assets.Editor {
             serializedObject.Update();
 
             Planet myTarget = (Planet)target;
-            hold = myTarget.GetCargoHold;
 
-            if (hold != null)
+            if (myTarget.MyName != null)
             {
+                EditorGUILayout.TextField("Name: ", myTarget.MyName);
+            }
+
+            if (myTarget.Faction != null)
+            {
+                EditorGUILayout.TextField("Faction: ", myTarget.Faction.Name);
+            }
+
+            if (myTarget.GetCargoHold != null)
+            {
+                hold = myTarget.GetCargoHold;
                 string holdString = hold.ToString();
 
-                EditorGUILayout.TextField("Faction: ", myTarget.Faction.Name);
                 EditorGUILayout.TextArea(holdString, GUILayout.MinHeight(40), GUILayout.MaxHeight(200), GUILayout.ExpandHeight(true));
                 EditorGUILayout.TextArea(myTarget.BuildingsToString(), GUILayout.MinHeight(40), GUILayout.MaxHeight(120), GUILayout.ExpandHeight(true));
             }

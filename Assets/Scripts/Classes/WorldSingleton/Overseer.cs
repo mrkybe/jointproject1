@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
@@ -41,37 +42,47 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return true;
         }
 
+        Vector3 PolarCoordinates(float rad, float distance)
+        {
+            float x = Mathf.Sin(2 * rad * Mathf.PI) * distance;
+            float z = Mathf.Cos(2 * rad * Mathf.PI) * distance;
+            return new Vector3(x, 0, z);
+        }
+
         void CreateSaturnSystem()
         {
             Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(0, 0, 0), Quaternion.identity);
             Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
             Saturn.name = "Saturn";
-            int numMoons = 25;
-            for (int i = 0; i < numMoons; i++)
+            int numMoons = 50;
+            float minSaturnDistance = 75f;
+            Queue<string> moon_names = new Queue<string>(ListOfSaturnMoonNames());
+            for (int i = 0; i < (numMoons); i++)
             {
-                float x = (Random.value * worldSize) - (worldSize / 2);
-                //float x = ((Random.value * worldSize) - (worldSize / 2))/70f;
-                float z = (Random.value * worldSize) - (worldSize / 2);
-                if (CheckForReject(x, z))
-                {
-                    GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(x, 0, z), Quaternion.identity);
-                    moon.name = "Moon" + i;
-                    var script = moon.GetComponent<Planet>();
-                    script.RandomizeSize();
-                    script.SetFaction(GetRandomFaction());
-                    Moons.Add(moon);
-                }
-                else
-                {
-                    i--;
-                }
+                float stepCount = ((worldSize / 2) - minSaturnDistance  )/numMoons;
+                var coords = PolarCoordinates(Random.value, minSaturnDistance + i * stepCount);
+                float x = coords.x;
+                float z = coords.z;
+
+                GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(x, 0, z), Quaternion.identity);
+                moon.name = "Moon" + i;
+                var script = moon.GetComponent<Planet>();
+                script.RandomizeSize();
+                string name = moon_names.Dequeue();
+                script.SetName(name);
+                script.SetFaction(GetRandomFaction());
+                Moons.Add(moon);
             }
-            int numAsteroidFields = 100;
+            int numAsteroidFields = 1000;
             for (int i = 0; i < numAsteroidFields; i++)
             {
-                float x = (Random.value * worldSize) - (worldSize / 2);
+                //float x = (Random.value * worldSize) - (worldSize / 2);
                 //float x = ((Random.value * worldSize) - (worldSize / 2))/70f;
-                float z = (Random.value * worldSize) - (worldSize / 2);
+                //float z = (Random.value * worldSize) - (worldSize / 2);
+                float stepCount = ((worldSize / 2) - minSaturnDistance) / numAsteroidFields;
+                var coords = PolarCoordinates(Random.value, minSaturnDistance + Random.value * ((worldSize / 2) - minSaturnDistance));
+                float x = coords.x;
+                float z = coords.z;
                 if (CheckForRejectAsteroids(x, z))
                 {
                     GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), new Vector3(x, 0, z), Quaternion.identity);
@@ -83,14 +94,20 @@ namespace Assets.Scripts.Classes.WorldSingleton
                     i--;
                 }
             }
+            List<GameObject> MoonsToDestroy = new List<GameObject>();
+            List<GameObject> AsteroidsToDestroy = new List<GameObject>();
             foreach (var moon in Moons)
             {
-                var hitCollidersNear = Physics.OverlapSphere(moon.transform.position, 50);
-                var hitCollidersMedium = Physics.OverlapSphere(moon.transform.root.position, 250);
-                var hitCollidersFar = Physics.OverlapSphere(moon.transform.position, 625);
+                var hitCollidersNear = Physics.OverlapSphere(moon.transform.position, 75);
+                //var hitCollidersMedium = Physics.OverlapSphere(moon.transform.root.position, 250);
+                //var hitCollidersFar = Physics.OverlapSphere(moon.transform.position, 625);
                 //Debug.Log("Near: " + hitCollidersNear.Length);
                 //Debug.Log("Medi: " + hitCollidersMedium.Length);
                 //Debug.Log("Far : " + hitCollidersFar.Length);
+                if (MoonsToDestroy.Contains(moon))
+                {
+                    continue;
+                }
                 foreach (var collider in hitCollidersNear)
                 {
                     if (collider.gameObject.tag == "StaticInteractive")
@@ -99,17 +116,42 @@ namespace Assets.Scripts.Classes.WorldSingleton
                         {
                             if (collider.gameObject.transform.root.gameObject != moon)
                             {
-                                Destroy(collider.gameObject);
+                                MoonsToDestroy.Add(collider.gameObject.transform.root.gameObject);
+                            }
+                        }
+                        else if (collider.gameObject.name.StartsWith("AsteroidField"))
+                        {
+                            float distance = (collider.gameObject.transform.position - moon.transform.position).magnitude;
+                            if (distance < 35f)
+                            {
+                                AsteroidsToDestroy.Add(collider.gameObject.transform.root.gameObject);
                             }
                         }
                     }
                 }
             }
+            foreach (var moon in MoonsToDestroy)
+            {
+                Moons.Remove(moon);
+                Destroy(moon);
+            }
+            foreach (var asteroid in AsteroidsToDestroy)
+            {
+                AsteroidFields.Remove(asteroid);
+                Destroy(asteroid);
+            }
+            Debug.Log("ASTEROID FIELDS COUNT:" + AsteroidFields.Count);
+            Debug.Log("MOONS COUNT:" + Moons.Count);
+            AsteroidsToDestroy.Clear();
             foreach (var asteroidField in AsteroidFields)
             {
-                var hitCollidersNear = Physics.OverlapSphere(asteroidField.transform.position, 50);
-                var hitCollidersMedium = Physics.OverlapSphere(asteroidField.transform.position, 250);
-                var hitCollidersFar = Physics.OverlapSphere(asteroidField.transform.position, 625);
+                var hitCollidersNear = Physics.OverlapSphere(asteroidField.transform.position, 9);
+                //var hitCollidersMedium = Physics.OverlapSphere(asteroidField.transform.position, 250);
+                //var hitCollidersFar = Physics.OverlapSphere(asteroidField.transform.position, 625);
+                if (AsteroidsToDestroy.Contains(asteroidField))
+                {
+                    continue;
+                }
                 foreach (var collider in hitCollidersNear)
                 {
                     if (collider.gameObject.transform.root.tag == "StaticInteractive")
@@ -118,22 +160,39 @@ namespace Assets.Scripts.Classes.WorldSingleton
                         {
                             if (collider.gameObject.transform.root.gameObject != asteroidField)
                             {
-                                Destroy(collider.gameObject.transform.root.gameObject);
-                                //Debug.Log("DESTROY!");
+                                AsteroidsToDestroy.Add(collider.gameObject.transform.root.gameObject);
                             }
                         }
                     }
                 }
+            }
+            foreach (var asteroid in AsteroidsToDestroy)
+            {
+                AsteroidFields.Remove(asteroid);
+                Destroy(asteroid);
+            }
+            Debug.Log("ASTEROID FIELDS COUNT:" + AsteroidFields.Count);
+            int counter = 0;
+            foreach (var moon in Moons)
+            {
+                moon.name = "Moon" + counter;
+                counter += 1;
+            }
+            counter = 0;
+            foreach (var asteroidField in AsteroidFields)
+            {
+                asteroidField.name = "AsteroidField" + counter;
+                counter += 1;
             }
         }
 
         bool CheckForReject(float x, float z)
         {
             float dist = Mathf.Sqrt((x * x) + (z * z));
-            if (dist > (worldSize/2))
+            /*if (dist > (worldSize/2))
             {
                 return false;
-            }
+            }*/
             /*if (dist < 100f)
         {
             return false;
@@ -160,14 +219,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
         bool CheckForRejectAsteroids(float x, float z)
         {
             float dist = Mathf.Sqrt((x * x) + (z * z));
-            if (dist > (worldSize / 2))
-            {
-                return false;
-            }
-            /*if (dist < 100f)
-        {
-            return false;
-        }*/
             int slot = (int)((dist / (worldSize / 2)) * 32);
             // Debug.Log(slot);
             //  0-3 atmosphere
@@ -179,11 +230,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
             //  31-32 last few rocks
             //  33+ deep space
             int[] map = new[] { 0, 0, 0, 0, 0, 1, 2, 2, 4, 4, 4, 4, 4, 16, 16, 16, 16, 19, 17, 12, 21, 18, 19, 1, 1, 15, 14, 13, 14, 15, 2, 1 };
-            if ((Random.value * 100) >= map[slot])
+            if ((Random.value * 50) <= map[slot])
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
         bool CreatePlanetNodes()
@@ -216,6 +267,74 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 Mobile.inTime = true;
                 Static.Static.inTime = true;
             }
+        }
+
+        List<string> ListOfSaturnMoonNames()
+        {
+            return new List<string>
+                   {
+                       "Pan",
+                       "Daphnis",
+                       "Atlas",
+                       "Prometheus",
+                       "Pandora",
+                       "Epimetheus",
+                       "Janus",
+                       "Aegaeon",
+                       "Mimas",
+                       "Methone",
+                       "Anthe",
+                       "Pallene",
+                       "Enceladus",
+                       "Tethys",
+                       "Telesto",
+                       "Calypso",
+                       "Dione",
+                       "Helene",
+                       "Polydeuces",
+                       "Rhea",
+                       "Titan",
+                       "Hyperion",
+                       "Iapetus",
+                       "Kiviuq",
+                       "Ijiraq",
+                       "Phoebe",
+                       "Paaliaq",
+                       "Skathi",
+                       "Albiorix",
+                       "S/2007 S 2",
+                       "Bebhionn",
+                       "Erriapo",
+                       "Skoll",
+                       "Siarnaq",
+                       "Tarqeq",
+                       "S/2004 S 13",
+                       "Greip",
+                       "Hyrrokkin",
+                       "Jarnsaxa",
+                       "Tarvos",
+                       "Mundilfari",
+                       "S/2006 S 1",
+                       "S/2004 S 17",
+                       "Bergelmir",
+                       "Narvi",
+                       "Suttungr",
+                       "Hati",
+                       "S/2004 S 12",
+                       "Farbauti",
+                       "Thrymr",
+                       "Aegir",
+                       "S/2007 S 3",
+                       "Bestla",
+                       "S/2004 S 7",
+                       "S/2006 S 3",
+                       "Fenrir",
+                       "Surtu",
+                       "Kari",
+                       "Ymir",
+                       "Loge",
+                       "Fornjot"
+                   };
         }
     }
 }

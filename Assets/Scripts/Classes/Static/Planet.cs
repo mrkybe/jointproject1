@@ -15,7 +15,7 @@ public class Planet : Static
     public Faction Faction;
 
     [SerializeField]
-    public Faction MyName;
+    public string MyName;
 
     [SerializeField]
     private Timer TimeToSpawn;
@@ -30,9 +30,6 @@ public class Planet : Static
     int MaxFriends;
 
     [SerializeField]
-    private CargoHold myStorage;
-
-    [SerializeField]
     private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
@@ -41,11 +38,11 @@ public class Planet : Static
     [SerializeField]
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
 
-	[SerializeField]
-	public static List<CargoHold> availableStocks = new List<CargoHold> ();
+    [SerializeField]
+    private CargoHold myStorage;
 
-	CargoHold availableCargoItems = new CargoHold();
-	Building items = new Building();
+    [SerializeField]
+    private CargoHold availableCargoItems;
 
     void Start ()
     {
@@ -57,8 +54,9 @@ public class Planet : Static
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
         
+
         myStorage = new CargoHold(50000);
-        //myStorage.printHold();
+        availableCargoItems = new CargoHold(50000);
 
         SetupBuildings();
 		SetupMarket ();
@@ -73,6 +71,9 @@ public class Planet : Static
 
         Faction = f;
         f.Own(this);
+
+        MeshRenderer mr = transform.GetChild(0).GetComponent<MeshRenderer>();
+        mr.material.color = f.ColorPrimary;
     }
 
     public void SetupBuildings()
@@ -89,9 +90,6 @@ public class Planet : Static
 
 	public void SetupMarket()
 	{
-		List<string> availabeStocks = availableCargoItems.getCargoItems ();
-		List<string> itemConsumed = items.GetConsumed ();
-		List<string> itemProduced = items.GetProduced ();
 
 
 	}
@@ -152,5 +150,10 @@ public class Planet : Static
             BuildingsNamed += building.Name + seperator;
         }
         return BuildingsNamed;
+    }
+
+    public void SetName(string val)
+    {
+        MyName = val;
     }
 }
