@@ -237,7 +237,7 @@ public class AI_Patrol : PilotInterface
         int minedAmount = 0;
         if (shipScript != null)
         {
-            List<Static> targets = shipScript.getAvailableTargets();
+            List<Static> targets = shipScript.GetStaticInRange();
             List<AsteroidField> newTargets = new List<AsteroidField>();
             AsteroidField finalTarget;
             Debug.Log("Targets available: " + targets.Count);

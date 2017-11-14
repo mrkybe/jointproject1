@@ -171,7 +171,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 AsteroidFields.Remove(asteroid);
                 Destroy(asteroid);
             }
-            Debug.Log("ASTEROID FIELDS COUNT:" + AsteroidFields.Count);
+
             int counter = 0;
             foreach (var moon in Moons)
             {
