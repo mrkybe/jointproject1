@@ -11,6 +11,7 @@ public partial class Planet: Static
 	{
 		public Planet()
 		{
+		
 		}
 	}
 
