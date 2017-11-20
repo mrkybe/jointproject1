@@ -56,6 +56,11 @@ public class Mobile : MonoBehaviour
             CalculateGravityVector();
             Move();
         }
+    }
+
+    protected void Update()
+    {
+        
 	}
 
     private void CalculateGravityVector()

@@ -1,35 +1,38 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Classes.WorldSingleton;
+using UnityEngine;
 
-public class Static : MonoBehaviour
+namespace Assets.Scripts.Classes.Static
 {
-    static public bool inTime = true;
-    protected int loadPriority = 0;
-    protected int loadPriorityInital = 5;
-    protected float interactionRange = 1;
-    public static List<Static> listOfStaticObjects = new List<Static>();
-    Overseer BossScript;
-
-    public void Start()
+    public class Static : MonoBehaviour
     {
-        BossScript = GameObject.Find("Overseer").GetComponent<Overseer>();
-        if(BossScript != null)
+        static public bool inTime = true;
+        protected int loadPriority = 0;
+        protected int loadPriorityInital = 5;
+        protected float interactionRange = 1;
+        public static List<Static> listOfStaticObjects = new List<Static>();
+        Overseer BossScript;
+
+        public void Start()
         {
+            BossScript = GameObject.Find("Overseer").GetComponent<Overseer>();
+            if(BossScript != null)
+            {
 
+            }
+            loadPriority = loadPriorityInital;
+            listOfStaticObjects.Add(this);
         }
-        loadPriority = loadPriorityInital;
-        listOfStaticObjects.Add(this);
-	}
 
-    protected virtual void DelayedLoad()
-    {
+        protected virtual void DelayedLoad()
+        {
         
+        }
+
+        // Update is called once per frame
+        protected void FixedUpdate ()
+        {
+        
+        }
     }
-
-	// Update is called once per frame
-	protected void FixedUpdate ()
-    {
-        
-	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Classes.Static;
 using UnityEngine;
 using ShipInternals;
 
@@ -66,7 +67,7 @@ namespace AI_Missions
         }
     }
 
-    public class Wait : MissionGeneric
+    /*public class Wait : MissionGeneric
     {
         float timeToWaitFor = 0f;
         float timeStartedWaitingAt;
@@ -98,7 +99,7 @@ namespace AI_Missions
                 }
             }
         }
-    }
+    }*/
     
     public class Mine : MissionGeneric
     {
@@ -133,7 +134,7 @@ namespace AI_Missions
                     case AI_States.ARRIVED:
                         if (shipScript != null)
                         {
-                            List<Static> targets = shipScript.getAvailableTargets();
+                            List<Static> targets = shipScript.GetStaticInRange();
                             List<AsteroidField> newTargets = new List<AsteroidField>();
                             AsteroidField finalTarget;
                             Debug.Log("Targets available: " + targets.Count);
@@ -144,7 +145,7 @@ namespace AI_Missions
                                 {
                                     finalTarget = targets[i] as AsteroidField;
                                     if (finalTarget.GetCargoHold.Contains(miningTarget) &&
-                                       finalTarget.GetCargoHold.getAmountInHold(miningTarget) > 0)
+                                       finalTarget.GetCargoHold.GetAmountInHold(miningTarget) > 0)
                                     {
                                         newTargets.Add((AsteroidField)targets[i]);
                                     }
@@ -154,8 +155,8 @@ namespace AI_Missions
                             if (newTargets.Count >= 1)
                             {
                                 finalTarget = newTargets[0];
-                                finalTarget.GetCargoHold.addToHold(miningTarget, -mineAmount);
-                                shipScript.GetCargoHold.addToHold(miningTarget, mineAmount);
+                                finalTarget.GetCargoHold.AddToHold(miningTarget, -mineAmount);
+                                shipScript.GetCargoHold.AddToHold(miningTarget, mineAmount);
                                 Debug.Log("Taking Cargo");
                                 _AI_State = AI_States.DONE;
                             }

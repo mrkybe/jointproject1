@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Scripts.Classes.Static;
 using ShipInternals;
 
 public class Spaceship : Mobile
@@ -21,7 +22,11 @@ public class Spaceship : Mobile
     private float throttle_input;
     private float oldThrottle_input;
     private CargoHold myStorage;
+    private SensorArray mySensorArray;
     // Use this for initialization
+
+    [SerializeField]
+    public List<GameObject> inSensorRange = new List<GameObject>();
     new void Start ()
     {
         base.Start();
@@ -29,6 +34,8 @@ public class Spaceship : Mobile
         {
             SetPilot(desired_AI_Type);
         }
+
+        pilot.SensorArray = mySensorArray;
 
         engineRunSpeed = 0;
         targetSpeed = -999;
@@ -39,20 +46,22 @@ public class Spaceship : Mobile
             targetSpeed = 0;
         }
         myStorage = new CargoHold(50);
-        myStorage.addHoldType("Gold");
+        myStorage.AddHoldType("Gold");
+
+        mySensorArray = new SensorArray(gameObject);
 	}
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            myStorage.printHold();
+            myStorage.PrintHold();
         }
     }
 	
 	// Update is called once per frame
 	new void FixedUpdate ()
-    {
+	{
         if (inTime && pilot)
         {
             base.FixedUpdate();
@@ -89,15 +98,36 @@ public class Spaceship : Mobile
             oldThrottle_input = throttle_input;
         }
 	}
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Boop");
+        inSensorRange.Add(other.gameObject.transform.root.gameObject);
+    }
+
+    public void CleanSensorList()
+    {
+        inSensorRange.RemoveAll(x => x == null);
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Unboop");
+        inSensorRange.Remove(other.gameObject.transform.root.gameObject);
+    }
     
-    public List<Static> getAvailableTargets()
+    public List<Static> GetStaticInRange()
     {
         List<Static> targets = new List<Static>();
-        for (int i = 0; i < Static.listOfStaticObjects.Count; i++)
+        for (int i = 0; i < inSensorRange.Count; i++)
         {
-            if (Vector3.Distance(transform.position, Static.listOfStaticObjects[i].transform.position) < 8)
+            if (inSensorRange[i] != null)
             {
-                targets.Add(Static.listOfStaticObjects[i]);
+                Static target = inSensorRange[i].GetComponent<Static>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                {
+                    targets.Add(target);
+                }
             }
         }
         return targets;

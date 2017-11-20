@@ -13,8 +13,8 @@
          *          a1.  CargoBays do not actually store instances of CargoItem.
          *     b. CargoHold contains multiple CargoBays.
          */
-
-
+    
+    [Serializable]
     public class CargoHold
     {
         private int _maxHold;
@@ -27,20 +27,36 @@
             _cargoItems = new List<CargoItem>();
         }
 
-        public void addHoldType(String type)
+        private CargoHold(List<CargoItem> items)
         {
-            // Check that CargoItems of this type exist.  Or don't.  I'm a comment. Not a cop.
-            if (true)
+            _cargoItems = items;
+            _maxHold = GetTotalHold();
+        }
+
+        public void AddHoldType(String type)
+        {
+            // would be nice to have an authoriative list of cargoitems that exist
+            if (!Contains(type))
             {
                 _cargoItems.Add(new CargoItem(type));
             }
             else
             {
-                Debug.Log("-WARNING: could not addHoldType(" + type + ") as it does not exist!");
+                Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
             }
         }
 
-        public void addToHold(String type, int count)
+        public void AddToHold(CargoItem item)
+        {
+            AddToHold(item.Name, item.Count);
+        }
+
+        public void TakeFromHold(CargoItem item)
+        {
+            AddToHold(item.Name, -item.Count);
+        }
+
+        public void AddToHold(String type, int count)
         {
             // Check that CargoItems of this type exist.
             if (this.Contains(type))
@@ -49,16 +65,27 @@
                 {
                     if (_cargoItems[i].Name == type)
                     {
-                        Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
+                        //Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
                         _cargoItems[i].Count = count;
                     }
                 }
             }
             else
             {
-                Debug.Log("-WARNING: could not addToHold(" + type + ") as it does not exist in this instace!");
+                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instace!");
             }
         }
+
+		public List<string> GetCargoItems()
+		{
+			var availableStocks = new List<string> ();
+
+			foreach(var item in _cargoItems)
+			{
+				availableStocks.Add(item.Name);
+			}
+			return availableStocks;
+		}
 
         public bool Contains(String type)
         {
@@ -73,7 +100,7 @@
             return contains;
         }
 
-        public int getTotalHold()
+        public int GetTotalHold()
         {
             int total = 0;
             foreach (CargoItem item in _cargoItems)
@@ -83,7 +110,12 @@
             return total;
         }
 
-        public int getAmountInHold(String type)
+        public int GetRemainingSpace()
+        {
+            return _maxHold - GetTotalHold();
+        }
+
+        public int GetAmountInHold(String type)
         {
             foreach (CargoItem item in _cargoItems)
             {
@@ -93,17 +125,71 @@
                 }
             }
 
-            Debug.Log("-WARNING: getAmountInHold(" + type + ") failed!  Could not find in available holds!");
+            Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
             return -1;
         }
 
-        public void printHold()
+        public override string ToString()
         {
+            string result = "";
+            if (_cargoItems == null)
+            {
+                return "No CargoItem List Initialized Yet";
+            }
             foreach (CargoItem item in _cargoItems)
             {
-                Debug.Log(item.Name + " : " + item.Count);
+                result += item.Name + " : " + item.Count + "\n";
             }
-            Debug.Log("Total: " + getTotalHold() + " / " + _maxHold);
+            result += "Total: " + GetTotalHold() + " / " + _maxHold;
+            return result;
+        }
+
+        public void PrintHold()
+        {
+            Debug.Log(ToString());
+        }
+
+        public int Credit(String type, CargoHold source, int amount)
+        {
+            if (this.Contains(type) && source.Contains(type))
+            {
+                int maxTransferable = Mathf.Min(GetRemainingSpace(), amount, source.GetAmountInHold(type));
+                AddToHold(type, maxTransferable);
+                source.AddToHold(type, -maxTransferable);
+                return maxTransferable;
+            }
+            return 0;
+        }
+
+        // 
+        public static CargoHold GetAsteroidFieldCargoHold()
+        {
+            List<CargoItem> items = new List<CargoItem>();
+            int hashcode = UnityEngine.Random.value.GetHashCode();
+            System.Random random = new System.Random(hashcode);
+
+            RandomAdder("Dirt"        , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Water"       , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Rock"        , random.Next(250) + random.Next(250) - 150, items);
+            RandomAdder("Iron Ore"    , random.Next(250) - 100                   , items);
+            RandomAdder("Copper Ore"  , random.Next(250) - 150                   , items);
+            RandomAdder("Titanium Ore", random.Next(250) - 200                   , items);
+            RandomAdder("Gold"        , random.Next(100) - 75                    , items);
+
+            return new CargoHold(items);
+        }
+
+        private static void RandomAdder(string itemName, int add, List<CargoItem> items)
+        {
+            if (add > 0)
+            {
+                items.Add(new CargoItem(itemName, add));
+            }
+        }
+
+        private static int Clamp01(int value)
+        {
+            return Mathf.Clamp(value, 0, int.MaxValue);
         }
     }
 }
