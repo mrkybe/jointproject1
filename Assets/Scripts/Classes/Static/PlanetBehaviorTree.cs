@@ -1,12 +1,17 @@
 ﻿using System;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
+using ShipInternals;
 
-namespace AssemblyCSharp
-{
-	public class PlanetBehaviorTree
+
+public partial class Planet: Static
 	{
-		public PlanetBehaviorTree ()
+		public Planet()
 		{
 		}
 	}
-}
+
 

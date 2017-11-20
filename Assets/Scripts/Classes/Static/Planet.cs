@@ -6,7 +6,7 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
-public class Planet : Static
+public partial class Planet : Static
 {
     [SerializeField]
     private List<GameObject> WorkerShips;
