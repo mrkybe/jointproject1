@@ -60,6 +60,7 @@ public partial class Planet : Static
 
         SetupBuildings();
 		SetupMarket ();
+		behaviorTree;
     }
 
     public void SetFaction(Faction f)
