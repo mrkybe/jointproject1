@@ -24,13 +24,12 @@ public class Fire : MonoBehaviour {
 		
 	void Shoot()
 	{
-		//float dist  = transform.position.z + 3f;
+        //float dist  = transform.position.z + 3f;
         GameObject bulletClone = Instantiate(ammo, transform.position, transform.rotation);
         rb = bulletClone.GetComponent<Rigidbody>();
-       // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
+        // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
         //rb.AddForce(rb.transform.forward * speed);
         rb.velocity = bulletClone.transform.forward * speed;
-
         Destroy(bulletClone, 1.5f);
     }
 }

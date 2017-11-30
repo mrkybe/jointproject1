@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
 
 	public GameObject player;       //Public variable to store a reference to the player game object
-	public float y_value = 10f;//Private variable to store the offset distance between the player and camera
+	public float y_value = 100f;//Private variable to store the offset distance between the player and camera
 
 	private float y_distance;
 	// Use this for initialization

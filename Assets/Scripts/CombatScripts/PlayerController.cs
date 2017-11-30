@@ -27,15 +27,19 @@ public class PlayerController : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetButtonDown("Y"))
+        if (Input.GetButtonDown("LB") && fire.enabled == false)
         {
-            fire.enabled = false;
+            fire.enabled = true;
+            lf.enabled = false;
+        }
+        else if (Input.GetButtonDown("LB") && lf.enabled == false)
+        {
             lf.enabled = true;
+            fire.enabled = false;
         }
     }
     void FixedUpdate()  // called each physics steps
 	{
-		
 		if (Input.GetButtonDown("Y") && flag == false)
         {
 			flag = true;
@@ -44,11 +48,12 @@ public class PlayerController : MonoBehaviour {
             fire.enabled = true;
             cc.enabled = true;
             cf.enabled = false;
+            lf.enabled = false;
 			transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
 
 			cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.y+20, cameraObject.transform.position.z);
 			combatField.SetActive (true);
 			enemySpawner.GetComponent<EnemySpawner>().enabled = true;
 		}
-	}
+    }
 }

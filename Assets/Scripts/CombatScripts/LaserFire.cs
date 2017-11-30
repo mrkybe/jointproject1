@@ -30,23 +30,19 @@ public class LaserFire : MonoBehaviour {
             RaycastHit hit;
 
             laser.SetPosition(0, ray.origin);
+            laser.SetPosition(1, ray.GetPoint(100));
 
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray,out hit))
             {
-                laser.SetPosition(1, hit.point);
-
-                if (hit.rigidbody.gameObject.CompareTag("Enemy"))
+                Debug.Log("hit:");
+                if (hit.transform.gameObject.CompareTag("Enemy"))
                 {
-                    hit.rigidbody.AddForceAtPosition(transform.forward* 10, hit.point);
-                    Destroy(hit.rigidbody.gameObject);
+                    Destroy(hit.transform.gameObject);
                 }
-            }
-            else
-                laser.SetPosition(1, ray.GetPoint(100));
+            }   
 
             yield return null;
         }
-
         laser.enabled = false;
     }
 }
