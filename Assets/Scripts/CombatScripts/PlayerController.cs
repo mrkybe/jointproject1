@@ -14,19 +14,30 @@ public class PlayerController : MonoBehaviour {
     private Fire fire;
     private CameraController cc;
     private CameraFollow cf;
+    private LaserFire lf;
 	// Use this for initialization
 	void Start () {
         move = GetComponent<Move>();
         sp = GetComponent<Spaceship>();
         fire = GetComponent<Fire>();
+        lf = GetComponent<LaserFire>();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
 	}
 
-	void FixedUpdate()  // called each physics steps
+    private void Update()
+    {
+        if (Input.GetButtonDown("Y"))
+        {
+            fire.enabled = false;
+            lf.enabled = true;
+        }
+    }
+    void FixedUpdate()  // called each physics steps
 	{
 		
-		if (Input.GetButtonDown("Y")&&flag ==false) {
+		if (Input.GetButtonDown("Y") && flag == false)
+        {
 			flag = true;
             move.enabled = true;
             sp.enabled = false;
@@ -38,8 +49,6 @@ public class PlayerController : MonoBehaviour {
 			cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.y+20, cameraObject.transform.position.z);
 			combatField.SetActive (true);
 			enemySpawner.GetComponent<EnemySpawner>().enabled = true;
-
-
 		}
 	}
 }
