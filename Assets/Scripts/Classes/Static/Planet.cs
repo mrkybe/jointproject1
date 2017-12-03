@@ -60,7 +60,7 @@ public partial class Planet : Static
 
         SetupBuildings();
 		SetupMarket ();
-		behaviorTree;
+		//behaviorTree; // Was causing compile errors
     }
 
     public void SetFaction(Faction f)
