@@ -9,12 +9,18 @@ namespace Assets.Scripts.Classes.WorldSingleton
     public class Faction
     {
         public String Name;
+        public Color ColorPrimary;
+        public Color ColorSecondary;
         public List<FactionLink> MyLinks;
+        private List<Planet> OwnedPlanets;
 
         public Faction(String name)
         {
             Name = name;
             MyLinks = new List<FactionLink>();
+            OwnedPlanets = new List<Planet>();
+            ColorPrimary = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            ColorSecondary = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         }
 
         // adjust relations between myself and named faction by amount
@@ -39,6 +45,19 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public void CalculateDEFCONLevel()
         {
             throw new NotImplementedException();
+        }
+
+        public void Unown(Planet planet)
+        {
+            OwnedPlanets.Remove(planet);
+        }
+
+        public void Own(Planet planet)
+        {
+            if (!OwnedPlanets.Contains(planet))
+            {
+                OwnedPlanets.Add(planet);
+            }
         }
     }
 

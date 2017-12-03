@@ -17,7 +17,7 @@ namespace Assets.Editor {
 
             if (hold != null)
             {
-                EditorGUILayout.TextArea(hold.ToString(), GUILayout.MaxHeight(75));
+                EditorGUILayout.TextArea(hold.ToString(), GUILayout.MaxHeight(200));
             }
 
             base.OnInspectorGUI();

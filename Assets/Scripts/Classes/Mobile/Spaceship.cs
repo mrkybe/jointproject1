@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Scripts.Classes.Static;
 using ShipInternals;
 
 public class Spaceship : Mobile
@@ -23,6 +24,9 @@ public class Spaceship : Mobile
     private CargoHold myStorage;
     private SensorArray mySensorArray;
     // Use this for initialization
+
+    [SerializeField]
+    public List<GameObject> inSensorRange = new List<GameObject>();
     new void Start ()
     {
         base.Start();
@@ -57,7 +61,7 @@ public class Spaceship : Mobile
 	
 	// Update is called once per frame
 	new void FixedUpdate ()
-    {
+	{
         if (inTime && pilot)
         {
             base.FixedUpdate();
@@ -98,21 +102,32 @@ public class Spaceship : Mobile
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("Boop");
+        inSensorRange.Add(other.gameObject.transform.root.gameObject);
+    }
+
+    public void CleanSensorList()
+    {
+        inSensorRange.RemoveAll(x => x == null);
     }
 
     public void OnTriggerExit(Collider other)
     {
         Debug.Log("Unboop");
+        inSensorRange.Remove(other.gameObject.transform.root.gameObject);
     }
     
-    public List<Static> getAvailableTargets()
+    public List<Static> GetStaticInRange()
     {
         List<Static> targets = new List<Static>();
-        for (int i = 0; i < Static.listOfStaticObjects.Count; i++)
+        for (int i = 0; i < inSensorRange.Count; i++)
         {
-            if (Vector3.Distance(transform.position, Static.listOfStaticObjects[i].transform.position) < 8)
+            if (inSensorRange[i] != null)
             {
-                targets.Add(Static.listOfStaticObjects[i]);
+                Static target = inSensorRange[i].GetComponent<Static>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                {
+                    targets.Add(target);
+                }
             }
         }
         return targets;

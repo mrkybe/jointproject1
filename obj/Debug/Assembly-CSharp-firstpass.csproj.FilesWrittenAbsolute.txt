@@ -28,3 +28,30 @@
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.Pdb.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/Unity.Cecil.Mdb.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Assembly-CSharp-firstpass.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/obj/Debug/Assembly-CSharp-firstpass.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/obj/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEditor.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.TestRunner.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/nunit.framework.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.Timeline.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.UIAutomation.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.GoogleAudioSpatializer.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.SpatialTracking.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEngine.Purchasing.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.Cecil.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/ExCSS.Unity.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.DataContract.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.Legacy.NRefactory.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.Cecil.Pdb.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Unity.Cecil.Mdb.dll

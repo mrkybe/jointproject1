@@ -2,12 +2,20 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
-public class Planet : Static
+public partial class Planet : Static
 {
     [SerializeField]
     private List<GameObject> WorkerShips;
+
+    [SerializeField]
+    public Faction Faction;
+
+    [SerializeField]
+    public string MyName;
 
     [SerializeField]
     private Timer TimeToSpawn;
@@ -22,9 +30,6 @@ public class Planet : Static
     int MaxFriends;
 
     [SerializeField]
-    private CargoHold myStorage;
-
-    [SerializeField]
     private List<Building> myBuildings = new List<Building>();
 
     [SerializeField]
@@ -32,6 +37,12 @@ public class Planet : Static
 
     [SerializeField]
     public static List<Planet> listOfPlanetObjects = new List<Planet>();
+
+    [SerializeField]
+    private CargoHold myStorage;
+
+    [SerializeField]
+    private CargoHold availableCargoItems;
 
     void Start ()
     {
@@ -43,10 +54,27 @@ public class Planet : Static
         TimeToSpawn.SetTimer(1);
         TimeToSpawn.Loop(true);
         
+
         myStorage = new CargoHold(50000);
-        //myStorage.printHold();
+        availableCargoItems = new CargoHold(50000);
 
         SetupBuildings();
+		SetupMarket ();
+		//behaviorTree; // Was causing compile errors
+    }
+
+    public void SetFaction(Faction f)
+    {
+        if (Faction != null)
+        {
+            Faction.Unown(this);
+        }
+
+        Faction = f;
+        f.Own(this);
+
+        MeshRenderer mr = transform.GetChild(0).GetComponent<MeshRenderer>();
+        mr.material.color = f.ColorPrimary;
     }
 
     public void SetupBuildings()
@@ -58,9 +86,14 @@ public class Planet : Static
             myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
         }
         myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
-        Debug.Log(this.name + " | " + BuildingsToString(", "));
-        TickBuildings();
+        TickBuildings(random.Next(25) + 25);
     }
+
+	public void SetupMarket()
+	{
+
+
+	}
 
     public void SpawnMiningShip()
     {
@@ -94,11 +127,14 @@ public class Planet : Static
         }
     }
 
-    private void TickBuildings()
+    private void TickBuildings(int multiplier = 1)
     {
-        foreach (var building in myBuildings)
+        for (int i = 0; i < multiplier; i++)
         {
-            building.Tick(myStorage);
+            foreach (var building in myBuildings)
+            {
+                building.Tick(myStorage);
+            }
         }
     }
 
@@ -115,5 +151,10 @@ public class Planet : Static
             BuildingsNamed += building.Name + seperator;
         }
         return BuildingsNamed;
+    }
+
+    public void SetName(string val)
+    {
+        MyName = val;
     }
 }

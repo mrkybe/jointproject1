@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.Static;
 using ShipInternals;
 
 public class AsteroidField : Static
@@ -15,7 +16,7 @@ public class AsteroidField : Static
     void Start ()
     {
         base.Start();
-        myStorage = new CargoHold(maxStorage);
+        myStorage = CargoHold.GetAsteroidFieldCargoHold();
         //GenerateMesh();
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
@@ -30,11 +31,7 @@ public class AsteroidField : Static
 
     new protected void DelayedLoad()
     {
-        myStorage.AddHoldType("Gold");
-        myStorage.AddToHold("Gold", 200);
-        //Debug.Log("PRINTING HOLD FOR ASTEROID FIELD");
         
-        //Debug.Log("-NOTE: STAGE " + loadPriorityInital + " LOADING COMPLETE");
     }
 
     public CargoHold GetCargoHold
