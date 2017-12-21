@@ -27,10 +27,10 @@ public class Spaceship : Mobile
 
     [SerializeField]
     public List<GameObject> inSensorRange = new List<GameObject>();
-    new void Start ()
+
+    void Awake()
     {
-        base.Start();
-        if(pilot == null)
+        if (pilot == null)
         {
             SetPilot(desired_AI_Type);
         }
@@ -41,7 +41,7 @@ public class Spaceship : Mobile
         targetSpeed = -999;
         throttle_input = 0;
         oldThrottle_input = 0;
-        if ( isAI )
+        if (isAI)
         {
             targetSpeed = 0;
         }
@@ -49,6 +49,11 @@ public class Spaceship : Mobile
         myStorage.AddHoldType("Gold");
 
         mySensorArray = new SensorArray(gameObject);
+    }
+
+    new void Start ()
+    {
+        base.Start();
 	}
 
     void Update()

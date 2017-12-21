@@ -67,7 +67,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         void CreateSaturnSystem()
         {
-            Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(0, 0, 0), Quaternion.identity);
+            Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Saturn"), new Vector3(0, 0, 0), Quaternion.identity);
             Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
             Saturn.name = "Saturn";
             int numMoons = 50;

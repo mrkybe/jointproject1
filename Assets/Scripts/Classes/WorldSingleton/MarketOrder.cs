@@ -70,6 +70,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public int CompareClosest(MarketOrder x, MarketOrder y)
         {
+            if (x.origin == null || y.origin == null)
+            {
+                Debug.Log("wat");
+                return 1;
+            }
             Vector3 xPos = x.origin.transform.position;
             Vector3 yPos = y.origin.transform.position;
             Vector3 buyerPos = buyer.transform.position;

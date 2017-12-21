@@ -17,6 +17,8 @@ public partial class Planet: Static
     private List<CargoItem> producableCargoItems;
     private List<CargoItem> itemsNetChange;
     private List<MarketOrder> deliveryList;
+    private GameObject DeliveryShip;
+    private int DeliveryShipCount = 4;
 
     void PlanetBTSetup()
 	{
@@ -34,7 +36,7 @@ public partial class Planet: Static
 	    producableCargoItems = new List<CargoItem>();
         itemsNetChange = new List<CargoItem>();
 	    deliveryList = new List<MarketOrder>();
-
+        DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
         behaviorTree.Start();
 	}
 
@@ -121,7 +123,7 @@ public partial class Planet: Static
             {
                 CargoItem transaction = new CargoItem(item, itemSupply);
                 MarketOrder order = new MarketOrder(this, transaction);
-                reservedStorage.Credit(item, myStorage, itemSupply);
+                reservedStorage.Credit(item, myStorage, itemSupply, true);
                 market.PlaceSellOrder(order);
             }
 	        if (itemDemand > 0 && true) // check that we can afford it..?  somehow?
@@ -138,7 +140,7 @@ public partial class Planet: Static
 	    Dictionary<Planet, List<MarketOrder>> orders = new Dictionary<Planet, List<MarketOrder>>();
 	    foreach (MarketOrder order in deliveryList)
 	    {
-	        if (orders[order.destination] == null)
+	        if (!orders.ContainsKey(order.destination))
 	        {
 	            orders[order.destination] = new List<MarketOrder>();
 	        }
@@ -150,17 +152,87 @@ public partial class Planet: Static
 	        var list = orders[p];
 	        foreach (var order in list)
 	        {
-	            SendDeliveryShip(order);
+	            if (DeliveryShipCount > 0)
+	            {
+	                SendDeliveryShip(order);
+	                deliveryList.Remove(order);
+	                DeliveryShipCount--;
+	            }
+	            else
+	            {
+	                break;
+	            }
 	        }
 	    }
 	}
 
+    public static T InstantiateAdv<T>(T unityObject, Vector3 pos, Quaternion rot, System.Action<T> beforeAwake = null) where T : UnityEngine.Object
+    {
+        //Find prefab gameObject
+        var gameObject = unityObject as GameObject;
+        var component = unityObject as Component;
+
+        if (gameObject == null && component != null)
+            gameObject = component.gameObject;
+
+        //Save current prefab active state
+        var isActive = false;
+        if (gameObject != null)
+        {
+            isActive = gameObject.activeSelf;
+            //Deactivate
+            gameObject.SetActive(false);
+        }
+
+        //Instantiate
+        var obj = UnityEngine.Object.Instantiate(unityObject, pos, rot) as T;
+        if (obj == null)
+            throw new System.Exception("Failed to instantiate Object " + unityObject);
+
+        //This funciton will be executed before awake of any script inside
+        if (beforeAwake != null)
+            beforeAwake(obj);
+
+        //Revert prefab active state
+        if (gameObject != null)
+            gameObject.SetActive(isActive);
+
+        //Find instantiated GameObject
+        gameObject = obj as GameObject;
+        component = obj as Component;
+
+        if (gameObject == null && component != null)
+            gameObject = component.gameObject;
+
+        //Set active state to prefab state
+        if (gameObject != null)
+            gameObject.SetActive(isActive);
+
+        return obj;
+    }
+
     private void SendDeliveryShip(MarketOrder order)
     {
-        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+        var ship = Instantiate(DeliveryShip, this.transform.position, Quaternion.identity);
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
+        Spaceship shipScript = ship.GetComponent<Spaceship>();
 
+        if (shipScript != null)
+        {
+            CargoHold shipHold = shipScript.GetCargoHold;
+            shipHold.AddHoldType(order.item.Name);
+            shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
+        }
+        if (pilot != null)
+        {
+            pilot.StartDelivery(order);
+        }
         WorkerShips.Add(ship.gameObject);
+    }
+
+    public void ReturnDeliveryShip()
+    {
+        DeliveryShipCount++;
     }
 
     public void AddToDeliveryQueue(MarketOrder marketOrder)
