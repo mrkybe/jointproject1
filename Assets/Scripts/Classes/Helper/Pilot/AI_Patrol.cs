@@ -18,8 +18,18 @@ public class AI_Patrol : PilotInterface
     {
         base.Start();
         shipScript = transform.GetComponent<Spaceship>();
-        ai_type = AI_Type.PATROL;
 
+        StartMining();
+
+        #if UNITY_EDITOR
+        Debugger debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        debugger.BehaviorTree = behaviorTree;
+        #endif
+        behaviorTree.Start();
+    }
+
+    public void StartMining()
+    {
         behaviorTree = CreateBehaviourTreeDumbMining();
 
         blackboard = behaviorTree.Blackboard;
@@ -28,13 +38,11 @@ public class AI_Patrol : PilotInterface
 
         // temporarily use this as the home base until we have a better system
         BlackboardSetNearestPlanet();
+    }
 
-        // attach the debugger component if executed in editor (helps to debug in the inspector) 
-#if UNITY_EDITOR
-        Debugger debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-        debugger.BehaviorTree = behaviorTree;
-#endif
-        behaviorTree.Start();
+    public void StartDelivery()
+    {
+        
     }
 
     private Root CreateBehaviourTreeDumbDelivery()

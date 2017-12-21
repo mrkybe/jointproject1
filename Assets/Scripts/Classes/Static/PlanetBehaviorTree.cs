@@ -150,10 +150,18 @@ public partial class Planet: Static
 	        var list = orders[p];
 	        foreach (var order in list)
 	        {
-	            
+	            SendDeliveryShip(order);
 	        }
 	    }
 	}
+
+    private void SendDeliveryShip(MarketOrder order)
+    {
+        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
+        AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
+
+        WorkerShips.Add(ship.gameObject);
+    }
 
     public void AddToDeliveryQueue(MarketOrder marketOrder)
     {

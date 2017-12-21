@@ -30,10 +30,6 @@ public class Mobile : MonoBehaviour
     {
         switch (wanted)
         {
-            case AI_Type.GATHER:
-                pilot = gameObject.AddComponent<AI_Gather>();
-                isAI = true;
-                break;
             case AI_Type.PATROL:
                 pilot = gameObject.AddComponent<AI_Patrol>();
                 isAI = true;
