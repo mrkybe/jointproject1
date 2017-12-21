@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
@@ -15,6 +17,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private static GameObject Saturn;
         private static List<GameObject> Moons = new List<GameObject>();
         private static List<GameObject> AsteroidFields = new List<GameObject>();
+        public static Overseer Main;
 
         //float timeScale;
         new void Start()
@@ -32,6 +35,19 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateSaturnSystem();
             CreatePlanetNodes();
             CreateSky();
+            CreateMarket();
+            if (Main == null)
+            {
+                Main = this;
+            }
+            else if (Main == this)
+            {
+                throw new Exception("Overseer Object Already Called Start() Once Please Fix");
+            }
+            else
+            {
+                throw new Exception("Overseer Object Already Created Please Fix");
+            }
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
         }
@@ -73,7 +89,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 script.SetFaction(GetRandomFaction());
                 Moons.Add(moon);
             }
-            int numAsteroidFields = 1000;
+            int numAsteroidFields = 100;
             for (int i = 0; i < numAsteroidFields; i++)
             {
                 //float x = (Random.value * worldSize) - (worldSize / 2);

@@ -72,7 +72,10 @@ public class Building
     }
 
     public delegate Building BasicEnviroment();
-    public static BasicEnviroment[] BasicEnviroments = {GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory};
+    public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
+
+    public delegate Building BasicIndustrial();
+    public static BasicIndustrial[] BasicIndustry = { GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory };
 
 
     // most basic resources

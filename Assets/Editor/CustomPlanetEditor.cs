@@ -33,6 +33,11 @@ namespace Assets.Editor {
                 EditorGUILayout.TextArea(myTarget.BuildingsToString(), GUILayout.MinHeight(40), GUILayout.MaxHeight(120), GUILayout.ExpandHeight(true));
             }
 
+            if (GUILayout.Button("Calculate Net Demand"))
+            {
+                myTarget.CalculateNetDemand();
+            }
+
             base.OnInspectorGUI();
         }
     }
