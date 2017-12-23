@@ -44,8 +44,7 @@ public class Mobile : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    protected void FixedUpdate()
+    protected void Update()
     {
         if (inTime)
         {
@@ -53,11 +52,6 @@ public class Mobile : MonoBehaviour
             Move();
         }
     }
-
-    protected void Update()
-    {
-        
-	}
 
     private void CalculateGravityVector()
     {

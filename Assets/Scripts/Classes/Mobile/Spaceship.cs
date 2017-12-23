@@ -56,20 +56,12 @@ public class Spaceship : Mobile
         base.Start();
 	}
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            myStorage.PrintHold();
-        }
-    }
-	
 	// Update is called once per frame
-	new void FixedUpdate ()
+	new void Update ()
 	{
         if (inTime && pilot)
         {
-            base.FixedUpdate();
+            base.Update();
             direction = transform.forward;
             velocity = engineRunSpeed;
 

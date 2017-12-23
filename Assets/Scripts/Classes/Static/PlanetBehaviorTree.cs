@@ -7,6 +7,7 @@ using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 using NPBehave;
 using Action = NPBehave.Action;
+using Random = UnityEngine.Random;
 
 public partial class Planet: Static
 {
@@ -213,7 +214,10 @@ public partial class Planet: Static
 
     private void SendDeliveryShip(MarketOrder order)
     {
-        var ship = Instantiate(DeliveryShip, this.transform.position, Quaternion.identity);
+        //Random.InitState(GetInstanceID());
+        Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
+        Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
+        var ship = Instantiate(DeliveryShip, this.transform.position + offset3d, Quaternion.identity);
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
 
