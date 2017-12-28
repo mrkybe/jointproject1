@@ -27,9 +27,13 @@ namespace Assets.Editor {
             if (myTarget.GetCargoHold != null)
             {
                 hold = myTarget.GetCargoHold;
+                
                 string holdString = hold.ToString();
+                string reserveString = myTarget.GetReserveCargoHold.ToString();
+
 
                 EditorGUILayout.TextArea(holdString, GUILayout.MinHeight(40), GUILayout.MaxHeight(200), GUILayout.ExpandHeight(true));
+                EditorGUILayout.TextArea(reserveString, GUILayout.MinHeight(40), GUILayout.MaxHeight(200), GUILayout.ExpandHeight(true));
                 EditorGUILayout.TextArea(myTarget.BuildingsToString(), GUILayout.MinHeight(40), GUILayout.MaxHeight(120), GUILayout.ExpandHeight(true));
             }
 

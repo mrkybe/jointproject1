@@ -57,6 +57,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             origin.AddToDeliveryQueue(this);
         }
+
+        public void Combine(MarketOrder order)
+        {
+            item.Count += order.item.Count;
+        }
     }
 
     public class MarketOrderComparer : IComparer<MarketOrder>

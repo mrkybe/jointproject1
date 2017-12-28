@@ -19,7 +19,7 @@ public partial class Planet: Static
     private List<CargoItem> itemsNetChange;
     private List<MarketOrder> deliveryList;
     private GameObject DeliveryShip;
-    private int DeliveryShipCount = 4;
+    public int DeliveryShipCount = 10;
 
     void PlanetBTSetup()
 	{
@@ -45,7 +45,7 @@ public partial class Planet: Static
 	{
 		return new Root (
 			new Sequence (
-				new Wait (10f),
+				new Wait (1f),
 				new Action (() => {
 					CalculateConsumableResources ();
 				}){ Label = "Calculate the resources needed for the market" },
@@ -57,10 +57,11 @@ public partial class Planet: Static
 				}){ Label = "Update the market selling orders and buying orders" },
 				new Action (() => {
 					SendDeliveryShips ();
-				}){ Label = "Send delivery ships for sold resources if ships are available" }
-			
-
-			)
+				}){ Label = "Send delivery ships for sold resources if ships are available" },
+                new Action(() => {
+                    TickSelf();
+                }){ Label = "Tick Self" }
+            )
 		);
 	}
 
@@ -155,9 +156,11 @@ public partial class Planet: Static
 	        {
 	            if (DeliveryShipCount > 0)
 	            {
-	                SendDeliveryShip(order);
-	                deliveryList.Remove(order);
-	                DeliveryShipCount--;
+	                if ( order.item.Count > 0)
+	                {
+	                    SendDeliveryShip(order);
+	                    DeliveryShipCount--;
+                    }
 	            }
 	            else
 	            {
@@ -167,56 +170,12 @@ public partial class Planet: Static
 	    }
 	}
 
-    public static T InstantiateAdv<T>(T unityObject, Vector3 pos, Quaternion rot, System.Action<T> beforeAwake = null) where T : UnityEngine.Object
-    {
-        //Find prefab gameObject
-        var gameObject = unityObject as GameObject;
-        var component = unityObject as Component;
-
-        if (gameObject == null && component != null)
-            gameObject = component.gameObject;
-
-        //Save current prefab active state
-        var isActive = false;
-        if (gameObject != null)
-        {
-            isActive = gameObject.activeSelf;
-            //Deactivate
-            gameObject.SetActive(false);
-        }
-
-        //Instantiate
-        var obj = UnityEngine.Object.Instantiate(unityObject, pos, rot) as T;
-        if (obj == null)
-            throw new System.Exception("Failed to instantiate Object " + unityObject);
-
-        //This funciton will be executed before awake of any script inside
-        if (beforeAwake != null)
-            beforeAwake(obj);
-
-        //Revert prefab active state
-        if (gameObject != null)
-            gameObject.SetActive(isActive);
-
-        //Find instantiated GameObject
-        gameObject = obj as GameObject;
-        component = obj as Component;
-
-        if (gameObject == null && component != null)
-            gameObject = component.gameObject;
-
-        //Set active state to prefab state
-        if (gameObject != null)
-            gameObject.SetActive(isActive);
-
-        return obj;
-    }
-
     private void SendDeliveryShip(MarketOrder order)
     {
         //Random.InitState(GetInstanceID());
         Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
         Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
+
         var ship = Instantiate(DeliveryShip, this.transform.position + offset3d, Quaternion.identity);
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
@@ -225,7 +184,12 @@ public partial class Planet: Static
         {
             CargoHold shipHold = shipScript.GetCargoHold;
             shipHold.AddHoldType(order.item.Name);
-            shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
+            int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
+            order.item.Count -= transfered;
+            if (order.item.Count == 0)
+            {
+                deliveryList.Remove(order);
+            }
         }
         if (pilot != null)
         {

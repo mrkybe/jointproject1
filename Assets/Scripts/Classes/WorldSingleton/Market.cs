@@ -7,25 +7,54 @@ namespace Assets.Scripts.Classes.WorldSingleton
 {
     public partial class Overseer : Static.Static
     {
-        public List<MarketOrder> sellingOrders;
-        public List<MarketOrder> buyingOrders;
+        //public List<MarketOrder> sellingOrders;
+        //public List<MarketOrder> buyingOrders;
+        public Dictionary<Planet, List<MarketOrder>> sellingOrdersByPlanet;
+        public Dictionary<Planet, List<MarketOrder>> buyingOrdersByPlanet;
         public Dictionary<Planet, MarketOrder> executedOrders;
 
         private void CreateMarket()
         {
-            sellingOrders = new List<MarketOrder>();
-            buyingOrders = new List<MarketOrder>();
+            //sellingOrders = new List<MarketOrder>();
+            //buyingOrders = new List<MarketOrder>();
+
+            sellingOrdersByPlanet = new Dictionary<Planet, List<MarketOrder>>();
+            buyingOrdersByPlanet = new Dictionary<Planet, List<MarketOrder>>();
             executedOrders = new Dictionary<Planet, MarketOrder>();
+
+            foreach (Planet p in Planet.listOfPlanetObjects)
+            {
+                sellingOrdersByPlanet.Add(p, new List<MarketOrder>());
+                buyingOrdersByPlanet.Add(p, new List<MarketOrder>());
+            }
         }
 
         public void PlaceSellOrder(MarketOrder order)
         {
-            sellingOrders.Add(order);
+            foreach (MarketOrder existing in sellingOrdersByPlanet[order.origin])
+            {
+                if (existing.item.KindEquals(order.item))
+                {
+                    existing.Combine(order);
+                    return;
+                }
+            }
+
+            sellingOrdersByPlanet[order.origin].Add(order);
         }
 
         public void PlaceBuyOrder(MarketOrder order)
         {
-            buyingOrders.Add(order);
+            foreach (MarketOrder existing in buyingOrdersByPlanet[order.origin])
+            {
+                if (existing.item.KindEquals(order.item))
+                {
+                    existing.Combine(order);
+                    return;
+                }
+            }
+
+            buyingOrdersByPlanet[order.origin].Add(order);
         }
         
         public void MatchOrders()
@@ -40,6 +69,18 @@ namespace Assets.Scripts.Classes.WorldSingleton
              *     3. Fill as much of the buy order as possible, until either there's no more sell orders or the buy order is filled
              *     4. Remove the filled buy order from the list of buy orders, turn the consumed sell orders into delivery jobs
             */
+            List<MarketOrder> sellingOrders = new List<MarketOrder>();
+            List<MarketOrder> buyingOrders = new List<MarketOrder>();
+
+            foreach (Planet p in sellingOrdersByPlanet.Keys)
+            {
+                sellingOrders.AddRange(sellingOrdersByPlanet[p]);
+            }
+            foreach (Planet p in buyingOrdersByPlanet.Keys)
+            {
+                buyingOrders.AddRange(buyingOrdersByPlanet[p]);
+            }
+
             foreach (MarketOrder buyOrder in buyingOrders)
             {
                 List<MarketOrder> candidates = new List<MarketOrder>();
@@ -74,7 +115,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
                 foreach (MarketOrder sold in sellOrdersFilled)
                 {
-                    sellingOrders.Remove(sold);
+                    sellingOrdersByPlanet[sold.origin].Remove(sold);
                 }
                 sellOrdersFilled.Clear();
                 if (currentBuyOrder.Done)
@@ -85,7 +126,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             foreach (MarketOrder bought in buyOrdersFilled)
             {
-                buyingOrders.Remove(bought);
+                buyingOrdersByPlanet[bought.origin].Remove(bought);
             }
             buyOrdersFilled.Clear();
 

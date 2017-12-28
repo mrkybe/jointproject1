@@ -44,7 +44,7 @@ public partial class Planet : Static
     [SerializeField]
     private CargoHold reservedStorage;
 
-    void Start ()
+    void Awake()
     {
         WorkerShips = new List<GameObject>();
 
@@ -81,7 +81,7 @@ public partial class Planet : Static
     public void SetupBuildings()
     {
         System.Random random = new System.Random(GetInstanceID());
-        int enviromentalStartingCount = random.Next(8) + 3;
+        int enviromentalStartingCount = random.Next(2) + 3;
         int industrialStartingCount = random.Next(2) + 1;
         // Add enviromental buildings
         for (int i = 0; i < enviromentalStartingCount; i++)
@@ -151,6 +151,11 @@ public partial class Planet : Static
         get { return myStorage; }
     }
 
+    public CargoHold GetReserveCargoHold
+    {
+        get { return reservedStorage; }
+    }
+
     public string BuildingsToString(string seperator = "\n")
     {
         string BuildingsNamed = "";
@@ -164,5 +169,10 @@ public partial class Planet : Static
     public void SetName(string val)
     {
         MyName = val;
+    }
+
+    private void TickSelf()
+    {
+        TickBuildings();
     }
 }
