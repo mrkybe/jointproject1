@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
 
+[SelectionBase]
 public class Mobile : MonoBehaviour
 {
     /* Written by Ruslan Kaybyshev, Late 2013
