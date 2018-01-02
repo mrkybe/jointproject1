@@ -11,6 +11,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         [SerializeField]
         public static GameObject Sky;
         float timeScaleOriginal;
+        public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
         private float worldSize = 800f;
 
@@ -25,6 +26,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             base.Start();
             // Initialize Stuff Above
             timeScaleOriginal = Time.fixedDeltaTime;
+            //Debug.unityLogger.logEnabled = false; 
             Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
             RootNode = GameObject.FindWithTag("RootNode");
             if(RootNode != null)
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreatePlanetNodes();
             CreateSky();
             CreateMarket();
+            StartMatchingOrders();
             if (Main == null)
             {
                 Main = this;
@@ -142,7 +145,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 Moons.Add(moon);
             }
 
-            int numAsteroidFields = 5;
+            int numAsteroidFields = 25;
             List<Vector3> asteroid_positions = GenerateMoonPositions(numAsteroidFields, 5, moon_positions);
             for (int i = 0; i < numAsteroidFields; i++)
             {

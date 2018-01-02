@@ -42,7 +42,7 @@
             }
             else
             {
-                Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
+                //Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
             }
         }
 
@@ -126,7 +126,7 @@
             }
 
             Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
-            return -1;
+            return 0;
         }
 
         public override string ToString()

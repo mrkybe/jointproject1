@@ -55,9 +55,16 @@ public class AI_Patrol : PilotInterface
 
     public void StartDelivery(MarketOrder order)
     {
-        behaviorTree = CreateBehaviourTreeDumbDelivery();
+        if (behaviorTree != null)
+        {
+            behaviorTree.Stop();
+        }
+        else
+        {
+            behaviorTree = CreateBehaviourTreeDumbDelivery();
+            blackboard = behaviorTree.Blackboard;
+        }
 
-        blackboard = behaviorTree.Blackboard;
         blackboard["deliveryOrder"] = order;
         blackboard["homePlanet"] = order.origin;
         blackboard["deliveryPlanet"] = order.destination;
@@ -70,6 +77,15 @@ public class AI_Patrol : PilotInterface
         debugger.BehaviorTree = behaviorTree;
 #endif
         behaviorTree.Start();
+    }
+
+    private Root CreateBehaviorTreePirate()
+    {
+        return new Root(
+            new Sequence(
+                new Wait(1f)
+            )
+        );
     }
 
     private Root CreateBehaviourTreeDumbDelivery()
@@ -133,14 +149,41 @@ public class AI_Patrol : PilotInterface
                 new Action(() =>
                     {
                         Planet nearest = GetNearestPlanet();
-                        nearest.ReturnDeliveryShip();
+                        nearest.AddToAvailableDeliveryShips(this);
+                        blackboard["arriveTime"] = Time.time;
+                    })
+                { Label = "Dock with planet" },
+                new Service(0.5f, UpdateDistanceToTarget,
+                    new Action((bool shouldCancel) =>
+                        {
+                            if (!shouldCancel)
+                            {
+                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                if (Time.time - blackboard.Get<float>("arriveTime") > 5f)
+                                {
+                                    Debug.Log("ARRIVED!!!! " + (Time.time - blackboard.Get<float>("arriveTime")));
+                                    return Action.Result.SUCCESS;
+                                }
+                                return Action.Result.PROGRESS;
+                            }
+                            else
+                            {
+                                return Action.Result.FAILED;
+                            }
+                        })
+                        { Label = "Wait at target position for 5 seconds" }
+                ),
+                new Action(() =>
+                    {
+                        Planet nearest = GetNearestPlanet();
+                        nearest.ReturnDeliveryShip(this);
+                        behaviorTree.Stop();
                         Destroy(this.gameObject);
                     })
                 { Label = "Dock with planet" }
             )
         );
     }
-
 
     private Root CreateBehaviourTreeDumbMining()
     {

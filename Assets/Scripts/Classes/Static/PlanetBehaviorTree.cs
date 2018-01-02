@@ -18,12 +18,16 @@ public partial class Planet: Static
     private List<CargoItem> producableCargoItems;
     private List<CargoItem> itemsNetChange;
     private List<MarketOrder> deliveryList;
+    private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
-    public int DeliveryShipCount = 10;
+    public int DeliveryShipCount = 5;
+    private float LastDeliveryShipDeployment = 0;
 
     void PlanetBTSetup()
 	{
         behaviorTree = CreatePlanetBT();
+
+	    LastDeliveryShipDeployment = Time.time;
 
 		blackboard = behaviorTree.Blackboard;
 
@@ -37,6 +41,7 @@ public partial class Planet: Static
 	    producableCargoItems = new List<CargoItem>();
         itemsNetChange = new List<CargoItem>();
 	    deliveryList = new List<MarketOrder>();
+        ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
         behaviorTree.Start();
 	}
@@ -45,7 +50,7 @@ public partial class Planet: Static
 	{
 		return new Root (
 			new Sequence (
-				new Wait (1f),
+				new Wait (1f + Random.value),
 				new Action (() => {
 					CalculateConsumableResources ();
 				}){ Label = "Calculate the resources needed for the market" },
@@ -154,12 +159,11 @@ public partial class Planet: Static
 	        var list = orders[p];
 	        foreach (var order in list)
 	        {
-	            if (DeliveryShipCount > 0)
+	            if (DeliveryShipCount > 0 || ReadyDeliveryShips.Count > 0)
 	            {
 	                if ( order.item.Count > 0)
 	                {
 	                    SendDeliveryShip(order);
-	                    DeliveryShipCount--;
                     }
 	            }
 	            else
@@ -176,7 +180,18 @@ public partial class Planet: Static
         Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
         Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
 
-        var ship = Instantiate(DeliveryShip, this.transform.position + offset3d, Quaternion.identity);
+        Quaternion shipRotation = Quaternion.LookRotation(offset3d, Vector3.up);
+        GameObject ship = null;
+        if (ReadyDeliveryShips.Count == 0)
+        {
+            ship = Instantiate(DeliveryShip, this.transform.position + offset3d, shipRotation);
+            DeliveryShipCount--;
+        }
+        else
+        {
+            ship = ReadyDeliveryShips[0];
+            ReadyDeliveryShips.RemoveAt(0);
+        }
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
 
@@ -198,14 +213,20 @@ public partial class Planet: Static
         WorkerShips.Add(ship.gameObject);
     }
 
-    public void ReturnDeliveryShip()
+    public void ReturnDeliveryShip(AI_Patrol aiPatrol)
     {
+        ReadyDeliveryShips.Remove(aiPatrol.gameObject);
         DeliveryShipCount++;
     }
 
     public void AddToDeliveryQueue(MarketOrder marketOrder)
     {
         deliveryList.Add(marketOrder);
+    }
+
+    public void AddToAvailableDeliveryShips(AI_Patrol aiPatrol)
+    {
+        ReadyDeliveryShips.Add(aiPatrol.gameObject);
     }
 }
 

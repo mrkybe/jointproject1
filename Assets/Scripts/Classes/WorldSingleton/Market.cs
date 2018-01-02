@@ -56,6 +56,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             buyingOrdersByPlanet[order.origin].Add(order);
         }
+
+        public void StartMatchingOrders()
+        {
+            InvokeRepeating("MatchOrders", 1f, 1f);
+        }
         
         public void MatchOrders()
         {
