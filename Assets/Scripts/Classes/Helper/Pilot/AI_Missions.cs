@@ -8,8 +8,9 @@ using ShipInternals;
 
 namespace AI_Missions
 {
+    
     public enum AI_Type { GATHER, PATROL, PLAYER }
-
+    /*
     public enum AI_States { MISSION_START, EN_ROUTE, ARRIVED, ARRIVING, DONE, MINING, WAITING};
 
     public class MissionGeneric
@@ -100,7 +101,7 @@ namespace AI_Missions
             }
         }
     }*/
-    
+    /*
     public class Mine : MissionGeneric
     {
         String miningTarget;
@@ -272,5 +273,5 @@ namespace AI_Missions
             targetSpeed = 0;
             slowDown = false;
         }
-    }
+    }*/
 }

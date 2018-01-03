@@ -48,7 +48,7 @@ namespace ShipInternals
         public int Count
         {
             get { return _count; }
-            set { _count += value; }
+            set { _count = value; }
         }
 
         public int Size
@@ -60,6 +60,16 @@ namespace ShipInternals
         public int Volume
         {
             get { return Size * Count; }
+        }
+
+        public bool KindEquals(CargoItem buyOrderItem)
+        {
+            return this.Name.Equals(buyOrderItem.Name);
+        }
+
+        internal CargoItem Copy()
+        {
+            return new CargoItem(_name, _count, _size);
         }
     }
 }

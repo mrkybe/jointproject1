@@ -30,10 +30,6 @@ public class Mobile : MonoBehaviour
     {
         switch (wanted)
         {
-            case AI_Type.GATHER:
-                pilot = gameObject.AddComponent<AI_Gather>();
-                isAI = true;
-                break;
             case AI_Type.PATROL:
                 pilot = gameObject.AddComponent<AI_Patrol>();
                 isAI = true;
@@ -48,8 +44,7 @@ public class Mobile : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    protected void FixedUpdate()
+    protected void Update()
     {
         if (inTime)
         {
@@ -57,11 +52,6 @@ public class Mobile : MonoBehaviour
             Move();
         }
     }
-
-    protected void Update()
-    {
-        
-	}
 
     private void CalculateGravityVector()
     {

@@ -42,9 +42,9 @@ public partial class Planet : Static
     private CargoHold myStorage;
 
     [SerializeField]
-    private CargoHold availableCargoItems;
+    private CargoHold reservedStorage;
 
-    void Start ()
+    void Awake()
     {
         WorkerShips = new List<GameObject>();
 
@@ -56,11 +56,12 @@ public partial class Planet : Static
         
 
         myStorage = new CargoHold(50000);
-        availableCargoItems = new CargoHold(50000);
+        reservedStorage = new CargoHold(50000);
 
         SetupBuildings();
-		SetupMarket ();
-		//behaviorTree; // Was causing compile errors
+		SetupMarket();
+        PlanetBTSetup();
+        //behaviorTree; // Was causing compile errors
     }
 
     public void SetFaction(Faction f)
@@ -80,10 +81,17 @@ public partial class Planet : Static
     public void SetupBuildings()
     {
         System.Random random = new System.Random(GetInstanceID());
-        int startingCount = random.Next(8) + 3;
-        for (int i = 0; i < startingCount; i++)
+        int enviromentalStartingCount = random.Next(2) + 3;
+        int industrialStartingCount = random.Next(2) + 1;
+        // Add enviromental buildings
+        for (int i = 0; i < enviromentalStartingCount; i++)
         {
-            myBuildings.Add(Building.BasicEnviroments[random.Next(4)]());
+            myBuildings.Add(Building.BasicEnviroments[random.Next(Building.BasicEnviroments.Length)]());
+        }
+        // Add industrial buildings
+        for (int i = 0; i < industrialStartingCount; i++)
+        {
+            myBuildings.Add(Building.BasicIndustry[random.Next(Building.BasicIndustry.Length)]());
         }
         myBuildings.Sort((a,b) => string.CompareOrdinal(a.Name, b.Name));
         TickBuildings(random.Next(25) + 25);
@@ -143,6 +151,11 @@ public partial class Planet : Static
         get { return myStorage; }
     }
 
+    public CargoHold GetReserveCargoHold
+    {
+        get { return reservedStorage; }
+    }
+
     public string BuildingsToString(string seperator = "\n")
     {
         string BuildingsNamed = "";
@@ -156,5 +169,10 @@ public partial class Planet : Static
     public void SetName(string val)
     {
         MyName = val;
+    }
+
+    private void TickSelf()
+    {
+        TickBuildings();
     }
 }

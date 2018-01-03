@@ -72,7 +72,10 @@ public class Building
     }
 
     public delegate Building BasicEnviroment();
-    public static BasicEnviroment[] BasicEnviroments = {GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory};
+    public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
+
+    public delegate Building BasicIndustrial();
+    public static BasicIndustrial[] BasicIndustry = { GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory };
 
 
     // most basic resources
@@ -82,7 +85,7 @@ public class Building
                             new List<CargoItem>(),
                             new List<CargoItem>()
                             {
-                                new CargoItem("Dirt", 10)
+                                new CargoItem("Dirt", 1)
                             });
     }
 
@@ -94,7 +97,7 @@ public class Building
                             },
                             new List<CargoItem>()
                             {
-                                new CargoItem("Water", 10)
+                                new CargoItem("Water", 1)
                             });
     }
 
@@ -106,7 +109,7 @@ public class Building
                             },
                             new List<CargoItem>()
                             {
-                                new CargoItem("Rock", 10)
+                                new CargoItem("Rock", 1)
                             });
     }
 
@@ -118,9 +121,9 @@ public class Building
                             },
                             new List<CargoItem>()
                             {
-                                new CargoItem("Dirt", 5),
-                                new CargoItem("Iron Ore", 3),
-                                new CargoItem("Copper Ore", 2),
+                                new CargoItem("Dirt", 1),
+                                new CargoItem("Iron Ore", 1),
+                                new CargoItem("Copper Ore", 1),
                                 new CargoItem("Titanium Ore", 1)
                             });
     }
@@ -176,7 +179,7 @@ public class Building
                             },
                             new List<CargoItem>()
                             {
-                                new CargoItem("Titanium", 1)
+                                new CargoItem("Titanium", 5)
                             });
     }
 
