@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
@@ -9,12 +11,14 @@ namespace Assets.Scripts.Classes.WorldSingleton
         [SerializeField]
         public static GameObject Sky;
         float timeScaleOriginal;
+        public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
-        private float worldSize = 1800f;
+        private float worldSize = 800f;
 
         private static GameObject Saturn;
         private static List<GameObject> Moons = new List<GameObject>();
         private static List<GameObject> AsteroidFields = new List<GameObject>();
+        public static Overseer Main;
 
         //float timeScale;
         new void Start()
@@ -22,6 +26,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             base.Start();
             // Initialize Stuff Above
             timeScaleOriginal = Time.fixedDeltaTime;
+            //Debug.unityLogger.logEnabled = false; 
             Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
             RootNode = GameObject.FindWithTag("RootNode");
             if(RootNode != null)
@@ -32,6 +37,20 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateSaturnSystem();
             CreatePlanetNodes();
             CreateSky();
+            CreateMarket();
+            StartMatchingOrders();
+            if (Main == null)
+            {
+                Main = this;
+            }
+            else if (Main == this)
+            {
+                throw new Exception("Overseer Object Already Called Start() Once Please Fix");
+            }
+            else
+            {
+                throw new Exception("Overseer Object Already Created Please Fix");
+            }
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
         }
@@ -49,22 +68,74 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return new Vector3(x, 0, z);
         }
 
+        Vector3 FindClosest(List<Vector3> list, Vector3 current)
+        {
+            Vector3 result = list[0];
+            float best = Vector3.Distance(list[0], current);
+            foreach (Vector3 pos in list)
+            {
+                float d = Vector3.Distance(pos, current);
+                if (d < best)
+                {
+                    best = d;
+                    result = pos;
+                }
+            }
+            return result;
+        }
+
+        Vector3 GetBestCandidate(List<Vector3> samples, int numCandidates)
+        {
+            Vector3 bestCandidate = Vector3.zero;
+            float bestDistance = 0;
+            for (var i = 0; i < numCandidates; ++i)
+            {
+                Vector3 c = PolarCoordinates(Random.value, 20f + Random.value * ((worldSize/2) - 100f));
+
+                float d = Vector3.Distance(FindClosest(samples, c), c);
+                if (d > bestDistance)
+                {
+                    bestDistance = d;
+                    bestCandidate = c;
+                }
+            }
+
+            return bestCandidate;
+        }
+
+        List<Vector3> GenerateMoonPositions(int numMoons, int numCandidates, List<Vector3> alsoAvoid = null)
+        {
+            List<Vector3> activeSamples = new List<Vector3>();
+            if (alsoAvoid != null)
+            {
+                activeSamples.AddRange(alsoAvoid);
+            }
+            else
+            {
+                activeSamples.Add(Vector3.zero);
+            }
+            List<Vector3> result = new List<Vector3>();
+            while (result.Count < (numMoons+1))
+            {
+                Vector3 sample = GetBestCandidate(activeSamples, numCandidates);
+                activeSamples.Add(sample);
+                result.Add(sample);
+            }
+            return result;
+        }
+
         void CreateSaturnSystem()
         {
-            Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(0, 0, 0), Quaternion.identity);
+            Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Saturn"), new Vector3(0, 0, 0), Quaternion.identity);
             Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
             Saturn.name = "Saturn";
             int numMoons = 50;
             float minSaturnDistance = 75f;
             Queue<string> moon_names = new Queue<string>(ListOfSaturnMoonNames());
+            List<Vector3> moon_positions = GenerateMoonPositions(numMoons, 10);
             for (int i = 0; i < (numMoons); i++)
             {
-                float stepCount = ((worldSize / 2) - minSaturnDistance  )/numMoons;
-                var coords = PolarCoordinates(Random.value, minSaturnDistance + i * stepCount);
-                float x = coords.x;
-                float z = coords.z;
-
-                GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), new Vector3(x, 0, z), Quaternion.identity);
+                GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), moon_positions[i], Quaternion.identity);
                 moon.name = "Moon" + i;
                 var script = moon.GetComponent<Planet>();
                 script.RandomizeSize();
@@ -73,28 +144,30 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 script.SetFaction(GetRandomFaction());
                 Moons.Add(moon);
             }
-            int numAsteroidFields = 1000;
+
+            int numAsteroidFields = 25;
+            List<Vector3> asteroid_positions = GenerateMoonPositions(numAsteroidFields, 5, moon_positions);
             for (int i = 0; i < numAsteroidFields; i++)
             {
                 //float x = (Random.value * worldSize) - (worldSize / 2);
                 //float x = ((Random.value * worldSize) - (worldSize / 2))/70f;
                 //float z = (Random.value * worldSize) - (worldSize / 2);
-                float stepCount = ((worldSize / 2) - minSaturnDistance) / numAsteroidFields;
-                var coords = PolarCoordinates(Random.value, minSaturnDistance + Random.value * ((worldSize / 2) - minSaturnDistance));
-                float x = coords.x;
-                float z = coords.z;
-                if (CheckForRejectAsteroids(x, z))
-                {
-                    GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), new Vector3(x, 0, z), Quaternion.identity);
-                    asteroidField.name = "AsteroidField" + i;
-                    AsteroidFields.Add(asteroidField);
-                }
-                else
-                {
-                    i--;
-                }
+                //float stepCount = ((worldSize / 2) - minSaturnDistance) / numAsteroidFields;
+                //var coords = PolarCoordinates(Random.value, minSaturnDistance + Random.value * ((worldSize / 2) - minSaturnDistance));
+                //float x = coords.x;
+                //float z = coords.z;
+                //if (CheckForRejectAsteroids(x, z))
+                //{
+                GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), asteroid_positions[i], Quaternion.identity);
+                asteroidField.name = "AsteroidField" + i;
+                AsteroidFields.Add(asteroidField);
+                //}
+                //else
+                //{
+                //    i--;
+                //}
             }
-            List<GameObject> MoonsToDestroy = new List<GameObject>();
+            /*List<GameObject> MoonsToDestroy = new List<GameObject>();
             List<GameObject> AsteroidsToDestroy = new List<GameObject>();
             foreach (var moon in Moons)
             {
@@ -172,7 +245,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 Destroy(asteroid);
             }
 
-            int counter = 0;
+            /*int counter = 0;
             foreach (var moon in Moons)
             {
                 moon.name = "Moon" + counter;
@@ -183,7 +256,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             {
                 asteroidField.name = "AsteroidField" + counter;
                 counter += 1;
-            }
+            }*/
         }
 
         bool CheckForReject(float x, float z)

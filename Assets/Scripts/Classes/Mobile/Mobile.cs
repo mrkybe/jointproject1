@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
 
+[SelectionBase]
 public class Mobile : MonoBehaviour
 {
     /* Written by Ruslan Kaybyshev, Late 2013
@@ -30,10 +31,6 @@ public class Mobile : MonoBehaviour
     {
         switch (wanted)
         {
-            case AI_Type.GATHER:
-                pilot = gameObject.AddComponent<AI_Gather>();
-                isAI = true;
-                break;
             case AI_Type.PATROL:
                 pilot = gameObject.AddComponent<AI_Patrol>();
                 isAI = true;
@@ -48,20 +45,22 @@ public class Mobile : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    protected void FixedUpdate()
+    protected void Update()
     {
         if (inTime)
         {
             CalculateGravityVector();
-            Move();
         }
     }
 
-    protected void Update()
+    public void LateUpdate()
     {
-        
-	}
+
+        if (inTime)
+        {
+            Move();
+        }
+    }
 
     private void CalculateGravityVector()
     {

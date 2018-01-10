@@ -42,7 +42,7 @@
             }
             else
             {
-                Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
+                //Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
             }
         }
 
@@ -66,7 +66,7 @@
                     if (_cargoItems[i].Name == type)
                     {
                         //Debug.Log("In Hold!: " + _cargoItems[i].Count + " adding " + count);
-                        _cargoItems[i].Count = count;
+                        _cargoItems[i].Count += count;
                     }
                 }
             }
@@ -126,7 +126,7 @@
             }
 
             Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
-            return -1;
+            return 0;
         }
 
         public override string ToString()
@@ -149,8 +149,15 @@
             Debug.Log(ToString());
         }
 
-        public int Credit(String type, CargoHold source, int amount)
+        public int Credit(String type, CargoHold source, int amount, bool AutoCreateHold = false)
         {
+            if (AutoCreateHold)
+            {
+                if (!this.Contains(type))
+                {
+                    AddHoldType(type);
+                }
+            }
             if (this.Contains(type) && source.Contains(type))
             {
                 int maxTransferable = Mathf.Min(GetRemainingSpace(), amount, source.GetAmountInHold(type));

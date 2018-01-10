@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
 using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using NPBehave;
 using ShipInternals;
 using Action = NPBehave.Action;
@@ -12,30 +13,100 @@ public class AI_Patrol : PilotInterface
 {
     private Blackboard blackboard;
     private Spaceship shipScript;
+    private Debugger debugger = null;
 
     // Use this for initialization
+    void Awake()
+    {
+        shipScript = transform.GetComponent<Spaceship>();
+
+#if UNITY_EDITOR
+        if (debugger == null)
+        {
+            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        }
+#endif
+    }
+
     void Start()
     {
         base.Start();
-        shipScript = transform.GetComponent<Spaceship>();
-        ai_type = AI_Type.PATROL;
+    }
 
+    public void StartMining(string targetName)
+    {
         behaviorTree = CreateBehaviourTreeDumbMining();
 
         blackboard = behaviorTree.Blackboard;
-
-        blackboard["miningTarget"] = "Gold";
+        blackboard["miningTarget"] = targetName;
 
         // temporarily use this as the home base until we have a better system
         BlackboardSetNearestPlanet();
 
-        // attach the debugger component if executed in editor (helps to debug in the inspector) 
 #if UNITY_EDITOR
-        Debugger debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        if (debugger == null)
+        {
+            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        }
         debugger.BehaviorTree = behaviorTree;
 #endif
         behaviorTree.Start();
     }
+
+    public void StartDelivery(MarketOrder order)
+    {
+        if (behaviorTree != null)
+        {
+            behaviorTree.Stop();
+        }
+        else
+        {
+            behaviorTree = CreateBehaviourTreeDumbDelivery();
+            blackboard = behaviorTree.Blackboard;
+        }
+
+        blackboard["deliveryOrder"] = order;
+        blackboard["homePlanet"] = order.origin;
+        blackboard["deliveryPlanet"] = order.destination;
+
+#if UNITY_EDITOR
+        if (debugger == null)
+        {
+            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        }
+        debugger.BehaviorTree = behaviorTree;
+#endif
+        behaviorTree.Start();
+    }
+
+    private Root CreateBehaviorTreePirate()
+    {
+        return new Root(
+            new Sequence(
+                new Wait(1f)
+            )
+        );
+    }
+
+    private List<Vector3> GetHuntingAreas()
+    {
+        List<Vector3> huntingPositions = new List<Vector3>();
+        foreach (Planet p in Planet.listOfPlanetObjects)
+        {
+            List<Planet> nearestPlanets = new List<Planet>(Planet.listOfPlanetObjects);
+            nearestPlanets.Remove(p);
+            Planet.PlanetComparer sortComparer = new Planet.PlanetComparer(p);
+            nearestPlanets.Sort(sortComparer);
+            for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
+            {
+                Vector3 posA = p.transform.position;
+                Vector3 posB = nearestPlanets[i].transform.position;
+                Vector3 newPosition = (posA + posB) / 2;
+                huntingPositions.Add(newPosition);
+            }
+        }
+        return huntingPositions;
+    } 
 
     private Root CreateBehaviourTreeDumbDelivery()
     {
@@ -46,7 +117,7 @@ public class AI_Patrol : PilotInterface
                     {
                         targetPosition = blackboard.Get<Planet>("deliveryPlanet").transform.position;
                     })
-                    { Label = "Set target position to go to drop off planet" },
+                { Label = "Set target position to go to drop off planet" },
                 new Service(0.5f, UpdateDistanceToTarget,
                     new Action((bool shouldCancel) =>
                         {
@@ -64,18 +135,18 @@ public class AI_Patrol : PilotInterface
                                 return Action.Result.FAILED;
                             }
                         })
-                        { Label = "Go to target" }
+                    { Label = "Go to target" }
                 ),
                 new Action(() =>
                     {
-                        DropOffResource("Gold");
+                        DropOffResource(blackboard.Get<MarketOrder>("deliveryOrder"));
                     })
-                    { Label = "Dropping off resources" },
+                { Label = "Dropping off resources" },
                 new Action(() =>
                     {
                         targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
                     })
-                    { Label = "Set target position to go home" },
+                { Label = "Set target position to go home" },
                 new Service(0.5f, UpdateDistanceToTarget,
                     new Action((bool shouldCancel) =>
                         {
@@ -93,8 +164,43 @@ public class AI_Patrol : PilotInterface
                                 return Action.Result.FAILED;
                             }
                         })
-                        { Label = "Go to target planet" }
-                )
+                    { Label = "Go to target planet" }
+                ),
+                new Action(() =>
+                    {
+                        Planet nearest = GetNearestPlanet();
+                        nearest.AddToAvailableDeliveryShips(this);
+                        blackboard["arriveTime"] = Time.time;
+                    })
+                { Label = "Dock with planet" },
+                new Service(0.5f, UpdateDistanceToTarget,
+                    new Action((bool shouldCancel) =>
+                        {
+                            if (!shouldCancel)
+                            {
+                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                if (Time.time - blackboard.Get<float>("arriveTime") > 5f)
+                                {
+                                    Debug.Log("ARRIVED!!!! " + (Time.time - blackboard.Get<float>("arriveTime")));
+                                    return Action.Result.SUCCESS;
+                                }
+                                return Action.Result.PROGRESS;
+                            }
+                            else
+                            {
+                                return Action.Result.FAILED;
+                            }
+                        })
+                        { Label = "Wait at target position for 5 seconds" }
+                ),
+                new Action(() =>
+                    {
+                        Planet nearest = GetNearestPlanet();
+                        nearest.ReturnDeliveryShip(this);
+                        behaviorTree.Stop();
+                        Destroy(this.gameObject);
+                    })
+                { Label = "Dock with planet" }
             )
         );
     }
@@ -109,8 +215,8 @@ public class AI_Patrol : PilotInterface
                                    FindNearestAsteroidField();
                                    targetPosition = blackboard.Get<AsteroidField>("nearestAsteroidField").transform.position;
                                })
-                    { Label = "Find Nearest Asteroid Field"},
-                    new Service(0.5f, UpdateDistanceToTarget, 
+                    { Label = "Find Nearest Asteroid Field" },
+                    new Service(0.5f, UpdateDistanceToTarget,
                         new Action((bool shouldCancel) =>
                                    {
                                        if (!shouldCancel)
@@ -127,7 +233,7 @@ public class AI_Patrol : PilotInterface
                                            return Action.Result.FAILED;
                                        }
                                    })
-                            { Label = "Go to target" }
+                        { Label = "Go to target" }
                     ),
                     new Succeeder(new Repeater(new Cooldown(0.1f,
                         new Action((bool shouldCancel) =>
@@ -149,13 +255,13 @@ public class AI_Patrol : PilotInterface
                                            return Action.Result.FAILED; // this should search for minable asteroid fields better
                                        }
                                    })
-                        { Label = "Mining"}
+                        { Label = "Mining" }
                     ))),
                     new Action(() =>
                                {
                                    targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
                                })
-                    {Label = "Set target position to go home"},
+                    { Label = "Set target position to go home" },
                     new Service(0.5f, UpdateDistanceToTarget,
                         new Action((bool shouldCancel) =>
                                     {
@@ -173,18 +279,18 @@ public class AI_Patrol : PilotInterface
                                             return Action.Result.FAILED;
                                         }
                                     })
-                            { Label = "Go to target planet" }
+                        { Label = "Go to target planet" }
                         ),
                     new Action(() =>
                                {
                                    DropOffResource("Gold");
                                    FindNearestAsteroidField();
                                })
-                        { Label = "Dropping off resources" }
+                    { Label = "Dropping off resources" }
                     )
         );
     }
-    
+
     private void FindNearestAsteroidField()
     {
         float nearestDistance = float.MaxValue;
@@ -215,7 +321,7 @@ public class AI_Patrol : PilotInterface
                 }
             }
         }
-        if(!found)
+        if (!found)
         {
             //Debug.Log("Checking All Asteroids!");
             foreach (var one in AsteroidField.listOfAsteroidFields)
@@ -233,7 +339,7 @@ public class AI_Patrol : PilotInterface
             }
         }
     }
-    
+
     private void BlackboardSetNearestPlanet()
     {
         blackboard.Set("homePlanet", GetNearestPlanet());
@@ -336,7 +442,13 @@ public class AI_Patrol : PilotInterface
 
     private int DropOffResource(String type)
     {
-        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type));
+        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
+    }
+
+    private void DropOffResource(MarketOrder type)
+    {
+        DropOffResource(type.item.Name);
+        //throw new NotImplementedException();
     }
 
     public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.Static
 {
+    [SelectionBase]
     public class Static : MonoBehaviour
     {
         static public bool inTime = true;

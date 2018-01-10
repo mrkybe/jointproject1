@@ -11,25 +11,12 @@ public abstract class PilotInterface : MonoBehaviour
     protected Planet homePlanet;
     protected Vector2 control_stickDirection;
     protected float targetSpeed;
-    protected int missionIndex;
-    protected List<MissionGeneric> _missions = new List<MissionGeneric>();
-    protected AI_Type ai_type = AI_Type.PLAYER;
     protected Root behaviorTree;
 
     public SensorArray SensorArray
     {
         get { return mySensorArray; }
         set { mySensorArray = value; }
-    }
-
-    public List<MissionGeneric> GetMissionList()
-    {
-        return _missions;
-    }
-
-    public int GetMissionIndex()
-    {
-        return missionIndex;
     }
 
     // Use this for initialization
