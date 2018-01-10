@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
@@ -70,11 +71,27 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
             }
 
+            MakePiratesHostileWithAll();
+
             //Debug.Log("Created Factions!");
 
             foreach (var link in Links)
             {
                 //Debug.Log(link.ToString());
+            }
+        }
+
+        private void MakePiratesHostileWithAll()
+        {
+            foreach (var f in Factions)
+            {
+                if (f.Name == "Pirates")
+                {
+                    foreach (var link in f.MyLinks)
+                    {
+                        link.Friendlyness = -100f;
+                    }
+                }
             }
         }
     }

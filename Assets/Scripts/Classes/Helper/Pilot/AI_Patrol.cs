@@ -83,7 +83,43 @@ public class AI_Patrol : PilotInterface
     {
         return new Root(
             new Sequence(
-                new Wait(1f)
+                new Wait(1f),
+                new Action(() =>
+                    {
+                        List<Vector3> huntingAreas = GetHuntingAreas();
+                        Vector3 myPos = transform.position;
+                        Vector3 closestPos = huntingAreas[0];
+                        float minDistance = float.MaxValue;
+                        foreach (Vector3 huntingPos in huntingAreas)
+                        {
+                            if (Vector3.Distance(huntingPos, myPos) < minDistance)
+                            {
+                                minDistance = Vector3.Distance(huntingPos, myPos);
+                                closestPos = huntingPos;
+                            }
+                        }
+                        blackboard.Set("targetPos", closestPos);
+                    })
+                { Label = "Set target position to nearest hunting area" },
+                new Service(0.5f, UpdateDistanceToTarget,
+                    new Action((bool shouldCancel) =>
+                        {
+                            if (!shouldCancel)
+                            {
+                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                if (blackboard.Get<float>("targetDistance") < 5f)
+                                {
+                                    return Action.Result.SUCCESS;
+                                }
+                                return Action.Result.PROGRESS;
+                            }
+                            else
+                            {
+                                return Action.Result.FAILED;
+                            }
+                        })
+                    { Label = "Go to target" }
+                    )
             )
         );
     }
@@ -106,7 +142,7 @@ public class AI_Patrol : PilotInterface
             }
         }
         return huntingPositions;
-    } 
+    }
 
     private Root CreateBehaviourTreeDumbDelivery()
     {
@@ -181,7 +217,7 @@ public class AI_Patrol : PilotInterface
                                 MoveTowards(blackboard.Get<Vector3>("targetPos"));
                                 if (Time.time - blackboard.Get<float>("arriveTime") > 5f)
                                 {
-                                    Debug.Log("ARRIVED!!!! " + (Time.time - blackboard.Get<float>("arriveTime")));
+                                    //Debug.Log("ARRIVED!!!! " + (Time.time - blackboard.Get<float>("arriveTime")));
                                     return Action.Result.SUCCESS;
                                 }
                                 return Action.Result.PROGRESS;
@@ -191,18 +227,22 @@ public class AI_Patrol : PilotInterface
                                 return Action.Result.FAILED;
                             }
                         })
-                        { Label = "Wait at target position for 5 seconds" }
+                    { Label = "Wait at target position for 5 seconds" }
                 ),
                 new Action(() =>
                     {
                         Planet nearest = GetNearestPlanet();
                         nearest.ReturnDeliveryShip(this);
-                        behaviorTree.Stop();
                         Destroy(this.gameObject);
                     })
                 { Label = "Dock with planet" }
             )
         );
+    }
+
+    public void OnDestroy()
+    {
+        behaviorTree.Stop();
     }
 
     private Root CreateBehaviourTreeDumbMining()
@@ -374,6 +414,18 @@ public class AI_Patrol : PilotInterface
         behaviorTree.Blackboard["targetDistance"] = targetLocalPos.magnitude;
     }
 
+    private void UpdateSafetyStatus()
+    {
+        Faction myFaction = shipScript.Faction;
+        foreach (Spaceship f in shipScript.GetShipsInRange())
+        {
+            if (f.Faction.HostileWith(myFaction))
+            {
+                
+            }
+        }
+    }
+
     private void MoveTowards(Vector3 position)
     {
         Vector2 stick = new Vector2();
@@ -448,6 +500,7 @@ public class AI_Patrol : PilotInterface
     private void DropOffResource(MarketOrder type)
     {
         DropOffResource(type.item.Name);
+        type.Succeed();
         //throw new NotImplementedException();
     }
 

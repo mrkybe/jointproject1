@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
 using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
 public class Spaceship : Mobile
@@ -18,6 +19,9 @@ public class Spaceship : Mobile
     private float manuverability;
     [SerializeField]
     private AI_Type desired_AI_Type;
+    [SerializeField]
+    public Faction Faction;
+
     private float targetSpeed;
     private float throttle_input;
     private float oldThrottle_input;
@@ -111,10 +115,35 @@ public class Spaceship : Mobile
         Debug.Log("Unboop");
         inSensorRange.Remove(other.gameObject.transform.root.gameObject);
     }
-    
+
+    public void SetModel(int number)
+    {
+        MeshFilter mf = GetComponentInChildren<MeshFilter>();
+        MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
+    }
+
+    public List<Spaceship> GetShipsInRange()
+    {
+        List<Spaceship> targets = new List<Spaceship>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            if (inSensorRange[i] != null)
+            {
+                Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                {
+                    targets.Add(target);
+                }
+            }
+        }
+        return targets;
+    }
+
     public List<Static> GetStaticInRange()
     {
         List<Static> targets = new List<Static>();
+        CleanSensorList();
         for (int i = 0; i < inSensorRange.Count; i++)
         {
             if (inSensorRange[i] != null)

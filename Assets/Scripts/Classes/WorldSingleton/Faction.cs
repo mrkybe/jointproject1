@@ -59,6 +59,21 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 OwnedPlanets.Add(planet);
             }
         }
+
+        public bool HostileWith(Faction myFaction)
+        {
+            foreach (FactionLink link in MyLinks)
+            {
+                if (link.a == myFaction || link.b == myFaction)
+                {
+                    if (link.Friendlyness < 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     public class FactionLink

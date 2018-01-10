@@ -62,6 +62,16 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             item.Count += order.item.Count;
         }
+
+        public void Succeed()
+        {
+            origin.CompleteOrder(this);
+        }
+
+        public void Fail()
+        {
+            origin.FailOrder(this);
+        }
     }
 
     public class MarketOrderComparer : IComparer<MarketOrder>

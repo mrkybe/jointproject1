@@ -18,6 +18,8 @@ public partial class Planet: Static
     private List<CargoItem> producableCargoItems;
     private List<CargoItem> itemsNetChange;
     private List<MarketOrder> deliveryList;
+    private List<MarketOrder> deliveryInProgressList;
+    private List<MarketOrder> deliveryFailedList;
     private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
     public int DeliveryShipCount = 5;
@@ -41,6 +43,8 @@ public partial class Planet: Static
 	    producableCargoItems = new List<CargoItem>();
         itemsNetChange = new List<CargoItem>();
 	    deliveryList = new List<MarketOrder>();
+	    deliveryInProgressList = new List<MarketOrder>();
+	    deliveryFailedList = new List<MarketOrder>();
         ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
         behaviorTree.Start();
@@ -176,7 +180,11 @@ public partial class Planet: Static
 
     private void SendDeliveryShip(MarketOrder order)
     {
-        //Random.InitState(GetInstanceID());
+        // Limit rate of ship creation
+        if (Random.value > 0.01f)
+        {
+            return;
+        }
         Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
         Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
 
@@ -195,6 +203,9 @@ public partial class Planet: Static
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
 
+        ship.name = "Ship_Transport_" + this.Faction.Name + "_" + this.MyName + "_" + DeliveryShipCount;
+        shipScript.Faction = Faction;
+
         if (shipScript != null)
         {
             CargoHold shipHold = shipScript.GetCargoHold;
@@ -204,6 +215,7 @@ public partial class Planet: Static
             if (order.item.Count == 0)
             {
                 deliveryList.Remove(order);
+                deliveryInProgressList.Add(order);
             }
         }
         if (pilot != null)
@@ -227,6 +239,31 @@ public partial class Planet: Static
     public void AddToAvailableDeliveryShips(AI_Patrol aiPatrol)
     {
         ReadyDeliveryShips.Add(aiPatrol.gameObject);
+    }
+
+    public void CompleteOrder(MarketOrder marketOrder)
+    {
+        if (deliveryInProgressList.Contains(marketOrder))
+        {
+            deliveryInProgressList.Remove(marketOrder);
+        }
+        else
+        {
+            Debug.Log("TRIED TO COMPLETE ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
+        }
+    }
+
+    public void FailOrder(MarketOrder marketOrder)
+    {
+        if (deliveryInProgressList.Contains(marketOrder))
+        {
+            deliveryInProgressList.Remove(marketOrder);
+            deliveryFailedList.Add(marketOrder);
+        }
+        else
+        {
+            Debug.Log("TRIED TO FAIL ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
+        }
     }
 }
 
