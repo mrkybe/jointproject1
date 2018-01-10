@@ -10,7 +10,7 @@ public class DestoyByContact : MonoBehaviour {
 		
 	}
 	void OnTriggerEnter(Collider other) {
-		other.gameObject.GetComponent<DestroyByTime>().enabled = false;
+		//other.gameObject.GetComponent<DestroyByTime>().enabled = false;
         if (other.gameObject.CompareTag("Enemy"))
         {
             Destroy(other.gameObject);
