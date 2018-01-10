@@ -88,6 +88,26 @@ public class AI_Patrol : PilotInterface
         );
     }
 
+    private List<Vector3> GetHuntingAreas()
+    {
+        List<Vector3> huntingPositions = new List<Vector3>();
+        foreach (Planet p in Planet.listOfPlanetObjects)
+        {
+            List<Planet> nearestPlanets = new List<Planet>(Planet.listOfPlanetObjects);
+            nearestPlanets.Remove(p);
+            Planet.PlanetComparer sortComparer = new Planet.PlanetComparer(p);
+            nearestPlanets.Sort(sortComparer);
+            for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
+            {
+                Vector3 posA = p.transform.position;
+                Vector3 posB = nearestPlanets[i].transform.position;
+                Vector3 newPosition = (posA + posB) / 2;
+                huntingPositions.Add(newPosition);
+            }
+        }
+        return huntingPositions;
+    } 
+
     private Root CreateBehaviourTreeDumbDelivery()
     {
         return new Root(

@@ -50,6 +50,14 @@ public class Mobile : MonoBehaviour
         if (inTime)
         {
             CalculateGravityVector();
+        }
+    }
+
+    public void LateUpdate()
+    {
+
+        if (inTime)
+        {
             Move();
         }
     }

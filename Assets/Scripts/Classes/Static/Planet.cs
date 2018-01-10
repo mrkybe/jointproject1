@@ -175,4 +175,51 @@ public partial class Planet : Static
     {
         TickBuildings();
     }
+
+    public class PlanetComparer : IComparer<Planet>
+    {
+        private Planet origin;
+
+        public PlanetComparer(Planet origin)
+        {
+            this.origin = origin;
+        }
+
+        public int CompareClosest(Planet x, Planet y)
+        {
+            Vector3 xPos = x.transform.position;
+            Vector3 yPos = y.transform.position;
+            Vector3 originPos = origin.transform.position;
+            float xDist = Vector3.Distance(originPos, xPos);
+            float yDist = Vector3.Distance(originPos, yPos);
+            if (xDist < yDist)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public int Compare(Planet x, Planet y)
+        {
+            return CompareClosest(x, y);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+    }
 }
