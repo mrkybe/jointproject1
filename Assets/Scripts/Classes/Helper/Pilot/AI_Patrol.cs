@@ -104,6 +104,7 @@ public class AI_Patrol : PilotInterface
                 new Service(0.5f, UpdateDistanceToTarget,
                     new Action((bool shouldCancel) =>
                         {
+                            UpdateSafetyStatus();
                             if (!shouldCancel)
                             {
                                 MoveTowards(blackboard.Get<Vector3>("targetPos"));
@@ -414,16 +415,45 @@ public class AI_Patrol : PilotInterface
         behaviorTree.Blackboard["targetDistance"] = targetLocalPos.magnitude;
     }
 
-    private void UpdateSafetyStatus()
+    List<Spaceship> GetHostileShipsInRange()
     {
         Faction myFaction = shipScript.Faction;
+        List<Spaceship> resultsList = new List<Spaceship>();
+
         foreach (Spaceship f in shipScript.GetShipsInRange())
         {
             if (f.Faction.HostileWith(myFaction))
             {
-                
+                resultsList.Add(f);
             }
         }
+
+        return resultsList;
+    }
+
+    private void UpdateSafetyStatus()
+    {
+        Faction myFaction = shipScript.Faction;
+        int fear_level = 0;
+        List<Spaceship> scaryList = new List<Spaceship>();
+        foreach (Spaceship f in GetHostileShipsInRange())
+        {
+            // add to fear level only positive values, since weak ships shouldn't make you fight a carrier
+            fear_level += Mathf.Clamp(f.GetScaryness(shipScript), 0, int.MaxValue);
+            scaryList.Add(f);
+        }
+
+        Vector3 averageScaryPosition = Vector3.zero;
+        foreach (Spaceship f in scaryList)
+        {
+            averageScaryPosition += f.transform.position;
+        }
+        averageScaryPosition /= scaryList.Count;
+
+        Vector3 fleeDirection = ((averageScaryPosition - transform.position) *-1).normalized;
+
+        behaviorTree.Blackboard["fleeDirection"] = fleeDirection;
+        behaviorTree.Blackboard["fearLevel"] = fear_level;
     }
 
     private void MoveTowards(Vector3 position)

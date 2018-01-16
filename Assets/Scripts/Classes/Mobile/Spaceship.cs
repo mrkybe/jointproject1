@@ -21,6 +21,8 @@ public class Spaceship : Mobile
     private AI_Type desired_AI_Type;
     [SerializeField]
     public Faction Faction;
+    [SerializeField]
+    public int PowerLevel;
 
     private float targetSpeed;
     private float throttle_input;
@@ -205,5 +207,10 @@ public class Spaceship : Mobile
     public CargoHold GetCargoHold
     {
         get { return myStorage; }
+    }
+
+    public int GetScaryness(Spaceship shipScript)
+    {
+        return PowerLevel - shipScript.PowerLevel;
     }
 }
