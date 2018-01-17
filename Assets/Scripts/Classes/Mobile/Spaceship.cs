@@ -6,6 +6,9 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
+/// <summary>
+/// The physical Spaceship.  Keeps track of 'physical' information, moves it every update.  Requires a Pilot, human or AI.
+/// </summary>
 public class Spaceship : Mobile
 {
     private float engineRunSpeed;
@@ -103,7 +106,7 @@ public class Spaceship : Mobile
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Boop");
+        // New entity in sensor range.
         inSensorRange.Add(other.gameObject.transform.root.gameObject);
     }
 
@@ -114,16 +117,24 @@ public class Spaceship : Mobile
 
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("Unboop");
+        // Entity leaves sensor range.
         inSensorRange.Remove(other.gameObject.transform.root.gameObject);
     }
 
+    /// <summary>
+    /// Change the ship's 3d model to a different one.
+    /// </summary>
+    /// <param name="number"></param>
     public void SetModel(int number)
     {
         MeshFilter mf = GetComponentInChildren<MeshFilter>();
         MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
     }
 
+    /// <summary>
+    /// Returns a list of Spaceships in sensor range.
+    /// </summary>
+    /// <returns></returns>
     public List<Spaceship> GetShipsInRange()
     {
         List<Spaceship> targets = new List<Spaceship>();
@@ -142,6 +153,10 @@ public class Spaceship : Mobile
         return targets;
     }
 
+    /// <summary>
+    /// Returns a list of Static entities in sensor range.
+    /// </summary>
+    /// <returns></returns>
     public List<Static> GetStaticInRange()
     {
         List<Static> targets = new List<Static>();
@@ -209,8 +224,13 @@ public class Spaceship : Mobile
         get { return myStorage; }
     }
 
-    public int GetScaryness(Spaceship shipScript)
+    /// <summary>
+    /// Returns how scary another ship is compared to mine.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public int GetScaryness(Spaceship other)
     {
-        return PowerLevel - shipScript.PowerLevel;
+        return PowerLevel - other.PowerLevel;
     }
 }

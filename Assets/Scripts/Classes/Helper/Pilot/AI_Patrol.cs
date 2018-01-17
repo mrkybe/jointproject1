@@ -9,8 +9,16 @@ using NPBehave;
 using ShipInternals;
 using Action = NPBehave.Action;
 
+/* AI_Patrol is the AI for the ships/fleets on the Overmap.
+ * It contains all of the atomic AI methods that are used by the AI behavior tree.
+ * It provides public functions for Factions/Planets to give orders through.
+ * These orders are fulfilled by replacing the current BehaviorTree with a new one.
+ *      
+ */
+
 public class AI_Patrol : PilotInterface
 {
+
     private Blackboard blackboard;
     private Spaceship shipScript;
     private Debugger debugger = null;
@@ -33,6 +41,10 @@ public class AI_Patrol : PilotInterface
         base.Start();
     }
 
+    /// <summary>
+    /// Replaces the Behavior Tree with the one for mining.
+    /// </summary>
+    /// <param name="targetName">The kind of resource to mine.</param>
     public void StartMining(string targetName)
     {
         behaviorTree = CreateBehaviourTreeDumbMining();
@@ -53,6 +65,10 @@ public class AI_Patrol : PilotInterface
         behaviorTree.Start();
     }
 
+    /// <summary>
+    /// Sets the Behavior Tree to be the one for delivering an order.
+    /// </summary>
+    /// <param name="order">The order that the ship is responsible for completing.</param>
     public void StartDelivery(MarketOrder order)
     {
         if (behaviorTree != null)
@@ -77,6 +93,14 @@ public class AI_Patrol : PilotInterface
         debugger.BehaviorTree = behaviorTree;
 #endif
         behaviorTree.Start();
+    }
+
+    /// <summary>
+    /// Sets the Behavior Tree to be the one for piracy.
+    /// </summary>
+    public void StartPirate()
+    {
+        
     }
 
     private Root CreateBehaviorTreePirate()
@@ -125,6 +149,11 @@ public class AI_Patrol : PilotInterface
         );
     }
 
+
+    /// <summary>
+    /// Returns a list of mid points between planets that are close to each other.
+    /// </summary>
+    /// <returns></returns>
     private List<Vector3> GetHuntingAreas()
     {
         List<Vector3> huntingPositions = new List<Vector3>();

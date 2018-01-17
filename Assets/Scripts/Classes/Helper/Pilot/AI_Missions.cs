@@ -10,6 +10,8 @@ namespace AI_Missions
 {
     
     public enum AI_Type { GATHER, PATROL, PLAYER }
+    
+    
     /*
     public enum AI_States { MISSION_START, EN_ROUTE, ARRIVED, ARRIVING, DONE, MINING, WAITING};
 

@@ -6,6 +6,9 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
+/// <summary>
+/// A Base that belongs to a faction.  Sends out ships and trades resources.
+/// </summary>
 public partial class Planet : Static
 {
     [SerializeField]

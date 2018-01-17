@@ -9,6 +9,9 @@ using NPBehave;
 using Action = NPBehave.Action;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// The AI portion of the class.
+/// </summary>
 public partial class Planet: Static
 {
 	protected Root behaviorTree;
@@ -202,7 +205,6 @@ public partial class Planet: Static
         }
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
-
         ship.name = "Ship_Transport_" + this.Faction.Name + "_" + this.MyName + "_" + DeliveryShipCount;
         shipScript.Faction = Faction;
 

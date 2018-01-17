@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Assets.Scripts.Classes.Static;
 using ShipInternals;
 
+/// <summary>
+/// A minable asteroid field.
+/// </summary>
 public class AsteroidField : Static
 {
     int rawMaterial;

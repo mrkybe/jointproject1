@@ -6,6 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// The Singleton that manages the systems in the game.  Organized into partial classes.
+    ///     Overseer.cs  - Main
+    ///     Market.cs    - Economy
+    ///     Diplomacy.cs - Factions
+    /// </summary>
     public partial class Overseer : Static.Static
     {
         [SerializeField]

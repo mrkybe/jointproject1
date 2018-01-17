@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// An order to buy or sell for a given resource, by who, for whom, completion status.
+    /// </summary>
     public class MarketOrder
     {
         public readonly Planet origin;

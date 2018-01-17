@@ -6,6 +6,10 @@ namespace ShipInternals
     using System.Text;
     using UnityEngine;
 
+
+    /// <summary>
+    /// A CargoItem keeps track of a single kind of resource in a CargoHold.
+    /// </summary>
     [Serializable]
     public class CargoItem
     {
@@ -62,6 +66,11 @@ namespace ShipInternals
             get { return Size * Count; }
         }
 
+        /// <summary>
+        /// Are these the same kind of CargoItem?
+        /// </summary>
+        /// <param name="buyOrderItem"></param>
+        /// <returns></returns>
         public bool KindEquals(CargoItem buyOrderItem)
         {
             return this.Name.Equals(buyOrderItem.Name);

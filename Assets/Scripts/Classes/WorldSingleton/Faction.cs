@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// A single Faction.  Tracks what belongs to it, who its at war with.
+    /// </summary>
     public class Faction
     {
         public String Name;
