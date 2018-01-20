@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject enemySpawner;
 	public GameObject cameraObject;
 	public GameObject combatField;
+	public GameObject player;
 
 	private bool flag = false;
     private Move move;
@@ -15,12 +16,14 @@ public class PlayerController : MonoBehaviour {
     private CameraController cc;
     private CameraFollow cf;
     private LaserFire lf;
+	private Timer tm;
 	// Use this for initialization
 	void Start () {
         move = GetComponent<Move>();
         sp = GetComponent<Spaceship>();
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
+		tm = GetComponent<Timer> ();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
 	}
@@ -42,7 +45,9 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (Input.GetButtonDown("Y") && flag == false)
         {
+			tm.Pause (false);
 			flag = true;
+			player.SetActive (true);
             move.enabled = true;
             sp.enabled = false;
             fire.enabled = true;
