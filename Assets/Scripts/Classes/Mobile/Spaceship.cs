@@ -153,7 +153,7 @@ public class Spaceship : Mobile
     }
 
     /// <summary>
-    /// Returns a list of Spaceships in sensor range.
+    /// Returns a list of Spaceships in interaction range.
     /// </summary>
     /// <returns></returns>
     public List<Spaceship> GetShipsInInteractionRange()
