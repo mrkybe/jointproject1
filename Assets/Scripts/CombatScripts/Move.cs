@@ -29,7 +29,7 @@ public class Move : MonoBehaviour {
 	//movement based on time
 	void timeMove()
 	{
-		float x = Input.GetAxis ("Horziontal");
+		float x = Input.GetAxis ("Horizontal");
 		float y = Input.GetAxis("Vertical");
 
 		transform.Translate (x * Time.deltaTime * speed, 0f, y * Time.deltaTime * speed, Space.World);
@@ -45,7 +45,7 @@ public class Move : MonoBehaviour {
 	//movement based on forces, requires and FixedUpdate
 	void forceMove()
 	{
-		float x = Input.GetAxis ("Horziontal");
+		float x = Input.GetAxis ("Horizontal");
 		float y = Input.GetAxis("Vertical");
 
 		Vector3 movement = new Vector3(x,0,y);

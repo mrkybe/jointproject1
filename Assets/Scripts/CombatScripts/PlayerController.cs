@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (Input.GetButtonDown("Y") && flag == false)
         {
-			tm.Pause (false);
 			flag = true;
 			player.SetActive (true);
             move.enabled = true;
@@ -54,6 +53,7 @@ public class PlayerController : MonoBehaviour {
             cc.enabled = true;
             cf.enabled = false;
             lf.enabled = false;
+			tm.Pause (false);
 			transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
 
 			cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.y+20, cameraObject.transform.position.z);
