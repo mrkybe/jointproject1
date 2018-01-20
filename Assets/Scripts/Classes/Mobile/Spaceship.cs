@@ -50,6 +50,8 @@ public class Spaceship : Mobile
         targetSpeed = -999;
         throttle_input = 0;
         oldThrottle_input = 0;
+        PowerLevel = 10;
+
         if (isAI)
         {
             targetSpeed = 0;
@@ -135,7 +137,26 @@ public class Spaceship : Mobile
     /// Returns a list of Spaceships in sensor range.
     /// </summary>
     /// <returns></returns>
-    public List<Spaceship> GetShipsInRange()
+    public List<Spaceship> GetShipsInSensorRange()
+    {
+        List<Spaceship> targets = new List<Spaceship>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of Spaceships in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<Spaceship> GetShipsInInteractionRange()
     {
         List<Spaceship> targets = new List<Spaceship>();
         CleanSensorList();
@@ -222,6 +243,11 @@ public class Spaceship : Mobile
     public CargoHold GetCargoHold
     {
         get { return myStorage; }
+    }
+
+    public PilotInterface GetPilot
+    {
+        get { return pilot; }
     }
 
     /// <summary>

@@ -86,16 +86,23 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         private void MakePiratesHostileWithAll()
         {
-            foreach (var f in Factions)
+            Faction f = GetFaction("Pirates");
+            foreach (var link in f.MyLinks)
             {
-                if (f.Name == "Pirates")
+                link.Friendlyness = -100f;
+            }
+        }
+
+        public Faction GetFaction(string name)
+        {
+            foreach (Faction f in Factions)
+            {
+                if (f.Name == name)
                 {
-                    foreach (var link in f.MyLinks)
-                    {
-                        link.Friendlyness = -100f;
-                    }
+                    return f;
                 }
             }
+            return null;
         }
     }
 }

@@ -13,7 +13,17 @@ namespace Assets.Editor {
             serializedObject.Update();
 
             Spaceship myTarget = (Spaceship)target;
+            PilotInterface pilot = myTarget.GetPilot;
             hold = myTarget.GetCargoHold;
+
+            if (pilot.GetType() == typeof(AI_Patrol))
+            {
+                if (GUILayout.Button("Become Pirate"))
+                {
+                    ((AI_Patrol)pilot).StartPirate();
+                    myTarget.PowerLevel = 5;
+                }
+            }
 
             if (hold != null)
             {

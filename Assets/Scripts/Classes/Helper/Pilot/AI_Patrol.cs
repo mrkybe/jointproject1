@@ -100,51 +100,104 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     public void StartPirate()
     {
+        if (behaviorTree != null)
+        {
+            behaviorTree.Stop();
+        }
+
+        behaviorTree = CreateBehaviorTreePirate();
+        blackboard = behaviorTree.Blackboard;
+
+        shipScript.Faction = Overseer.Main.GetFaction("Pirates");
         
+        UpdateSafetyStatus();
+
+#if UNITY_EDITOR
+        if (debugger == null)
+        {
+            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+        }
+        debugger.BehaviorTree = behaviorTree;
+#endif
+        behaviorTree.Start();
     }
 
     private Root CreateBehaviorTreePirate()
     {
         return new Root(
-            new Sequence(
-                new Wait(1f),
-                new Action(() =>
-                    {
-                        List<Vector3> huntingAreas = GetHuntingAreas();
-                        Vector3 myPos = transform.position;
-                        Vector3 closestPos = huntingAreas[0];
-                        float minDistance = float.MaxValue;
-                        foreach (Vector3 huntingPos in huntingAreas)
+            new Selector(
+                new Sequence(
+                    new Wait(1f),
+                    new Action(() =>
                         {
-                            if (Vector3.Distance(huntingPos, myPos) < minDistance)
+                            List<Vector3> huntingAreas = GetHuntingAreas();
+                            Vector3 myPos = transform.position;
+                            Vector3 closestPos = huntingAreas[0];
+                            float minDistance = float.MaxValue;
+                            foreach (Vector3 huntingPos in huntingAreas)
                             {
-                                minDistance = Vector3.Distance(huntingPos, myPos);
-                                closestPos = huntingPos;
-                            }
-                        }
-                        blackboard.Set("targetPos", closestPos);
-                    })
-                { Label = "Set target position to nearest hunting area" },
-                new Service(0.5f, UpdateDistanceToTarget,
-                    new Action((bool shouldCancel) =>
-                        {
-                            UpdateSafetyStatus();
-                            if (!shouldCancel)
-                            {
-                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                if (blackboard.Get<float>("targetDistance") < 5f)
+                                if (Vector3.Distance(huntingPos, myPos) < minDistance)
                                 {
-                                    return Action.Result.SUCCESS;
+                                    minDistance = Vector3.Distance(huntingPos, myPos);
+                                    closestPos = huntingPos;
                                 }
-                                return Action.Result.PROGRESS;
                             }
-                            else
-                            {
-                                return Action.Result.FAILED;
-                            }
+                            targetPosition = closestPos;
                         })
-                    { Label = "Go to target" }
+                    { Label = "Set target position to nearest hunting area" },
+                    new Service(0.5f, UpdateDistanceToTarget,
+                        new Action((bool shouldCancel) =>
+                            {
+                                UpdateSafetyStatus();
+                                if (blackboard.Get<int>("fearLevel") != 0)
+                                {
+                                    shouldCancel = true;
+                                }
+                                if (!shouldCancel)
+                                {
+                                    MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                    if (blackboard.Get<float>("targetDistance") < 5f)
+                                    {
+                                        //return Action.Result.SUCCESS;
+                                    }
+                                    return Action.Result.PROGRESS;
+                                }
+                                else
+                                {
+                                    return Action.Result.FAILED;
+                                }
+                            })
+                        { Label = "Go to target" }
+                        )
+                ),
+                new Sequence(
+                    new Service(0.5f, UpdateSafetyStatus,
+                        new Action((bool shouldCancel) =>
+                            {
+                                /*if (blackboard.Get<int>("fearLevel") == 0)
+                                {
+                                    shouldCancel = true;
+                                }*/
+                                if (!shouldCancel)
+                                {
+                                    Vector3 scaryPosition = blackboard.Get<Vector3>("scaryPosition");
+                                    Debug.DrawLine(this.transform.position, scaryPosition, Color.red, 1f);
+                                    MoveTowards((blackboard.Get<Vector3>("fleeDirection") * 1000f) + scaryPosition);
+                                    Vector3 dist = scaryPosition - transform.position;
+                                    if (dist.magnitude > 50f)
+                                    {
+                                        return Action.Result.SUCCESS;
+                                    }
+                                    return Action.Result.PROGRESS;
+                                }
+                                else
+                                {
+                                    return Action.Result.FAILED;
+                                }
+                            })
+                            { Label = "Run away from scary" }
                     )
+                )
             )
         );
     }
@@ -449,7 +502,7 @@ public class AI_Patrol : PilotInterface
         Faction myFaction = shipScript.Faction;
         List<Spaceship> resultsList = new List<Spaceship>();
 
-        foreach (Spaceship f in shipScript.GetShipsInRange())
+        foreach (Spaceship f in shipScript.GetShipsInSensorRange())
         {
             if (f.Faction.HostileWith(myFaction))
             {
@@ -462,9 +515,10 @@ public class AI_Patrol : PilotInterface
 
     private void UpdateSafetyStatus()
     {
-        Faction myFaction = shipScript.Faction;
         int fear_level = 0;
         List<Spaceship> scaryList = new List<Spaceship>();
+        var list = GetHostileShipsInRange();
+        var list2 = shipScript.GetShipsInSensorRange();
         foreach (Spaceship f in GetHostileShipsInRange())
         {
             // add to fear level only positive values, since weak ships shouldn't make you fight a carrier
@@ -481,7 +535,11 @@ public class AI_Patrol : PilotInterface
 
         Vector3 fleeDirection = ((averageScaryPosition - transform.position) *-1).normalized;
 
-        behaviorTree.Blackboard["fleeDirection"] = fleeDirection;
+        if (scaryList.Count > 0)
+        {
+            behaviorTree.Blackboard["fleeDirection"] = fleeDirection;
+            behaviorTree.Blackboard["scaryPosition"] = averageScaryPosition;
+        }
         behaviorTree.Blackboard["fearLevel"] = fear_level;
     }
 
