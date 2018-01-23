@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerPilot : PilotInterface
@@ -16,5 +17,11 @@ public class PlayerPilot : PilotInterface
         base.Update();
         control_stickDirection.x = Input.GetAxis("Horizontal"); // turning
         control_stickDirection.y = Input.GetAxis("Vertical");   // throttle
-	}
+    }
+
+    public override void Die()
+    {
+        // Game Over!
+        throw new NotImplementedException();
+    }
 }

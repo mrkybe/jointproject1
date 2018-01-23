@@ -50,6 +50,8 @@ public class AI_Patrol : PilotInterface
         behaviorTree = CreateBehaviourTreeDumbMining();
 
         blackboard = behaviorTree.Blackboard;
+
+        InitializeDefaultBlackboard();
         blackboard["miningTarget"] = targetName;
 
         // temporarily use this as the home base until we have a better system
@@ -79,6 +81,7 @@ public class AI_Patrol : PilotInterface
         {
             behaviorTree = CreateBehaviourTreeDumbDelivery();
             blackboard = behaviorTree.Blackboard;
+            InitializeDefaultBlackboard();
         }
 
         blackboard["deliveryOrder"] = order;
@@ -107,6 +110,7 @@ public class AI_Patrol : PilotInterface
 
         behaviorTree = CreateBehaviorTreePirate();
         blackboard = behaviorTree.Blackboard;
+        InitializeDefaultBlackboard();
 
         shipScript.Faction = Overseer.Main.GetFaction("Pirates");
         
@@ -120,6 +124,19 @@ public class AI_Patrol : PilotInterface
         debugger.BehaviorTree = behaviorTree;
 #endif
         behaviorTree.Start();
+    }
+
+    /// <summary>
+    /// Setup the things that all behavior trees want to share.
+    /// </summary>
+    private void InitializeDefaultBlackboard()
+    {
+        blackboard["dead"] = false;
+    }
+
+    public override void Die()
+    {
+        blackboard["dead"] = true;
     }
 
     private Root CreateBehaviorTreePirate()
@@ -624,5 +641,14 @@ public class AI_Patrol : PilotInterface
     public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)
     {
         return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
+    }
+
+    /// <summary>
+    /// Returns the Shipscript that I am the pilot of.
+    /// </summary>
+    /// <returns></returns>
+    public Spaceship GetShip()
+    {
+        return shipScript;
     }
 }

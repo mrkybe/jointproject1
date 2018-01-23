@@ -26,6 +26,8 @@ public class Spaceship : Mobile
     public Faction Faction;
     [SerializeField]
     public int PowerLevel;
+    [SerializeField]
+    public int HullHealth;
 
     private float targetSpeed;
     private float throttle_input;
@@ -51,6 +53,7 @@ public class Spaceship : Mobile
         throttle_input = 0;
         oldThrottle_input = 0;
         PowerLevel = 10;
+        HullHealth = 100;
 
         if (isAI)
         {
@@ -258,5 +261,10 @@ public class Spaceship : Mobile
     public int GetScaryness(Spaceship other)
     {
         return PowerLevel - other.PowerLevel;
+    }
+
+    public void TakeDamage(int i)
+    {
+        HullHealth -= i;
     }
 }
