@@ -16,12 +16,15 @@ namespace Assets.Editor {
             PilotInterface pilot = myTarget.GetPilot;
             hold = myTarget.GetCargoHold;
 
-            if (pilot.GetType() == typeof(AI_Patrol))
+            if(pilot != null)
             {
-                if (GUILayout.Button("Become Pirate"))
+                if (pilot.GetType() == typeof(AI_Patrol))
                 {
-                    ((AI_Patrol)pilot).StartPirate();
-                    myTarget.PowerLevel = 5;
+                    if (GUILayout.Button("Become Pirate"))
+                    {
+                        ((AI_Patrol)pilot).StartPirate();
+                        myTarget.PowerLevel = 5;
+                    }
                 }
             }
 

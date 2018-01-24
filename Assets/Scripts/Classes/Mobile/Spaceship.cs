@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Scripts.Classes.Helper;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
@@ -39,6 +40,7 @@ public class Spaceship : Mobile
     [SerializeField]
     public List<GameObject> inSensorRange = new List<GameObject>();
 
+    private int modelChoice = 0;
     void Awake()
     {
         if (pilot == null)
@@ -62,12 +64,15 @@ public class Spaceship : Mobile
         myStorage = new CargoHold(100);
 
         mySensorArray = new SensorArray(gameObject);
+        modelChoice = (int)(Random.value * 11);
     }
 
     new void Start ()
     {
         base.Start();
 	}
+        GetComponentInChildren<ModelSwitcher>().SetModel(modelChoice);
+    }
 
 	// Update is called once per frame
 	new void Update ()
@@ -266,5 +271,9 @@ public class Spaceship : Mobile
     public void TakeDamage(int i)
     {
         HullHealth -= i;
+        if (HullHealth <= 0)
+        {
+            GetPilot.Die();
+        }
     }
 }
