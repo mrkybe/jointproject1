@@ -18,13 +18,12 @@ using Action = NPBehave.Action;
 
 public class AI_Patrol : PilotInterface
 {
-
     private Blackboard blackboard;
     private Spaceship shipScript;
     private Debugger debugger = null;
 
     // Use this for initialization
-    void Awake()
+    public void Awake()
     {
         shipScript = transform.GetComponent<Spaceship>();
 
@@ -36,23 +35,40 @@ public class AI_Patrol : PilotInterface
 #endif
     }
 
-    void Start()
+    public new void Start()
     {
         base.Start();
     }
 
+    public void OnDestroy()
+    {
+        if (behaviorTree != null)
+        {
+            behaviorTree.Stop();
+        }
+    }
+
     /// <summary>
-    /// Replaces the Behavior Tree with the one for mining.
+    /// Returns the Shipscript that I am the pilot of.
     /// </summary>
-    /// <param name="targetName">The kind of resource to mine.</param>
-    public void StartMining(string targetName)
+    /// <returns></returns>
+    public Spaceship GetShip()
+    {
+        return shipScript;
+    }
+
+    /// <summary>
+    /// Sets the Behavior Tree the one for mining.
+    /// </summary>
+    /// <param name="miningTargets">The kind of resources to mine.</param>
+    public void StartMining(List<string> miningTargets)
     {
         behaviorTree = CreateBehaviourTreeDumbMining();
 
         blackboard = behaviorTree.Blackboard;
 
         InitializeDefaultBlackboard();
-        blackboard["miningTarget"] = targetName;
+        blackboard["miningTargets"] = miningTargets;
 
         // temporarily use this as the home base until we have a better system
         BlackboardSetNearestPlanet();
@@ -68,7 +84,7 @@ public class AI_Patrol : PilotInterface
     }
 
     /// <summary>
-    /// Sets the Behavior Tree to be the one for delivering an order.
+    /// Sets the Behavior Tree the one for delivering an order.
     /// </summary>
     /// <param name="order">The order that the ship is responsible for completing.</param>
     public void StartDelivery(MarketOrder order)
@@ -99,7 +115,7 @@ public class AI_Patrol : PilotInterface
     }
 
     /// <summary>
-    /// Sets the Behavior Tree to be the one for piracy.
+    /// Sets the Behavior Tree to the one for piracy.
     /// </summary>
     public void StartPirate()
     {
@@ -127,13 +143,17 @@ public class AI_Patrol : PilotInterface
     }
 
     /// <summary>
-    /// Setup the things that all behavior trees want to share.
+    /// Setup the things that all behavior trees will share.
     /// </summary>
     private void InitializeDefaultBlackboard()
     {
         blackboard["dead"] = false;
     }
 
+    /// <summary>
+    /// This kills the Pilot.  Sets a Flag in the Blackboard for being dead,
+    /// Behavior Trees must clean up after themselves and go into their dead state.
+    /// </summary>
     public override void Die()
     {
         if (blackboard != null)
@@ -220,31 +240,6 @@ public class AI_Patrol : PilotInterface
                 )
             )
         );
-    }
-
-
-    /// <summary>
-    /// Returns a list of mid points between planets that are close to each other.
-    /// </summary>
-    /// <returns></returns>
-    private List<Vector3> GetHuntingAreas()
-    {
-        List<Vector3> huntingPositions = new List<Vector3>();
-        foreach (Planet p in Planet.listOfPlanetObjects)
-        {
-            List<Planet> nearestPlanets = new List<Planet>(Planet.listOfPlanetObjects);
-            nearestPlanets.Remove(p);
-            Planet.PlanetComparer sortComparer = new Planet.PlanetComparer(p);
-            nearestPlanets.Sort(sortComparer);
-            for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
-            {
-                Vector3 posA = p.transform.position;
-                Vector3 posB = nearestPlanets[i].transform.position;
-                Vector3 newPosition = (posA + posB) / 2;
-                huntingPositions.Add(newPosition);
-            }
-        }
-        return huntingPositions;
     }
 
     private Root CreateBehaviourTreeDumbDelivery()
@@ -343,14 +338,6 @@ public class AI_Patrol : PilotInterface
         );
     }
 
-    public void OnDestroy()
-    {
-        if (behaviorTree != null)
-        {
-            behaviorTree.Stop();
-        }
-    }
-
     private Root CreateBehaviourTreeDumbMining()
     {
         return new Root(
@@ -435,6 +422,30 @@ public class AI_Patrol : PilotInterface
                     { Label = "Dropping off resources" }
                     )
         );
+    }
+
+    /// <summary>
+    /// Returns a list of mid points between planets that are close to each other.
+    /// </summary>
+    /// <returns></returns>
+    private List<Vector3> GetHuntingAreas()
+    {
+        List<Vector3> huntingPositions = new List<Vector3>();
+        foreach (Planet p in Planet.listOfPlanetObjects)
+        {
+            List<Planet> nearestPlanets = new List<Planet>(Planet.listOfPlanetObjects);
+            nearestPlanets.Remove(p);
+            Planet.PlanetComparer sortComparer = new Planet.PlanetComparer(p);
+            nearestPlanets.Sort(sortComparer);
+            for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
+            {
+                Vector3 posA = p.transform.position;
+                Vector3 posB = nearestPlanets[i].transform.position;
+                Vector3 newPosition = (posA + posB) / 2;
+                huntingPositions.Add(newPosition);
+            }
+        }
+        return huntingPositions;
     }
 
     private void FindNearestAsteroidField()
@@ -644,17 +655,16 @@ public class AI_Patrol : PilotInterface
         //throw new NotImplementedException();
     }
 
-    public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)
+    /// <summary>
+    /// Returns whether checkPoint is on the left side of the line defined by pos1 and pos2.
+    /// </summary>
+    /// <param name="pos1"></param>
+    /// <param name="pos2"></param>
+    /// <param name="checkPoint"></param>
+    /// <returns></returns>
+    private bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)
     {
         return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
     }
 
-    /// <summary>
-    /// Returns the Shipscript that I am the pilot of.
-    /// </summary>
-    /// <returns></returns>
-    public Spaceship GetShip()
-    {
-        return shipScript;
-    }
 }
