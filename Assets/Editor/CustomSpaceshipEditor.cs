@@ -27,7 +27,13 @@ namespace Assets.Editor {
                     }
                 }
             }
-
+            if (pilot != null)
+            {
+                if (GUILayout.Button("Take 100 Damage"))
+                {
+                    myTarget.TakeDamage(100);
+                }
+            }
             if (hold != null)
             {
                 EditorGUILayout.TextArea(hold.ToString(), GUILayout.MaxHeight(75));

@@ -136,7 +136,10 @@ public class AI_Patrol : PilotInterface
 
     public override void Die()
     {
-        blackboard["dead"] = true;
+        if (blackboard != null)
+        {
+            blackboard["dead"] = true;
+        }
     }
 
     private Root CreateBehaviorTreePirate()
@@ -342,7 +345,10 @@ public class AI_Patrol : PilotInterface
 
     public void OnDestroy()
     {
-        behaviorTree.Stop();
+        if (behaviorTree != null)
+        {
+            behaviorTree.Stop();
+        }
     }
 
     private Root CreateBehaviourTreeDumbMining()

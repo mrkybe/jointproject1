@@ -205,7 +205,7 @@ public partial class Planet: Static
         }
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
-        ship.name = "Ship_Transport_" + this.Faction.Name + "_" + this.MyName + "_" + DeliveryShipCount;
+        ship.name = "S_Transport_" + this.Faction.Name + "_" + this.MyName + "_" + DeliveryShipCount;
         shipScript.Faction = Faction;
 
         if (shipScript != null)

@@ -35,6 +35,7 @@ public class Spaceship : Mobile
     private float oldThrottle_input;
     private CargoHold myStorage;
     private SensorArray mySensorArray;
+    private ModelSwitcher myModelSwitcher;
     // Use this for initialization
 
     [SerializeField]
@@ -70,7 +71,8 @@ public class Spaceship : Mobile
     new void Start ()
     {
         base.Start();
-        GetComponentInChildren<ModelSwitcher>().SetModel(modelChoice);
+        myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
+        myModelSwitcher.SetModel(modelChoice);
     }
 
 	// Update is called once per frame
@@ -128,16 +130,6 @@ public class Spaceship : Mobile
     {
         // Entity leaves sensor range.
         inSensorRange.Remove(other.gameObject.transform.root.gameObject);
-    }
-
-    /// <summary>
-    /// Change the ship's 3d model to a different one.
-    /// </summary>
-    /// <param name="number"></param>
-    public void SetModel(int number)
-    {
-        MeshFilter mf = GetComponentInChildren<MeshFilter>();
-        MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
     }
 
     /// <summary>
@@ -272,7 +264,13 @@ public class Spaceship : Mobile
         HullHealth -= i;
         if (HullHealth <= 0)
         {
-            GetPilot.Die();
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        myModelSwitcher.BecomeGraveyard();
+        GetPilot.Die();
     }
 }
