@@ -62,7 +62,7 @@ public class AI_Patrol : PilotInterface
     /// Sets the Behavior Tree the one for mining.
     /// </summary>
     /// <param name="miningTargets">The kind of resources to mine.</param>
-    public void StartMining(List<string> miningTargets)
+    public void StartMining(List<string> miningTargets, Planet homePlanet)
     {
         behaviorTree = CreateBehaviourTreeDumbMining();
 
@@ -70,9 +70,9 @@ public class AI_Patrol : PilotInterface
 
         InitializeDefaultBlackboard();
         blackboard["miningTargetsList"] = miningTargets;
-
-        // temporarily use this as the home base until we have a better system
-        BlackboardSetNearestPlanet();
+        
+        blackboard["homePlanet"] = homePlanet;
+        this.homePlanet = homePlanet;
 
 #if UNITY_EDITOR
         if (debugger == null)
@@ -350,6 +350,7 @@ public class AI_Patrol : PilotInterface
                                 if (bestCandidate != null)
                                 {
                                     blackboard["bestMiningField"] = bestCandidate;
+                                    targetPosition = bestCandidate.transform.position;
                                     blackboard["targetPos"] = bestCandidate.transform.position;
                                     return Action.Result.SUCCESS;
                                 }
@@ -390,7 +391,7 @@ public class AI_Patrol : PilotInterface
                                     }
                                     else
                                     {
-                                        int mined = Mine(blackboard.Get<List<string>>("miningTargetList"));
+                                        int mined = Mine(blackboard.Get<List<string>>("miningTargetsList"));
                                         if (mined > 0)
                                         {
                                             return Action.Result.SUCCESS;
@@ -665,11 +666,17 @@ public class AI_Patrol : PilotInterface
         return minedAmount;
     }
 
-    private void DropOffMinedResources() { throw new NotImplementedException(); }
-
-    private int DropOffResource(String type)
+    private void DropOffMinedResources()
     {
-        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
+        List<Planet> planets = shipScript.GetInInteractionRange<Planet>();
+        if (planets.Contains(homePlanet))
+        {
+            List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
+            foreach (string resource in miningTargetsList)
+            {
+                homePlanet.GetCargoHold.Credit(resource, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(resource), true);
+            }
+        }
     }
 
     private void DropOffResource(MarketOrder type)
@@ -677,6 +684,11 @@ public class AI_Patrol : PilotInterface
         DropOffResource(type.item.Name);
         type.Succeed();
         //throw new NotImplementedException();
+    }
+
+    private int DropOffResource(String type)
+    {
+        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
     }
 
     /// <summary>

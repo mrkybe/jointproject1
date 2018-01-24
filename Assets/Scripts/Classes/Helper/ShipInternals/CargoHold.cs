@@ -167,7 +167,7 @@
         }
 
         // 
-        public static CargoHold GetAsteroidFieldCargoHold()
+        public static CargoHold GenerateAsteroidFieldCargoHold()
         {
             List<CargoItem> items = new List<CargoItem>();
             int hashcode = UnityEngine.Random.value.GetHashCode();

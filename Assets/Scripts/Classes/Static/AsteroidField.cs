@@ -19,7 +19,7 @@ public class AsteroidField : Static
     void Start ()
     {
         base.Start();
-        myStorage = CargoHold.GetAsteroidFieldCargoHold();
+        myStorage = CargoHold.GenerateAsteroidFieldCargoHold();
         //GenerateMesh();
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;

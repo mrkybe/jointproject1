@@ -25,7 +25,7 @@ public partial class Planet: Static
     private List<MarketOrder> deliveryFailedList;
     private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
-    public int DeliveryShipCount = 1;
+    public int DeliveryShipCount = 0;
     private float LastDeliveryShipDeployment = 0;
 
     void PlanetBTSetup()
@@ -179,47 +179,70 @@ public partial class Planet: Static
 	            }
 	        }
 	    }
-	}
+    }
 
-    private void SendDeliveryShip(MarketOrder order)
+    public Spaceship SpawnSpaceship(string typename, int number)
     {
-        // Limit rate of ship creation
-        if (Random.value > 0.01f)
-        {
-            return;
-        }
         Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
         Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
 
         Quaternion shipRotation = Quaternion.LookRotation(offset3d, Vector3.up);
         GameObject ship = null;
-        if (ReadyDeliveryShips.Count == 0)
-        {
-            ship = Instantiate(DeliveryShip, this.transform.position + offset3d, shipRotation);
-            DeliveryShipCount--;
-        }
-        else
-        {
-            ship = ReadyDeliveryShips[0];
-            ReadyDeliveryShips.RemoveAt(0);
-        }
+
+        ship = Instantiate(DeliveryShip, this.transform.position + offset3d, shipRotation);
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
-        ship.name = "S_Transport_" + this.Faction.Name + "_" + this.MyName + "_" + DeliveryShipCount;
+        ship.name = "S_" + typename + "_" + this.Faction.Name + "_" + this.MyName + "_" + number;
         shipScript.Faction = Faction;
+
+        return shipScript;
+    }
+
+    public void SpawnMiningShip(List<string> miningTargetList)
+    {
+        Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
+        AI_Patrol pilot = (AI_Patrol)shipScript.GetPilot;
 
         if (shipScript != null)
         {
             CargoHold shipHold = shipScript.GetCargoHold;
-            shipHold.AddHoldType(order.item.Name);
-            int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
-            order.item.Count -= transfered;
-            if (order.item.Count == 0)
-            {
-                deliveryList.Remove(order);
-                deliveryInProgressList.Add(order);
-            }
+            foreach(string resource in miningTargetList)
+            shipHold.AddHoldType(resource);
         }
+        if (pilot != null)
+        {
+            pilot.StartMining(miningTargetList, this);
+        }
+
+        WorkerShips.Add(shipScript.gameObject);
+    }
+
+    private void SendDeliveryShip(MarketOrder order)
+    {
+        Spaceship shipScript = null;
+        if (ReadyDeliveryShips.Count == 0)
+        {
+            shipScript = SpawnSpaceship("Transport", DeliveryShipCount);
+            DeliveryShipCount--;
+        }
+        else
+        {
+            shipScript = ReadyDeliveryShips[0].GetComponent<Spaceship>();
+            ReadyDeliveryShips.RemoveAt(0);
+        }
+        GameObject ship = shipScript.gameObject;
+        
+        CargoHold shipHold = shipScript.GetCargoHold;
+        shipHold.AddHoldType(order.item.Name);
+        int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
+        order.item.Count -= transfered;
+        if (order.item.Count == 0)
+        {
+            deliveryList.Remove(order);
+            deliveryInProgressList.Add(order);
+        }
+
+        AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         if (pilot != null)
         {
             pilot.StartDelivery(order);

@@ -1,4 +1,5 @@
-﻿using ShipInternals;
+﻿using System.Collections.Generic;
+using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,6 +41,13 @@ namespace Assets.Editor {
             if (GUILayout.Button("Calculate Net Demand"))
             {
                 myTarget.CalculateNetDemand();
+            }
+
+            if (GUILayout.Button("Spawn Mining Ship"))
+            {
+                List<string> miningTargetList = new List<string>();
+                miningTargetList.Add("Gold");
+                myTarget.SpawnMiningShip(miningTargetList);
             }
 
             base.OnInspectorGUI();

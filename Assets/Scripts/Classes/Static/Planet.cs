@@ -106,12 +106,6 @@ public partial class Planet : Static
 
 	}
 
-    public void SpawnMiningShip()
-    {
-        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
-        WorkerShips.Add(ship.gameObject);
-    }
-
     public void RandomizeSize()
     {
         System.Random random = new System.Random(GetInstanceID());
