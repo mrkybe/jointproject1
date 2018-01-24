@@ -70,7 +70,6 @@ public class Spaceship : Mobile
     new void Start ()
     {
         base.Start();
-	}
         GetComponentInChildren<ModelSwitcher>().SetModel(modelChoice);
     }
 
