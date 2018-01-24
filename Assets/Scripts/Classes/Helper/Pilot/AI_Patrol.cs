@@ -21,6 +21,7 @@ public class AI_Patrol : PilotInterface
     private Blackboard blackboard;
     private Spaceship shipScript;
     private Debugger debugger = null;
+    private float interactionDistance = 5f;
 
     // Use this for initialization
     public void Awake()
@@ -68,7 +69,7 @@ public class AI_Patrol : PilotInterface
         blackboard = behaviorTree.Blackboard;
 
         InitializeDefaultBlackboard();
-        blackboard["miningTargets"] = miningTargets;
+        blackboard["miningTargetsList"] = miningTargets;
 
         // temporarily use this as the home base until we have a better system
         BlackboardSetNearestPlanet();
@@ -185,7 +186,7 @@ public class AI_Patrol : PilotInterface
                             targetPosition = closestPos;
                         })
                     { Label = "Set target position to nearest hunting area" },
-                    new Service(0.5f, UpdateDistanceToTarget,
+                    new Service(0.5f, UpdateDistanceToTargetPosition,
                         new Action((bool shouldCancel) =>
                             {
                                 UpdateSafetyStatus();
@@ -252,7 +253,7 @@ public class AI_Patrol : PilotInterface
                         targetPosition = blackboard.Get<Planet>("deliveryPlanet").transform.position;
                     })
                 { Label = "Set target position to go to drop off planet" },
-                new Service(0.5f, UpdateDistanceToTarget,
+                new Service(0.5f, UpdateDistanceToTargetPosition,
                     new Action((bool shouldCancel) =>
                         {
                             if (!shouldCancel)
@@ -281,7 +282,7 @@ public class AI_Patrol : PilotInterface
                         targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
                     })
                 { Label = "Set target position to go home" },
-                new Service(0.5f, UpdateDistanceToTarget,
+                new Service(0.5f, UpdateDistanceToTargetPosition,
                     new Action((bool shouldCancel) =>
                         {
                             if (!shouldCancel)
@@ -307,7 +308,7 @@ public class AI_Patrol : PilotInterface
                         blackboard["arriveTime"] = Time.time;
                     })
                 { Label = "Dock with planet" },
-                new Service(0.5f, UpdateDistanceToTarget,
+                new Service(0.5f, UpdateDistanceToTargetPosition,
                     new Action((bool shouldCancel) =>
                         {
                             if (!shouldCancel)
@@ -342,85 +343,93 @@ public class AI_Patrol : PilotInterface
     {
         return new Root(
             new Sequence(
-                    new Wait(1f),
-                    new Action(() =>
-                               {
-                                   FindNearestAsteroidField();
-                                   targetPosition = blackboard.Get<AsteroidField>("nearestAsteroidField").transform.position;
-                               })
-                    { Label = "Find Nearest Asteroid Field" },
-                    new Service(0.5f, UpdateDistanceToTarget,
-                        new Action((bool shouldCancel) =>
-                                   {
-                                       if (!shouldCancel)
-                                       {
-                                           MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                           if (blackboard.Get<float>("targetDistance") < 5f)
-                                           {
-                                               return Action.Result.SUCCESS;
-                                           }
-                                           return Action.Result.PROGRESS;
-                                       }
-                                       else
-                                       {
-                                           return Action.Result.FAILED;
-                                       }
-                                   })
-                        { Label = "Go to target" }
-                    ),
-                    new Succeeder(new Repeater(new Cooldown(0.1f,
-                        new Action((bool shouldCancel) =>
-                                   {
-                                       control_stickDirection = new Vector2();
-                                       targetSpeed = 0;
-                                       int spaceRemaining = shipScript.GetCargoHold.GetRemainingSpace();
-                                       if (spaceRemaining == 0)
-                                       {
-                                           blackboard.Set("cargoHoldFull", true);
-                                       }
-                                       int mined = Mine("Gold");
-                                       if (mined > 0)
-                                       {
-                                           return Action.Result.SUCCESS;
-                                       }
-                                       else
-                                       {
-                                           return Action.Result.FAILED; // this should search for minable asteroid fields better
-                                       }
-                                   })
-                        { Label = "Mining" }
-                    ))),
-                    new Action(() =>
-                               {
-                                   targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
-                               })
-                    { Label = "Set target position to go home" },
-                    new Service(0.5f, UpdateDistanceToTarget,
-                        new Action((bool shouldCancel) =>
+                new Wait(1f),
+                new Action((bool shouldCancel) =>
+                            {
+                                AsteroidField bestCandidate = FindNearestAsteroidFieldForMining(blackboard.Get<List<string>>("miningTargetsList"));
+                                if (bestCandidate != null)
+                                {
+                                    blackboard["bestMiningField"] = bestCandidate;
+                                    blackboard["targetPos"] = bestCandidate.transform.position;
+                                    return Action.Result.SUCCESS;
+                                }
+                                else
+                                {
+                                    return Action.Result.FAILED;
+                                }
+                            })
+                { Label = "Find best nearest AsteroidField for mining" },
+                new Service(0.5f, UpdateDistanceToTargetPosition,
+                    new Action((bool shouldCancel) =>
+                                {
+                                    if (!shouldCancel)
                                     {
-                                        if (!shouldCancel)
+                                        MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                        if (blackboard.Get<float>("targetDistance") < interactionDistance)
                                         {
-                                            MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                            if (blackboard.Get<float>("targetDistance") < 5f)
-                                            {
-                                                return Action.Result.SUCCESS;
-                                            }
-                                            return Action.Result.PROGRESS;
+                                            return Action.Result.SUCCESS;
                                         }
-                                        else
+                                        return Action.Result.PROGRESS;
+                                    }
+                                    else
+                                    {
+                                        return Action.Result.FAILED;
+                                    }
+                                })
+                    { Label = "Go to target position" }
+                ),
+                new Succeeder(new Repeater(new Cooldown(0.1f,
+                    new Action((bool shouldCancel) =>
+                                {
+                                    control_stickDirection = new Vector2();
+                                    targetSpeed = 0;
+                                    int spaceRemaining = shipScript.GetCargoHold.GetRemainingSpace();
+                                    if (spaceRemaining == 0)
+                                    {
+                                        blackboard.Set("cargoHoldFull", true);
+                                    }
+                                    else
+                                    {
+                                        int mined = Mine(blackboard.Get<List<string>>("miningTargetList"));
+                                        if (mined > 0)
                                         {
-                                            return Action.Result.FAILED;
+                                            return Action.Result.SUCCESS;
                                         }
-                                    })
-                        { Label = "Go to target planet" }
-                        ),
-                    new Action(() =>
-                               {
-                                   DropOffResource("Gold");
-                                   FindNearestAsteroidField();
-                               })
-                    { Label = "Dropping off resources" }
-                    )
+                                    }
+                                    return Action.Result.FAILED; // this should search for minable asteroid fields better
+                                })
+                    { Label = "Mining" }
+                ))),
+                new Action(() =>
+                            {
+                                targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
+                            })
+                { Label = "Set target position to go to home planet" },
+                new Service(0.5f, UpdateDistanceToTargetPosition,
+                    new Action((bool shouldCancel) =>
+                                {
+                                    if (!shouldCancel)
+                                    {
+                                        MoveTowards(blackboard.Get<Vector3>("targetPos"));
+                                        if (blackboard.Get<float>("targetDistance") < 5f)
+                                        {
+                                            return Action.Result.SUCCESS;
+                                        }
+                                        return Action.Result.PROGRESS;
+                                    }
+                                    else
+                                    {
+                                        return Action.Result.FAILED;
+                                    }
+                                })
+                    { Label = "Go to target planet" }
+                    ),
+                new Action(() =>
+                            {
+                                DropOffMinedResources();
+                            })
+                { Label = "Dropping off resources" }
+                )
         );
     }
 
@@ -448,10 +457,9 @@ public class AI_Patrol : PilotInterface
         return huntingPositions;
     }
 
-    private void FindNearestAsteroidField()
+    private AsteroidField FindNearestAsteroidFieldForMining(List<string> miningTargetsList)
     {
-        float nearestDistance = float.MaxValue;
-        bool found = false;
+        AsteroidField bestCandidate = null;
 
         // faster to use optimized physics engine and narrow down our list of objects to check
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, 100f, Vector3.up);
@@ -459,42 +467,60 @@ public class AI_Patrol : PilotInterface
         if (hits.Length > 0)
         {
             //Debug.Log("Checking Hits!");
+            List<AsteroidField> fields = new List<AsteroidField>();
             foreach (var hit in hits)
             {
                 AsteroidField one = hit.transform.gameObject.GetComponent<AsteroidField>();
                 if (one)
                 {
-                    if ((transform.position - one.transform.position).magnitude < nearestDistance)
-                    {
-                        string miningTarget = blackboard.Get<String>("miningTarget");
-                        if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                        {
-                            blackboard["nearestAsteroidField"] = one;
-                            nearestDistance = (transform.position - one.transform.position).magnitude;
-                            targetPosition = one.transform.position;
-                            found = true;
-                        }
-                    }
+                    fields.Add(one);
                 }
             }
+
+            bestCandidate = FindNearestAsteroidFieldForMiningFromCandidates(fields, miningTargetsList);
         }
-        if (!found)
+        // okay search all of them :(
+        if (bestCandidate == null)
         {
-            //Debug.Log("Checking All Asteroids!");
-            foreach (var one in AsteroidField.listOfAsteroidFields)
+            bestCandidate = FindNearestAsteroidFieldForMiningFromCandidates(AsteroidField.listOfAsteroidFields, miningTargetsList);
+        }
+
+        return bestCandidate;
+    }
+
+    private AsteroidField FindNearestAsteroidFieldForMiningFromCandidates(List<AsteroidField> candidates, List<string> miningTargetsList)
+    {
+        AsteroidField bestCandidate = null;
+        float nearestDistance = float.MaxValue;
+        foreach (var one in candidates)
+        {
+            float distance = (transform.position - one.transform.position).magnitude;
+            if (distance < nearestDistance)
             {
-                if ((transform.position - one.transform.position).magnitude < nearestDistance)
+                List<string> found = CheckAsteroidFieldForMinable(one, miningTargetsList);
+                if (found.Count > 0)
                 {
-                    string miningTarget = blackboard.Get<String>("miningTarget");
-                    if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                    {
-                        blackboard["nearestAsteroidField"] = one;
-                        nearestDistance = (transform.position - one.transform.position).magnitude;
-                        targetPosition = one.transform.position;
-                    }
+                    nearestDistance = distance;
+                    bestCandidate = one;
                 }
             }
         }
+
+        return bestCandidate;
+    }
+
+    private List<string> CheckAsteroidFieldForMinable(AsteroidField field, List<string> miningTargetsList)
+    {
+        List<string> success = new List<string>();
+        foreach (string resource in miningTargetsList)
+        {
+            if (field.GetCargoHold.Contains(resource) && field.GetCargoHold.GetAmountInHold(resource) > 0)
+            {
+                success.Add(resource);
+            }
+        }
+
+        return success;
     }
 
     private void BlackboardSetNearestPlanet()
@@ -517,18 +543,11 @@ public class AI_Patrol : PilotInterface
         return bestPlanet;
     }
 
-    private void UpdateCargoHoldSpaceRemaining()
-    {
-        blackboard["cargoSpaceRemaining"] = shipScript.GetCargoHold.GetRemainingSpace();
-    }
-
     Vector3 targetPosition = Vector3.zero;
-    private void UpdateDistanceToTarget()
+    private void UpdateDistanceToTargetPosition()
     {
-        Vector3 targetPos = targetPosition;
-        behaviorTree.Blackboard["targetPos"] = targetPos;
-        Vector3 targetLocalPos = targetPosition - this.transform.position;
-        behaviorTree.Blackboard["targetDistance"] = targetLocalPos.magnitude;
+        behaviorTree.Blackboard["targetPos"] = targetPosition;
+        behaviorTree.Blackboard["targetDistance"] = Vector3.Distance(this.transform.position, targetPosition);
     }
 
     List<Spaceship> GetHostileShipsInRange()
@@ -609,39 +628,44 @@ public class AI_Patrol : PilotInterface
         control_stickDirection = stick;
     }
 
-    private int Mine(String miningTarget)
+    private int Mine(List<string> list)
     {
-        int mineAmount = 1;
+        int maxMineAmount = 1;
+        int minedAmount = 0;
+        foreach (string resource in list)
+        {
+            if (minedAmount < maxMineAmount)
+            {
+                minedAmount += MineResource(resource, maxMineAmount);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return minedAmount;
+    }
+
+    private int MineResource(String miningTarget, int maxMineAmount)
+    {
+        int mineAmount = maxMineAmount;
         int minedAmount = 0;
         if (shipScript != null)
         {
-            List<Static> targets = shipScript.GetStaticInRange();
-            List<AsteroidField> newTargets = new List<AsteroidField>();
-            AsteroidField finalTarget;
-            Debug.Log("Targets available: " + targets.Count);
-            for (int i = 0; i < targets.Count; i++)
+            List<AsteroidField> targets = shipScript.GetInInteractionRange<AsteroidField>();
+            AsteroidField finalTarget = blackboard.Get<AsteroidField>("bestMiningField");
+            if (!targets.Contains(finalTarget))
             {
-                if (targets[i].GetType() == typeof(AsteroidField))
-                {
-                    finalTarget = targets[i] as AsteroidField;
-                    if (finalTarget.GetCargoHold.Contains(miningTarget) &&
-                        finalTarget.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                    {
-                        newTargets.Add((AsteroidField)targets[i]);
-                    }
-                }
+                Debug.Log("THIS SHOULDN'T HAPPEN!");
+            }
 
-            }
-            if (newTargets.Count >= 1)
-            {
-                finalTarget = newTargets[0];
-                minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
-                Debug.Log("Taking Cargo");
-            }
+            minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
         }
 
         return minedAmount;
     }
+
+    private void DropOffMinedResources() { throw new NotImplementedException(); }
 
     private int DropOffResource(String type)
     {

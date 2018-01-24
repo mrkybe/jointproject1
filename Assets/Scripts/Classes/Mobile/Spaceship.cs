@@ -29,6 +29,8 @@ public class Spaceship : Mobile
     public int PowerLevel;
     [SerializeField]
     public int HullHealth;
+    [SerializeField]
+    public float InteractionRange;
 
     private float targetSpeed;
     private float throttle_input;
@@ -57,6 +59,7 @@ public class Spaceship : Mobile
         oldThrottle_input = 0;
         PowerLevel = 10;
         HullHealth = 100;
+        InteractionRange = 8f;
 
         if (isAI)
         {
@@ -152,6 +155,44 @@ public class Spaceship : Mobile
     }
 
     /// <summary>
+    /// Returns a list of Static entities in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<Static> GetStaticInSensorRange()
+    {
+        List<Static> targets = new List<Static>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            Static target = inSensorRange[i].GetComponent<Static>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of specified entities in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<T> GetInSensorRange<T>()
+    {
+        List<T> targets = new List<T>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            T target = inSensorRange[i].GetComponent<T>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
     /// Returns a list of Spaceships in interaction range.
     /// </summary>
     /// <returns></returns>
@@ -164,7 +205,25 @@ public class Spaceship : Mobile
             if (inSensorRange[i] != null)
             {
                 Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
-                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
+                {
+                    targets.Add(target);
+                }
+            }
+        }
+        return targets;
+    }
+
+    public List<Static> GetStaticInInteractionRange()
+    {
+        List<Static> targets = new List<Static>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            if (inSensorRange[i] != null)
+            {
+                Static target = inSensorRange[i].GetComponent<Static>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
                 {
                     targets.Add(target);
                 }
@@ -174,19 +233,19 @@ public class Spaceship : Mobile
     }
 
     /// <summary>
-    /// Returns a list of Static entities in sensor range.
+    /// Returns a list of specified entities in interaction range.
     /// </summary>
     /// <returns></returns>
-    public List<Static> GetStaticInRange()
+    public List<T> GetInInteractionRange<T>()
     {
-        List<Static> targets = new List<Static>();
+        List<T> targets = new List<T>();
         CleanSensorList();
         for (int i = 0; i < inSensorRange.Count; i++)
         {
             if (inSensorRange[i] != null)
             {
-                Static target = inSensorRange[i].GetComponent<Static>();
-                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                T target = inSensorRange[i].GetComponent<T>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
                 {
                     targets.Add(target);
                 }

@@ -137,7 +137,7 @@ namespace AI_Missions
                     case AI_States.ARRIVED:
                         if (shipScript != null)
                         {
-                            List<Static> targets = shipScript.GetStaticInRange();
+                            List<Static> targets = shipScript.GetStaticInSensorRange();
                             List<AsteroidField> newTargets = new List<AsteroidField>();
                             AsteroidField finalTarget;
                             Debug.Log("Targets available: " + targets.Count);
