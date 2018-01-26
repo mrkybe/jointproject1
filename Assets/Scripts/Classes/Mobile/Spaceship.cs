@@ -122,6 +122,10 @@ public class Spaceship : Mobile
     {
         // New entity in sensor range.
         inSensorRange.Add(other.gameObject.transform.root.gameObject);
+        if (pilot.GetType() == typeof(AI_Patrol))
+        {
+            ((AI_Patrol)pilot).Notify(other.gameObject.transform.root.gameObject);
+        }
     }
 
     public void CleanSensorList()

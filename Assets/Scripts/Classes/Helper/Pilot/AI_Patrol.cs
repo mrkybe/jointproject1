@@ -703,4 +703,8 @@ public class AI_Patrol : PilotInterface
         return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
     }
 
+    public void Notify(GameObject contact)
+    {
+        blackboard["sensor_contact"] = true;
+    }
 }
