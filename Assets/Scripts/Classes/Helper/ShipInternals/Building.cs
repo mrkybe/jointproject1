@@ -9,14 +9,17 @@ public class Building
     public readonly string Name;
     private List<CargoItem> Consume;
     private List<CargoItem> Produce;
+	private List<CargoItem> Cost;
     private int spaceFreed = 0;
     private int spaceConsumed = 0;
+	private int buildingCost = 0;
 
-    private Building(string name, List<CargoItem> consume, List<CargoItem> produce)
+	private Building(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost)
     {
         Name = name ?? "Building";
         Consume = consume ?? new List<CargoItem>();
         Produce = produce ?? new List<CargoItem>();
+		Cost = cost ?? new List<CargoItem> ();
         foreach (var item in Consume)
         {
             spaceFreed += item.Volume;
@@ -25,6 +28,9 @@ public class Building
         {
             spaceConsumed += item.Volume;
         }
+		foreach (var item in Cost) {
+			buildingCost += item.Volume;
+		}
     }
 
     /// <summary>
@@ -74,6 +80,11 @@ public class Building
     {
         return Produce;
     }
+	public List<CargoItem> GetBuildingCost()
+	{
+		return Cost;
+	}
+
 
     public delegate Building BasicEnviroment();
     public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
@@ -90,7 +101,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Dirt", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetEnviromentCometFactory()
@@ -102,7 +113,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Water", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetEnviromentRockFactory()
@@ -114,7 +125,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Rock", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetEnviromentOreFactory()
@@ -129,7 +140,7 @@ public class Building
                                 new CargoItem("Iron Ore", 1),
                                 new CargoItem("Copper Ore", 1),
                                 new CargoItem("Titanium Ore", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     // level 1 resources
@@ -144,7 +155,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Food", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetSteelFactory()
@@ -158,7 +169,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Steel", 5)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetCopperFactory()
@@ -171,7 +182,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Copper", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetTitaniumFactory()
@@ -184,7 +195,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Titanium", 5)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetSiliconFactory()
@@ -197,7 +208,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Silicon", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     // level 2 resource production
@@ -212,7 +223,7 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Processor", 1)
-                            });
+			}, new List<CargoItem>());
     }
 
     public static Building GetShipPartsFactory()
@@ -226,6 +237,6 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Basic Ship Components", 1)
-                            });
+			}, new List<CargoItem>());
     }
 }
