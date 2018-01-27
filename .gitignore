@@ -63,3 +63,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+!/Assets/Behavior Designer/Editor/BehaviorDesignerEditor.dll
+!/Assets/Behavior Designer/Runtime/BehaviorDesignerRuntime.dll
