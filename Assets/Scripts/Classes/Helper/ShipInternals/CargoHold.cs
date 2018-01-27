@@ -8,10 +8,8 @@
     /* How Cargo should work in theory:
          * 1.  I have a class that needs to store Cargo
          * 2.  I attach a CargoHold to that class
-         * 3.  I set up the CargoBays
-         *     a. CargoBays keep track of the amount of CargoItem they have in them.
-         *          a1.  CargoBays do not actually store instances of CargoItem.
-         *     b. CargoHold contains multiple CargoBays.
+         * 3.  The CargoHold is basically a collection of CargoItem that adds useful methods
+         * 4.  CargoItem is basically a single cargo bay that tracks the amount of a given CargoItem, its name, etc.
          */
     
     [Serializable]
@@ -42,7 +40,7 @@
             }
             else
             {
-                Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
+                //Debug.Log("-WARNING: could not AddHoldType(" + type + ") as it already exists on this cargohold!");
             }
         }
 
@@ -126,7 +124,7 @@
             }
 
             Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
-            return -1;
+            return 0;
         }
 
         public override string ToString()
@@ -169,7 +167,7 @@
         }
 
         // 
-        public static CargoHold GetAsteroidFieldCargoHold()
+        public static CargoHold GenerateAsteroidFieldCargoHold()
         {
             List<CargoItem> items = new List<CargoItem>();
             int hashcode = UnityEngine.Random.value.GetHashCode();

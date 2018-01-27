@@ -6,6 +6,9 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
+/// <summary>
+/// A Base that belongs to a faction.  Sends out ships and trades resources.
+/// </summary>
 public partial class Planet : Static
 {
     [SerializeField]
@@ -103,12 +106,6 @@ public partial class Planet : Static
 
 	}
 
-    public void SpawnMiningShip()
-    {
-        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
-        WorkerShips.Add(ship.gameObject);
-    }
-
     public void RandomizeSize()
     {
         System.Random random = new System.Random(GetInstanceID());
@@ -174,5 +171,52 @@ public partial class Planet : Static
     private void TickSelf()
     {
         TickBuildings();
+    }
+
+    public class PlanetComparer : IComparer<Planet>
+    {
+        private Planet origin;
+
+        public PlanetComparer(Planet origin)
+        {
+            this.origin = origin;
+        }
+
+        public int CompareClosest(Planet x, Planet y)
+        {
+            Vector3 xPos = x.transform.position;
+            Vector3 yPos = y.transform.position;
+            Vector3 originPos = origin.transform.position;
+            float xDist = Vector3.Distance(originPos, xPos);
+            float yDist = Vector3.Distance(originPos, yPos);
+            if (xDist < yDist)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public int Compare(Planet x, Planet y)
+        {
+            return CompareClosest(x, y);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

@@ -9,6 +9,9 @@ using NPBehave;
 using Action = NPBehave.Action;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// The AI portion of the class.
+/// </summary>
 public partial class Planet: Static
 {
 	protected Root behaviorTree;
@@ -18,12 +21,18 @@ public partial class Planet: Static
     private List<CargoItem> producableCargoItems;
     private List<CargoItem> itemsNetChange;
     private List<MarketOrder> deliveryList;
+    private List<MarketOrder> deliveryInProgressList;
+    private List<MarketOrder> deliveryFailedList;
+    private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
-    public int DeliveryShipCount = 10;
+    public int DeliveryShipCount = 0;
+    private float LastDeliveryShipDeployment = 0;
 
     void PlanetBTSetup()
 	{
         behaviorTree = CreatePlanetBT();
+
+	    LastDeliveryShipDeployment = Time.time;
 
 		blackboard = behaviorTree.Blackboard;
 
@@ -37,6 +46,9 @@ public partial class Planet: Static
 	    producableCargoItems = new List<CargoItem>();
         itemsNetChange = new List<CargoItem>();
 	    deliveryList = new List<MarketOrder>();
+	    deliveryInProgressList = new List<MarketOrder>();
+	    deliveryFailedList = new List<MarketOrder>();
+        ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
         behaviorTree.Start();
 	}
@@ -45,7 +57,7 @@ public partial class Planet: Static
 	{
 		return new Root (
 			new Sequence (
-				new Wait (1f),
+				new Wait (1f + Random.value),
 				new Action (() => {
 					CalculateConsumableResources ();
 				}){ Label = "Calculate the resources needed for the market" },
@@ -154,12 +166,11 @@ public partial class Planet: Static
 	        var list = orders[p];
 	        foreach (var order in list)
 	        {
-	            if (DeliveryShipCount > 0)
+	            if (DeliveryShipCount > 0 || ReadyDeliveryShips.Count > 0)
 	            {
 	                if ( order.item.Count > 0)
 	                {
 	                    SendDeliveryShip(order);
-	                    DeliveryShipCount--;
                     }
 	            }
 	            else
@@ -168,29 +179,70 @@ public partial class Planet: Static
 	            }
 	        }
 	    }
-	}
+    }
 
-    private void SendDeliveryShip(MarketOrder order)
+    public Spaceship SpawnSpaceship(string typename, int number)
     {
-        //Random.InitState(GetInstanceID());
         Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
         Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
 
-        var ship = Instantiate(DeliveryShip, this.transform.position + offset3d, Quaternion.identity);
+        Quaternion shipRotation = Quaternion.LookRotation(offset3d, Vector3.up);
+        GameObject ship = null;
+
+        ship = Instantiate(DeliveryShip, this.transform.position + offset3d, shipRotation);
         AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         Spaceship shipScript = ship.GetComponent<Spaceship>();
+        ship.name = "S_" + typename + "_" + this.Faction.Name + "_" + this.MyName + "_" + number;
+        shipScript.Faction = Faction;
+
+        return shipScript;
+    }
+
+    public void SpawnMiningShip(List<string> miningTargetList)
+    {
+        Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
+        AI_Patrol pilot = (AI_Patrol)shipScript.GetPilot;
 
         if (shipScript != null)
         {
             CargoHold shipHold = shipScript.GetCargoHold;
-            shipHold.AddHoldType(order.item.Name);
-            int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
-            order.item.Count -= transfered;
-            if (order.item.Count == 0)
-            {
-                deliveryList.Remove(order);
-            }
+            foreach(string resource in miningTargetList)
+            shipHold.AddHoldType(resource);
         }
+        if (pilot != null)
+        {
+            pilot.StartMining(miningTargetList, this);
+        }
+
+        WorkerShips.Add(shipScript.gameObject);
+    }
+
+    private void SendDeliveryShip(MarketOrder order)
+    {
+        Spaceship shipScript = null;
+        if (ReadyDeliveryShips.Count == 0)
+        {
+            shipScript = SpawnSpaceship("Transport", DeliveryShipCount);
+            DeliveryShipCount--;
+        }
+        else
+        {
+            shipScript = ReadyDeliveryShips[0].GetComponent<Spaceship>();
+            ReadyDeliveryShips.RemoveAt(0);
+        }
+        GameObject ship = shipScript.gameObject;
+        
+        CargoHold shipHold = shipScript.GetCargoHold;
+        shipHold.AddHoldType(order.item.Name);
+        int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
+        order.item.Count -= transfered;
+        if (order.item.Count == 0)
+        {
+            deliveryList.Remove(order);
+            deliveryInProgressList.Add(order);
+        }
+
+        AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
         if (pilot != null)
         {
             pilot.StartDelivery(order);
@@ -198,14 +250,45 @@ public partial class Planet: Static
         WorkerShips.Add(ship.gameObject);
     }
 
-    public void ReturnDeliveryShip()
+    public void ReturnDeliveryShip(AI_Patrol aiPatrol)
     {
+        ReadyDeliveryShips.Remove(aiPatrol.gameObject);
         DeliveryShipCount++;
     }
 
     public void AddToDeliveryQueue(MarketOrder marketOrder)
     {
         deliveryList.Add(marketOrder);
+    }
+
+    public void AddToAvailableDeliveryShips(AI_Patrol aiPatrol)
+    {
+        ReadyDeliveryShips.Add(aiPatrol.gameObject);
+    }
+
+    public void CompleteOrder(MarketOrder marketOrder)
+    {
+        if (deliveryInProgressList.Contains(marketOrder))
+        {
+            deliveryInProgressList.Remove(marketOrder);
+        }
+        else
+        {
+            Debug.Log("TRIED TO COMPLETE ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
+        }
+    }
+
+    public void FailOrder(MarketOrder marketOrder)
+    {
+        if (deliveryInProgressList.Contains(marketOrder))
+        {
+            deliveryInProgressList.Remove(marketOrder);
+            deliveryFailedList.Add(marketOrder);
+        }
+        else
+        {
+            Debug.Log("TRIED TO FAIL ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
+        }
     }
 }
 

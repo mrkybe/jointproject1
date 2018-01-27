@@ -55,4 +55,5 @@ public abstract class PilotInterface : MonoBehaviour
         }
     }
 
+    public abstract void Die();
 }

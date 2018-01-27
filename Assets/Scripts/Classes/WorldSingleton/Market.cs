@@ -7,8 +7,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
 {
     public partial class Overseer : Static.Static
     {
-        //public List<MarketOrder> sellingOrders;
-        //public List<MarketOrder> buyingOrders;
+        // This part of the singleton keeps track of buying and selling resources between planets along with matching orders.
+
         public Dictionary<Planet, List<MarketOrder>> sellingOrdersByPlanet;
         public Dictionary<Planet, List<MarketOrder>> buyingOrdersByPlanet;
         public Dictionary<Planet, MarketOrder> executedOrders;
@@ -55,6 +55,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
 
             buyingOrdersByPlanet[order.origin].Add(order);
+        }
+
+        public void StartMatchingOrders()
+        {
+            InvokeRepeating("MatchOrders", 1f, 1f);
         }
         
         public void MatchOrders()

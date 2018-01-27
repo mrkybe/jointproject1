@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// An order to buy or sell for a given resource, by who, for whom, completion status.
+    /// </summary>
     public class MarketOrder
     {
         public readonly Planet origin;
@@ -61,6 +64,16 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public void Combine(MarketOrder order)
         {
             item.Count += order.item.Count;
+        }
+
+        public void Succeed()
+        {
+            origin.CompleteOrder(this);
+        }
+
+        public void Fail()
+        {
+            origin.FailOrder(this);
         }
     }
 

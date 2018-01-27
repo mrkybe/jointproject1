@@ -10,6 +10,8 @@ namespace AI_Missions
 {
     
     public enum AI_Type { GATHER, PATROL, PLAYER }
+    
+    
     /*
     public enum AI_States { MISSION_START, EN_ROUTE, ARRIVED, ARRIVING, DONE, MINING, WAITING};
 
@@ -135,7 +137,7 @@ namespace AI_Missions
                     case AI_States.ARRIVED:
                         if (shipScript != null)
                         {
-                            List<Static> targets = shipScript.GetStaticInRange();
+                            List<Static> targets = shipScript.GetStaticInSensorRange();
                             List<AsteroidField> newTargets = new List<AsteroidField>();
                             AsteroidField finalTarget;
                             Debug.Log("Targets available: " + targets.Count);

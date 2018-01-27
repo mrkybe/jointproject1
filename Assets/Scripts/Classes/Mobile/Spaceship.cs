@@ -2,9 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Scripts.Classes.Helper;
 using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
+/// <summary>
+/// The physical Spaceship.  Keeps track of 'physical' information, moves it every update.  Requires a Pilot, human or AI.
+/// </summary>
 public class Spaceship : Mobile
 {
     private float engineRunSpeed;
@@ -18,16 +23,27 @@ public class Spaceship : Mobile
     private float manuverability;
     [SerializeField]
     private AI_Type desired_AI_Type;
+    [SerializeField]
+    public Faction Faction;
+    [SerializeField]
+    public int PowerLevel;
+    [SerializeField]
+    public int HullHealth;
+    [SerializeField]
+    public float InteractionRange;
+
     private float targetSpeed;
     private float throttle_input;
     private float oldThrottle_input;
     private CargoHold myStorage;
     private SensorArray mySensorArray;
+    private ModelSwitcher myModelSwitcher;
     // Use this for initialization
 
     [SerializeField]
     public List<GameObject> inSensorRange = new List<GameObject>();
 
+    private int modelChoice = 0;
     void Awake()
     {
         if (pilot == null)
@@ -41,6 +57,10 @@ public class Spaceship : Mobile
         targetSpeed = -999;
         throttle_input = 0;
         oldThrottle_input = 0;
+        PowerLevel = 10;
+        HullHealth = 100;
+        InteractionRange = 8f;
+
         if (isAI)
         {
             targetSpeed = 0;
@@ -48,12 +68,15 @@ public class Spaceship : Mobile
         myStorage = new CargoHold(100);
 
         mySensorArray = new SensorArray(gameObject);
+        modelChoice = (int)(Random.value * 11);
     }
 
     new void Start ()
     {
         base.Start();
-	}
+        myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
+        myModelSwitcher.SetModel(modelChoice);
+    }
 
 	// Update is called once per frame
 	new void Update ()
@@ -97,8 +120,12 @@ public class Spaceship : Mobile
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Boop");
+        // New entity in sensor range.
         inSensorRange.Add(other.gameObject.transform.root.gameObject);
+        if (pilot.GetType() == typeof(AI_Patrol))
+        {
+            ((AI_Patrol)pilot).Notify(other.gameObject.transform.root.gameObject);
+        }
     }
 
     public void CleanSensorList()
@@ -108,19 +135,121 @@ public class Spaceship : Mobile
 
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("Unboop");
+        // Entity leaves sensor range.
         inSensorRange.Remove(other.gameObject.transform.root.gameObject);
     }
-    
-    public List<Static> GetStaticInRange()
+
+    /// <summary>
+    /// Returns a list of Spaceships in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<Spaceship> GetShipsInSensorRange()
+    {
+        List<Spaceship> targets = new List<Spaceship>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of Static entities in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<Static> GetStaticInSensorRange()
     {
         List<Static> targets = new List<Static>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            Static target = inSensorRange[i].GetComponent<Static>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of specified entities in sensor range.
+    /// </summary>
+    /// <returns></returns>
+    public List<T> GetInSensorRange<T>()
+    {
+        List<T> targets = new List<T>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            T target = inSensorRange[i].GetComponent<T>();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of Spaceships in interaction range.
+    /// </summary>
+    /// <returns></returns>
+    public List<Spaceship> GetShipsInInteractionRange()
+    {
+        List<Spaceship> targets = new List<Spaceship>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            if (inSensorRange[i] != null)
+            {
+                Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
+                {
+                    targets.Add(target);
+                }
+            }
+        }
+        return targets;
+    }
+
+    public List<Static> GetStaticInInteractionRange()
+    {
+        List<Static> targets = new List<Static>();
+        CleanSensorList();
         for (int i = 0; i < inSensorRange.Count; i++)
         {
             if (inSensorRange[i] != null)
             {
                 Static target = inSensorRange[i].GetComponent<Static>();
-                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < 8)
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
+                {
+                    targets.Add(target);
+                }
+            }
+        }
+        return targets;
+    }
+
+    /// <summary>
+    /// Returns a list of specified entities in interaction range.
+    /// </summary>
+    /// <returns></returns>
+    public List<T> GetInInteractionRange<T>()
+    {
+        List<T> targets = new List<T>();
+        CleanSensorList();
+        for (int i = 0; i < inSensorRange.Count; i++)
+        {
+            if (inSensorRange[i] != null)
+            {
+                T target = inSensorRange[i].GetComponent<T>();
+                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
                 {
                     targets.Add(target);
                 }
@@ -176,5 +305,35 @@ public class Spaceship : Mobile
     public CargoHold GetCargoHold
     {
         get { return myStorage; }
+    }
+
+    public PilotInterface GetPilot
+    {
+        get { return pilot; }
+    }
+
+    /// <summary>
+    /// Returns how scary another ship is compared to mine.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public int GetScaryness(Spaceship other)
+    {
+        return PowerLevel - other.PowerLevel;
+    }
+
+    public void TakeDamage(int i)
+    {
+        HullHealth -= i;
+        if (HullHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        myModelSwitcher.BecomeGraveyard();
+        GetPilot.Die();
     }
 }
