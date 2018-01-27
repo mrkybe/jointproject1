@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject enemySpawner;
 	public GameObject cameraObject;
 	public GameObject combatField;
+	public GameObject ai_player;
 	public GameObject player;
 
 	private bool flag = false;
@@ -19,10 +20,10 @@ public class PlayerController : MonoBehaviour {
 	private Timer tm;
 	// Use this for initialization
 	void Start () {
-        move = GetComponent<Move>();
-        sp = GetComponent<Spaceship>();
-        fire = GetComponent<Fire>();
-        lf = GetComponent<LaserFire>();
+        move = player.GetComponent<Move>();
+        sp = ai_player.GetComponent<Spaceship>();
+        fire = player.GetComponent<Fire>();
+        lf = player.GetComponent<LaserFire>();
 		tm = GetComponent<Timer> ();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
@@ -46,16 +47,16 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetButtonDown("Y") && flag == false)
         {
 			flag = true;
+			ai_player.SetActive (false);
 			player.SetActive (true);
             move.enabled = true;
-            sp.enabled = false;
             fire.enabled = true;
             cc.enabled = true;
             cf.enabled = false;
             lf.enabled = false;
 			tm.Pause (false);
-			transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
-
+			combatField.SetActive (true);
+			player.transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
 			cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.y+20, cameraObject.transform.position.z);
 			combatField.SetActive (true);
 			enemySpawner.GetComponent<EnemySpawner>().enabled = true;

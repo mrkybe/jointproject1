@@ -24,6 +24,7 @@ public class Fire : MonoBehaviour {
 		
 	void Shoot()
 	{
+		Debug.Log ("shoot");
         //float dist  = transform.position.z + 3f;
         GameObject bulletClone = Instantiate(ammo, transform.position, transform.rotation);
         rb = bulletClone.GetComponent<Rigidbody>();

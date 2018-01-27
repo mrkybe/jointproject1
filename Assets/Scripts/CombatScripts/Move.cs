@@ -5,7 +5,7 @@ using UnityEngine;
 public class Move : MonoBehaviour {
 
     public float speed = 10f;
-    public float rotateSpeed = 1f;
+	public float rotateSpeed = .05f;
    
 	private Rigidbody rb;
 	private Vector3 lookPos;
@@ -18,7 +18,7 @@ public class Move : MonoBehaviour {
 	void Update()
 	{
 		timeMove ();
-		//mouseLook ();
+		mouseLook ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
@@ -30,16 +30,18 @@ public class Move : MonoBehaviour {
 	void timeMove()
 	{
 		float x = Input.GetAxis ("Horizontal");
-		float y = Input.GetAxis("Vertical");
+		float z = Input.GetAxis("Vertical");
 
-		transform.Translate (x * Time.deltaTime * speed, 0f, y * Time.deltaTime * speed, Space.World);
+		Vector3 move = new Vector3 (x, 0, z);
+
+		transform.position += move * speed * Time.deltaTime;
 
 		float rx = Input.GetAxis("HorizontalR");
-		float ry = Input.GetAxis("VerticalR");
+		float rz = Input.GetAxis("VerticalR");
 
-		float angle = Mathf.Atan2 (rx, ry);
+		float angle = Mathf.Atan2 (rx, rz) * Mathf.Rad2Deg;
 
-		transform.rotation = Quaternion.EulerAngles (0, angle, 0);
+		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
 	}
 
 	//movement based on forces, requires and FixedUpdate
@@ -56,16 +58,15 @@ public class Move : MonoBehaviour {
 	void mouseLook()
 	{
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit hit;
+		Plane ground = new Plane (Vector3.up, Vector3.zero);
+		float raylength;
 
-		if (Physics.Raycast (ray, out hit, 100)) 
+		if (ground.Raycast (ray, out raylength)) 
 		{
-			lookPos = hit.point;
+			Vector3 pointToLook = ray.GetPoint(raylength);
+			Debug.DrawLine (ray.origin, pointToLook, Color.magenta);
+			transform.LookAt (new Vector3(pointToLook.x,transform.position.y,pointToLook.z));
 		}
-
-		Vector3 lookDir = lookPos - transform.position;
-		lookDir.y = 0;
-		transform.LookAt (transform.position + lookDir, Vector3.up);
 	}
 		
 }
