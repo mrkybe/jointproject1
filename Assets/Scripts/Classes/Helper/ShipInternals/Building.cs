@@ -28,7 +28,8 @@ public class Building
         {
             spaceConsumed += item.Volume;
         }
-		foreach (var item in Cost) {
+		foreach (var item in Cost) 
+		{
 			buildingCost += item.Volume;
 		}
     }
@@ -93,6 +94,7 @@ public class Building
     public static BasicIndustrial[] BasicIndustry = { GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory };
 
 
+
     // most basic resources
     public static Building GetEnviromentDirtFactory()
     {
@@ -113,7 +115,12 @@ public class Building
                             new List<CargoItem>()
                             {
                                 new CargoItem("Water", 1)
-			}, new List<CargoItem>());
+							},
+							new List<CargoItem>()
+							{
+								new CargoItem("Iron", 5)
+							}
+		);
     }
 
     public static Building GetEnviromentRockFactory()
