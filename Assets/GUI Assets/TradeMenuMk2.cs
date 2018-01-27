@@ -4,26 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 /// <summary>
-/// Pressing the spacebar should bring up a list of nearby ships.
-/// Pressing space again closes the list.
+/// Take 2:  This time I'm trying to use the newer UI stuff, since it seems to be better suited to Button stuff.
+/// ...Though the actual changes seem to have been relatively minor.  Whatever.  Still requires me to learn some new stuff.
 /// 
-/// Next up:
-/// Click on ships in the list to open the list of their cargo.
 /// 
-///
-/// 
-/// NOTE:  There is quite a bit of just plain-old bad stuff in here that I don't like.
-/// I intend to fix it in later versions.
 /// </summary>
-/// 
-
-public class TradeMenuMkI : MonoBehaviour
+public class TradeMenuMk2 : MonoBehaviour
 {
+    public Button buttonPrefab;
 
-    public GameObject buttonPrefab;
-
-    private Spaceship myShip;
+    private Spaceship ship;
 
     private RectTransform leftPanel;
     private RectTransform rightPanel;
@@ -33,13 +25,13 @@ public class TradeMenuMkI : MonoBehaviour
     private Vector2 rightOffPosition;
     private bool isRightOff;
     private bool isLeftOff;
-    private List<GameObject> buttonListLeft;
-    private List<GameObject> buttonListRight;
+    private List<Button> buttonListLeft;
+    private List<Button> buttonListRight;
 
-    private void Awake()
+    // Use this for initialization
+    void Awake()
     {
-
-
+        buttonPrefab.onClick.AddListener(OpenInventory);
         leftPanel = GameObject.Find("Left Panel").GetComponent<RectTransform>();
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
         on = new Vector2(0, 0);
@@ -47,31 +39,35 @@ public class TradeMenuMkI : MonoBehaviour
         rightOffPosition = new Vector2(675, 0);
         isRightOff = true;
         isLeftOff = true;
-        myShip = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
-        buttonListLeft = new List<GameObject>();
-        buttonListRight = new List<GameObject>();
-
+        ship = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
+        buttonListLeft = new List<Button>();
+        buttonListRight = new List<Button>();
         int i = 0;
 
         for (i = 0; i < 15; i++)                                        // Only 15 buttons per panel.  Look into later.
         {
-            GameObject myButton1 = (GameObject)Instantiate(buttonPrefab);
+            Button myButton1 = Instantiate(buttonPrefab);
             buttonListLeft.Add(myButton1);
-            GameObject myButton2 = (GameObject)Instantiate(buttonPrefab);
+            Button myButton2 = Instantiate(buttonPrefab);
             buttonListRight.Add(myButton2);
         }
 
         foreach (var b in buttonListLeft)                                 // List of buttons so they can be edited and set active or inactive.
         {
             b.transform.SetParent(leftPanel, false);
-            b.SetActive(false);
+            b.gameObject.SetActive(false);
         }
 
         foreach (var b in buttonListRight)
         {
             b.transform.SetParent(rightPanel, false);
-            b.SetActive(false);
+            b.gameObject.SetActive(false);
         }
+    }
+
+    private void OpenInventory()
+    {
+        throw new NotImplementedException();
     }
 
     void Update()
@@ -84,7 +80,7 @@ public class TradeMenuMkI : MonoBehaviour
                 leftPanel.anchoredPosition = on;
                 isLeftOff = false;
 
-                List<Spaceship> shipsInRange = myShip.GetShipsInInteractionRange();
+                List<Spaceship> shipsInRange = ship.GetShipsInInteractionRange();
 
                 int i = 0;
 
@@ -93,15 +89,20 @@ public class TradeMenuMkI : MonoBehaviour
                     for (i = 0; i < shipsInRange.Count; i++)
                     {
                         buttonListLeft[i].GetComponentInChildren<Text>().text = shipsInRange[i].name;
-                        buttonListLeft[i].SetActive(true);
+                        buttonListLeft[i].gameObject.SetActive(true);
                         if (shipsInRange.Count < 15)
                         {
                             int j = 0;
                             for (j = shipsInRange.Count; j < 15; j++)
                             {
-                                buttonListLeft[j].SetActive(false);
+                                buttonListLeft[j].gameObject.SetActive(false);
                             }
                         }
+                    }
+                    for (i=0; i<shipsInRange.Count; i++)
+                    {
+                        Button butt = buttonListLeft[i].GetComponent<Button>();
+                        butt.onClick.AddListener(openInventory);
                     }
                 }
                 else if (shipsInRange.Count == 0)
@@ -110,7 +111,7 @@ public class TradeMenuMkI : MonoBehaviour
                     {
                         string nullstring = "";
                         buttonListLeft[i].GetComponentInChildren<Text>().text = nullstring;
-                        buttonListLeft[i].SetActive(false);
+                        buttonListLeft[i].gameObject.SetActive(false);
                     }
                 }
             }
@@ -120,12 +121,17 @@ public class TradeMenuMkI : MonoBehaviour
                 for (i = 0; i < 15; i++)
                 {
                     buttonListLeft[i].GetComponentInChildren<Text>().text = "";            // Clear list of buttons on menu closing.
-                    buttonListLeft[i].SetActive(false);
+                    buttonListLeft[i].gameObject.SetActive(false);
                 }
                 Time.timeScale = 1;                                                     // Again, might not be the best way to pause/unpause.
                 leftPanel.anchoredPosition = leftOffPosition;
                 isLeftOff = true;
             }
         }
+    }
+
+    private void openInventory()
+    {
+        
     }
 }

@@ -705,6 +705,9 @@ public class AI_Patrol : PilotInterface
 
     public void Notify(GameObject contact)
     {
-        blackboard["sensor_contact"] = true;
+        if (blackboard != null)
+        {
+            blackboard["sensor_contact"] = true;
+        }
     }
 }
