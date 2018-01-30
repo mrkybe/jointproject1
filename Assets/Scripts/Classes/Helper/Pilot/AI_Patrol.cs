@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using AI_Missions;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
-using NPBehave;
 using ShipInternals;
-using Action = NPBehave.Action;
+using BehaviorDesigner.Runtime;
 
 /* AI_Patrol is the AI for the ships/fleets on the Overmap.
  * It contains all of the atomic AI methods that are used by the AI behavior tree.
  * It provides public functions for Factions/Planets to give orders through.
  * These orders are fulfilled by replacing the current BehaviorTree with a new one.
- *      
  */
 
 public class AI_Patrol : PilotInterface
 {
-    private Blackboard blackboard;
+    public ExternalBehaviorTree ExternalBehaviorTree;
+
+    private SharedVector2 ControlStick;
+    private SharedFloat TargetSpeed;
+
+
+    private BehaviorTree behaviorTree;
     private Spaceship shipScript;
-    private Debugger debugger = null;
     private float interactionDistance = 5f;
 
     // Use this for initialization
@@ -28,25 +31,30 @@ public class AI_Patrol : PilotInterface
     {
         shipScript = transform.GetComponent<Spaceship>();
 
-#if UNITY_EDITOR
-        if (debugger == null)
+        behaviorTree = transform.GetComponent<BehaviorTree>();
+        if (!behaviorTree)
         {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+            behaviorTree = gameObject.AddComponent<BehaviorTree>();
+            behaviorTree.ExternalBehavior = ExternalBehaviorTree;
+            behaviorTree.StartWhenEnabled = false;
         }
-#endif
     }
 
     public new void Start()
     {
         base.Start();
+
+        ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
+        TargetSpeed  = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
+        behaviorTree.Start();
+
     }
 
-    public void OnDestroy()
+    public new void Update()
     {
-        if (behaviorTree != null)
-        {
-            behaviorTree.Stop();
-        }
+        base.Update();
+        control_stickDirection = ControlStick.Value;
+        targetSpeed = TargetSpeed.Value;
     }
 
     /// <summary>
@@ -64,9 +72,9 @@ public class AI_Patrol : PilotInterface
     /// <param name="miningTargets">The kind of resources to mine.</param>
     public void StartMining(List<string> miningTargets, Planet homePlanet)
     {
-        behaviorTree = CreateBehaviourTreeDumbMining();
+        /*BehaviorTree = CreateBehaviourTreeDumbMining();
 
-        blackboard = behaviorTree.Blackboard;
+        blackboard = BehaviorTree.Blackboard;
 
         InitializeDefaultBlackboard();
         blackboard["miningTargetsList"] = miningTargets;
@@ -79,9 +87,9 @@ public class AI_Patrol : PilotInterface
         {
             debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
         }
-        debugger.BehaviorTree = behaviorTree;
+        debugger.BehaviorTree = BehaviorTree;
 #endif
-        behaviorTree.Start();
+        BehaviorTree.Start();*/
     }
 
     /// <summary>
@@ -90,14 +98,14 @@ public class AI_Patrol : PilotInterface
     /// <param name="order">The order that the ship is responsible for completing.</param>
     public void StartDelivery(MarketOrder order)
     {
-        if (behaviorTree != null)
+        /*if (BehaviorTree != null)
         {
-            behaviorTree.Stop();
+            BehaviorTree.Stop();
         }
         else
         {
-            behaviorTree = CreateBehaviourTreeDumbDelivery();
-            blackboard = behaviorTree.Blackboard;
+            BehaviorTree = CreateBehaviourTreeDumbDelivery();
+            blackboard = BehaviorTree.Blackboard;
             InitializeDefaultBlackboard();
         }
 
@@ -110,9 +118,9 @@ public class AI_Patrol : PilotInterface
         {
             debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
         }
-        debugger.BehaviorTree = behaviorTree;
+        debugger.BehaviorTree = BehaviorTree;
 #endif
-        behaviorTree.Start();
+        BehaviorTree.Start();*/
     }
 
     /// <summary>
@@ -120,13 +128,13 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     public void StartPirate()
     {
-        if (behaviorTree != null)
+        /*if (BehaviorTree != null)
         {
-            behaviorTree.Stop();
+            BehaviorTree.Stop();
         }
 
-        behaviorTree = CreateBehaviorTreePirate();
-        blackboard = behaviorTree.Blackboard;
+        BehaviorTree = CreateBehaviorTreePirate();
+        blackboard = BehaviorTree.Blackboard;
         InitializeDefaultBlackboard();
 
         shipScript.Faction = Overseer.Main.GetFaction("Pirates");
@@ -138,9 +146,9 @@ public class AI_Patrol : PilotInterface
         {
             debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
         }
-        debugger.BehaviorTree = behaviorTree;
+        debugger.BehaviorTree = BehaviorTree;
 #endif
-        behaviorTree.Start();
+        BehaviorTree.Start();*/
     }
 
     /// <summary>
@@ -148,7 +156,7 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     private void InitializeDefaultBlackboard()
     {
-        blackboard["dead"] = false;
+        //blackboard["dead"] = false;
     }
 
     /// <summary>
@@ -157,15 +165,15 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     public override void Die()
     {
-        if (blackboard != null)
+        /*if (blackboard != null)
         {
             blackboard["dead"] = true;
-        }
+        }*/
     }
 
-    private Root CreateBehaviorTreePirate()
+    private void CreateBehaviorTreePirate()
     {
-        return new Root(
+        /*return new Root(
             new Selector(
                 new Sequence(
                     new Wait(1f),
@@ -218,7 +226,7 @@ public class AI_Patrol : PilotInterface
                                 /*if (blackboard.Get<int>("fearLevel") == 0)
                                 {
                                     shouldCancel = true;
-                                }*/
+                                }*//*
                                 if (!shouldCancel)
                                 {
                                     Vector3 scaryPosition = blackboard.Get<Vector3>("scaryPosition");
@@ -240,11 +248,12 @@ public class AI_Patrol : PilotInterface
                     )
                 )
             )
-        );
+        );*/
     }
 
-    private Root CreateBehaviourTreeDumbDelivery()
+    private void CreateBehaviourTreeDumbDelivery()
     {
+        /*
         return new Root(
             new Sequence(
                 new Wait(1f),
@@ -336,12 +345,13 @@ public class AI_Patrol : PilotInterface
                     })
                 { Label = "Dock with planet" }
             )
-        );
+        );*/
     }
 
-    private Root CreateBehaviourTreeDumbMining()
+    private void CreateBehaviourTreeDumbMining()
     {
-        return new Root(
+
+        /*return new Root(
             new Sequence(
                 new Wait(1f),
                 new Action((bool shouldCancel) =>
@@ -431,7 +441,7 @@ public class AI_Patrol : PilotInterface
                             })
                 { Label = "Dropping off resources" }
                 )
-        );
+        );*/
     }
 
     /// <summary>
@@ -526,7 +536,7 @@ public class AI_Patrol : PilotInterface
 
     private void BlackboardSetNearestPlanet()
     {
-        blackboard.Set("homePlanet", GetNearestPlanet());
+        //blackboard.Set("homePlanet", GetNearestPlanet());
     }
 
     private Planet GetNearestPlanet()
@@ -547,8 +557,8 @@ public class AI_Patrol : PilotInterface
     Vector3 targetPosition = Vector3.zero;
     private void UpdateDistanceToTargetPosition()
     {
-        behaviorTree.Blackboard["targetPos"] = targetPosition;
-        behaviorTree.Blackboard["targetDistance"] = Vector3.Distance(this.transform.position, targetPosition);
+        //BehaviorTree.Blackboard["targetPos"] = targetPosition;
+        //BehaviorTree.Blackboard["targetDistance"] = Vector3.Distance(this.transform.position, targetPosition);
     }
 
     List<Spaceship> GetHostileShipsInRange()
@@ -591,10 +601,10 @@ public class AI_Patrol : PilotInterface
 
         if (scaryList.Count > 0)
         {
-            behaviorTree.Blackboard["fleeDirection"] = fleeDirection;
-            behaviorTree.Blackboard["scaryPosition"] = averageScaryPosition;
+            //BehaviorTree.Blackboard["fleeDirection"] = fleeDirection;
+            //BehaviorTree.Blackboard["scaryPosition"] = averageScaryPosition;
         }
-        behaviorTree.Blackboard["fearLevel"] = fear_level;
+        //BehaviorTree.Blackboard["fearLevel"] = fear_level;
     }
 
     private void MoveTowards(Vector3 position)
@@ -653,14 +663,14 @@ public class AI_Patrol : PilotInterface
         int minedAmount = 0;
         if (shipScript != null)
         {
-            List<AsteroidField> targets = shipScript.GetInInteractionRange<AsteroidField>();
+            /*List<AsteroidField> targets = shipScript.GetInInteractionRange<AsteroidField>();
             AsteroidField finalTarget = blackboard.Get<AsteroidField>("bestMiningField");
             if (!targets.Contains(finalTarget))
             {
                 Debug.Log("THIS SHOULDN'T HAPPEN!");
             }
 
-            minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
+            minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);*/
         }
 
         return minedAmount;
@@ -671,11 +681,11 @@ public class AI_Patrol : PilotInterface
         List<Planet> planets = shipScript.GetInInteractionRange<Planet>();
         if (planets.Contains(homePlanet))
         {
-            List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
+            /*List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
             foreach (string resource in miningTargetsList)
             {
                 homePlanet.GetCargoHold.Credit(resource, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(resource), true);
-            }
+            }*/
         }
     }
 
@@ -705,9 +715,9 @@ public class AI_Patrol : PilotInterface
 
     public void Notify(GameObject contact)
     {
-        if (blackboard != null)
+        /*if (blackboard != null)
         {
             blackboard["sensor_contact"] = true;
-        }
+        }*/
     }
 }
