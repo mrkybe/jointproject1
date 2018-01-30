@@ -9,6 +9,7 @@ public class Move : MonoBehaviour {
    
 	private Rigidbody rb;
 	private Vector3 lookPos;
+	private bool mouse;
     // Use this for initialization
     void Start ()
     {
@@ -17,13 +18,14 @@ public class Move : MonoBehaviour {
 
 	void Update()
 	{
-		timeMove ();
+		//timeMove ();
 		mouseLook ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		//forceMove ();
+		forceMove ();
+		checkCont ();
     }
 
 	//movement based on time
@@ -57,16 +59,24 @@ public class Move : MonoBehaviour {
 	// rays to use mouse for rotation, requires Update
 	void mouseLook()
 	{
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		Plane ground = new Plane (Vector3.up, Vector3.zero);
-		float raylength;
-
-		if (ground.Raycast (ray, out raylength)) 
+		if (mouse) 
 		{
-			Vector3 pointToLook = ray.GetPoint(raylength);
-			Debug.DrawLine (ray.origin, pointToLook, Color.magenta);
-			transform.LookAt (new Vector3(pointToLook.x,transform.position.y,pointToLook.z));
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			Plane ground = new Plane (Vector3.up, Vector3.zero);
+			float raylength;
+
+			if (ground.Raycast (ray, out raylength)) 
+			{
+				Vector3 pointToLook = ray.GetPoint (raylength);
+				Debug.DrawLine (ray.origin, pointToLook, Color.magenta);
+				transform.LookAt (new Vector3 (pointToLook.x, transform.position.y, pointToLook.z));
+			}
 		}
+	}
+
+	void checkCont()
+	{
+		Debug.Log (Input.GetJoystickNames());
 	}
 		
 }
