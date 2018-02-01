@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -59,6 +60,9 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
+
+            BehaviorManager.instance.UpdateIntervalSeconds = 0.2f;
+            BehaviorManager.instance.MaxTaskExecutionsPerTick = 1;
         }
 
         bool CreateSky()

@@ -19,6 +19,10 @@ namespace ShipInternals
         private int _baseValue;
         private int _count;
 
+        private CargoItem()
+        {
+        }
+
         public CargoItem(string name_in)
         {
             _name = name_in;

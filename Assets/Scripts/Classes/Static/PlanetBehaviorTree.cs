@@ -23,7 +23,7 @@ public partial class Planet: Static
     private List<MarketOrder> deliveryFailedList;
     private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
-    public int DeliveryShipCount = 0;
+    public int DeliveryShipCount = 5;
     private float LastDeliveryShipDeployment = 0;
 
     void PlanetBTSetup()
@@ -44,6 +44,7 @@ public partial class Planet: Static
 	    deliveryFailedList = new List<MarketOrder>();
         ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
+        InvokeRepeating("UpdateEverything", 1, 1);
         //behaviorTree.Start();
 	}
 
@@ -70,6 +71,15 @@ public partial class Planet: Static
             )
 		);*/
 	}
+
+    private void UpdateEverything()
+    {
+        CalculateConsumableResources();
+        CalculateUnwantedResource();
+        UpdateMarketSellingBuyingOrders();
+        SendDeliveryShips();
+        TickSelf();
+    }
 
     private void CalculateConsumableResources()
     {
@@ -196,17 +206,13 @@ public partial class Planet: Static
     {
         Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
         AI_Patrol pilot = (AI_Patrol)shipScript.GetPilot;
-
-        if (shipScript != null)
-        {
-            CargoHold shipHold = shipScript.GetCargoHold;
-            foreach(string resource in miningTargetList)
-            shipHold.AddHoldType(resource);
-        }
-        if (pilot != null)
-        {
-            pilot.StartMining(miningTargetList, this);
-        }
+        
+        CargoHold shipHold = shipScript.GetCargoHold;
+        foreach(string resource in miningTargetList)
+        shipHold.AddHoldType(resource);
+        
+        pilot.StartMining(miningTargetList, this);
+        
 
         WorkerShips.Add(shipScript.gameObject);
         return shipScript;

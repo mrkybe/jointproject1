@@ -123,7 +123,7 @@
                 }
             }
 
-            Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
+            //Debug.Log("-WARNING: GetAmountInHold(" + type + ") failed!  Could not find in available holds!");
             return 0;
         }
 

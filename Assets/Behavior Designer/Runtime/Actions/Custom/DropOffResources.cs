@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Assets.Behavior_Designer.Runtime;
 using Assets.Behavior_Designer.Runtime.Variables;
+using Assets.Scripts.Classes.WorldSingleton;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
@@ -17,7 +18,8 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
     {
         public SharedSpaceship SpaceshipScript;
         public SharedStringList MiningTargetsList;
-        public SharedPlanet HomePlanet;
+        public SharedMarketOrder DeliveryOrder;
+        public SharedPlanet DropOffDestination;
 
         private Spaceship shipScript;
 
@@ -29,12 +31,21 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
         public override TaskStatus OnUpdate()
         {
             List<global::Planet> planets = shipScript.GetInInteractionRange<global::Planet>();
-            if (planets.Contains(HomePlanet.Value))
+            if (planets.Contains(DropOffDestination.Value))
             {
-                List<string> miningTargetsList = MiningTargetsList.Value;
-                foreach (string resource in miningTargetsList)
+                if (MiningTargetsList.Value.Count != 0)
                 {
-                    HomePlanet.Value.GetCargoHold.Credit(resource, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(resource), true);
+                    List<string> miningTargetsList = MiningTargetsList.Value;
+                    foreach (string resource in miningTargetsList)
+                    {
+                        DropOffDestination.Value.GetCargoHold.Credit(resource, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(resource), true);
+                    }
+                }
+                else if (DeliveryOrder.Value != null)
+                {
+                    string type = DeliveryOrder.Value.item.Name;
+                    DeliveryOrder.Value.Succeed();
+                    DropOffDestination.Value.GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
                 }
             }
             return TaskStatus.Success;
