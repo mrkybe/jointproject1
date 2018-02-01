@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
-using NPBehave;
-using Action = NPBehave.Action;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -14,8 +12,8 @@ using Random = UnityEngine.Random;
 /// </summary>
 public partial class Planet: Static
 {
-	protected Root behaviorTree;
-	private Blackboard blackboard;
+	/*protected Root behaviorTree;
+	private Blackboard blackboard;*/
 
     private List<CargoItem> consumableCargoItems;
     private List<CargoItem> producableCargoItems;
@@ -30,17 +28,13 @@ public partial class Planet: Static
 
     void PlanetBTSetup()
 	{
-        behaviorTree = CreatePlanetBT();
+        //behaviorTree = CreatePlanetBT();
 
 	    LastDeliveryShipDeployment = Time.time;
 
-		blackboard = behaviorTree.Blackboard;
+		//blackboard = behaviorTree.Blackboard;
 
 		// attach the debugger component if executed in editor (helps to debug in the inspector) 
-		#if UNITY_EDITOR
-		Debugger debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-		debugger.BehaviorTree = behaviorTree;
-        #endif
 
 	    consumableCargoItems = new List<CargoItem>();
 	    producableCargoItems = new List<CargoItem>();
@@ -50,12 +44,12 @@ public partial class Planet: Static
 	    deliveryFailedList = new List<MarketOrder>();
         ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
-        behaviorTree.Start();
+        //behaviorTree.Start();
 	}
 
-	private Root CreatePlanetBT()
+	private void CreatePlanetBT()
 	{
-		return new Root (
+		/*return new Root (
 			new Sequence (
 				new Wait (1f + Random.value),
 				new Action (() => {
@@ -74,7 +68,7 @@ public partial class Planet: Static
                     TickSelf();
                 }){ Label = "Tick Self" }
             )
-		);
+		);*/
 	}
 
     private void CalculateConsumableResources()

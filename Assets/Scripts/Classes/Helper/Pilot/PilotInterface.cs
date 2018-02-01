@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
-using NPBehave;
 using ShipInternals;
 
 public abstract class PilotInterface : MonoBehaviour
@@ -11,7 +10,6 @@ public abstract class PilotInterface : MonoBehaviour
     protected Planet homePlanet;
     protected Vector2 control_stickDirection;
     protected float targetSpeed;
-    protected Root behaviorTree;
 
     public SensorArray SensorArray
     {

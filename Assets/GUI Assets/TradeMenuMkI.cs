@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,8 +18,8 @@ using UnityEngine.UI;
 /// </summary>
 /// 
 
-public class TradeMenuMkI : MonoBehaviour {
-
+public class TradeMenuMkI : MonoBehaviour
+{
 
     public GameObject buttonPrefab;
 
@@ -32,31 +33,43 @@ public class TradeMenuMkI : MonoBehaviour {
     private Vector2 rightOffPosition;
     private bool isRightOff;
     private bool isLeftOff;
-    private List<GameObject> myButtonList;
+    private List<GameObject> buttonListLeft;
+    private List<GameObject> buttonListRight;
 
     private void Awake()
     {
+
+
         leftPanel = GameObject.Find("Left Panel").GetComponent<RectTransform>();
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
         on = new Vector2(0, 0);
-        leftOffPosition = new Vector2(-675, 0);                         // Don't love that this is just hard-coded
+        leftOffPosition = new Vector2(-675, 0);                         // Don't love that this is just hard-coded, but I can't think of another way.
         rightOffPosition = new Vector2(675, 0);
         isRightOff = true;
         isLeftOff = true;
         myShip = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
-        myButtonList = new List<GameObject>();
+        buttonListLeft = new List<GameObject>();
+        buttonListRight = new List<GameObject>();
 
         int i = 0;
 
-        for (i = 0; i < 15; i++)                                        // Only 15 buttons.  Look into later.
+        for (i = 0; i < 15; i++)                                        // Only 15 buttons per panel.  Look into later.
         {
-            GameObject myButton = (GameObject)Instantiate(buttonPrefab);
-            myButtonList.Add(myButton);
+            GameObject myButton1 = (GameObject)Instantiate(buttonPrefab);
+            buttonListLeft.Add(myButton1);
+            GameObject myButton2 = (GameObject)Instantiate(buttonPrefab);
+            buttonListRight.Add(myButton2);
         }
 
-        foreach(var b in myButtonList)                                  // List of buttons so they can be edited and set active or inactive.
+        foreach (var b in buttonListLeft)                                 // List of buttons so they can be edited and set active or inactive.
         {
             b.transform.SetParent(leftPanel, false);
+            b.SetActive(false);
+        }
+
+        foreach (var b in buttonListRight)
+        {
+            b.transform.SetParent(rightPanel, false);
             b.SetActive(false);
         }
     }
@@ -75,18 +88,18 @@ public class TradeMenuMkI : MonoBehaviour {
 
                 int i = 0;
 
-                if (shipsInRange.Count <=15)                            // I only made 15 buttons, for now.  Might add scrolling, later.
+                if (shipsInRange.Count <= 15)                            // I only made 15 buttons, for now.  Might add scrolling, later.
                 {
                     for (i = 0; i < shipsInRange.Count; i++)
                     {
-                        myButtonList[i].GetComponentInChildren<Text>().text = shipsInRange[i].name;
-                        myButtonList[i].SetActive(true);
+                        buttonListLeft[i].GetComponentInChildren<Text>().text = shipsInRange[i].name;
+                        buttonListLeft[i].SetActive(true);
                         if (shipsInRange.Count < 15)
                         {
                             int j = 0;
-                            for (j=shipsInRange.Count; j<15; j++)
+                            for (j = shipsInRange.Count; j < 15; j++)
                             {
-                                myButtonList[j].SetActive(false);
+                                buttonListLeft[j].SetActive(false);
                             }
                         }
                     }
@@ -96,20 +109,20 @@ public class TradeMenuMkI : MonoBehaviour {
                     for (i = 0; i < 15; i++)
                     {
                         string nullstring = "";
-                        myButtonList[i].GetComponentInChildren<Text>().text = nullstring;
-                        myButtonList[i].SetActive(false);
+                        buttonListLeft[i].GetComponentInChildren<Text>().text = nullstring;
+                        buttonListLeft[i].SetActive(false);
                     }
                 }
             }
             else
             {
                 int i = 0;
-                for (i=0;i<15;i++)
+                for (i = 0; i < 15; i++)
                 {
-                    myButtonList[i].GetComponentInChildren<Text>().text = "";
-                    myButtonList[i].SetActive(false);
+                    buttonListLeft[i].GetComponentInChildren<Text>().text = "";            // Clear list of buttons on menu closing.
+                    buttonListLeft[i].SetActive(false);
                 }
-                Time.timeScale = 1;                                     // Again, might not be the best way to pause/unpause.
+                Time.timeScale = 1;                                                     // Again, might not be the best way to pause/unpause.
                 leftPanel.anchoredPosition = leftOffPosition;
                 isLeftOff = true;
             }
