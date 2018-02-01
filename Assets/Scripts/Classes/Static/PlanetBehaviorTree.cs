@@ -192,7 +192,7 @@ public partial class Planet: Static
         return shipScript;
     }
 
-    public void SpawnMiningShip(List<string> miningTargetList)
+    public Spaceship SpawnMiningShip(List<string> miningTargetList)
     {
         Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
         AI_Patrol pilot = (AI_Patrol)shipScript.GetPilot;
@@ -209,6 +209,7 @@ public partial class Planet: Static
         }
 
         WorkerShips.Add(shipScript.gameObject);
+        return shipScript;
     }
 
     private void SendDeliveryShip(MarketOrder order)

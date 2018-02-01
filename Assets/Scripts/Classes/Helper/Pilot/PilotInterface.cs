@@ -7,7 +7,6 @@ using ShipInternals;
 public abstract class PilotInterface : MonoBehaviour
 {
     protected SensorArray mySensorArray;
-    protected Planet homePlanet;
     protected Vector2 control_stickDirection;
     protected float targetSpeed;
 

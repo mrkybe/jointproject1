@@ -46,9 +46,10 @@ public class Spaceship : Mobile
     private int modelChoice = 0;
     void Awake()
     {
+        pilot = GetComponent<AI_Patrol>();
         if (pilot == null)
         {
-            SetPilot(desired_AI_Type);
+            pilot = GetComponent<PlayerPilot>();
         }
 
         pilot.SensorArray = mySensorArray;

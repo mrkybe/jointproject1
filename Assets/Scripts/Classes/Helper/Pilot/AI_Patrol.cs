@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Behavior_Designer.Runtime.Variables;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
@@ -16,38 +17,42 @@ using BehaviorDesigner.Runtime;
 
 public class AI_Patrol : PilotInterface
 {
-    public ExternalBehaviorTree ExternalBehaviorTree;
+    public ExternalBehaviorTree ExternalMiningBehaviorTree;
 
     private SharedVector2 ControlStick;
     private SharedFloat TargetSpeed;
-
+    private SharedPlanet HomePlanet;
+    private SharedSpaceship shipScript;
 
     private BehaviorTree behaviorTree;
-    private Spaceship shipScript;
     private float interactionDistance = 5f;
 
     // Use this for initialization
     public void Awake()
     {
-        shipScript = transform.GetComponent<Spaceship>();
-
         behaviorTree = transform.GetComponent<BehaviorTree>();
         if (!behaviorTree)
         {
             behaviorTree = gameObject.AddComponent<BehaviorTree>();
-            behaviorTree.ExternalBehavior = ExternalBehaviorTree;
+            behaviorTree.ExternalBehavior = ExternalMiningBehaviorTree;
             behaviorTree.StartWhenEnabled = false;
         }
+        InitializeBehaviorTreeVariableReferences();
+    }
+
+    private void InitializeBehaviorTreeVariableReferences()
+    {
+        ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
+        TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
+        HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
+        shipScript = (SharedSpaceship)behaviorTree.GetVariable("Shipscript");
+
+        shipScript.Value = transform.GetComponent<Spaceship>();
     }
 
     public new void Start()
     {
         base.Start();
-
-        ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
-        TargetSpeed  = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
-        behaviorTree.Start();
-
     }
 
     public new void Update()
@@ -63,33 +68,32 @@ public class AI_Patrol : PilotInterface
     /// <returns></returns>
     public Spaceship GetShip()
     {
-        return shipScript;
+        return shipScript.Value;
+    }
+
+    /// <summary>
+    /// Returns the Behavior Tree script that makes my decisions.
+    /// </summary>
+    /// <returns></returns>
+    public BehaviorTree GetBehaviorTree()
+    {
+        return behaviorTree;
     }
 
     /// <summary>
     /// Sets the Behavior Tree the one for mining.
     /// </summary>
     /// <param name="miningTargets">The kind of resources to mine.</param>
+    /// <param name="homePlanet">The planet we drop off resources at.</param>
     public void StartMining(List<string> miningTargets, Planet homePlanet)
     {
-        /*BehaviorTree = CreateBehaviourTreeDumbMining();
+        behaviorTree.ExternalBehavior = ExternalMiningBehaviorTree;
+        InitializeBehaviorTreeVariableReferences();
 
-        blackboard = BehaviorTree.Blackboard;
+        HomePlanet.Value = homePlanet;
+        behaviorTree.GetVariable("MiningTargets").SetValue(miningTargets);
 
-        InitializeDefaultBlackboard();
-        blackboard["miningTargetsList"] = miningTargets;
-        
-        blackboard["homePlanet"] = homePlanet;
-        this.homePlanet = homePlanet;
-
-#if UNITY_EDITOR
-        if (debugger == null)
-        {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-        }
-        debugger.BehaviorTree = BehaviorTree;
-#endif
-        BehaviorTree.Start();*/
+        behaviorTree.Start();
     }
 
     /// <summary>
@@ -437,7 +441,7 @@ public class AI_Patrol : PilotInterface
                     ),
                 new Action(() =>
                             {
-                                DropOffMinedResources();
+                                DropOffResources();
                             })
                 { Label = "Dropping off resources" }
                 )
@@ -468,6 +472,7 @@ public class AI_Patrol : PilotInterface
         return huntingPositions;
     }
 
+    /*
     private AsteroidField FindNearestAsteroidFieldForMining(List<string> miningTargetsList)
     {
         AsteroidField bestCandidate = null;
@@ -533,7 +538,7 @@ public class AI_Patrol : PilotInterface
 
         return success;
     }
-
+    */
     private void BlackboardSetNearestPlanet()
     {
         //blackboard.Set("homePlanet", GetNearestPlanet());
@@ -563,10 +568,10 @@ public class AI_Patrol : PilotInterface
 
     List<Spaceship> GetHostileShipsInRange()
     {
-        Faction myFaction = shipScript.Faction;
+        Faction myFaction = shipScript.Value.Faction;
         List<Spaceship> resultsList = new List<Spaceship>();
 
-        foreach (Spaceship f in shipScript.GetShipsInSensorRange())
+        foreach (Spaceship f in shipScript.Value.GetShipsInSensorRange())
         {
             if (f.Faction.HostileWith(myFaction))
             {
@@ -582,11 +587,11 @@ public class AI_Patrol : PilotInterface
         int fear_level = 0;
         List<Spaceship> scaryList = new List<Spaceship>();
         var list = GetHostileShipsInRange();
-        var list2 = shipScript.GetShipsInSensorRange();
+        var list2 = shipScript.Value.GetShipsInSensorRange();
         foreach (Spaceship f in GetHostileShipsInRange())
         {
             // add to fear level only positive values, since weak ships shouldn't make you fight a carrier
-            fear_level += Mathf.Clamp(f.GetScaryness(shipScript), 0, int.MaxValue);
+            fear_level += Mathf.Clamp(f.GetScaryness(shipScript.Value), 0, int.MaxValue);
             scaryList.Add(f);
         }
 
@@ -678,8 +683,8 @@ public class AI_Patrol : PilotInterface
 
     private void DropOffMinedResources()
     {
-        List<Planet> planets = shipScript.GetInInteractionRange<Planet>();
-        if (planets.Contains(homePlanet))
+        List<Planet> planets = shipScript.Value.GetInInteractionRange<Planet>();
+        if (planets.Contains(HomePlanet.Value))
         {
             /*List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
             foreach (string resource in miningTargetsList)
@@ -698,7 +703,7 @@ public class AI_Patrol : PilotInterface
 
     private int DropOffResource(String type)
     {
-        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
+        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.Value.GetCargoHold, shipScript.Value.GetCargoHold.GetAmountInHold(type), true);
     }
 
     /// <summary>

@@ -43,11 +43,12 @@ namespace Assets.Editor {
                 myTarget.CalculateNetDemand();
             }
 
-            if (GUILayout.Button("Spawn Mining Ship"))
+            if (GUILayout.Button("Spawn Gold Mining Ship"))
             {
                 List<string> miningTargetList = new List<string>();
                 miningTargetList.Add("Gold");
-                myTarget.SpawnMiningShip(miningTargetList);
+                Spaceship ship = myTarget.SpawnMiningShip(miningTargetList);
+                Selection.objects = new[]{ship.gameObject};
             }
 
             base.OnInspectorGUI();

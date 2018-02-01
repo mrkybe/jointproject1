@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Behavior_Designer.Runtime.Variables;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
@@ -11,13 +12,14 @@ namespace Assets.Scripts.Classes.Helper.Pilot
 {
     class MoveToward : Action
     {
-        public SharedTransform Target;
+        public SharedVector3 Target;
         public SharedVector2 ControlStick;
         public SharedFloat TargetSpeed;
+        public SharedFloat AcceptableDistance = 1;
 
         public override TaskStatus OnUpdate()
         {
-            Vector3 targetPosition = Target.Value.position;
+            Vector3 targetPosition = Target.Value;
             Vector2 stick = new Vector2();
             float targetAngle = Vector3.Angle((transform.forward).normalized, (targetPosition - transform.position).normalized);
             if (isLeft(transform.position, transform.position + transform.forward * 500, targetPosition))
@@ -49,7 +51,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
             ControlStick.Value = stick;
             TargetSpeed.Value = Mathf.Clamp((Mathf.Clamp01(1 - (Mathf.Abs(targetAngle) / 60)) * 3), 0f, 10f);
 
-            if (Vector3.SqrMagnitude(transform.position - Target.Value.position) < 0.1f)
+            if (Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
             {
                 return TaskStatus.Success;
             }
