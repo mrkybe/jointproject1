@@ -147,8 +147,8 @@ namespace AI_Missions
                                 if (targets[i].GetType() == typeof(AsteroidField))
                                 {
                                     finalTarget = targets[i] as AsteroidField;
-                                    if (finalTarget.GetCargoHold.Contains(miningTarget) &&
-                                       finalTarget.GetCargoHold.GetAmountInHold(miningTarget) > 0)
+                                    if (finalTarget.CargoHold.Contains(miningTarget) &&
+                                       finalTarget.CargoHold.GetAmountInHold(miningTarget) > 0)
                                     {
                                         newTargets.Add((AsteroidField)targets[i]);
                                     }
@@ -158,8 +158,8 @@ namespace AI_Missions
                             if (newTargets.Count >= 1)
                             {
                                 finalTarget = newTargets[0];
-                                finalTarget.GetCargoHold.AddToHold(miningTarget, -mineAmount);
-                                shipScript.GetCargoHold.AddToHold(miningTarget, mineAmount);
+                                finalTarget.CargoHold.AddToHold(miningTarget, -mineAmount);
+                                shipScript.CargoHold.AddToHold(miningTarget, mineAmount);
                                 Debug.Log("Taking Cargo");
                                 _AI_State = AI_States.DONE;
                             }

@@ -90,7 +90,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
             List<string> success = new List<string>();
             foreach (string resource in miningTargetsList)
             {
-                if (field.GetCargoHold.Contains(resource) && field.GetCargoHold.GetAmountInHold(resource) > 0)
+                if (field.CargoHold.Contains(resource) && field.CargoHold.GetAmountInHold(resource) > 0)
                 {
                     success.Add(resource);
                 }

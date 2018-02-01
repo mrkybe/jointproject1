@@ -71,7 +71,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions
                     Debug.Log("THIS SHOULDN'T HAPPEN!");
                 }
 
-                minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
+                minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.CargoHold, mineAmount);
             }
 
             return minedAmount;

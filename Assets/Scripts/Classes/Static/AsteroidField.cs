@@ -10,16 +10,15 @@ using ShipInternals;
 public class AsteroidField : Static
 {
     int rawMaterial;
-    private CargoHold myStorage;
     private float rotationSpeed = 1f;
     private int maxStorage = 200;
     List<Vector3> vertices = new List<Vector3>();
     public static List<AsteroidField> listOfAsteroidFields = new List<AsteroidField>();
     // Use this for initialization
-    void Start ()
+    protected new void Start ()
     {
         base.Start();
-        myStorage = CargoHold.GenerateAsteroidFieldCargoHold();
+        CargoHold = CargoHold.GenerateAsteroidFieldCargoHold();
         //GenerateMesh();
         System.Random r = new System.Random(this.GetInstanceID());
         float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
@@ -32,21 +31,26 @@ public class AsteroidField : Static
         listOfAsteroidFields.Add(this);
     }
 
-    new protected void DelayedLoad()
+    protected new void OnDestroy()
+    {
+        listOfAsteroidFields.Remove(this);
+    }
+
+    protected new void DelayedLoad()
     {
         
     }
 
-    public CargoHold GetCargoHold
-    { 
-        get { return myStorage; } 
+    public CargoHold CargoHold
+    {
+        get; private set;
     }
 
-    void Update()
+    protected void Update()
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            myStorage.PrintHold();
+            CargoHold.PrintHold();
         }
 
         transform.Rotate(Vector3.up, Time.deltaTime * rotationSpeed * -1f);

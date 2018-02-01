@@ -19,6 +19,7 @@ public class AI_Patrol : PilotInterface
 {
     public ExternalBehaviorTree ExternalMiningBehaviorTree;
 
+    private SharedBool Alive;
     private SharedVector2 ControlStick;
     private SharedFloat TargetSpeed;
     private SharedPlanet HomePlanet;
@@ -42,6 +43,7 @@ public class AI_Patrol : PilotInterface
 
     private void InitializeBehaviorTreeVariableReferences()
     {
+        Alive = (SharedBool)behaviorTree.GetVariable("Alive");
         ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
         TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
         HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
@@ -169,10 +171,7 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     public override void Die()
     {
-        /*if (blackboard != null)
-        {
-            blackboard["dead"] = true;
-        }*/
+        Alive.SetValue(false);
     }
 
     private void CreateBehaviorTreePirate()
@@ -644,6 +643,7 @@ public class AI_Patrol : PilotInterface
         control_stickDirection = stick;
     }
 
+    /*
     private int Mine(List<string> list)
     {
         int maxMineAmount = 1;
@@ -668,31 +668,31 @@ public class AI_Patrol : PilotInterface
         int minedAmount = 0;
         if (shipScript != null)
         {
-            /*List<AsteroidField> targets = shipScript.GetInInteractionRange<AsteroidField>();
+            List<AsteroidField> targets = shipScript.GetInInteractionRange<AsteroidField>();
             AsteroidField finalTarget = blackboard.Get<AsteroidField>("bestMiningField");
             if (!targets.Contains(finalTarget))
             {
                 Debug.Log("THIS SHOULDN'T HAPPEN!");
             }
 
-            minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);*/
+            minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
         }
 
         return minedAmount;
     }
-
+    
     private void DropOffMinedResources()
     {
         List<Planet> planets = shipScript.Value.GetInInteractionRange<Planet>();
         if (planets.Contains(HomePlanet.Value))
         {
-            /*List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
+            List<string> miningTargetsList = blackboard.Get<List<string>>("miningTargetsList");
             foreach (string resource in miningTargetsList)
             {
                 homePlanet.GetCargoHold.Credit(resource, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(resource), true);
-            }*/
+            }
         }
-    }
+    }*/
 
     private void DropOffResource(MarketOrder type)
     {

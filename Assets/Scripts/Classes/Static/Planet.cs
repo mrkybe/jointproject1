@@ -219,4 +219,11 @@ public partial class Planet : Static
             return base.ToString();
         }
     }
+
+    protected new void OnDestroy()
+    {
+        base.OnDestroy();
+        listOfPlanetObjects.Remove(this);
+    }
+
 }
