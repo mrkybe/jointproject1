@@ -152,44 +152,6 @@ public class Spaceship : Mobile
     }
 
     /// <summary>
-    /// Returns a list of Spaceships in sensor range.
-    /// </summary>
-    /// <returns></returns>
-    public List<Spaceship> GetShipsInSensorRange()
-    {
-        List<Spaceship> targets = new List<Spaceship>();
-        CleanSensorList();
-        for (int i = 0; i < inSensorRange.Count; i++)
-        {
-            Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
-            if (target != null)
-            {
-                targets.Add(target);
-            }
-        }
-        return targets;
-    }
-
-    /// <summary>
-    /// Returns a list of Static entities in sensor range.
-    /// </summary>
-    /// <returns></returns>
-    public List<Static> GetStaticInSensorRange()
-    {
-        List<Static> targets = new List<Static>();
-        CleanSensorList();
-        for (int i = 0; i < inSensorRange.Count; i++)
-        {
-            Static target = inSensorRange[i].GetComponent<Static>();
-            if (target != null)
-            {
-                targets.Add(target);
-            }
-        }
-        return targets;
-    }
-
-    /// <summary>
     /// Returns a list of specified entities in sensor range.
     /// </summary>
     /// <returns></returns>
@@ -203,46 +165,6 @@ public class Spaceship : Mobile
             if (target != null)
             {
                 targets.Add(target);
-            }
-        }
-        return targets;
-    }
-
-    /// <summary>
-    /// Returns a list of Spaceships in interaction range.
-    /// </summary>
-    /// <returns></returns>
-    public List<Spaceship> GetShipsInInteractionRange()
-    {
-        List<Spaceship> targets = new List<Spaceship>();
-        CleanSensorList();
-        for (int i = 0; i < inSensorRange.Count; i++)
-        {
-            if (inSensorRange[i] != null)
-            {
-                Spaceship target = inSensorRange[i].GetComponent<Spaceship>();
-                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
-                {
-                    targets.Add(target);
-                }
-            }
-        }
-        return targets;
-    }
-
-    public List<Static> GetStaticInInteractionRange()
-    {
-        List<Static> targets = new List<Static>();
-        CleanSensorList();
-        for (int i = 0; i < inSensorRange.Count; i++)
-        {
-            if (inSensorRange[i] != null)
-            {
-                Static target = inSensorRange[i].GetComponent<Static>();
-                if (target != null && Vector3.Distance(transform.position, inSensorRange[i].transform.root.position) < InteractionRange)
-                {
-                    targets.Add(target);
-                }
             }
         }
         return targets;

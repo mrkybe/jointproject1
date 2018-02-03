@@ -78,7 +78,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 leftPanel.anchoredPosition = on;
                 isLeftOff = false;
 
-                List<Spaceship> shipsInRange = ship.GetShipsInInteractionRange();
+                List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
 
                 int i = 0;
 

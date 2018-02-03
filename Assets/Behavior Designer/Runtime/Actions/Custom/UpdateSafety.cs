@@ -52,7 +52,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
             Faction myFaction = SpaceshipScript.Value.Faction;
             List<Spaceship> resultsList = new List<Spaceship>();
 
-            foreach (Spaceship f in SpaceshipScript.Value.GetShipsInSensorRange())
+            foreach (Spaceship f in SpaceshipScript.Value.GetInSensorRange<Spaceship>())
             {
                 if (f.Faction.HostileWith(myFaction) && f.Alive)
                 {

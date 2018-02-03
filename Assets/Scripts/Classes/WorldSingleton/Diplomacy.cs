@@ -116,8 +116,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         /// <returns></returns>
         public BattleResult ResolveShipCombat(Spaceship attacker_ship, Spaceship defender_ship)
         {
-            IEnumerable<Spaceship> ship1_allies = attacker_ship.GetShipsInInteractionRange().Where(x => x.Faction == attacker_ship.Faction);
-            IEnumerable<Spaceship> ship2_allies = defender_ship.GetShipsInInteractionRange().Where(x => x.Faction == defender_ship.Faction);
+            IEnumerable<Spaceship> ship1_allies = attacker_ship.GetInInteractionRange<Spaceship>().Where(x => x.Faction == attacker_ship.Faction);
+            IEnumerable<Spaceship> ship2_allies = defender_ship.GetInInteractionRange<Spaceship>().Where(x => x.Faction == defender_ship.Faction);
 
             int attacker_power = attacker_ship.PowerLevel + ship1_allies.Sum(x => x.PowerLevel);
             int defender_power = defender_ship.PowerLevel + ship2_allies.Sum(x => x.PowerLevel);

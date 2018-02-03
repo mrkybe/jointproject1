@@ -448,7 +448,7 @@ public class AI_Patrol : PilotInterface
         Faction myFaction = shipScript.Value.Faction;
         List<Spaceship> resultsList = new List<Spaceship>();
 
-        foreach (Spaceship f in shipScript.Value.GetShipsInSensorRange())
+        foreach (Spaceship f in shipScript.Value.GetInSensorRange<Spaceship>())
         {
             if (f.Faction.HostileWith(myFaction))
             {
@@ -464,7 +464,7 @@ public class AI_Patrol : PilotInterface
         int fear_level = 0;
         List<Spaceship> scaryList = new List<Spaceship>();
         var list = GetHostileShipsInRange();
-        var list2 = shipScript.Value.GetShipsInSensorRange();
+        var list2 = shipScript.Value.GetInSensorRange<Spaceship>();
         foreach (Spaceship f in GetHostileShipsInRange())
         {
             // add to fear level only positive values, since weak ships shouldn't make you fight a carrier
