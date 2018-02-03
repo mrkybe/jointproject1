@@ -14,11 +14,22 @@ namespace Assets.Scripts.Classes.Helper.Pilot
     {
         public SharedVector3 Target;
         public SharedVector2 ControlStick;
+        public SharedSpaceship TargetSpaceship;
         public SharedFloat TargetSpeed;
+        public SharedFloat MaxSpeed = 3f;
         public SharedFloat AcceptableDistance = 1;
+
+        public override void OnAwake()
+        {
+            base.OnAwake();
+        }
 
         public override TaskStatus OnUpdate()
         {
+            if (TargetSpaceship.Value != null)
+            {
+                Target.Value = TargetSpaceship.Value.transform.position;
+            }
             Vector3 targetPosition = Target.Value;
             Vector2 stick = new Vector2();
             float targetAngle = Vector3.Angle((transform.forward).normalized, (targetPosition - transform.position).normalized);
@@ -49,7 +60,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
 
             // Outputs
             ControlStick.Value = stick;
-            TargetSpeed.Value = Mathf.Clamp((Mathf.Clamp01(1 - (Mathf.Abs(targetAngle) / 60)) * 3), 0f, 10f);
+            TargetSpeed.Value = Mathf.Clamp((Mathf.Clamp01(1 - (Mathf.Abs(targetAngle) / 60)) * MaxSpeed.Value), 0f, 10f);
 
             if (Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
             {

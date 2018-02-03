@@ -23,7 +23,7 @@ namespace Assets.Editor {
                     if (GUILayout.Button("Become Pirate"))
                     {
                         ((AI_Patrol)pilot).StartPirate();
-                        myTarget.PowerLevel = 15;
+                        myTarget.PowerLevel = 150;
                     }
                 }
             }

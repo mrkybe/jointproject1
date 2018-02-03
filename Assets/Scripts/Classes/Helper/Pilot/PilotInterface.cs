@@ -53,4 +53,9 @@ public abstract class PilotInterface : MonoBehaviour
     }
 
     public abstract void Die();
+
+    public virtual void NotifyKilled(Spaceship victim, Spaceship killer = null)
+    {
+        // a winner is you!
+    }
 }

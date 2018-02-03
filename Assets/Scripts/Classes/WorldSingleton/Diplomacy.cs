@@ -27,7 +27,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 "Freedom",
                 "Duty",
                 "Independent",
-                "Pirates"
+                "Pirates",
+                "Player"
             };
             Factions = new List<Faction>();
             Links = new List<FactionLink>();
@@ -36,8 +37,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private Faction GetRandomFaction()
         {
             int numFactions = Factions.Count;
-            // -1 to exclude pirates
-            int val = Random.Range(0, numFactions-1);
+            // -2 to exclude pirates, player
+            int val = Random.Range(0, numFactions-2);
             return Factions[val];
         }
 
@@ -105,10 +106,16 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return null;
         }
 
-        public void ResolveShipCombat(AI_Patrol attacker, AI_Patrol defender)
+
+        public enum BattleResult { ATTACK_WIN, TIE, DEFEND_WIN}
+        /// <summary>
+        /// Makes two ships fight and returns who did the best.
+        /// </summary>
+        /// <param name="attacker_ship"></param>
+        /// <param name="defender_ship"></param>
+        /// <returns></returns>
+        public BattleResult ResolveShipCombat(Spaceship attacker_ship, Spaceship defender_ship)
         {
-            Spaceship attacker_ship = attacker.GetShip();
-            Spaceship defender_ship = defender.GetShip();
             IEnumerable<Spaceship> ship1_allies = attacker_ship.GetShipsInInteractionRange().Where(x => x.Faction == attacker_ship.Faction);
             IEnumerable<Spaceship> ship2_allies = defender_ship.GetShipsInInteractionRange().Where(x => x.Faction == defender_ship.Faction);
 
@@ -127,37 +134,45 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             if (result <= critical_win) // attacker / defender <= 0.25 = defender critial win
             {
-                attacker_ship.TakeDamage(100);
+                attacker_ship.TakeDamage(100, defender_ship);
+                return BattleResult.DEFEND_WIN;
             }
             else if (result <= good_win) // attacker / defender <= 0.50 = defender good win
             {
-                attacker_ship.TakeDamage(75 + (int)(25 * Random.value));
+                attacker_ship.TakeDamage(75 + (int)(25 * Random.value), defender_ship);
+                return BattleResult.DEFEND_WIN;
             }
             else if (result <= close_win) // attacker / defender <= 0.75 = defender close win
             {
-                attacker_ship.TakeDamage(50 + (int)(50 * Random.value));
+                attacker_ship.TakeDamage(50 + (int)(50 * Random.value), defender_ship);
+                return BattleResult.DEFEND_WIN;
             }
             else if (result <= costly_win) // attacker / defender <= 1.00 = defender costly win
             {
-                attacker_ship.TakeDamage(25 + (int)(75 * Random.value));
-                defender_ship.TakeDamage((int)(25 * Random.value));
+                attacker_ship.TakeDamage(25 + (int)(75 * Random.value), defender_ship);
+                defender_ship.TakeDamage((int)(25 * Random.value), attacker_ship);
+                return BattleResult.TIE;
             }
             else if (result <= 1 + (1 - close_win)) // attacker / defender <= 1.25 = attacker costly win
             {
-                attacker_ship.TakeDamage((int)(25 * Random.value));
-                defender_ship.TakeDamage(25 + (int)(75 * Random.value));
+                attacker_ship.TakeDamage((int)(25 * Random.value), defender_ship);
+                defender_ship.TakeDamage(25 + (int)(75 * Random.value), attacker_ship);
+                return BattleResult.TIE;
             }
             else if (result <= 1 + (1 - good_win)) // attacker / defender <= 1.50 = attacker close win
             {
-                defender_ship.TakeDamage(50 + (int)(50 * Random.value));
+                defender_ship.TakeDamage(50 + (int)(50 * Random.value), attacker_ship);
+                return BattleResult.ATTACK_WIN;
             }
             else if (result <= 1 + (1 - critical_win)) // attacker / defender <= 1.75 = attacker good win
             {
-                defender_ship.TakeDamage(75 + (int)(25 * Random.value));
+                defender_ship.TakeDamage(75 + (int)(25 * Random.value), attacker_ship);
+                return BattleResult.ATTACK_WIN;
             }
             else  // attacker / defender > 1.75 = attacker critical win
             {
-                defender_ship.TakeDamage(100);
+                defender_ship.TakeDamage(100, attacker_ship);
+                return BattleResult.ATTACK_WIN;
             }
         }
     }

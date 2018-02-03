@@ -11,17 +11,17 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
-    class CheckSafety : Action
+    class UpdateSafety : Action
     {
         public SharedSpaceship SpaceshipScript;
+        public SharedVector3 FleeDirection;
 
         public override TaskStatus OnUpdate()
         {
             int fear_level = 0;
             List<Spaceship> scaryList = new List<Spaceship>();
-            var list = GetHostileShipsInRange();
-            var list2 = SpaceshipScript.Value.GetShipsInSensorRange();
-            foreach (Spaceship f in GetHostileShipsInRange())
+            var hostile = GetHostileShipsInRange();
+            foreach (Spaceship f in hostile)
             {
                 // add to fear level only positive values, since weak ships shouldn't make you fight a carrier
                 fear_level += Mathf.Clamp(f.GetScaryness(SpaceshipScript.Value), 0, int.MaxValue);
@@ -34,13 +34,14 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 averageScaryPosition += f.transform.position;
             }
             averageScaryPosition /= scaryList.Count;
-
-            Vector3 fleeDirection = ((averageScaryPosition - transform.position) * -1).normalized;
-
+            
             if (scaryList.Count > 0)
             {
-                //BehaviorTree.Blackboard["fleeDirection"] = fleeDirection;
-                //BehaviorTree.Blackboard["scaryPosition"] = averageScaryPosition;
+                FleeDirection.Value = ((averageScaryPosition - transform.position) * -1).normalized;
+            }
+            else
+            {
+                FleeDirection.Value = Vector3.zero;
             }
             //BehaviorTree.Blackboard["fearLevel"] = fear_level;
             return TaskStatus.Success;
@@ -53,7 +54,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
             foreach (Spaceship f in SpaceshipScript.Value.GetShipsInSensorRange())
             {
-                if (f.Faction.HostileWith(myFaction))
+                if (f.Faction.HostileWith(myFaction) && f.Alive)
                 {
                     resultsList.Add(f);
                 }

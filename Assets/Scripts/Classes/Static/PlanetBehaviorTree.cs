@@ -23,7 +23,7 @@ public partial class Planet: Static
     private List<MarketOrder> deliveryFailedList;
     private List<GameObject> ReadyDeliveryShips;
     private GameObject DeliveryShip;
-    public int DeliveryShipCount = 5;
+    public int DeliveryShipCount = 1;
     private float LastDeliveryShipDeployment = 0;
 
     void PlanetBTSetup()

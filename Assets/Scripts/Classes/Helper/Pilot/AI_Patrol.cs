@@ -22,11 +22,14 @@ public class AI_Patrol : PilotInterface
     public ExternalBehaviorTree ExternalPirateBehaviorTree;
 
     private SharedBool Alive;
+    private SharedBool HasVictim;
+    private SharedBool FreshKill;
     private SharedBool Safe;
     private SharedVector2 ControlStick;
     private SharedFloat TargetSpeed;
     private SharedPlanet HomePlanet;
     private SharedSpaceship shipScript;
+    private SharedSpaceship AttackTarget;
 
     private BehaviorTree behaviorTree;
     private float interactionDistance = 5f;
@@ -123,6 +126,14 @@ public class AI_Patrol : PilotInterface
     {
         behaviorTree.ExternalBehavior = ExternalPirateBehaviorTree;
         InitializeBehaviorTreeVariableReferences();
+
+        AttackTarget = (SharedSpaceship)behaviorTree.GetVariable("AttackTarget");
+        HasVictim = (SharedBool)behaviorTree.GetVariable("HasVictim");
+        FreshKill = (SharedBool)behaviorTree.GetVariable("FreshKill");
+
+        AttackTarget.Value = null;
+        HasVictim.Value = false;
+        FreshKill.Value = false;
 
         shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
         behaviorTree.Start();
@@ -585,8 +596,30 @@ public class AI_Patrol : PilotInterface
         return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
     }
 
+    public override void NotifyKilled(Spaceship victim, Spaceship killer = null)
+    {
+        base.NotifyKilled(victim, killer);
+        if (AttackTarget != null && HasVictim != null && AttackTarget.Value == victim)
+        {
+            AttackTarget.Value = null;
+            HasVictim.Value = false;
+            if (killer == shipScript.Value)
+            {
+                FreshKill.Value = true;
+            }
+        }
+    }
+
     public void NotifyShip(Spaceship contact)
     {
+        if (HasVictim != null && AttackTarget != null && FreshKill != null)
+        {
+            if (contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)
+            {
+                HasVictim.Value = true;
+                AttackTarget.Value = contact;
+            }
+        }
         /*if (blackboard != null)
         {
             blackboard["sensor_contact"] = true;

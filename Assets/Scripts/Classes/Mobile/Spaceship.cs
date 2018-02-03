@@ -30,7 +30,13 @@ public class Spaceship : Mobile
     [SerializeField]
     public int HullHealth;
     [SerializeField]
-    public float InteractionRange;
+    public float InteractionRange = 5f;
+    [SerializeField]
+    public float SensorRange = 40f;
+    [SerializeField]
+    public float NotificationRange = 50f;
+    [SerializeField]
+    public LayerMask NotificationLayerMask;
 
     private float targetSpeed;
     private float throttle_input;
@@ -61,6 +67,7 @@ public class Spaceship : Mobile
         PowerLevel = 10;
         HullHealth = 100;
         InteractionRange = 8f;
+        Alive = true;
 
         if (isAI)
         {
@@ -123,9 +130,9 @@ public class Spaceship : Mobile
     {
         // New entity in sensor range.
         inSensorRange.Add(other.gameObject.transform.root.gameObject);
-        if (pilot.GetType() == typeof(AI_Patrol))
+        if (pilot.GetType() == typeof(AI_Patrol)) // If we're an AI ship...
         {
-            Spaceship contact = gameObject.GetComponent<Spaceship>();
+            Spaceship contact = other.gameObject.GetComponent<Spaceship>();
             if (contact)
             {
                 ((AI_Patrol)pilot).NotifyShip(contact);
@@ -317,6 +324,8 @@ public class Spaceship : Mobile
         get { return pilot; }
     }
 
+    public bool Alive { get; internal set; }
+
     /// <summary>
     /// Returns how scary another ship is compared to mine.
     /// </summary>
@@ -327,18 +336,32 @@ public class Spaceship : Mobile
         return PowerLevel - other.PowerLevel;
     }
 
-    public void TakeDamage(int i)
+    public void TakeDamage(int i, Spaceship source = null)
     {
         HullHealth -= i;
         if (HullHealth <= 0)
         {
+            if (source != null)
+            {
+                source.pilot.NotifyKilled(this);
+            }
             Die();
         }
     }
 
-    private void Die()
+    private void Die(Spaceship killer = null)
     {
+        Collider[] f = Physics.OverlapSphere(transform.position, NotificationRange, NotificationLayerMask, QueryTriggerInteraction.Collide);
+        foreach(Collider c in f)
+        {
+            AI_Patrol comms = c.gameObject.GetComponent<AI_Patrol>();
+            if (comms)
+            {
+                comms.NotifyKilled(this, killer);
+            }
+        }
         myModelSwitcher.BecomeGraveyard();
+        Alive = false;
         GetPilot.Die();
     }
 }

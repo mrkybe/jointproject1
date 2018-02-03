@@ -28,24 +28,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public static Overseer Main;
 
         //float timeScale;
-        new void Start()
+        new void Awake()
         {
-            base.Start();
-            // Initialize Stuff Above
-            timeScaleOriginal = Time.fixedDeltaTime;
-            //Debug.unityLogger.logEnabled = false; 
-            Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
-            RootNode = GameObject.FindWithTag("RootNode");
-            if(RootNode != null)
-            {
-                //Debug.Log("Found Root Node!");
-            }
-            CreateFactions();
-            CreateSaturnSystem();
-            CreatePlanetNodes();
-            CreateSky();
-            CreateMarket();
-            StartMatchingOrders();
             if (Main == null)
             {
                 Main = this;
@@ -58,6 +42,27 @@ namespace Assets.Scripts.Classes.WorldSingleton
             {
                 throw new Exception("Overseer Object Already Created Please Fix");
             }
+            //Debug.unityLogger.logEnabled = false; 
+            Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
+            RootNode = GameObject.FindWithTag("RootNode");
+
+            CreateFactions();
+            CreateSaturnSystem();
+            CreatePlanetNodes();
+            CreateSky();
+            CreateMarket();
+        }
+
+        new void Start()
+        {
+            base.Start();
+            // Initialize Stuff Above
+            timeScaleOriginal = Time.fixedDeltaTime;
+            if(RootNode != null)
+            {
+                //Debug.Log("Found Root Node!");
+            }
+            StartMatchingOrders();
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
 
