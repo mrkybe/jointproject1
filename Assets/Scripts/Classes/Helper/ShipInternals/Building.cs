@@ -301,47 +301,25 @@ public class Building
 			this.resources = resources;    
 		}
 
-		public int CompareClosest(MarketOrder x, MarketOrder y)
+		public List<CargoItem> CompareResources(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
 		{
-			if (x.origin == null || y.origin == null)
+			
+			if (Building1Cost < Building2Cost)
 			{
-				Debug.Log("waat");
-				return 1;
-			}
-			Vector3 xPos = x.origin.transform.position;
-			Vector3 yPos = y.origin.transform.position;
-			Vector3 buyerPos = buyer.transform.position;
-			float xDist = Vector3.Distance(buyerPos, xPos);
-			float yDist = Vector3.Distance(buyerPos, yPos);
-			if (xDist < yDist)
-			{
-				return -1;
+				return Building1Cost;
 			}
 			else
 			{
-				return 1;
+				return Building2Cost;
 			}
 		}
 
-		public int Compare(MarketOrder x, MarketOrder y)
+		public List<CargoItem> Compare(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
 		{
-			return CompareClosest(x,y);
+			return CompareResources(Building1Cost,Building2Cost);
 		}
 
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+	*/
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
 
-		public override string ToString()
-		{
-			return base.ToString();
-		}
-	}
-*/
 }
