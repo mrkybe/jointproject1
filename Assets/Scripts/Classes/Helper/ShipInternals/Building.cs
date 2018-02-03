@@ -10,6 +10,7 @@ public class Building
     private List<CargoItem> Consume;
     private List<CargoItem> Produce;
 	private List<CargoItem> Cost;
+	private List<Building> SortedFactories;
     private int spaceFreed = 0;
     private int spaceConsumed = 0;
 	private int buildingCost = 0;
@@ -20,6 +21,8 @@ public class Building
         Consume = consume ?? new List<CargoItem>();
         Produce = produce ?? new List<CargoItem>();
 		Cost = cost ?? new List<CargoItem> ();
+
+
         foreach (var item in Consume)
         {
             spaceFreed += item.Volume;
@@ -85,7 +88,10 @@ public class Building
 	{
 		return Cost;
 	}
+		
 
+
+	//public static List<Building> AllFactories = new List<Building>();
 
     public delegate Building BasicEnviroment();
     public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
@@ -93,12 +99,16 @@ public class Building
     public delegate Building BasicIndustrial();
     public static BasicIndustrial[] BasicIndustry = { GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory };
 
-
+	public delegate Building AllFactories ();
+	public static AllFactories[] AllBuildings = {
+		GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, 
+		GetEnviromentOreFactory, GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory
+	};
 
     // most basic resources
     public static Building GetEnviromentDirtFactory()
     {
-        return new Building("Dirt Factory",
+		return new Building("Dirt Factory",
                             new List<CargoItem>(),
                             new List<CargoItem>()
                             {
@@ -109,6 +119,7 @@ public class Building
 								new CargoItem("Titanium Ore", 10), new CargoItem("Gold", 8)
 							}
 		);
+
     }
 
     public static Building GetEnviromentCometFactory()
@@ -279,4 +290,58 @@ public class Building
 				new CargoItem("Iron Ore", 6), new CargoItem("Gold", 13)
 			});
     }
+
+	/*
+	public class BuildingResourceComparer : IComparer<Building>
+	{
+		private Building resources;
+
+		public BuildingResourceComparer(Building resources)
+		{
+			this.resources = resources;    
+		}
+
+		public int CompareClosest(MarketOrder x, MarketOrder y)
+		{
+			if (x.origin == null || y.origin == null)
+			{
+				Debug.Log("waat");
+				return 1;
+			}
+			Vector3 xPos = x.origin.transform.position;
+			Vector3 yPos = y.origin.transform.position;
+			Vector3 buyerPos = buyer.transform.position;
+			float xDist = Vector3.Distance(buyerPos, xPos);
+			float yDist = Vector3.Distance(buyerPos, yPos);
+			if (xDist < yDist)
+			{
+				return -1;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+
+		public int Compare(MarketOrder x, MarketOrder y)
+		{
+			return CompareClosest(x,y);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+		}
+	}
+*/
 }
