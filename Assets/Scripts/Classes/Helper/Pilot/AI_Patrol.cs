@@ -19,8 +19,10 @@ public class AI_Patrol : PilotInterface
 {
     public ExternalBehaviorTree ExternalMiningBehaviorTree;
     public ExternalBehaviorTree ExternalDeliveryBehaviorTree;
+    public ExternalBehaviorTree ExternalPirateBehaviorTree;
 
     private SharedBool Alive;
+    private SharedBool Safe;
     private SharedVector2 ControlStick;
     private SharedFloat TargetSpeed;
     private SharedPlanet HomePlanet;
@@ -112,29 +114,6 @@ public class AI_Patrol : PilotInterface
         behaviorTree.GetVariable("DeliveryOrder").SetValue(order);
         behaviorTree.GetVariable("DeliveryPlanet").SetValue(order.destination);
         behaviorTree.Start();
-        /*if (BehaviorTree != null)
-        {
-            BehaviorTree.Stop();
-        }
-        else
-        {
-            BehaviorTree = CreateBehaviourTreeDumbDelivery();
-            blackboard = BehaviorTree.Blackboard;
-            InitializeDefaultBlackboard();
-        }
-
-        blackboard["deliveryOrder"] = order;
-        blackboard["homePlanet"] = order.origin;
-        blackboard["deliveryPlanet"] = order.destination;
-
-#if UNITY_EDITOR
-        if (debugger == null)
-        {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-        }
-        debugger.BehaviorTree = BehaviorTree;
-#endif
-        BehaviorTree.Start();*/
     }
 
     /// <summary>
@@ -142,35 +121,11 @@ public class AI_Patrol : PilotInterface
     /// </summary>
     public void StartPirate()
     {
-        /*if (BehaviorTree != null)
-        {
-            BehaviorTree.Stop();
-        }
+        behaviorTree.ExternalBehavior = ExternalPirateBehaviorTree;
+        InitializeBehaviorTreeVariableReferences();
 
-        BehaviorTree = CreateBehaviorTreePirate();
-        blackboard = BehaviorTree.Blackboard;
-        InitializeDefaultBlackboard();
-
-        shipScript.Faction = Overseer.Main.GetFaction("Pirates");
-        
-        UpdateSafetyStatus();
-
-#if UNITY_EDITOR
-        if (debugger == null)
-        {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-        }
-        debugger.BehaviorTree = BehaviorTree;
-#endif
-        BehaviorTree.Start();*/
-    }
-
-    /// <summary>
-    /// Setup the things that all behavior trees will share.
-    /// </summary>
-    private void InitializeDefaultBlackboard()
-    {
-        //blackboard["dead"] = false;
+        shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
+        behaviorTree.Start();
     }
 
     /// <summary>
@@ -630,7 +585,7 @@ public class AI_Patrol : PilotInterface
         return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
     }
 
-    public void Notify(GameObject contact)
+    public void NotifyShip(Spaceship contact)
     {
         /*if (blackboard != null)
         {
