@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -13,7 +14,8 @@ using UnityEngine.UI;
 /// </summary>
 public class TradeMenuMk2 : MonoBehaviour
 {
-    public Button buttonPrefab;
+    public Button buttonPrefab1;
+    public Button buttonPrefab2;
 
     private Spaceship ship;
 
@@ -31,7 +33,6 @@ public class TradeMenuMk2 : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        buttonPrefab.onClick.AddListener(OpenInventory);
         leftPanel = GameObject.Find("Left Panel").GetComponent<RectTransform>();
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
         on = new Vector2(0, 0);
@@ -46,9 +47,10 @@ public class TradeMenuMk2 : MonoBehaviour
 
         for (i = 0; i < 15; i++)                                        // Only 15 buttons per panel.  Look into later.
         {
-            Button myButton1 = Instantiate(buttonPrefab);
+            Button myButton1 = Instantiate(buttonPrefab1);
             buttonListLeft.Add(myButton1);
-            Button myButton2 = Instantiate(buttonPrefab);
+            Button myButton2 = Instantiate(buttonPrefab2);
+            myButton2.onClick.AddListener(MakeTrade);
             buttonListRight.Add(myButton2);
         }
 
@@ -65,10 +67,6 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void OpenInventory()
-    {
-        throw new NotImplementedException();
-    }
 
     void Update()
     {
@@ -90,6 +88,8 @@ public class TradeMenuMk2 : MonoBehaviour
                     {
                         buttonListLeft[i].GetComponentInChildren<Text>().text = shipsInRange[i].name;
                         buttonListLeft[i].gameObject.SetActive(true);
+                        buttonListLeft[i].onClick.AddListener(() => { OpenInventory(buttonListLeft[i]); });
+                        print(buttonListLeft[i].GetComponentInChildren<Text>().text);
                         if (shipsInRange.Count < 15)
                         {
                             int j = 0;
@@ -98,11 +98,6 @@ public class TradeMenuMk2 : MonoBehaviour
                                 buttonListLeft[j].gameObject.SetActive(false);
                             }
                         }
-                    }
-                    for (i=0; i<shipsInRange.Count; i++)
-                    {
-                        Button butt = buttonListLeft[i].GetComponent<Button>();
-                        butt.onClick.AddListener(openInventory);
                     }
                 }
                 else if (shipsInRange.Count == 0)
@@ -130,8 +125,19 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void openInventory()
+    private void OpenInventory(Button butt)
     {
-        
+        if (isRightOff)
+        {
+            rightPanel.anchoredPosition = on;
+            print(butt.GetComponentInChildren<Text>().text);
+            isRightOff = false;
+        }
+    }
+
+    private void MakeTrade()
+    {
+        throw new NotImplementedException();
     }
 }
+
