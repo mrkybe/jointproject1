@@ -80,3 +80,5 @@
 /Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Xcode.xml
 /Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Common.dll
 /Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Common.dll.mdb
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/BehaviorDesignerRuntime.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/BehaviorDesignerEditor.dll
