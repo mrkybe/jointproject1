@@ -10,40 +10,37 @@ public class Move : MonoBehaviour {
 	private Rigidbody rb;
 	private Vector3 lookPos;
 	private bool mouse;
+    private bool controller;
+    private Vector3 velocity;
     // Use this for initialization
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        mouse = true;
     }
 
 	void Update()
 	{
-		//timeMove ();
+		timeMove ();
 		mouseLook ();
-	}
+        stickLook();
+        checkCont();
+    }
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		forceMove ();
-		checkCont ();
+        //forceMove ();
+        rb.velocity = velocity;
     }
 
 	//movement based on time
 	void timeMove()
 	{
-		float x = Input.GetAxis ("Horizontal");
-		float z = Input.GetAxis("Vertical");
+		float x = Input.GetAxisRaw("Horizontal");
+		float z = Input.GetAxisRaw("Vertical");
 
 		Vector3 move = new Vector3 (x, 0, z);
-
-		transform.position += move * speed * Time.deltaTime;
-
-		float rx = Input.GetAxis("HorizontalR");
-		float rz = Input.GetAxis("VerticalR");
-
-		float angle = Mathf.Atan2 (rx, rz) * Mathf.Rad2Deg;
-
-		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
+        velocity = move * speed;
 	}
 
 	//movement based on forces, requires and FixedUpdate
@@ -73,6 +70,19 @@ public class Move : MonoBehaviour {
 			}
 		}
 	}
+
+    void stickLook()
+    {
+        float rx = Input.GetAxis("HorizontalR");
+        float rz = Input.GetAxis("VerticalR");
+        Vector3 direction = Vector3.right * rx + Vector3.forward * rz;
+        if(direction.sqrMagnitude > 0)
+        {
+            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        }
+        //float angle = Mathf.Atan2 (rx, rz);
+        //transform.rotation = Quaternion.Euler(0, angle * Mathf.Rad2Deg, 0);
+    }
 
 	void checkCont()
 	{
