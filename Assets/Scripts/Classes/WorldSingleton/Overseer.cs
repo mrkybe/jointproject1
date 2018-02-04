@@ -83,6 +83,22 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return new Vector3(x, 0, z);
         }
 
+        Planet FindClosest(List<Planet> list, Planet current)
+        {
+            Planet result = list[0];
+            float best = Vector3.Distance(list[0].transform.position, current.transform.position);
+            foreach (Planet pos in list)
+            {
+                float d = Vector3.Distance(pos.transform.position, current.transform.position);
+                if (d < best)
+                {
+                    best = d;
+                    result = pos;
+                }
+            }
+            return result;
+        }
+
         Vector3 FindClosest(List<Vector3> list, Vector3 current)
         {
             Vector3 result = list[0];
@@ -148,181 +164,69 @@ namespace Assets.Scripts.Classes.WorldSingleton
             float minSaturnDistance = 75f;
             Queue<string> moon_names = new Queue<string>(ListOfSaturnMoonNames());
             List<Vector3> moon_positions = GenerateMoonPositions(numMoons, 10);
+            List<Planet> moon_scripts = new List<Planet>();
             for (int i = 0; i < (numMoons); i++)
             {
                 GameObject moon = Instantiate((GameObject)Resources.Load("Prefabs/Moon"), moon_positions[i], Quaternion.identity);
-                moon.name = "Moon" + i;
                 var script = moon.GetComponent<Planet>();
                 script.RandomizeSize();
-                string name = moon_names.Dequeue();
-                script.SetName(name);
-                script.SetFaction(GetRandomFaction());
+                string name = "Moon" + i;
+                moon.name = name;
+                if (moon_names.Count > 0)
+                {
+                    name = moon_names.Dequeue();
+                    script.SetName(name);
+                }
                 Moons.Add(moon);
+                moon_scripts.Add(script);
+            }
+
+            int k = MainFactions.Count;
+            int num_nearest_candidates = 15;
+            List<Planet> claimed = new List<Planet>();
+            List<Planet> motherPlanets = new List<Planet>();
+            List<Planet> unclaimed = new List<Planet>();
+            unclaimed.AddRange(moon_scripts);
+            for (int i = 0; i < k; i++)
+            {
+                //Vector3 closest = FindClosest(moon_positions, PolarCoordinates((float)((Math.PI * 2) / (k+1)), worldSize));
+                //Planet moon = moon_scripts.First(x => x.transform.position == closest);
+                Planet moon = moon_scripts[Random.Range(0, moon_scripts.Count)];
+                if (moon != null)
+                {
+                    moon.SetFaction(MainFactions[i]);
+                    claimed.Add(moon);
+                    motherPlanets.Add(moon);
+                    unclaimed.Remove(moon);
+                }
+            }
+            int iter = 0;
+            while (unclaimed.Count > 0)
+            {
+                Planet new_owner = motherPlanets[Random.Range(0, k)];
+                List<Planet> candidates = new List<Planet>();
+                for (int i = 0; i < num_nearest_candidates && i < unclaimed.Count; i++)
+                {
+                    int r = Random.Range(0, unclaimed.Count);
+                    Planet x = unclaimed[r];
+                    unclaimed.RemoveAt(r);
+                    candidates.Add(x);
+                }
+                Planet closest = FindClosest(candidates, new_owner);
+                candidates.Remove(closest);
+                closest.SetFaction(new_owner.Faction);
+                unclaimed.AddRange(candidates);
+                iter++;
             }
 
             int numAsteroidFields = 25;
             List<Vector3> asteroid_positions = GenerateMoonPositions(numAsteroidFields, 5, moon_positions);
             for (int i = 0; i < numAsteroidFields; i++)
             {
-                //float x = (Random.value * worldSize) - (worldSize / 2);
-                //float x = ((Random.value * worldSize) - (worldSize / 2))/70f;
-                //float z = (Random.value * worldSize) - (worldSize / 2);
-                //float stepCount = ((worldSize / 2) - minSaturnDistance) / numAsteroidFields;
-                //var coords = PolarCoordinates(Random.value, minSaturnDistance + Random.value * ((worldSize / 2) - minSaturnDistance));
-                //float x = coords.x;
-                //float z = coords.z;
-                //if (CheckForRejectAsteroids(x, z))
-                //{
                 GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), asteroid_positions[i], Quaternion.identity);
                 asteroidField.name = "AsteroidField" + i;
                 AsteroidFields.Add(asteroidField);
-                //}
-                //else
-                //{
-                //    i--;
-                //}
             }
-            /*List<GameObject> MoonsToDestroy = new List<GameObject>();
-            List<GameObject> AsteroidsToDestroy = new List<GameObject>();
-            foreach (var moon in Moons)
-            {
-                var hitCollidersNear = Physics.OverlapSphere(moon.transform.position, 75);
-                //var hitCollidersMedium = Physics.OverlapSphere(moon.transform.root.position, 250);
-                //var hitCollidersFar = Physics.OverlapSphere(moon.transform.position, 625);
-                //Debug.Log("Near: " + hitCollidersNear.Length);
-                //Debug.Log("Medi: " + hitCollidersMedium.Length);
-                //Debug.Log("Far : " + hitCollidersFar.Length);
-                if (MoonsToDestroy.Contains(moon))
-                {
-                    continue;
-                }
-                foreach (var collider in hitCollidersNear)
-                {
-                    if (collider.gameObject.tag == "StaticInteractive")
-                    {
-                        if (collider.gameObject.name.StartsWith("Moon"))
-                        {
-                            if (collider.gameObject.transform.root.gameObject != moon)
-                            {
-                                MoonsToDestroy.Add(collider.gameObject.transform.root.gameObject);
-                            }
-                        }
-                        else if (collider.gameObject.name.StartsWith("AsteroidField"))
-                        {
-                            float distance = (collider.gameObject.transform.position - moon.transform.position).magnitude;
-                            if (distance < 35f)
-                            {
-                                AsteroidsToDestroy.Add(collider.gameObject.transform.root.gameObject);
-                            }
-                        }
-                    }
-                }
-            }
-            foreach (var moon in MoonsToDestroy)
-            {
-                Moons.Remove(moon);
-                Destroy(moon);
-            }
-            foreach (var asteroid in AsteroidsToDestroy)
-            {
-                AsteroidFields.Remove(asteroid);
-                Destroy(asteroid);
-            }
-            Debug.Log("ASTEROID FIELDS COUNT:" + AsteroidFields.Count);
-            Debug.Log("MOONS COUNT:" + Moons.Count);
-            AsteroidsToDestroy.Clear();
-            foreach (var asteroidField in AsteroidFields)
-            {
-                var hitCollidersNear = Physics.OverlapSphere(asteroidField.transform.position, 9);
-                //var hitCollidersMedium = Physics.OverlapSphere(asteroidField.transform.position, 250);
-                //var hitCollidersFar = Physics.OverlapSphere(asteroidField.transform.position, 625);
-                if (AsteroidsToDestroy.Contains(asteroidField))
-                {
-                    continue;
-                }
-                foreach (var collider in hitCollidersNear)
-                {
-                    if (collider.gameObject.transform.root.tag == "StaticInteractive")
-                    {
-                        if (collider.gameObject.transform.root.name.StartsWith("AsteroidField"))
-                        {
-                            if (collider.gameObject.transform.root.gameObject != asteroidField)
-                            {
-                                AsteroidsToDestroy.Add(collider.gameObject.transform.root.gameObject);
-                            }
-                        }
-                    }
-                }
-            }
-            foreach (var asteroid in AsteroidsToDestroy)
-            {
-                AsteroidFields.Remove(asteroid);
-                Destroy(asteroid);
-            }
-
-            /*int counter = 0;
-            foreach (var moon in Moons)
-            {
-                moon.name = "Moon" + counter;
-                counter += 1;
-            }
-            counter = 0;
-            foreach (var asteroidField in AsteroidFields)
-            {
-                asteroidField.name = "AsteroidField" + counter;
-                counter += 1;
-            }*/
-        }
-
-        bool CheckForReject(float x, float z)
-        {
-            float dist = Mathf.Sqrt((x * x) + (z * z));
-            /*if (dist > (worldSize/2))
-            {
-                return false;
-            }*/
-            /*if (dist < 100f)
-        {
-            return false;
-        }*/
-            int slot = (int) ((dist/(worldSize/2))*32);
-            // Debug.Log(slot);
-            //  0-3 atmosphere
-            //  4-7 interveening space
-            //  8-12 thin field
-            //  13-21 main field
-            //  22-23 edge of space
-            //  24-30 a new hope
-            //  31-32 last few rocks
-            //  33+ deep space
-            //                  1  -  -  -  5  -  -  - 10  -  -  - 15  -  -  - 20  -  -  - 25  
-            int[] map = new[] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 8, 16, 16, 17, 0, 1, 2, 4, 18, 19, 1, 1, 15, 14, 13, 14, 15, 2, 1 };
-            if ((Random.value * 100) >= map[slot])
-            {
-                return false;
-            }
-            return true;
-        }
-
-        bool CheckForRejectAsteroids(float x, float z)
-        {
-            float dist = Mathf.Sqrt((x * x) + (z * z));
-            int slot = (int)((dist / (worldSize / 2)) * 32);
-            // Debug.Log(slot);
-            //  0-3 atmosphere
-            //  4-7 interveening space
-            //  8-12 thin field
-            //  13-21 main field
-            //  22-23 edge of space
-            //  24-30 a new hope
-            //  31-32 last few rocks
-            //  33+ deep space
-            int[] map = new[] { 0, 0, 0, 0, 0, 1, 2, 2, 4, 4, 4, 4, 4, 16, 16, 16, 16, 19, 17, 12, 21, 18, 19, 1, 1, 15, 14, 13, 14, 15, 2, 1 };
-            if ((Random.value * 50) <= map[slot])
-            {
-                return true;
-            }
-            return false;
         }
 
         bool CreatePlanetNodes()

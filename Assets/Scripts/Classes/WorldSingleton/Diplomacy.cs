@@ -10,49 +10,74 @@ namespace Assets.Scripts.Classes.WorldSingleton
     public partial class Overseer : Static.Static
     {
         [SerializeField]
-        public static List<string> FactionNamesList;
+        public static List<string> FactionNamesListMain;
+
+        [SerializeField]
+        public static List<string> FactionNamesListOther;
 
         [SerializeField]
         public static List<Faction> Factions;
+
+        [SerializeField]
+        public static List<Faction> MainFactions;
+
+        [SerializeField]
+        public static List<Faction> OtherFactions;
 
         [SerializeField]
         public static List<FactionLink> Links;
 
         private void InitializeFactions()
         {
-            FactionNamesList = new List<string>
+            FactionNamesListMain = new List<string>
             {
                 "Communist",
                 "Libertarian",
                 "Freedom",
                 "Duty",
-                "Independent",
+                "Independent"
+            };
+            FactionNamesListOther = new List<string>
+            {
+                "Robots",
                 "Pirates",
                 "Player"
             };
             Factions = new List<Faction>();
+            MainFactions = new List<Faction>();
+            OtherFactions = new List<Faction>();
             Links = new List<FactionLink>();
         }
 
-        private Faction GetRandomFaction()
+        private Faction GetRandomMainFaction()
         {
-            int numFactions = Factions.Count;
-            // -2 to exclude pirates, player
-            int val = Random.Range(0, numFactions-2);
-            return Factions[val];
+            int numFactions = MainFactions.Count;
+            int val = Random.Range(0, numFactions);
+            return MainFactions[val];
         }
 
         private void CreateFactions()
         {
             InitializeFactions();
             int count = 0;
+            var FactionNamesList = new List<string>();
+            FactionNamesList.AddRange(FactionNamesListMain);
+            FactionNamesList.AddRange(FactionNamesListOther);
             foreach (var name in FactionNamesList)
             {
                 Faction f = new Faction(name);
-                float frac = count / (FactionNamesList.Count * 2f);
+                float frac = count / (FactionNamesListMain.Count * 2f);
                 f.ColorPrimary = Color.HSVToRGB(frac, 0.8f, 1f);
                 f.ColorSecondary = Color.HSVToRGB(frac + 0.5f, 0.8f, 1f);
                 Factions.Add(f);
+                if (FactionNamesListMain.Contains(name))
+                {
+                    MainFactions.Add(f);
+                }
+                else
+                {
+                    OtherFactions.Add(f);
+                }
                 count++;
             }
 

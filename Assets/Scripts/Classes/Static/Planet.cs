@@ -47,6 +47,8 @@ public partial class Planet : Static
     [SerializeField]
     private CargoHold reservedStorage;
 
+    private Faction faction;
+
     void Awake()
     {
         WorkerShips = new List<GameObject>();
@@ -66,6 +68,7 @@ public partial class Planet : Static
         PlanetBTSetup();
         //behaviorTree; // Was causing compile errors
     }
+
 
     public void SetFaction(Faction f)
     {
