@@ -26,7 +26,7 @@ public class CameraFollow : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () 
+	void Update () 
     {
         
         floatieness = floatieness_start * ((zoom / zoomMax) * (zoom / zoomMax));

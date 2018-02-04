@@ -66,7 +66,17 @@ namespace Assets.Scripts.Classes.Helper
                 transform.Rotate(randomRotationAxis, rotationSpeed * Time.deltaTime);
             }
         }
-        
+
+        public void OnTriggerEnter(Collider collider)
+        {
+            Debug.Log("Boop");
+        }
+
+        public void OnTriggerExit(Collider collider)
+        {
+            Debug.Log("Unboop");
+        }
+
         private Vector3 randomRotationAxis;
         private float rotationSpeed;
 

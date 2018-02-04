@@ -40,7 +40,7 @@ public class Spaceship : Mobile
 
     private float targetSpeed;
     private float throttle_input;
-    private float oldThrottle_input;
+    private float old_throttleInput;
     private CargoHold myStorage;
     private SensorArray mySensorArray;
     private ModelSwitcher myModelSwitcher;
@@ -63,7 +63,7 @@ public class Spaceship : Mobile
         engineRunSpeed = 0;
         targetSpeed = -999;
         throttle_input = 0;
-        oldThrottle_input = 0;
+        old_throttleInput = 0;
         PowerLevel = 10;
         HullHealth = 100;
         InteractionRange = 8f;
@@ -87,14 +87,31 @@ public class Spaceship : Mobile
     }
 
 	// Update is called once per frame
+    private Vector3 dAngularVelocity = Vector3.zero;
+    private Vector3 dVelocity = Vector3.zero;
+    private float dTorquey = 0;
+    private float torquey = 0;
+
+    private void UpdateDerivatives()
+    {
+        torquey = Vector3.SignedAngle(transform.forward, pilot.TargetFaceDirection, Vector3.up);
+        dTorquey = (torquey - old_torquey) / Time.fixedDeltaTime;
+
+        dVelocity = (rigidbody.velocity - old_velocity) / Time.fixedDeltaTime;
+        dAngularVelocity = (rigidbody.angularVelocity - old_angularVelocity) / Time.fixedDeltaTime;
+    }
+
 	new void Update ()
 	{
         if (inTime && pilot)
         {
+            UpdateDerivatives();
             base.Update();
+
+            
             direction = transform.forward;
             velocity = engineRunSpeed;
-
+            /*
             if (pilot.Throttle > 0)
             {
                 engineRunSpeed += engineAcceleration * pilot.Throttle;
@@ -119,12 +136,40 @@ public class Spaceship : Mobile
                 }
             }
 
-            engineRunSpeed = Mathf.Clamp(maxSpeed, -(maxSpeed / 15), engineRunSpeed);
+            engineRunSpeed = Mathf.Clamp(engineRunSpeed, -(maxSpeed), maxSpeed);
             throttle_input = engineAcceleration * Mathf.Clamp((targetSpeed - engineRunSpeed), -1f, 1f);
-            transform.Rotate(Vector3.up * getVelocityPercentage() * (pilot.Turning * turningSpeed));
-            oldThrottle_input = throttle_input;
+            //transform.Rotate(Vector3.up * getVelocityPercentage() * (pilot.Turning * turningSpeed));*/
+
+            float av = rigidbody.angularVelocity.y;
+            float max_torq = TurningSpeed;
+            float nT = (dTorquey / 2f);
+            float torq = Mathf.Clamp(torquey + nT, -max_torq - av, max_torq - av);
+            rigidbody.AddTorque(new Vector3(0, torq, 0));
+            Move();
         }
-	}
+    }
+
+    private Vector3 old_angularVelocity = Vector3.zero;
+    private Vector3 old_velocity = Vector3.zero;
+    private float old_torquey = 0;
+    public void LateUpdate()
+    {
+        old_throttleInput = throttle_input;
+        old_angularVelocity = rigidbody.angularVelocity;
+        old_velocity = rigidbody.velocity;
+        old_torquey = torquey;
+    }
+
+    private void Move()
+    {
+        Vector3 engineVel = (direction.normalized * pilot.Throttle);
+        Vector3 finalVel = (engineVel) * Time.deltaTime * engineAcceleration;
+        float velmax = ((rigidbody.velocity.magnitude) / maxSpeed);
+        rigidbody.AddForce(finalVel);
+        float dot = Vector3.Dot(rigidbody.velocity.normalized, rigidbody.transform.forward);
+        rigidbody.velocity = rigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + rigidbody.transform.forward * rigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
+        //transform.position = transform.position + finalVel;
+    }
 
     public void OnTriggerEnter(Collider other)
     {
