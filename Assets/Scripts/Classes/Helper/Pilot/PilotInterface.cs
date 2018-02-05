@@ -11,6 +11,7 @@ public abstract class PilotInterface : MonoBehaviour
     protected Vector3 targetFaceDirection;
     protected Vector3 targetVelocity;
     protected float targetSpeed;
+    protected float throttle = 0f;
 
     public SensorArray SensorArray
     {
@@ -24,22 +25,18 @@ public abstract class PilotInterface : MonoBehaviour
         control_stickDirection = new Vector2();
         targetFaceDirection = transform.forward;
         targetVelocity = Vector3.zero;
-        targetSpeed = 0;
+        throttle = 0f;
+        targetSpeed = 0f;
 	}
 
     protected void Update()
     {
-
-	}
+        Debug.DrawLine(transform.position, transform.position + targetFaceDirection * 5f, Color.cyan);
+    }
 
     public float Throttle
     {
-        get { return Mathf.Clamp(control_stickDirection.y, -1f, 1f); }
-    }
-
-    public float Turning
-    {
-        get { return Mathf.Clamp(control_stickDirection.x, -1f, 1f); }
+        get { return Mathf.Clamp(throttle, -1f, 1f); }
     }
 
     public Vector3 TargetFaceDirection
@@ -48,6 +45,7 @@ public abstract class PilotInterface : MonoBehaviour
         {
             return targetFaceDirection;
         }
+        set { targetFaceDirection = value; }
     }
 
     public float TargetSpeed

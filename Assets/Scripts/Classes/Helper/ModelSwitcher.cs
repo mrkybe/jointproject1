@@ -21,6 +21,7 @@ namespace Assets.Scripts.Classes.Helper
         private MeshFilter myMesh;
         private MeshRenderer myMeshRenderer;
         private ParticleSystem myParticleSystem;
+        private Spaceship mySpaceshipScript;
         private States State = States.ALIVE;
 
         
@@ -29,6 +30,7 @@ namespace Assets.Scripts.Classes.Helper
             myMesh = this.GetComponent<MeshFilter>();
             myMeshRenderer = this.GetComponent<MeshRenderer>();
             myParticleSystem = this.GetComponent<ParticleSystem>();
+            mySpaceshipScript = this.transform.parent.GetComponent<Spaceship>();
 
             myParticleSystem.Stop();
 
@@ -70,6 +72,7 @@ namespace Assets.Scripts.Classes.Helper
         public void OnTriggerEnter(Collider collider)
         {
             Debug.Log("Boop");
+
         }
 
         public void OnTriggerExit(Collider collider)

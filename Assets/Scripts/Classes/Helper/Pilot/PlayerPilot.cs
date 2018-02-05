@@ -19,17 +19,13 @@ public class PlayerPilot : PilotInterface
 	new void Update ()
     {
         base.Update();
-        control_stickDirection.x = Input.GetAxis("Horizontal"); // turning
-        control_stickDirection.y = Input.GetAxis("Vertical");   // throttle
+        throttle = Input.GetAxis("Vertical");
+
 
         //Vector3.RotateTowards(targetFaceDirection);
         //Quaternion rot = Quaternion.Euler(Input.GetAxis("Horizontal") * Vector3.up);
         Quaternion rot = Quaternion.Euler(Input.GetAxis("Horizontal") * Vector3.up * Time.deltaTime * 120f);
         targetFaceDirection = rot * targetFaceDirection;
-
-        float angle;
-        Vector3 direction;
-        Debug.DrawLine(transform.position, transform.position + targetFaceDirection * 5f);
     }
 
     public override void Die()

@@ -8,6 +8,7 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 using BehaviorDesigner.Runtime;
+using UnityEditor;
 
 /* AI_Patrol is the AI for the ships/fleets on the Overmap.
  * It contains all of the atomic AI methods that are used by the AI behavior tree.
@@ -33,6 +34,8 @@ public class AI_Patrol : PilotInterface
 
     private BehaviorTree behaviorTree;
     private float interactionDistance = 5f;
+    private Rigidbody rigidbody;
+    public float Speed;
 
     // Use this for initialization
     public void Awake()
@@ -48,6 +51,8 @@ public class AI_Patrol : PilotInterface
 
     private void InitializeBehaviorTreeVariableReferences()
     {
+        rigidbody = GetComponent<Rigidbody>();
+
         Alive = (SharedBool)behaviorTree.GetVariable("Alive");
         ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
         TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
@@ -66,8 +71,19 @@ public class AI_Patrol : PilotInterface
     public new void Update()
     {
         base.Update();
-        control_stickDirection = ControlStick.Value;
+        Speed = rigidbody.velocity.magnitude;
+        targetFaceDirection = new Vector3(ControlStick.Value.x, 0, ControlStick.Value.y);
+        if (ControlStick.Value.sqrMagnitude <= 0.001)
+        {
+            targetFaceDirection = transform.forward;
+        }
         targetSpeed = TargetSpeed.Value;
+        float ratio = Mathf.Clamp((targetSpeed - Speed), -1.0f, 1.0f);
+        if (float.IsNaN(ratio))
+        {
+            ratio = 0;
+        }
+        throttle = (ratio) * shipScript.Value.EngineAcceleration;
     }
 
     /// <summary>

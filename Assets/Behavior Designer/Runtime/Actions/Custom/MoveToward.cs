@@ -18,14 +18,34 @@ namespace Assets.Scripts.Classes.Helper.Pilot
         public SharedFloat TargetSpeed;
         public SharedFloat MaxSpeed = 3f;
         public SharedFloat AcceptableDistance = 1;
+        public SharedBool SlowArrive = true;
+
+        private float stoppingDistance = 0f;
+        private Rigidbody rigidbody;
+        private Spaceship Shipscript;
+        private bool arriving = false;
 
         public override void OnAwake()
         {
             base.OnAwake();
+            Shipscript = GetComponent<Spaceship>();
+            rigidbody = GetComponent<Rigidbody>();
+            arriving = false;
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            rigidbody = GetComponent<Rigidbody>();
+            Shipscript = GetComponent<Spaceship>();
         }
 
         public override TaskStatus OnUpdate()
         {
+            float stoppingDistanceNew = ((rigidbody.velocity.sqrMagnitude) /
+                                         (2 * rigidbody.mass * Shipscript.EngineAcceleration * Time.fixedDeltaTime)) * 1.05f;
+            stoppingDistance = (stoppingDistanceNew + stoppingDistance) / 2;
+
             if (TargetSpaceship.Value != null)
             {
                 Target.Value = TargetSpaceship.Value.transform.position;
@@ -38,33 +58,42 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 targetAngle = -targetAngle;
             }
 
-
-            //Debug.Log(targetSpeed);
+            Debug.Log(stoppingDistance);
             Vector3 temp = targetPosition - transform.position;
-
-            // TODO:  Make this more accurate by using _parent.transform.forward - target position.
-            /*if (temp.magnitude < mySensorArray.StoppingDistance)
-            {
-                bool slowDown = true;
-            }*/
-            //temp = temp.normalized + _parent.transform.forward;
-            stick = new Vector2(temp.x, temp.z);
+            
+            stick = new Vector2(temp.x, temp.z).normalized;
 
             Debug.DrawLine(transform.position, targetPosition, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
             Debug.DrawLine(transform.position, transform.position + transform.forward, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
-            stick.y = 0;
-            stick.x = targetAngle / 10;
 
-            stick.x = Mathf.Clamp(stick.x, -1f, 1f);
-            stick.y = Mathf.Clamp(stick.y, -1f, 1f);
-
-            // Outputs
             ControlStick.Value = stick;
-            TargetSpeed.Value = Mathf.Clamp((Mathf.Clamp01(1 - (Mathf.Abs(targetAngle) / 60)) * MaxSpeed.Value), 0f, 10f);
+            float dot = Vector3.Dot(temp, transform.forward);
+            TargetSpeed.Value = Mathf.Clamp(dot * MaxSpeed.Value, 0f, MaxSpeed.Value);
 
-            if (Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
+            if (SlowArrive.Value)
             {
-                return TaskStatus.Success;
+                Vector3 proj = Math3d.ProjectPointOnLine(transform.position, transform.forward, targetPosition);
+                int result = Math3d.PointOnWhichSideOfLineSegment(transform.position,
+                    transform.position + transform.forward * stoppingDistance, proj);
+                
+                if (result == 0)
+                {
+                    TargetSpeed.Value = 0;
+                }
+                if (rigidbody.velocity.magnitude < 0.05f && Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
+                {
+                    TargetSpeed.Value = 0;
+                    Shipscript.GetPilot.TargetFaceDirection = transform.forward;
+                    return TaskStatus.Success;
+                }
+                Debug.DrawLine(transform.position + transform.forward * stoppingDistance, transform.position + transform.forward * stoppingDistance + transform.up * 10f);
+            }
+            else
+            {
+                if (Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
+                {
+                    return TaskStatus.Success;
+                }
             }
 
             return TaskStatus.Running;

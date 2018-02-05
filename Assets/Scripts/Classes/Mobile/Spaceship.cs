@@ -38,6 +38,8 @@ public class Spaceship : Mobile
     [SerializeField]
     public LayerMask NotificationLayerMask;
 
+    public float EngineForce = 0;
+
     private float targetSpeed;
     private float throttle_input;
     private float old_throttleInput;
@@ -108,37 +110,8 @@ public class Spaceship : Mobile
             UpdateDerivatives();
             base.Update();
 
-            
             direction = transform.forward;
             velocity = engineRunSpeed;
-            /*
-            if (pilot.Throttle > 0)
-            {
-                engineRunSpeed += engineAcceleration * pilot.Throttle;
-            }
-            else if (pilot.Throttle < 0 && engineRunSpeed > 0)
-            {
-                engineRunSpeed += engineAcceleration * pilot.Throttle;
-            }
-            else if (engineRunSpeed < 0)
-            {
-                engineRunSpeed = 0;
-            }
-            if (targetSpeed != -999)
-            {
-                targetSpeed = pilot.TargetSpeed;
-                //Debug.Log(targetSpeed);
-                engineRunSpeed += engineAcceleration * Mathf.Clamp((targetSpeed - engineRunSpeed) * 10000, -1f, 1f);
-                //Debug.Log(engineRunSpeed);
-                if (Mathf.Abs(engineRunSpeed) < engineAcceleration )
-                {
-                    engineRunSpeed = 0;
-                }
-            }
-
-            engineRunSpeed = Mathf.Clamp(engineRunSpeed, -(maxSpeed), maxSpeed);
-            throttle_input = engineAcceleration * Mathf.Clamp((targetSpeed - engineRunSpeed), -1f, 1f);
-            //transform.Rotate(Vector3.up * getVelocityPercentage() * (pilot.Turning * turningSpeed));*/
 
             float av = rigidbody.angularVelocity.y;
             float max_torq = TurningSpeed;
@@ -168,7 +141,6 @@ public class Spaceship : Mobile
         rigidbody.AddForce(finalVel);
         float dot = Vector3.Dot(rigidbody.velocity.normalized, rigidbody.transform.forward);
         rigidbody.velocity = rigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + rigidbody.transform.forward * rigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
-        //transform.position = transform.position + finalVel;
     }
 
     public void OnTriggerEnter(Collider other)
@@ -277,8 +249,14 @@ public class Spaceship : Mobile
 
     public float ThrottleInput
     {
-        get { return throttle_input; }
-        set { throttle_input = value; }
+        get
+        {
+            if (pilot)
+            {
+                return pilot.Throttle;
+            }
+            else return 0;
+        }
     }
 
     public CargoHold GetCargoHold
