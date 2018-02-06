@@ -12,17 +12,6 @@ using ShipInternals;
 /// </summary>
 public class Spaceship : Mobile
 {
-    private float engineRunSpeed;
-    [SerializeField]
-    private float engineAcceleration;
-    [SerializeField]
-    private float maxSpeed;
-    [SerializeField]
-    private float turningSpeed;
-    [SerializeField]
-    private float manuverability;
-    [SerializeField]
-    private AI_Type desired_AI_Type;
     [SerializeField]
     public Faction Faction;
     [SerializeField]
@@ -37,6 +26,17 @@ public class Spaceship : Mobile
     public float NotificationRange = 50f;
     [SerializeField]
     public LayerMask NotificationLayerMask;
+    
+    [SerializeField]
+    private float engineAcceleration;
+    [SerializeField]
+    private float maxSpeed;
+    [SerializeField]
+    private float turningSpeed;
+    [SerializeField]
+    private float manuverability;
+    [SerializeField]
+    private AI_Type desired_AI_Type;
 
     public float EngineForce = 0;
 
@@ -61,8 +61,7 @@ public class Spaceship : Mobile
         }
 
         pilot.SensorArray = mySensorArray;
-
-        engineRunSpeed = 0;
+        
         targetSpeed = -999;
         throttle_input = 0;
         old_throttleInput = 0;
@@ -109,9 +108,6 @@ public class Spaceship : Mobile
         {
             UpdateDerivatives();
             base.Update();
-
-            direction = transform.forward;
-            velocity = engineRunSpeed;
 
             float av = rigidbody.angularVelocity.y;
             float max_torq = TurningSpeed;
@@ -208,17 +204,7 @@ public class Spaceship : Mobile
         }
         return targets;
     }
-
-    private float getVelocityPercentage()
-    {
-        return (manuverability + Mathf.Abs(engineRunSpeed - maxSpeed) * (1-manuverability));
-    }
-
-    public float EngineRunSpeed
-    {
-        get { return engineRunSpeed; }
-        set { engineRunSpeed = value; }
-    }
+    
     public float EngineAcceleration
     {
         get { return engineAcceleration; }
