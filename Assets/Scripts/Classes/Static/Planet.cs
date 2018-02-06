@@ -6,6 +6,9 @@ using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using ShipInternals;
 
+/// <summary>
+/// A Base that belongs to a faction.  Sends out ships and trades resources.
+/// </summary>
 public partial class Planet : Static
 {
     [SerializeField]
@@ -44,6 +47,8 @@ public partial class Planet : Static
     [SerializeField]
     private CargoHold reservedStorage;
 
+    private Faction faction;
+
     void Awake()
     {
         WorkerShips = new List<GameObject>();
@@ -63,6 +68,7 @@ public partial class Planet : Static
         PlanetBTSetup();
         //behaviorTree; // Was causing compile errors
     }
+
 
     public void SetFaction(Faction f)
     {
@@ -102,12 +108,6 @@ public partial class Planet : Static
 
 
 	}
-
-    public void SpawnMiningShip()
-    {
-        var ship = (GameObject)Instantiate(Resources.Load("Prefabs/AI_ship"), this.transform.position, Quaternion.identity);
-        WorkerShips.Add(ship.gameObject);
-    }
 
     public void RandomizeSize()
     {
@@ -171,7 +171,11 @@ public partial class Planet : Static
         MyName = val;
     }
 
-    private void TickSelf()
+
+    /// <summary>
+    /// Called by Overseer.cs.  Not every planet has its Tick called at the same time.  You have been warned.
+    /// </summary>
+    public void Tick()
     {
         TickBuildings();
     }
@@ -222,4 +226,11 @@ public partial class Planet : Static
             return base.ToString();
         }
     }
+
+    protected new void OnDestroy()
+    {
+        base.OnDestroy();
+        listOfPlanetObjects.Remove(this);
+    }
+
 }

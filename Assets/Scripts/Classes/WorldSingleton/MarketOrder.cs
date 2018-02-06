@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using ShipInternals;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// An order to buy or sell for a given resource, by who, for whom, completion status.
+    /// </summary>
+    [Serializable]
     public class MarketOrder
     {
         public readonly Planet origin;
-        public CargoItem item;
         public Planet destination = null;
+        public CargoItem item;
         public bool Done = false;
+
+        private MarketOrder()
+        {
+
+        }
 
         public MarketOrder(Planet origin, CargoItem item)
         {
@@ -62,8 +70,19 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             item.Count += order.item.Count;
         }
+
+        public void Succeed()
+        {
+            origin.CompleteOrder(this);
+        }
+
+        public void Fail()
+        {
+            origin.FailOrder(this);
+        }
     }
 
+    [Serializable]
     public class MarketOrderComparer : IComparer<MarketOrder>
     {
         private Planet buyer;
@@ -77,7 +96,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             if (x.origin == null || y.origin == null)
             {
-                Debug.Log("wat");
+                Debug.Log("waat");
                 return 1;
             }
             Vector3 xPos = x.origin.transform.position;

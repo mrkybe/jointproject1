@@ -1,4 +1,5 @@
-﻿using ShipInternals;
+﻿using System.Collections.Generic;
+using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 
@@ -41,6 +42,21 @@ namespace Assets.Editor {
             {
                 myTarget.CalculateNetDemand();
             }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Spawn Gold Mining Ship"))
+            {
+                List<string> miningTargetList = new List<string>();
+                miningTargetList.Add("Gold");
+                Spaceship ship = myTarget.SpawnMiningShip(miningTargetList);
+            }
+            if (GUILayout.Button("and Select It"))
+            {
+                List<string> miningTargetList = new List<string>();
+                miningTargetList.Add("Gold");
+                Spaceship ship = myTarget.SpawnMiningShip(miningTargetList);
+                Selection.objects = new[] { ship.gameObject };
+            }
+            GUILayout.EndHorizontal();
 
             base.OnInspectorGUI();
         }
