@@ -71,13 +71,13 @@ namespace Assets.Scripts.Classes.Helper
 
         public void OnTriggerEnter(Collider collider)
         {
-            Debug.Log("Boop");
+            mySpaceshipScript.SensorEnter(collider);
 
         }
 
         public void OnTriggerExit(Collider collider)
         {
-            Debug.Log("Unboop");
+            mySpaceshipScript.SensorExit(collider);
         }
 
         private Vector3 randomRotationAxis;
@@ -88,10 +88,10 @@ namespace Assets.Scripts.Classes.Helper
             State = States.DEAD;
             myParticleSystem.Play();
             Quaternion randomSpin = Random.rotationUniform;
-            transform.rotation = Random.rotation;
+            //transform.rotation = Random.rotation;
 
             randomSpin.ToAngleAxis(out rotationSpeed, out randomRotationAxis);
-            rotationSpeed = (0.5f + Random.value) * 10f;
+            rotationSpeed = (0.5f + Random.value) * 20f;
         }
     }
 }

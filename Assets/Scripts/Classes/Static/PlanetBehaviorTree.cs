@@ -48,30 +48,6 @@ public partial class Planet: Static
         //behaviorTree.Start();
 	}
 
-	private void CreatePlanetBT()
-	{
-		/*return new Root (
-			new Sequence (
-				new Wait (1f + Random.value),
-				new Action (() => {
-					CalculateConsumableResources ();
-				}){ Label = "Calculate the resources needed for the market" },
-				new Action (() => {
-					CalculateUnwantedResource ();
-				}){ Label = "Calculate the resources that doesn't need" },
-				new Action (() => {
-					UpdateMarketSellingBuyingOrders();
-				}){ Label = "Update the market selling orders and buying orders" },
-				new Action (() => {
-					SendDeliveryShips ();
-				}){ Label = "Send delivery ships for sold resources if ships are available" },
-                new Action(() => {
-                    TickSelf();
-                }){ Label = "Tick Self" }
-            )
-		);*/
-	}
-
     private void UpdateEverything()
     {
         CalculateConsumableResources();

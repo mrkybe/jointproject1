@@ -58,7 +58,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 targetAngle = -targetAngle;
             }
 
-            Debug.Log(stoppingDistance);
             Vector3 temp = targetPosition - transform.position;
             
             stick = new Vector2(temp.x, temp.z).normalized;

@@ -143,7 +143,7 @@ public class Spaceship : Mobile
         rigidbody.velocity = rigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + rigidbody.transform.forward * rigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void SensorEnter(Collider other)
     {
         // New entity in sensor range.
         inSensorRange.Add(other.gameObject.transform.root.gameObject);
@@ -157,15 +157,15 @@ public class Spaceship : Mobile
         }
     }
 
-    public void CleanSensorList()
-    {
-        inSensorRange.RemoveAll(x => x == null);
-    }
-
-    public void OnTriggerExit(Collider other)
+    public void SensorExit(Collider other)
     {
         // Entity leaves sensor range.
         inSensorRange.Remove(other.gameObject.transform.root.gameObject);
+    }
+
+    public void SensorListRemoveNulls()
+    {
+        inSensorRange.RemoveAll(x => x == null);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public class Spaceship : Mobile
     public List<T> GetInSensorRange<T>()
     {
         List<T> targets = new List<T>();
-        CleanSensorList();
+        SensorListRemoveNulls(); // Entities aren't removed from the list if they are destroyed, so delete nulls first.
         for (int i = 0; i < inSensorRange.Count; i++)
         {
             T target = inSensorRange[i].GetComponent<T>();
@@ -194,7 +194,7 @@ public class Spaceship : Mobile
     public List<T> GetInInteractionRange<T>()
     {
         List<T> targets = new List<T>();
-        CleanSensorList();
+        SensorListRemoveNulls(); // Entities aren't removed from the list if they are destroyed, so delete nulls first.
         for (int i = 0; i < inSensorRange.Count; i++)
         {
             if (inSensorRange[i] != null)
