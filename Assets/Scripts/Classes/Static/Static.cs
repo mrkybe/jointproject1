@@ -14,7 +14,7 @@ namespace Assets.Scripts.Classes.Static
         public static List<Static> listOfStaticObjects = new List<Static>();
         Overseer BossScript;
 
-        public void Start()
+        protected void Start()
         {
             BossScript = GameObject.Find("Overseer").GetComponent<Overseer>();
             if(BossScript != null)
@@ -33,7 +33,12 @@ namespace Assets.Scripts.Classes.Static
         // Update is called once per frame
         protected void FixedUpdate ()
         {
-        
+
+        }
+
+        protected void OnDestroy()
+        {
+            listOfStaticObjects.Remove(this);
         }
     }
 }

@@ -3,456 +3,190 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
+using Assets.Behavior_Designer.Runtime.Variables;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
-using NPBehave;
 using ShipInternals;
-using Action = NPBehave.Action;
+using BehaviorDesigner.Runtime;
+using UnityEditor;
+
+/* AI_Patrol is the AI for the ships/fleets on the Overmap.
+ * It contains all of the atomic AI methods that are used by the AI behavior tree.
+ * It provides public functions for Factions/Planets to give orders through.
+ * These orders are fulfilled by replacing the current BehaviorTree with a new one.
+ */
 
 public class AI_Patrol : PilotInterface
 {
-    private Blackboard blackboard;
-    private Spaceship shipScript;
-    private Debugger debugger = null;
+    public ExternalBehaviorTree ExternalMiningBehaviorTree;
+    public ExternalBehaviorTree ExternalDeliveryBehaviorTree;
+    public ExternalBehaviorTree ExternalPirateBehaviorTree;
+
+    private SharedBool Alive;
+    private SharedBool HasVictim;
+    private SharedBool FreshKill;
+    private SharedBool Safe;
+    private SharedVector2 ControlStick;
+    private SharedFloat TargetSpeed;
+    private SharedPlanet HomePlanet;
+    private SharedSpaceship shipScript;
+    private SharedSpaceship AttackTarget;
+
+    private BehaviorTree behaviorTree;
+    private float interactionDistance = 5f;
+    private Rigidbody rigidbody;
+    public float Speed;
 
     // Use this for initialization
-    void Awake()
+    public void Awake()
     {
-        shipScript = transform.GetComponent<Spaceship>();
-
-#if UNITY_EDITOR
-        if (debugger == null)
+        behaviorTree = transform.GetComponent<BehaviorTree>();
+        if (!behaviorTree)
         {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+            behaviorTree = gameObject.AddComponent<BehaviorTree>();
+            behaviorTree.ExternalBehavior = ExternalMiningBehaviorTree;
+            behaviorTree.StartWhenEnabled = true;
         }
-#endif
     }
 
-    void Start()
+    private void InitializeBehaviorTreeVariableReferences()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+
+        Alive = (SharedBool)behaviorTree.GetVariable("Alive");
+        ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
+        TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
+        HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
+        shipScript = (SharedSpaceship)behaviorTree.GetVariable("Shipscript");
+
+        shipScript.Value = transform.GetComponent<Spaceship>();
+    }
+
+    public new void Start()
     {
         base.Start();
+        InitializeBehaviorTreeVariableReferences();
     }
 
-    public void StartMining(string targetName)
+    public new void Update()
     {
-        behaviorTree = CreateBehaviourTreeDumbMining();
-
-        blackboard = behaviorTree.Blackboard;
-        blackboard["miningTarget"] = targetName;
-
-        // temporarily use this as the home base until we have a better system
-        BlackboardSetNearestPlanet();
-
-#if UNITY_EDITOR
-        if (debugger == null)
+        base.Update();
+        Speed = rigidbody.velocity.magnitude;
+        targetFaceDirection = new Vector3(ControlStick.Value.x, 0, ControlStick.Value.y);
+        if (ControlStick.Value.sqrMagnitude <= 0.001)
         {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
+            targetFaceDirection = transform.forward;
         }
-        debugger.BehaviorTree = behaviorTree;
-#endif
+        targetSpeed = TargetSpeed.Value;
+        float ratio = Mathf.Clamp((targetSpeed - Speed), -1.0f, 1.0f);
+        if (float.IsNaN(ratio))
+        {
+            ratio = 0;
+        }
+        throttle = (ratio) * shipScript.Value.EngineAcceleration;
+    }
+
+    /// <summary>
+    /// Returns the Shipscript that I am the pilot of.
+    /// </summary>
+    /// <returns></returns>
+    public Spaceship GetShip()
+    {
+        return shipScript.Value;
+    }
+
+    /// <summary>
+    /// Returns the Behavior Tree script that makes my decisions.
+    /// </summary>
+    /// <returns></returns>
+    public BehaviorTree GetBehaviorTree()
+    {
+        return behaviorTree;
+    }
+
+    /// <summary>
+    /// Sets the Behavior Tree the one for mining.
+    /// </summary>
+    /// <param name="miningTargets">The kind of resources to mine.</param>
+    /// <param name="homePlanet">The planet we drop off resources at.</param>
+    public void StartMining(List<string> miningTargets, Planet homePlanet)
+    {
+        behaviorTree.ExternalBehavior = ExternalMiningBehaviorTree;
+        InitializeBehaviorTreeVariableReferences();
+
+        HomePlanet.Value = homePlanet;
+        behaviorTree.GetVariable("MiningTargets").SetValue(miningTargets);
+
         behaviorTree.Start();
     }
 
+    /// <summary>
+    /// Sets the Behavior Tree the one for delivering an order.
+    /// </summary>
+    /// <param name="order">The order that the ship is responsible for completing.</param>
     public void StartDelivery(MarketOrder order)
     {
-        if (behaviorTree != null)
-        {
-            behaviorTree.Stop();
-        }
-        else
-        {
-            behaviorTree = CreateBehaviourTreeDumbDelivery();
-            blackboard = behaviorTree.Blackboard;
-        }
+        behaviorTree.ExternalBehavior = ExternalDeliveryBehaviorTree;
+        InitializeBehaviorTreeVariableReferences();
 
-        blackboard["deliveryOrder"] = order;
-        blackboard["homePlanet"] = order.origin;
-        blackboard["deliveryPlanet"] = order.destination;
-
-#if UNITY_EDITOR
-        if (debugger == null)
-        {
-            debugger = (Debugger)this.gameObject.AddComponent(typeof(Debugger));
-        }
-        debugger.BehaviorTree = behaviorTree;
-#endif
+        HomePlanet.Value = order.origin;
+        behaviorTree.GetVariable("DeliveryOrder").SetValue(order);
+        behaviorTree.GetVariable("DeliveryPlanet").SetValue(order.destination);
         behaviorTree.Start();
     }
 
-    private Root CreateBehaviorTreePirate()
+    /// <summary>
+    /// Sets the Behavior Tree to the one for piracy.
+    /// </summary>
+    public void StartPirate()
     {
-        return new Root(
-            new Sequence(
-                new Wait(1f)
-            )
-        );
+        behaviorTree.ExternalBehavior = ExternalPirateBehaviorTree;
+        InitializeBehaviorTreeVariableReferences();
+
+        AttackTarget = (SharedSpaceship)behaviorTree.GetVariable("AttackTarget");
+        HasVictim = (SharedBool)behaviorTree.GetVariable("HasVictim");
+        FreshKill = (SharedBool)behaviorTree.GetVariable("FreshKill");
+
+        AttackTarget.Value = null;
+        HasVictim.Value = false;
+        FreshKill.Value = false;
+
+        shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
+        behaviorTree.Start();
     }
 
-    private List<Vector3> GetHuntingAreas()
+    /// <summary>
+    /// This kills the Pilot.  Sets a Flag in the Blackboard for being dead,
+    /// Behavior Trees must clean up after themselves and go into their dead state.
+    /// </summary>
+    public override void Die()
     {
-        List<Vector3> huntingPositions = new List<Vector3>();
-        foreach (Planet p in Planet.listOfPlanetObjects)
-        {
-            List<Planet> nearestPlanets = new List<Planet>(Planet.listOfPlanetObjects);
-            nearestPlanets.Remove(p);
-            Planet.PlanetComparer sortComparer = new Planet.PlanetComparer(p);
-            nearestPlanets.Sort(sortComparer);
-            for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
-            {
-                Vector3 posA = p.transform.position;
-                Vector3 posB = nearestPlanets[i].transform.position;
-                Vector3 newPosition = (posA + posB) / 2;
-                huntingPositions.Add(newPosition);
-            }
-        }
-        return huntingPositions;
-    } 
-
-    private Root CreateBehaviourTreeDumbDelivery()
-    {
-        return new Root(
-            new Sequence(
-                new Wait(1f),
-                new Action(() =>
-                    {
-                        targetPosition = blackboard.Get<Planet>("deliveryPlanet").transform.position;
-                    })
-                { Label = "Set target position to go to drop off planet" },
-                new Service(0.5f, UpdateDistanceToTarget,
-                    new Action((bool shouldCancel) =>
-                        {
-                            if (!shouldCancel)
-                            {
-                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                if (blackboard.Get<float>("targetDistance") < 5f)
-                                {
-                                    return Action.Result.SUCCESS;
-                                }
-                                return Action.Result.PROGRESS;
-                            }
-                            else
-                            {
-                                return Action.Result.FAILED;
-                            }
-                        })
-                    { Label = "Go to target" }
-                ),
-                new Action(() =>
-                    {
-                        DropOffResource(blackboard.Get<MarketOrder>("deliveryOrder"));
-                    })
-                { Label = "Dropping off resources" },
-                new Action(() =>
-                    {
-                        targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
-                    })
-                { Label = "Set target position to go home" },
-                new Service(0.5f, UpdateDistanceToTarget,
-                    new Action((bool shouldCancel) =>
-                        {
-                            if (!shouldCancel)
-                            {
-                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                if (blackboard.Get<float>("targetDistance") < 5f)
-                                {
-                                    return Action.Result.SUCCESS;
-                                }
-                                return Action.Result.PROGRESS;
-                            }
-                            else
-                            {
-                                return Action.Result.FAILED;
-                            }
-                        })
-                    { Label = "Go to target planet" }
-                ),
-                new Action(() =>
-                    {
-                        Planet nearest = GetNearestPlanet();
-                        nearest.AddToAvailableDeliveryShips(this);
-                        blackboard["arriveTime"] = Time.time;
-                    })
-                { Label = "Dock with planet" },
-                new Service(0.5f, UpdateDistanceToTarget,
-                    new Action((bool shouldCancel) =>
-                        {
-                            if (!shouldCancel)
-                            {
-                                MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                if (Time.time - blackboard.Get<float>("arriveTime") > 5f)
-                                {
-                                    Debug.Log("ARRIVED!!!! " + (Time.time - blackboard.Get<float>("arriveTime")));
-                                    return Action.Result.SUCCESS;
-                                }
-                                return Action.Result.PROGRESS;
-                            }
-                            else
-                            {
-                                return Action.Result.FAILED;
-                            }
-                        })
-                        { Label = "Wait at target position for 5 seconds" }
-                ),
-                new Action(() =>
-                    {
-                        Planet nearest = GetNearestPlanet();
-                        nearest.ReturnDeliveryShip(this);
-                        behaviorTree.Stop();
-                        Destroy(this.gameObject);
-                    })
-                { Label = "Dock with planet" }
-            )
-        );
+        Alive.SetValue(false);
     }
 
-    private Root CreateBehaviourTreeDumbMining()
+    public override void NotifyKilled(Spaceship victim, Spaceship killer = null)
     {
-        return new Root(
-            new Sequence(
-                    new Wait(1f),
-                    new Action(() =>
-                               {
-                                   FindNearestAsteroidField();
-                                   targetPosition = blackboard.Get<AsteroidField>("nearestAsteroidField").transform.position;
-                               })
-                    { Label = "Find Nearest Asteroid Field" },
-                    new Service(0.5f, UpdateDistanceToTarget,
-                        new Action((bool shouldCancel) =>
-                                   {
-                                       if (!shouldCancel)
-                                       {
-                                           MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                           if (blackboard.Get<float>("targetDistance") < 5f)
-                                           {
-                                               return Action.Result.SUCCESS;
-                                           }
-                                           return Action.Result.PROGRESS;
-                                       }
-                                       else
-                                       {
-                                           return Action.Result.FAILED;
-                                       }
-                                   })
-                        { Label = "Go to target" }
-                    ),
-                    new Succeeder(new Repeater(new Cooldown(0.1f,
-                        new Action((bool shouldCancel) =>
-                                   {
-                                       control_stickDirection = new Vector2();
-                                       targetSpeed = 0;
-                                       int spaceRemaining = shipScript.GetCargoHold.GetRemainingSpace();
-                                       if (spaceRemaining == 0)
-                                       {
-                                           blackboard.Set("cargoHoldFull", true);
-                                       }
-                                       int mined = Mine("Gold");
-                                       if (mined > 0)
-                                       {
-                                           return Action.Result.SUCCESS;
-                                       }
-                                       else
-                                       {
-                                           return Action.Result.FAILED; // this should search for minable asteroid fields better
-                                       }
-                                   })
-                        { Label = "Mining" }
-                    ))),
-                    new Action(() =>
-                               {
-                                   targetPosition = blackboard.Get<Planet>("homePlanet").transform.position;
-                               })
-                    { Label = "Set target position to go home" },
-                    new Service(0.5f, UpdateDistanceToTarget,
-                        new Action((bool shouldCancel) =>
-                                    {
-                                        if (!shouldCancel)
-                                        {
-                                            MoveTowards(blackboard.Get<Vector3>("targetPos"));
-                                            if (blackboard.Get<float>("targetDistance") < 5f)
-                                            {
-                                                return Action.Result.SUCCESS;
-                                            }
-                                            return Action.Result.PROGRESS;
-                                        }
-                                        else
-                                        {
-                                            return Action.Result.FAILED;
-                                        }
-                                    })
-                        { Label = "Go to target planet" }
-                        ),
-                    new Action(() =>
-                               {
-                                   DropOffResource("Gold");
-                                   FindNearestAsteroidField();
-                               })
-                    { Label = "Dropping off resources" }
-                    )
-        );
-    }
-
-    private void FindNearestAsteroidField()
-    {
-        float nearestDistance = float.MaxValue;
-        bool found = false;
-
-        // faster to use optimized physics engine and narrow down our list of objects to check
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 100f, Vector3.up);
-
-        if (hits.Length > 0)
+        base.NotifyKilled(victim, killer);
+        if (AttackTarget != null && HasVictim != null && AttackTarget.Value == victim)
         {
-            //Debug.Log("Checking Hits!");
-            foreach (var hit in hits)
+            AttackTarget.Value = null;
+            HasVictim.Value = false;
+            if (killer == shipScript.Value)
             {
-                AsteroidField one = hit.transform.gameObject.GetComponent<AsteroidField>();
-                if (one)
-                {
-                    if ((transform.position - one.transform.position).magnitude < nearestDistance)
-                    {
-                        string miningTarget = blackboard.Get<String>("miningTarget");
-                        if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                        {
-                            blackboard["nearestAsteroidField"] = one;
-                            nearestDistance = (transform.position - one.transform.position).magnitude;
-                            targetPosition = one.transform.position;
-                            found = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (!found)
-        {
-            //Debug.Log("Checking All Asteroids!");
-            foreach (var one in AsteroidField.listOfAsteroidFields)
-            {
-                if ((transform.position - one.transform.position).magnitude < nearestDistance)
-                {
-                    string miningTarget = blackboard.Get<String>("miningTarget");
-                    if (one.GetCargoHold.Contains(miningTarget) && one.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                    {
-                        blackboard["nearestAsteroidField"] = one;
-                        nearestDistance = (transform.position - one.transform.position).magnitude;
-                        targetPosition = one.transform.position;
-                    }
-                }
+                FreshKill.Value = true;
             }
         }
     }
 
-    private void BlackboardSetNearestPlanet()
+    public void NotifyShip(Spaceship contact)
     {
-        blackboard.Set("homePlanet", GetNearestPlanet());
-    }
-
-    private Planet GetNearestPlanet()
-    {
-        Planet bestPlanet = null;
-        float nearestDistance = float.MaxValue;
-        foreach (var one in Planet.listOfPlanetObjects)
+        if (HasVictim != null && AttackTarget != null && FreshKill != null)
         {
-            if ((transform.position - one.transform.position).magnitude < nearestDistance)
+            if (contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)
             {
-                bestPlanet = one;
-                nearestDistance = (transform.position - one.transform.position).magnitude;
+                HasVictim.Value = true;
+                AttackTarget.Value = contact;
             }
         }
-        return bestPlanet;
-    }
-
-    private void UpdateCargoHoldSpaceRemaining()
-    {
-        blackboard["cargoSpaceRemaining"] = shipScript.GetCargoHold.GetRemainingSpace();
-    }
-
-    Vector3 targetPosition = Vector3.zero;
-    private void UpdateDistanceToTarget()
-    {
-        Vector3 targetPos = targetPosition;
-        behaviorTree.Blackboard["targetPos"] = targetPos;
-        Vector3 targetLocalPos = targetPosition - this.transform.position;
-        behaviorTree.Blackboard["targetDistance"] = targetLocalPos.magnitude;
-    }
-
-    private void MoveTowards(Vector3 position)
-    {
-        Vector2 stick = new Vector2();
-        float targetAngle = Vector3.Angle((transform.forward).normalized, (position - transform.position).normalized);
-        if (isLeft(transform.position, transform.position + transform.forward * 500, position))
-        {
-            targetAngle = -targetAngle;
-        }
-
-        targetSpeed = Mathf.Clamp((Mathf.Clamp01(1 - (Mathf.Abs(targetAngle) / 60)) * 3), 0f, 10f);
-
-        //Debug.Log(targetSpeed);
-        Vector3 temp = position - transform.position;
-
-        // TODO:  Make this more accurate by using _parent.transform.forward - target position.
-        /*if (temp.magnitude < mySensorArray.StoppingDistance)
-        {
-            bool slowDown = true;
-        }*/
-        //temp = temp.normalized + _parent.transform.forward;
-        stick = new Vector2(temp.x, temp.z);
-        Debug.DrawLine(transform.position, position);
-        Debug.DrawLine(transform.position, transform.position + transform.forward);
-        stick.y = 0;
-        stick.x = targetAngle / 10;
-
-        stick.x = Mathf.Clamp(stick.x, -1f, 1f);
-        stick.y = Mathf.Clamp(stick.y, -1f, 1f);
-
-        control_stickDirection = stick;
-    }
-
-    private int Mine(String miningTarget)
-    {
-        int mineAmount = 1;
-        int minedAmount = 0;
-        if (shipScript != null)
-        {
-            List<Static> targets = shipScript.GetStaticInRange();
-            List<AsteroidField> newTargets = new List<AsteroidField>();
-            AsteroidField finalTarget;
-            Debug.Log("Targets available: " + targets.Count);
-            for (int i = 0; i < targets.Count; i++)
-            {
-                if (targets[i].GetType() == typeof(AsteroidField))
-                {
-                    finalTarget = targets[i] as AsteroidField;
-                    if (finalTarget.GetCargoHold.Contains(miningTarget) &&
-                        finalTarget.GetCargoHold.GetAmountInHold(miningTarget) > 0)
-                    {
-                        newTargets.Add((AsteroidField)targets[i]);
-                    }
-                }
-
-            }
-            if (newTargets.Count >= 1)
-            {
-                finalTarget = newTargets[0];
-                minedAmount = shipScript.GetCargoHold.Credit(miningTarget, finalTarget.GetCargoHold, mineAmount);
-                Debug.Log("Taking Cargo");
-            }
-        }
-
-        return minedAmount;
-    }
-
-    private int DropOffResource(String type)
-    {
-        return GetNearestPlanet().GetCargoHold.Credit(type, shipScript.GetCargoHold, shipScript.GetCargoHold.GetAmountInHold(type), true);
-    }
-
-    private void DropOffResource(MarketOrder type)
-    {
-        DropOffResource(type.item.Name);
-        //throw new NotImplementedException();
-    }
-
-    public bool isLeft(Vector3 pos1, Vector3 pos2, Vector3 checkPoint)
-    {
-        return ((pos2.x - pos1.x) * (checkPoint.z - pos1.z) - (pos2.z - pos1.z) * (checkPoint.x - pos1.x)) > 0;
     }
 }
