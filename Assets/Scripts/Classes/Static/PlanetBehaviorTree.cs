@@ -44,9 +44,10 @@ public partial class Planet: Static
 	    deliveryFailedList = new List<MarketOrder>();
         ReadyDeliveryShips = new List<GameObject>();
         DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
-        InvokeRepeating("UpdateEverything", 1, 1);
+        InvokeRepeating("UpdateEverything", 1, 0.75f + (Random.value/2f));
+        
         //behaviorTree.Start();
-	}
+    }
 
     private void UpdateEverything()
     {
@@ -54,7 +55,6 @@ public partial class Planet: Static
         CalculateUnwantedResource();
         UpdateMarketSellingBuyingOrders();
         SendDeliveryShips();
-        TickSelf();
     }
 
     private void CalculateConsumableResources()

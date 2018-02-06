@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviorDesigner.Runtime;
@@ -51,6 +52,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreatePlanetNodes();
             CreateSky();
             CreateMarket();
+
+            InvokeRepeating("TickPlanets", 1f, 1f);
         }
 
         new void Start()
@@ -244,6 +247,38 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 // 
             }
             return true;
+        }
+
+        void FixedUpdate()
+        {
+            if (inTime)
+            {
+            }
+        }
+
+        private void TickPlanets()
+        {
+            StartCoroutine(TickPlanetsCoroutine());
+        }
+
+        private IEnumerator TickPlanetsCoroutine()
+        {
+            int counter = 0;
+            int planets_to_do_per_iteration = 10;
+            foreach (Planet p in Planet.listOfPlanetObjects)
+            {
+                if (counter > planets_to_do_per_iteration)
+                {
+                    counter = 0;
+                    yield return null;
+                }
+                else
+                {
+                    p.Tick();
+                    counter++;
+                }
+            }
+            MatchOrders();
         }
 
         // Update is called once per frame

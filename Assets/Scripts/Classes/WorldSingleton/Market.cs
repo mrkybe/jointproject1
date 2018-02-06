@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -59,11 +60,20 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public void StartMatchingOrders()
         {
-            InvokeRepeating("MatchOrders", 1f, 1f);
+            //InvokeRepeating("MatchOrders", 1f, 1f);
         }
-        
+
         public void MatchOrders()
         {
+            StartCoroutine(MatchOrdersCoroutine());
+        }
+
+        private DateTime orderMatchingStartTime = DateTime.Now;
+        public IEnumerator MatchOrdersCoroutine()
+        {
+            float dt = Time.unscaledDeltaTime;
+            orderMatchingStartTime = System.DateTime.Now;
+
             List<MarketOrder> buyOrdersFilled = new List<MarketOrder>();
             List<MarketOrder> sellOrdersFilled = new List<MarketOrder>();
             List<MarketOrder> resultOrders = new List<MarketOrder>();
@@ -126,6 +136,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 if (currentBuyOrder.Done)
                 {
                     buyOrdersFilled.Add(currentBuyOrder);
+                }
+
+                double timeElapsed = (DateTime.Now - orderMatchingStartTime).TotalSeconds;
+                if (timeElapsed >= 0.5f * dt)
+                {
+                    yield return null;
                 }
             }
 

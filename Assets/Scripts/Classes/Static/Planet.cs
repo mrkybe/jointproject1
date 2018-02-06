@@ -171,7 +171,11 @@ public partial class Planet : Static
         MyName = val;
     }
 
-    private void TickSelf()
+
+    /// <summary>
+    /// Called by Overseer.cs.  Not every planet has its Tick called at the same time.  You have been warned.
+    /// </summary>
+    public void Tick()
     {
         TickBuildings();
     }
