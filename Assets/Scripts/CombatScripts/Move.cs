@@ -14,18 +14,20 @@ public class Move : MonoBehaviour {
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+		mouse = true;
     }
 
 	void Update()
 	{
-		//timeMove ();
+		timeMove ();
 		mouseLook ();
+		//checkCont ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		forceMove ();
-		checkCont ();
+		//forceMove ();
+
     }
 
 	//movement based on time
@@ -36,7 +38,7 @@ public class Move : MonoBehaviour {
 
 		Vector3 move = new Vector3 (x, 0, z);
 
-		transform.position += move * speed * Time.deltaTime;
+		transform.position += move * speed / Time.deltaTime;
 
 		float rx = Input.GetAxis("HorizontalR");
 		float rz = Input.GetAxis("VerticalR");
