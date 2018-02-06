@@ -6,18 +6,11 @@ using ShipInternals;
 
 public abstract class PilotInterface : MonoBehaviour
 {
-    protected SensorArray mySensorArray;
     protected Vector2 control_stickDirection;
     protected Vector3 targetFaceDirection;
     protected Vector3 targetVelocity;
     protected float targetSpeed;
     protected float throttle = 0f;
-
-    public SensorArray SensorArray
-    {
-        get { return mySensorArray; }
-        set { mySensorArray = value; }
-    }
 
     // Use this for initialization
     protected void Start()

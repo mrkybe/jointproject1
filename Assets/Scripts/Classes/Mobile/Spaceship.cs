@@ -44,7 +44,6 @@ public class Spaceship : Mobile
     private float throttle_input;
     private float old_throttleInput;
     private CargoHold myStorage;
-    private SensorArray mySensorArray;
     private ModelSwitcher myModelSwitcher;
     // Use this for initialization
 
@@ -59,8 +58,6 @@ public class Spaceship : Mobile
         {
             pilot = GetComponent<PlayerPilot>();
         }
-
-        pilot.SensorArray = mySensorArray;
         
         targetSpeed = -999;
         throttle_input = 0;
@@ -75,8 +72,7 @@ public class Spaceship : Mobile
             targetSpeed = 0;
         }
         myStorage = new CargoHold(100);
-
-        mySensorArray = new SensorArray(gameObject);
+        
         modelChoice = (int)(Random.value * 11);
     }
 
