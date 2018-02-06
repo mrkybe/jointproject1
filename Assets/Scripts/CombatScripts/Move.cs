@@ -21,25 +21,14 @@ public class Move : MonoBehaviour {
 	void Update()
 	{
 		timeMove ();
-<<<<<<< HEAD
-		mouseLook ();
-		//checkCont ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		//forceMove ();
-
-=======
+		rb.velocity = velocity;
         look();
     }
-	// Update is called once per frame
-	void FixedUpdate ()
-    {
-        //forceMove ();
-        rb.velocity = velocity;
->>>>>>> f76b674d8e5be778ba68add3d33a9b72225fd6cf
-    }
+
 
 	//movement based on time
 	void timeMove()
@@ -48,9 +37,6 @@ public class Move : MonoBehaviour {
 		float z = Input.GetAxisRaw("Vertical");
 
 		Vector3 move = new Vector3 (x, 0, z);
-<<<<<<< HEAD
-
-		transform.position += move * speed / Time.deltaTime;
 
 		float rx = Input.GetAxis("HorizontalR");
 		float rz = Input.GetAxis("VerticalR");
@@ -58,9 +44,7 @@ public class Move : MonoBehaviour {
 		float angle = Mathf.Atan2 (rx, rz) * Mathf.Rad2Deg;
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
-=======
         velocity = move * speed;
->>>>>>> f76b674d8e5be778ba68add3d33a9b72225fd6cf
 	}
 
     //movement based on forces, requires and FixedUpdate
