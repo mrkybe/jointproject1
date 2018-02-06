@@ -14,31 +14,20 @@ public class Move : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
-		mouse = true;
+		rb = gameObject.GetComponent<Rigidbody>();
     }
 
 	void Update()
 	{
 		timeMove ();
-<<<<<<< HEAD
-		mouseLook ();
 		//checkCont ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
 		//forceMove ();
-
-=======
+		rb.velocity = velocity;
         look();
-    }
-	// Update is called once per frame
-	void FixedUpdate ()
-    {
-        //forceMove ();
-        rb.velocity = velocity;
->>>>>>> f76b674d8e5be778ba68add3d33a9b72225fd6cf
     }
 
 	//movement based on time
@@ -48,30 +37,19 @@ public class Move : MonoBehaviour {
 		float z = Input.GetAxisRaw("Vertical");
 
 		Vector3 move = new Vector3 (x, 0, z);
-<<<<<<< HEAD
 
-		transform.position += move * speed / Time.deltaTime;
-
+		//transform.position += move * speed / Time.deltaTime;
+		/*
 		float rx = Input.GetAxis("HorizontalR");
 		float rz = Input.GetAxis("VerticalR");
 
 		float angle = Mathf.Atan2 (rx, rz) * Mathf.Rad2Deg;
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
-=======
-        velocity = move * speed;
->>>>>>> f76b674d8e5be778ba68add3d33a9b72225fd6cf
+        */
+		velocity = move * speed;
 	}
-
-    //movement based on forces, requires and FixedUpdate
-    void forceMove()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        Vector3 movement = new Vector3(x, 0, y);
-        rb.AddForce(movement * speed / Time.deltaTime);
-    }
+		
 
     void look()
     {
