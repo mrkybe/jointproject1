@@ -105,6 +105,8 @@ public class Spaceship : Mobile
             UpdateDerivatives();
             base.Update();
 
+            direction = transform.forward;
+
             float av = rigidbody.angularVelocity.y;
             float max_torq = TurningSpeed;
             float nT = (dTorquey / 2f);
