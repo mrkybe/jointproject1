@@ -13,7 +13,6 @@ namespace Assets.Scripts.Classes.Mobile {
     [SelectionBase]
     public class Spaceship : MonoBehaviour
     {
-        private float engineRunSpeed;
         [SerializeField]
         private float engineAcceleration;
         [SerializeField]
@@ -65,15 +64,14 @@ namespace Assets.Scripts.Classes.Mobile {
         public List<GameObject> inSensorRange = new List<GameObject>();
 
         private int modelChoice = 0;
-        void Awake()
+        private void Awake()
         {
             pilot = GetComponent<AI_Patrol>();
             if (pilot == null)
             {
                 pilot = GetComponent<PlayerPilot>();
             }
-
-            engineRunSpeed = 0;
+            
             targetSpeed = -999;
             throttle_input = 0;
             old_throttleInput = 0;
@@ -90,7 +88,7 @@ namespace Assets.Scripts.Classes.Mobile {
             modelChoice = (int)(Random.value * 11);
         }
 
-        void Start ()
+        private void Start ()
         {
             inTime = true;
             MyRigidbody = GetComponent<Rigidbody>();
@@ -113,14 +111,14 @@ namespace Assets.Scripts.Classes.Mobile {
             dAngularVelocity = (MyRigidbody.angularVelocity - old_angularVelocity) / Time.fixedDeltaTime;
         }
 
-        void Update ()
+        private void Update ()
         {
             if (inTime && pilot)
             {
                 UpdateDerivatives();
 
                 direction = transform.forward;
-                velocity = engineRunSpeed;
+                //velocity = engineRunSpeed;
 
                 float av = MyRigidbody.angularVelocity.y;
                 float max_torq = TurningSpeed;
@@ -151,7 +149,11 @@ namespace Assets.Scripts.Classes.Mobile {
             float dot = Vector3.Dot(MyRigidbody.velocity.normalized, MyRigidbody.transform.forward);
             MyRigidbody.velocity = MyRigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + MyRigidbody.transform.forward * MyRigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
         }
-
+        
+        /// <summary>
+        /// Unregisters a collider that entered the ship's sensor range.
+        /// </summary>
+        /// <param name="other"></param>
         public void SensorEnter(Collider other)
         {
             // New entity in sensor range.
@@ -166,13 +168,17 @@ namespace Assets.Scripts.Classes.Mobile {
             }
         }
 
+        /// <summary>
+        /// Registers a collider that enters the ship's sensor range.
+        /// </summary>
+        /// <param name="other"></param>
         public void SensorExit(Collider other)
         {
             // Entity leaves sensor range.
             inSensorRange.Remove(other.gameObject.transform.root.gameObject);
         }
-
-        public void SensorListRemoveNulls()
+        
+        private void SensorListRemoveNulls()
         {
             inSensorRange.RemoveAll(x => x == null);
         }
@@ -180,7 +186,6 @@ namespace Assets.Scripts.Classes.Mobile {
         /// <summary>
         /// Returns a list of specified entities in sensor range.
         /// </summary>
-        /// <returns></returns>
         public List<T> GetInSensorRange<T>()
         {
             List<T> targets = new List<T>();
@@ -199,7 +204,6 @@ namespace Assets.Scripts.Classes.Mobile {
         /// <summary>
         /// Returns a list of specified entities in interaction range.
         /// </summary>
-        /// <returns></returns>
         public List<T> GetInInteractionRange<T>()
         {
             List<T> targets = new List<T>();
@@ -218,44 +222,54 @@ namespace Assets.Scripts.Classes.Mobile {
             return targets;
         }
 
-        private float getVelocityPercentage()
-        {
-            return (manuverability + Mathf.Abs(engineRunSpeed - maxSpeed) * (1-manuverability));
-        }
-
-        public float EngineRunSpeed
-        {
-            get { return engineRunSpeed; }
-            set { engineRunSpeed = value; }
-        }
+        /// <summary>
+        /// Returns how acceleration of the ship.
+        /// </summary>
         public float EngineAcceleration
         {
             get { return engineAcceleration; }
             set { engineAcceleration = value; }
         }
+
+        /// <summary>
+        /// Returns the max speed of the ship.
+        /// </summary>
         public float MaxSpeed
         {
             get { return maxSpeed; }
             set { maxSpeed = value; }
         }
+
+        /// <summary>
+        /// Returns the turning speed of the ship.
+        /// </summary>
         public float TurningSpeed
         {
             get { return turningSpeed; }
             set { turningSpeed = value; }
         }
-
+        
+        /// <summary>
+        /// Returns the manuverability of the ship.
+        /// </summary>
         public float Manuverability
         {
             get { return manuverability; }
             set { manuverability = value; }
         }
-
+        
+        /// <summary>
+        /// Returns the speed the ship is trying to reach.
+        /// </summary>
         public float TargetSpeed
         {
             get { return targetSpeed; }
             set { targetSpeed = value; }
         }
 
+        /// <summary>
+        /// Returns the Throttle input by the pilot.
+        /// </summary>
         public float ThrottleInput
         {
             get
@@ -267,32 +281,49 @@ namespace Assets.Scripts.Classes.Mobile {
                 else return 0;
             }
         }
-
+        
+        /// <summary>
+        /// Returns the ship's Cargohold.
+        /// </summary>
         public CargoHold GetCargoHold
         {
             get { return myStorage; }
         }
 
+        /// <summary>
+        /// Returns the ship's pilot.
+        /// </summary>
         public PilotInterface GetPilot
         {
             get { return pilot; }
         }
 
-        public bool Alive { get; internal set; }
+        /// <summary>
+        /// Is the ship alive?
+        /// </summary>
+        public bool Alive
+        {
+            get; internal set;
+        }
 
         /// <summary>
         /// Returns how scary another ship is compared to mine.
         /// </summary>
-        /// <param name="other"></param>
+        /// <param name="other">The source of the scaryness.</param>
         /// <returns></returns>
         public int GetScaryness(Spaceship other)
         {
             return PowerLevel - other.PowerLevel;
         }
 
-        public void TakeDamage(int i, Spaceship source = null)
+        /// <summary>
+        /// Deals damage to the ship, dies upon reaching 0 health.
+        /// </summary>
+        /// <param name="damage">Amount of damage, (postive integer).</param>
+        /// <param name="source">Source of damage.</param>
+        public void TakeDamage(int damage, Spaceship source = null)
         {
-            HullHealth -= i;
+            HullHealth -= damage;
             if (HullHealth <= 0)
             {
                 if (source != null)
@@ -302,6 +333,7 @@ namespace Assets.Scripts.Classes.Mobile {
                 Die();
             }
         }
+
 
         private void Die(Spaceship killer = null)
         {
