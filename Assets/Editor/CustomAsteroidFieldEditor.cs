@@ -13,7 +13,7 @@ namespace Assets.Editor {
             serializedObject.Update();
 
             AsteroidField myTarget = (AsteroidField)target;
-            hold = myTarget.GetCargoHold;
+            hold = myTarget.CargoHold;
 
             if (hold != null)
             {

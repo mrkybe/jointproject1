@@ -110,3 +110,5 @@
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEngine.StandardEvents.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Xcode.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Xcode.xml
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/BehaviorDesignerEditor.dll
+/Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/BehaviorDesignerRuntime.dll

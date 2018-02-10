@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
+    /// <summary>
+    /// A single Faction.  Tracks what belongs to it, who its at war with.
+    /// </summary>
     public class Faction
     {
         public String Name;
@@ -58,6 +61,21 @@ namespace Assets.Scripts.Classes.WorldSingleton
             {
                 OwnedPlanets.Add(planet);
             }
+        }
+
+        public bool HostileWith(Faction myFaction)
+        {
+            foreach (FactionLink link in MyLinks)
+            {
+                if (link.a == myFaction || link.b == myFaction)
+                {
+                    if (link.Friendlyness < 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 

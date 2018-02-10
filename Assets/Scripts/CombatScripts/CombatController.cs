@@ -13,10 +13,7 @@ public class CombatController : MonoBehaviour {
 	public float waveWait;
 	// Use this for initialization
 	void Start () {
-		
 		StartCoroutine (SpawnWaves ());
-
-
 	}
 	IEnumerator SpawnWaves ()
 	{

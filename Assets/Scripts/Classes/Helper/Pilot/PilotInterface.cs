@@ -2,48 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using AI_Missions;
-using NPBehave;
 using ShipInternals;
 
 public abstract class PilotInterface : MonoBehaviour
 {
-    protected SensorArray mySensorArray;
-    protected Planet homePlanet;
     protected Vector2 control_stickDirection;
+    protected Vector3 targetFaceDirection;
+    protected Vector3 targetVelocity;
     protected float targetSpeed;
-    protected Root behaviorTree;
-
-    public SensorArray SensorArray
-    {
-        get { return mySensorArray; }
-        set { mySensorArray = value; }
-    }
+    protected float throttle = 0f;
 
     // Use this for initialization
     protected void Start()
     {
         control_stickDirection = new Vector2();
-        targetSpeed = 0;
+        targetFaceDirection = transform.forward;
+        targetVelocity = Vector3.zero;
+        throttle = 0f;
+        targetSpeed = 0f;
 	}
 
     protected void Update()
     {
-
-	}
-
-    public Vector3 Direction
-    {
-        get { return control_stickDirection.normalized; }
+        Debug.DrawLine(transform.position, transform.position + targetFaceDirection * 5f, Color.cyan);
     }
 
     public float Throttle
     {
-        get { return Mathf.Clamp(control_stickDirection.y, -1f, 1f); }
+        get { return Mathf.Clamp(throttle, -1f, 1f); }
     }
 
-    public float Turning
+    public Vector3 TargetFaceDirection
     {
-        get { return Mathf.Clamp(control_stickDirection.x, -1f, 1f); }
+        get
+        {
+            return targetFaceDirection;
+        }
+        set { targetFaceDirection = value; }
     }
 
     public float TargetSpeed
@@ -55,4 +50,10 @@ public abstract class PilotInterface : MonoBehaviour
         }
     }
 
+    public abstract void Die();
+
+    public virtual void NotifyKilled(Spaceship victim, Spaceship killer = null)
+    {
+        // a winner is you!
+    }
 }
