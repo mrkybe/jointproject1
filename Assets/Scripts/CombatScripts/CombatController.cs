@@ -15,6 +15,11 @@ public class CombatController : MonoBehaviour {
 	void Start () {
 		StartCoroutine (SpawnWaves ());
 	}
+
+	//<summary>
+	// Spawning asteriods waves at random locations around the player. Different asteriods are defined in the hazards.
+	//</summary>
+
 	IEnumerator SpawnWaves ()
 	{
 
@@ -36,8 +41,5 @@ public class CombatController : MonoBehaviour {
 
 		}
 	}
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

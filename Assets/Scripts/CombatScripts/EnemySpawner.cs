@@ -27,7 +27,9 @@ public class EnemySpawner : MonoBehaviour {
 
 		
 	}
-
+	//<summary>
+	// Spawning enemies waves at random locations around the player. Different enemies are defined in the hazards.
+	//</summary>
 	IEnumerator SpawnWaves ()
 	{
 
@@ -51,10 +53,6 @@ public class EnemySpawner : MonoBehaviour {
 			yield return new WaitForSeconds (waveWait);
 
 		}
-	}
-
-	void Update () {
-		
 	}
 
 	public void Enable() {
