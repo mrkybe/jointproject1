@@ -12,6 +12,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
+    /// <summary>
+    /// Action to Dock with a target Planet or land at it.
+    /// </summary>
     class DockAtPlanet : Action
     {
         public SharedSpaceship SpaceshipScript;

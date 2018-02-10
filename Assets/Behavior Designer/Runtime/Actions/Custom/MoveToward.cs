@@ -12,6 +12,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Scripts.Classes.Helper.Pilot
 {
+    /// <summary>
+    /// Action to steer a ship towards a target position or Spaceship.
+    /// </summary>
     class MoveToward : Action
     {
         public SharedVector3 Target;

@@ -11,6 +11,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
+    /// <summary>
+    /// Action to Attack a target Spaceship.
+    /// </summary>
     class AttackShip : Action
     {
         public SharedSpaceship AttackTarget;

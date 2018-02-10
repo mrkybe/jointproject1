@@ -13,6 +13,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Scripts.Classes.Helper.Pilot
 {
+    /// <summary>
+    /// Action to search for an Asteroid to mine.
+    /// </summary>
     class TryFindAsteroidToMine : Action
     {
         public SharedAsteroid AsteroidToMine;

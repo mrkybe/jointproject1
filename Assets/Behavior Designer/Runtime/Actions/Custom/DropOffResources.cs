@@ -14,6 +14,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
+    /// <summary>
+    /// Action to drop off resources from your Cargohold to another one.
+    /// </summary>
     [TaskCategory("Custom/Spaceship")]
     class DropOffResources : Action
     {

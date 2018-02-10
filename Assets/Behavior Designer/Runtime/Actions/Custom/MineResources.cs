@@ -14,6 +14,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions
 {
+    /// <summary>
+    /// Action to mine resources from an Asteroid Field.
+    /// </summary>
     [TaskCategory("Custom/Spaceship")]
     class MineResources : Action
     {

@@ -9,6 +9,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
+    /// <summary>
+    /// Action to get a list of Hunting Positions without repeating.
+    /// </summary>
     class PickHuntingLocation : Action
     {
         public SharedVector3 Target;

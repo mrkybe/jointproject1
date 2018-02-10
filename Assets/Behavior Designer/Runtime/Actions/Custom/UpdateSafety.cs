@@ -12,6 +12,9 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
+    /// <summary>
+    /// Action to check whether there is anything Scary on the sensors.
+    /// </summary>
     class UpdateSafety : Action
     {
         public SharedSpaceship SpaceshipScript;
