@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using BehaviorDesigner.Runtime.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
-namespace Assets.Behavior_Designer.Runtime.Composites
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Similar to the sequence task, the random sequence task will return success as soon as every child task returns success.  " +
                      "The difference is that the random sequence class will run its children in a random order. The sequence task is deterministic " +
@@ -10,13 +9,13 @@ namespace Assets.Behavior_Designer.Runtime.Composites
                      "execution in a random order. Other than that the random sequence class is the same as the sequence class. It will stop running tasks " +
                      "as soon as a single task ends in failure. On a task failure it will stop executing all of the child tasks and return failure. " +
                      "If no child returns failure then it will return success.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=31")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=31")]
     [TaskIcon("{SkinColor}RandomSequenceIcon.png")]
     public class RandomSequence : Composite
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Seed the random number generator to make things easier to debug")]
+        [Tooltip("Seed the random number generator to make things easier to debug")]
         public int seed = 0;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Do we want to use the seed?")]
+        [Tooltip("Do we want to use the seed?")]
         public bool useSeed = false;
 
         // A list of indexes of every child task. This list is used by the Fischer-Yates shuffle algorithm.

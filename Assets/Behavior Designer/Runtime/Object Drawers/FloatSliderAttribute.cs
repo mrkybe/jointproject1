@@ -1,6 +1,6 @@
 ﻿using BehaviorDesigner.Runtime.Tasks;
 
-namespace Assets.Behavior_Designer.Runtime.Object_Drawers
+namespace BehaviorDesigner.Runtime.ObjectDrawers
 {
     public class FloatSliderAttribute : ObjectDrawerAttribute
     {

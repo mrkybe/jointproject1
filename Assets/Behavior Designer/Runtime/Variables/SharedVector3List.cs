@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Variables
+namespace BehaviorDesigner.Runtime
 {
     [Serializable]
     public class SharedVector3List : SharedVariable<List<Vector3>>

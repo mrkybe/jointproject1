@@ -1,34 +1,31 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-using UnityEngine;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using System.Reflection;
 
-namespace Assets.Behavior_Designer.Runtime.Actions.Reflection
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Invokes the specified method with the specified parameters. Can optionally store the return value. Returns success if the method was invoked.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=145")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=145")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class InvokeMethod : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to invoke the method on")]
+        [Tooltip("The GameObject to invoke the method on")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to invoke the method on")]
+        [Tooltip("The component to invoke the method on")]
         public SharedString componentName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the method")]
+        [Tooltip("The name of the method")]
         public SharedString methodName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first parameter of the method")]
+        [Tooltip("The first parameter of the method")]
         public SharedVariable parameter1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The second parameter of the method")]
+        [Tooltip("The second parameter of the method")]
         public SharedVariable parameter2;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The third parameter of the method")]
+        [Tooltip("The third parameter of the method")]
         public SharedVariable parameter3;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The fourth parameter of the method")]
+        [Tooltip("The fourth parameter of the method")]
         public SharedVariable parameter4;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Store the result of the invoke call")]
+        [Tooltip("Store the result of the invoke call")]
         public SharedVariable storeResult;
 
         public override TaskStatus OnUpdate()

@@ -1,27 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Sends an event to the behavior tree, returns success after sending the event.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=121")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=121")]
     [TaskIcon("{SkinColor}SendEventIcon.png")]
     public class SendEvent : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject of the behavior tree that should have the event sent to it. If null use the current behavior")]
+        [Tooltip("The GameObject of the behavior tree that should have the event sent to it. If null use the current behavior")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The event to send")]
+        [Tooltip("The event to send")]
         public SharedString eventName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The group of the behavior tree that the event should be sent to")]
+        [Tooltip("The group of the behavior tree that the event should be sent to")]
         public SharedInt group;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Optionally specify a first argument to send")]
+        [Tooltip("Optionally specify a first argument to send")]
         [SharedRequired]
         public SharedVariable argument1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Optionally specify a second argument to send")]
+        [Tooltip("Optionally specify a second argument to send")]
         [SharedRequired]
         public SharedVariable argument2;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Optionally specify a third argument to send")]
+        [Tooltip("Optionally specify a third argument to send")]
         [SharedRequired]
         public SharedVariable argument3;
 

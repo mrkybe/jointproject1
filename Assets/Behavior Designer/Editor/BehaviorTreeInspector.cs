@@ -1,8 +1,7 @@
-using Assets.Behavior_Designer.Runtime;
-using BehaviorDesigner.Editor;
 using UnityEditor;
+using BehaviorDesigner.Runtime;
 
-namespace Assets.Behavior_Designer.Editor
+namespace BehaviorDesigner.Editor
 {
     [CustomEditor(typeof(BehaviorTree))]
     public class BehaviorTreeInspector : BehaviorInspector

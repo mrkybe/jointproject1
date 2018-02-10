@@ -1,7 +1,4 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.String
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityString
 {
     [TaskCategory("Basic/String")]
     [TaskDescription("Stores the length of the string")]

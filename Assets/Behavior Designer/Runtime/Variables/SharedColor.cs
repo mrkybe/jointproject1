@@ -1,7 +1,6 @@
-using BehaviorDesigner.Runtime;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Variables
+namespace BehaviorDesigner.Runtime
 {
     [System.Serializable]
     public class SharedColor : SharedVariable<Color>

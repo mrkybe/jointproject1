@@ -1,4 +1,12 @@
-﻿namespace Assets.Scripts.Classes.Helper.Pilot
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Assets.Scripts.Classes.Static;
+using UnityEngine;
+using ShipInternals;
+
+namespace AI_Missions
 {
     
     public enum AI_Type { GATHER, PATROL, PLAYER }

@@ -1,25 +1,24 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody2D
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody2D
 {
     [TaskCategory("Basic/Rigidbody2D")]
     [TaskDescription("Applies a torque to the Rigidbody2D. Returns Success.")]
     public class AddTorque : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount of torque to apply")]
+        [Tooltip("The amount of torque to apply")]
         public SharedFloat torque;
 
-        private UnityEngine.Rigidbody2D rigidbody2D;
-        private UnityEngine.GameObject prevGameObject;
+        private Rigidbody2D rigidbody2D;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                rigidbody2D = currentGameObject.GetComponent<UnityEngine.Rigidbody2D>();
+                rigidbody2D = currentGameObject.GetComponent<Rigidbody2D>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +26,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody2D
         public override TaskStatus OnUpdate()
         {
             if (rigidbody2D == null) {
-                UnityEngine.Debug.LogWarning("Rigidbody2D is null");
+                Debug.LogWarning("Rigidbody2D is null");
                 return TaskStatus.Failure;
             }
 

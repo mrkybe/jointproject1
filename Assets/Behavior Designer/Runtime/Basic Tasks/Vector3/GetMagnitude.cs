@@ -1,15 +1,14 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Stores the magnitude of the Vector3.")]
     public class GetMagnitude : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 to get the magnitude of")]
+        [Tooltip("The Vector3 to get the magnitude of")]
         public SharedVector3 vector3Variable;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The magnitude of the vector")]
+        [Tooltip("The magnitude of the vector")]
         [RequiredField]
         public SharedFloat storeResult;
 
@@ -21,7 +20,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 
         public override void OnReset()
         {
-            vector3Variable = UnityEngine.Vector3.zero;
+            vector3Variable = Vector3.zero;
             storeResult = 0;
         }
     }

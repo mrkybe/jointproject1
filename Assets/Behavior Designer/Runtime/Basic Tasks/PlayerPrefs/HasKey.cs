@@ -1,18 +1,17 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Retruns success if the specified key exists.")]
     public class HasKey : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to check")]
+        [Tooltip("The key to check")]
         public SharedString key;
 
         public override TaskStatus OnUpdate()
         {
-            return UnityEngine.PlayerPrefs.HasKey(key.Value) ? TaskStatus.Success : TaskStatus.Failure;
+            return PlayerPrefs.HasKey(key.Value) ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()

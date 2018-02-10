@@ -1,17 +1,15 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Restarts a behavior tree, returns success after it has been restarted.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=66")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=66")]
     [TaskIcon("{SkinColor}RestartBehaviorTreeIcon.png")]
     public class RestartBehaviorTree : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject of the behavior tree that should be restarted. If null use the current behavior")]
+        [Tooltip("The GameObject of the behavior tree that should be restarted. If null use the current behavior")]
         public SharedGameObject behaviorGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The group of the behavior tree that should be restarted")]
+        [Tooltip("The group of the behavior tree that should be restarted")]
         public SharedInt group;
 
         private Behavior behavior;

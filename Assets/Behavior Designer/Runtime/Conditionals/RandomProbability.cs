@@ -1,7 +1,4 @@
-﻿using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Conditionals
+﻿namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("The random probability task will return success when the random probability is above the succeed probability. It will otherwise return failure.")]
     [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=33")]

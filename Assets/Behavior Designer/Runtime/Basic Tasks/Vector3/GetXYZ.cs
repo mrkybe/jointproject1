@@ -1,21 +1,20 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Stores the X, Y, and Z values of the Vector3.")]
     public class GetXYZ : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 to get the values of")]
+        [Tooltip("The Vector3 to get the values of")]
         public SharedVector3 vector3Variable;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The X value")]
+        [Tooltip("The X value")]
         [RequiredField]
         public SharedFloat storeX;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Y value")]
+        [Tooltip("The Y value")]
         [RequiredField]
         public SharedFloat storeY;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Z value")]
+        [Tooltip("The Z value")]
         [RequiredField]
         public SharedFloat storeZ;
 
@@ -29,7 +28,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 
         public override void OnReset()
         {
-            vector3Variable = UnityEngine.Vector3.zero;
+            vector3Variable = Vector3.zero;
             storeX = storeY = storeZ = 0;
         }
     }

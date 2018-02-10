@@ -1,27 +1,26 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Light
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
 {
     [TaskCategory("Basic/Light")]
     [TaskDescription("Stores the shadow bias of the light.")]
     public class GetShadowBias : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
         [RequiredField]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The shadow bias to store")]
+        [Tooltip("The shadow bias to store")]
         public SharedFloat storeValue;
 
         // cache the light component
-        private UnityEngine.Light light;
-        private UnityEngine.GameObject prevGameObject;
+        private Light light;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                light = currentGameObject.GetComponent<UnityEngine.Light>();
+                light = currentGameObject.GetComponent<Light>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -29,7 +28,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Light
         public override TaskStatus OnUpdate()
         {
             if (light == null) {
-                UnityEngine.Debug.LogWarning("Light is null");
+                Debug.LogWarning("Light is null");
                 return TaskStatus.Failure;
             }
 

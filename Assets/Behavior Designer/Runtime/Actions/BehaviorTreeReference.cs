@@ -1,8 +1,6 @@
 ﻿
 
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace BehaviorDesigner.Runtime.Tasks
 {
     // Wrapper class for the Behavior Reference task. The Behavior Tree Reference task allows you to run another behavior tree within the current behavior tree.
     // One use for this task is if you have an unit that plays a series of tasks to attack. You may want the unit to attack at different points within

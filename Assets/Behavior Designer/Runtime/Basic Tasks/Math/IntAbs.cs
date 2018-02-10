@@ -1,14 +1,12 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
+namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Stores the absolute value of the int.")]
     public class IntAbs : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The int to return the absolute value of")]
+        [Tooltip("The int to return the absolute value of")]
         public SharedInt intVariable;
 
         public override TaskStatus OnUpdate()

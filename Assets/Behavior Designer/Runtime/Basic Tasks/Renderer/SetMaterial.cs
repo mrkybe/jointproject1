@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Renderer
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRenderer
 {
     [TaskCategory("Basic/Renderer")]
     [TaskDescription("Sets the material on the Renderer.")]
     public class SetMaterial : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The material to set")]
+        [Tooltip("The material to set")]
         public SharedMaterial material;
 
         // cache the renderer component
-        private UnityEngine.Renderer renderer;
-        private UnityEngine.GameObject prevGameObject;
+        private Renderer renderer;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                renderer = currentGameObject.GetComponent<UnityEngine.Renderer>();
+                renderer = currentGameObject.GetComponent<Renderer>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Renderer
         public override TaskStatus OnUpdate()
         {
             if (renderer == null) {
-                UnityEngine.Debug.LogWarning("Renderer is null");
+                Debug.LogWarning("Renderer is null");
                 return TaskStatus.Failure;
             }
 

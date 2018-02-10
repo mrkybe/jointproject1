@@ -1,22 +1,21 @@
+using UnityEngine;
 using System.Collections.Generic;
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
+namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedTransformList values from the Transforms. Returns Success.")]
     public class SharedTransformsToTransformList : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Transforms value")]
+        [Tooltip("The Transforms value")]
         public SharedTransform[] transforms;
         [RequiredField]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedTransformList to set")]
+        [Tooltip("The SharedTransformList to set")]
         public SharedTransformList storedTransformList;
 
         public override void OnAwake()
         {
-            storedTransformList.Value = new List<UnityEngine.Transform>();
+            storedTransformList.Value = new List<Transform>();
         }
 
         public override TaskStatus OnUpdate()

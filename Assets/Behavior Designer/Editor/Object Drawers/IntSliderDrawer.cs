@@ -1,10 +1,9 @@
-﻿using Assets.Behavior_Designer.Runtime.Object_Drawers;
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Editor;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.ObjectDrawers;
 
-namespace Assets.Behavior_Designer.Editor.Object_Drawers
+namespace BehaviorDesigner.Editor.ObjectDrawers
 {
     [CustomObjectDrawer(typeof(IntSliderAttribute))]
     public class IntSliderDrawer : ObjectDrawer

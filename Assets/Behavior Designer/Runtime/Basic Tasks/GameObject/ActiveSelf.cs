@@ -1,13 +1,12 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Returns Success if the GameObject is active in the hierarchy, otherwise Failure.")]
     public class ActiveSelf : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
 
         public override TaskStatus OnUpdate()

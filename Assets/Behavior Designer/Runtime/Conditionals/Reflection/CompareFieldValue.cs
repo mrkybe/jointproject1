@@ -1,23 +1,22 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
+using System;
+using System.Reflection;
 
-namespace Assets.Behavior_Designer.Runtime.Conditionals.Reflection
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Compares the field value to the value specified. Returns success if the values are the same.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=151")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=151")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class CompareFieldValue : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to compare the field on")]
+        [Tooltip("The GameObject to compare the field on")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to compare the field on")]
+        [Tooltip("The component to compare the field on")]
         public SharedString componentName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the field")]
+        [Tooltip("The name of the field")]
         public SharedString fieldName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to compare to")]
+        [Tooltip("The value to compare to")]
         public SharedVariable compareValue;
 
         public override TaskStatus OnUpdate()

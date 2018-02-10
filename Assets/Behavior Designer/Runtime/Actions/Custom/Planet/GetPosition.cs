@@ -21,7 +21,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom.Planet
         public SharedVector3 storeValue;
 
         private Transform targetTransform;
-        private global::Assets.Scripts.Classes.Static.Planet prevPlanet;
+        private global::Planet prevPlanet;
 
         public override void OnStart()
         {

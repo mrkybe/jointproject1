@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
 {
     [TaskCategory("Basic/Rigidbody")]
     [TaskDescription("Sets the position of the Rigidbody. Returns Success.")]
     public class SetPosition : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The position of the Rigidbody")]
+        [Tooltip("The position of the Rigidbody")]
         public SharedVector3 position;
 
         // cache the rigidbody component
-        private UnityEngine.Rigidbody rigidbody;
-        private UnityEngine.GameObject prevGameObject;
+        private Rigidbody rigidbody;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                rigidbody = currentGameObject.GetComponent<UnityEngine.Rigidbody>();
+                rigidbody = currentGameObject.GetComponent<Rigidbody>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody
         public override TaskStatus OnUpdate()
         {
             if (rigidbody == null) {
-                UnityEngine.Debug.LogWarning("Rigidbody is null");
+                Debug.LogWarning("Rigidbody is null");
                 return TaskStatus.Failure;
             }
 
@@ -40,7 +39,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody
         public override void OnReset()
         {
             targetGameObject = null;
-            position = UnityEngine.Vector3.zero;
+            position = Vector3.zero;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Composites
+﻿namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("The selector evaluator is a selector task which reevaluates its children every tick. It will run the lowest priority child which returns a task status of running. " +
                      "This is done each tick. If a higher priority child is running and the next frame a lower priority child wants to run it will interrupt the higher priority child. " +

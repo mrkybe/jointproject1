@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.Classes.Helper.Pilot;
-using Assets.Scripts.Classes.Helper.ShipInternals;
-using Assets.Scripts.Classes.Mobile;
+﻿using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 

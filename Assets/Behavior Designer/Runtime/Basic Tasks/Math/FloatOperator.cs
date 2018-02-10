@@ -1,8 +1,6 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
+namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Performs a math operation on two floats: Add, Subtract, Multiply, Divide, Min, or Max.")]
@@ -19,13 +17,13 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
             Modulo
         }
 
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The operation to perform")]
+        [Tooltip("The operation to perform")]
         public Operation operation;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first float")]
+        [Tooltip("The first float")]
         public SharedFloat float1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The second float")]
+        [Tooltip("The second float")]
         public SharedFloat float2;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
+        [Tooltip("The variable to store the result")]
         public SharedFloat storeResult;
 
         public override TaskStatus OnUpdate()

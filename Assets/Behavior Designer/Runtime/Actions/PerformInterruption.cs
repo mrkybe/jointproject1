@@ -1,8 +1,4 @@
-﻿using Assets.Behavior_Designer.Runtime.Decorators;
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Actions
+﻿namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Perform the actual interruption. This will immediately stop the specified tasks from running and will return success or failure depending on the value of interrupt success.")]
     [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=17")]

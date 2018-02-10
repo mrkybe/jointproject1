@@ -1,28 +1,27 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Stores the layer's weight. Returns Success.")]
     public class GetLayerWeight : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The index of the layer")]
+        [Tooltip("The index of the layer")]
         public SharedInt index;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value of the float parameter")]
+        [Tooltip("The value of the float parameter")]
         [RequiredField]
         public SharedFloat storeValue;
 
-        private UnityEngine.Animator animator;
-        private UnityEngine.GameObject prevGameObject;
+        private Animator animator;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
+                animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -30,7 +29,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                UnityEngine.Debug.LogWarning("Animator is null");
+                Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 

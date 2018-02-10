@@ -1,7 +1,4 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Decorators
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Evaluates the specified conditional task. If the conditional task returns success then the child task is run and the child status is returned. If the conditional task does not " +
                      "return success then the child task is not run and a failure status is immediately returned.")]

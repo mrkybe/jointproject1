@@ -1,65 +1,64 @@
-﻿using Assets.Scripts.Classes.Helper.Pilot;
-using Assets.Scripts.Classes.Static;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using AI_Missions;
 
-namespace Assets.Scripts.Classes.Mobile {
-    [SelectionBase]
-    public class Mobile : MonoBehaviour
-    {
-        /* Purpose: Define the base class for all entities that will be moving
+[SelectionBase]
+public class Mobile : MonoBehaviour
+{
+    /* Purpose: Define the base class for all entities that will be moving
      *          every update.
      */
-        protected Vector3 direction;
-        protected float velocity;
-        [SerializeField]
-        protected bool isAI;
-        [SerializeField]
-        protected bool isAffectedByGravity;
-        protected PilotInterface pilot;
-        static public bool inTime;
-        private Vector3 gravityVector;
+    protected Vector3 direction;
+    protected float velocity;
+    [SerializeField]
+    protected bool isAI;
+    [SerializeField]
+    protected bool isAffectedByGravity;
+    protected PilotInterface pilot;
+    static public bool inTime;
+    private Vector3 gravityVector;
 
-        public Rigidbody rigidbody;
-        // Use this for initialization
-        protected void Start()
+    public Rigidbody rigidbody;
+    // Use this for initialization
+    protected void Start()
+    {
+        inTime = true;
+        rigidbody = GetComponent<Rigidbody>();
+    }
+
+    protected void Update()
+    {
+        if (inTime)
         {
-            inTime = true;
-            rigidbody = GetComponent<Rigidbody>();
+            CalculateGravityVector();
         }
+    }
 
-        protected void Update()
-        {
-            if (inTime)
-            {
-                CalculateGravityVector();
-            }
-        }
-
-        private void CalculateGravityVector()
-        {
-            //Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);
-            gravityVector = Vector3.zero;
+    private void CalculateGravityVector()
+    {
+        //Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);
+        gravityVector = Vector3.zero;
         
-            foreach (var x in Planet.listOfPlanetObjects)
-            {
-                //List<Vector3> planetPositions = new List<Vector3>();
-                //List<double> planetMasses = new List<double>();
+        foreach (var x in Planet.listOfPlanetObjects)
+        {
+            //List<Vector3> planetPositions = new List<Vector3>();
+            //List<double> planetMasses = new List<double>();
 
-                if (x.hasGravity)
+            if (x.hasGravity)
+            {
+                Vector3 offset = x.transform.position - transform.position;
+                double g = x.Mass / offset.sqrMagnitude;
+                if (offset.magnitude < (x.Radius + 1))
                 {
-                    Vector3 offset = x.transform.position - transform.position;
-                    double g = x.Mass / offset.sqrMagnitude;
-                    if (offset.magnitude < (x.Radius + 1))
-                    {
-                        g = 0;
-                    }
-                    Vector3 norm = offset.normalized;
-                    norm.Scale(new Vector3((float)g, 0, (float)g));
-                    gravityVector = gravityVector + norm;
-                    //Debug.Log(g);
-                    //planetPositions.Add(offset);
-                    //planetMasses.Add(x.MassKilotons);
+                    g = 0;
                 }
+                Vector3 norm = offset.normalized;
+                norm.Scale(new Vector3((float)g, 0, (float)g));
+                gravityVector = gravityVector + norm;
+                //Debug.Log(g);
+                //planetPositions.Add(offset);
+                //planetMasses.Add(x.MassKilotons);
             }
         }
     }

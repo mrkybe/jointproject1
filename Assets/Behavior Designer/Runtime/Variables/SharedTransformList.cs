@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using BehaviorDesigner.Runtime;
 using UnityEngine;
+using System.Collections.Generic;
 
-namespace Assets.Behavior_Designer.Runtime.Variables
+namespace BehaviorDesigner.Runtime
 {
     [System.Serializable]
     public class SharedTransformList : SharedVariable<List<Transform>>

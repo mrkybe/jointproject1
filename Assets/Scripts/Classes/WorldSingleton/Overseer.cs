@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Classes.Static;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -285,14 +284,14 @@ namespace Assets.Scripts.Classes.WorldSingleton
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && Mobile.Mobile.inTime)
+            if (Input.GetKeyDown(KeyCode.Space) && Mobile.inTime)
             {
-                Mobile.Mobile.inTime = false;
+                Mobile.inTime = false;
                 Static.Static.inTime = false;
             }
             else if (Input.GetKeyDown(KeyCode.Space))
             {
-                Mobile.Mobile.inTime = true;
+                Mobile.inTime = true;
                 Static.Static.inTime = true;
             }
         }

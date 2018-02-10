@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Classes.Mobile;
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 
 namespace Assets.Behavior_Designer.Runtime.Variables
 {

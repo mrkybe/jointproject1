@@ -1,7 +1,4 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
+namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Performs comparison between two floats: less than, less than or equal to, equal to, not equal to, greater than or equal to, or greater than.")]

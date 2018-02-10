@@ -1,25 +1,24 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Stores the quaternion identity.")]
     public class Identity : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The identity")]
+        [Tooltip("The identity")]
         [RequiredField]
         public SharedQuaternion storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Quaternion.identity;
+            storeResult.Value = Quaternion.identity;
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            storeResult = UnityEngine.Quaternion.identity;
+            storeResult = Quaternion.identity;
         }
     }
 }

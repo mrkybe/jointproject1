@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animation
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation
 {
     [TaskCategory("Basic/Animation")]
     [TaskDescription("Sets animate physics to the specified value. Returns Success.")]
     public class SetAnimatePhysics : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Are animations executed in the physics loop?")]
+        [Tooltip("Are animations executed in the physics loop?")]
         public SharedBool animatePhysics;
 
         // cache the animation component
-        private UnityEngine.Animation animation;
-        private UnityEngine.GameObject prevGameObject;
+        private Animation animation;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animation = currentGameObject.GetComponent<UnityEngine.Animation>();
+                animation = currentGameObject.GetComponent<Animation>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animation
         public override TaskStatus OnUpdate()
         {
             if (animation == null) {
-                UnityEngine.Debug.LogWarning("Animation is null");
+                Debug.LogWarning("Animation is null");
                 return TaskStatus.Failure;
             }
 

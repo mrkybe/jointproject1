@@ -1,46 +1,44 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Physics
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPhysics
 {
     [TaskCategory("Basic/Physics")]
     [TaskDescription("Casts a sphere against all colliders in the scene. Returns success if a collider was hit.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=117")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=117")]
     public class SphereCast : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Starts the spherecast at the GameObject's position. If null the originPosition will be used")]
+        [Tooltip("Starts the spherecast at the GameObject's position. If null the originPosition will be used")]
         public SharedGameObject originGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Starts the sherecast at the position. Only used if originGameObject is null")]
+        [Tooltip("Starts the sherecast at the position. Only used if originGameObject is null")]
         public SharedVector3 originPosition;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The radius of the spherecast")]
+        [Tooltip("The radius of the spherecast")]
         public SharedFloat radius;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The direction of the spherecast")]
+        [Tooltip("The direction of the spherecast")]
         public SharedVector3 direction;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The length of the spherecast. Set to -1 for infinity")]
+        [Tooltip("The length of the spherecast. Set to -1 for infinity")]
         public SharedFloat distance = -1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Selectively ignore colliders")]
-        public UnityEngine.LayerMask layerMask = -1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Use world or local space. The direction is in world space if no GameObject is specified")]
+        [Tooltip("Selectively ignore colliders")]
+        public LayerMask layerMask = -1;
+        [Tooltip("Use world or local space. The direction is in world space if no GameObject is specified")]
         public Space space = Space.Self;
 
         [SharedRequired]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Stores the hit object of the spherecast")]
+        [Tooltip("Stores the hit object of the spherecast")]
         public SharedGameObject storeHitObject;
         [SharedRequired]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Stores the hit point of the spherecast")]
+        [Tooltip("Stores the hit point of the spherecast")]
         public SharedVector3 storeHitPoint;
         [SharedRequired]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Stores the hit normal of the spherecast")]
+        [Tooltip("Stores the hit normal of the spherecast")]
         public SharedVector3 storeHitNormal;
         [SharedRequired]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Stores the hit distance of the spherecast")]
+        [Tooltip("Stores the hit distance of the spherecast")]
         public SharedFloat storeHitDistance;
 
         public override TaskStatus OnUpdate()
         {
-            UnityEngine.Vector3 position;
-            UnityEngine.Vector3 dir = direction.Value;
+            Vector3 position;
+            Vector3 dir = direction.Value;
             if (originGameObject.Value != null) {
                 position = originGameObject.Value.transform.position;
                 if (space == Space.Self) {
@@ -51,7 +49,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Physics
             }
 
             RaycastHit hit;
-            if (UnityEngine.Physics.SphereCast(position, radius.Value, dir, out hit, distance.Value == -1 ? Mathf.Infinity : distance.Value, layerMask)) {
+            if (Physics.SphereCast(position, radius.Value, dir, out hit, distance.Value == -1 ? Mathf.Infinity : distance.Value, layerMask)) {
                 storeHitObject.Value = hit.collider.gameObject;
                 storeHitPoint.Value = hit.point;
                 storeHitNormal.Value = hit.normal;
@@ -65,9 +63,9 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Physics
         public override void OnReset()
         {
             originGameObject = null;
-            originPosition = UnityEngine.Vector3.zero;
+            originPosition = Vector3.zero;
             radius = 0;
-            direction = UnityEngine.Vector3.zero;
+            direction = Vector3.zero;
             distance = -1;
             layerMask = -1;
             space = Space.Self;

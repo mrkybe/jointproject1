@@ -1,8 +1,4 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-
-namespace Assets.Behavior_Designer.Runtime.Conditionals
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Returns success as soon as the event specified by eventName has been received.")]
     [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=123")]

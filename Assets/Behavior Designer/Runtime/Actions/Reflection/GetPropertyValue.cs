@@ -1,24 +1,22 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using System;
+using System.Reflection;
 
-namespace Assets.Behavior_Designer.Runtime.Actions.Reflection
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Gets the value from the property specified. Returns success if the property was retrieved.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=148")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=148")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class GetPropertyValue : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to get the property of")]
+        [Tooltip("The GameObject to get the property of")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to get the property of")]
+        [Tooltip("The component to get the property of")]
         public SharedString componentName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the property")]
+        [Tooltip("The name of the property")]
         public SharedString propertyName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value of the property")]
+        [Tooltip("The value of the property")]
         [RequiredField]
         public SharedVariable propertyValue;
 

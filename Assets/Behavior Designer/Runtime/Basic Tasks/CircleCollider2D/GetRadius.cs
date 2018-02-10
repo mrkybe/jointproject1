@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CircleCollider2D
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCircleCollider2D
 {
     [TaskCategory("Basic/CircleCollider2D")]
     [TaskDescription("Stores the radius of the CircleCollider2D. Returns Success.")]
     public class GetRadius : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The radius of the CircleCollider2D")]
+        [Tooltip("The radius of the CircleCollider2D")]
         [RequiredField]
         public SharedFloat storeValue;
 
-        private UnityEngine.CircleCollider2D circleCollider2D;
-        private UnityEngine.GameObject prevGameObject;
+        private CircleCollider2D circleCollider2D;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                circleCollider2D = currentGameObject.GetComponent<UnityEngine.CircleCollider2D>();
+                circleCollider2D = currentGameObject.GetComponent<CircleCollider2D>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CircleCollider2D
         public override TaskStatus OnUpdate()
         {
             if (circleCollider2D == null) {
-                UnityEngine.Debug.LogWarning("CircleCollider2D is null");
+                Debug.LogWarning("CircleCollider2D is null");
                 return TaskStatus.Failure;
             }
 

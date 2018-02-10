@@ -1,29 +1,28 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Plays an animator state. Returns Success.")]
     public class Play : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the state")]
+        [Tooltip("The name of the state")]
         public SharedString stateName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The layer where the state is")]
+        [Tooltip("The layer where the state is")]
         public int layer = -1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The normalized time at which the state will play")]
+        [Tooltip("The normalized time at which the state will play")]
         public float normalizedTime = float.NegativeInfinity;
 
-        private UnityEngine.Animator animator;
-        private UnityEngine.GameObject prevGameObject;
+        private Animator animator;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
+                animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -31,7 +30,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                UnityEngine.Debug.LogWarning("Animator is null");
+                Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 

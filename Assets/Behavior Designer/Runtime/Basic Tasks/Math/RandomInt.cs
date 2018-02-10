@@ -1,20 +1,18 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
+namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Sets a random int value")]
     public class RandomInt : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The minimum amount")]
+        [Tooltip("The minimum amount")]
         public SharedInt min;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum amount")]
+        [Tooltip("The maximum amount")]
         public SharedInt max;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Is the maximum value inclusive?")]
+        [Tooltip("Is the maximum value inclusive?")]
         public bool inclusive;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
+        [Tooltip("The variable to store the result")]
         public SharedInt storeResult;
 
         public override TaskStatus OnUpdate()

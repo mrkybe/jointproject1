@@ -1,17 +1,15 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Conditionals.Physics
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Returns success when a 2D collision ends. This task will only receive the physics callback if it is being reevaluated (with a conditional abort or under a parallel task).")]
     [TaskCategory("Physics")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=110")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=110")]
     public class HasExitedCollision2D : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The tag of the GameObject to check for a collision against")]
+        [Tooltip("The tag of the GameObject to check for a collision against")]
         public SharedString tag = "";
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The object that exited the collision")]
+        [Tooltip("The object that exited the collision")]
         public SharedGameObject collidedGameObject;
 
         private bool exitedCollision = false;

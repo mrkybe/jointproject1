@@ -1,18 +1,17 @@
-﻿using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Returns success when the specified button is pressed.")]
     public class IsButtonDown : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the button")]
+        [Tooltip("The name of the button")]
         public SharedString buttonName;
 
         public override TaskStatus OnUpdate()
         {
-            return UnityEngine.Input.GetButtonDown(buttonName.Value) ? TaskStatus.Success : TaskStatus.Failure;
+            return Input.GetButtonDown(buttonName.Value) ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()

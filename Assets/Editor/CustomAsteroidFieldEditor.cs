@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Classes.Helper.ShipInternals;
-using Assets.Scripts.Classes.Static;
+﻿using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 

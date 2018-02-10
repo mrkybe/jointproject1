@@ -1,18 +1,16 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CharacterController
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
 {
     [TaskCategory("Basic/CharacterController")]
     [TaskDescription("Returns Success if the collider hit another object, otherwise Failure.")]
     public class HasColliderHit : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The tag of the GameObject to check for a collision against")]
+        [Tooltip("The tag of the GameObject to check for a collision against")]
         public SharedString tag = "";
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The object that started the collision")]
+        [Tooltip("The object that started the collision")]
         public SharedGameObject collidedGameObject;
 
         private bool enteredCollision = false;

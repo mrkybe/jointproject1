@@ -1,19 +1,18 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Sets the X, Y, and Z values of the Vector3.")]
     public class SetXYZ : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 to set the values of")]
+        [Tooltip("The Vector3 to set the values of")]
         public SharedVector3 vector3Variable;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The X value. Set to None to have the value ignored")]
+        [Tooltip("The X value. Set to None to have the value ignored")]
         public SharedFloat xValue;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Y value. Set to None to have the value ignored")]
+        [Tooltip("The Y value. Set to None to have the value ignored")]
         public SharedFloat yValue;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Z value. Set to None to have the value ignored")]
+        [Tooltip("The Z value. Set to None to have the value ignored")]
         public SharedFloat zValue;
 
         public override TaskStatus OnUpdate()
@@ -34,7 +33,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 
         public override void OnReset()
         {
-            vector3Variable = UnityEngine.Vector3.zero;
+            vector3Variable = Vector3.zero;
             xValue = yValue = zValue = 0;
         }
     }

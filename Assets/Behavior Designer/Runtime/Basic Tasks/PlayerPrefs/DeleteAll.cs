@@ -1,6 +1,6 @@
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Deletes all entries from the PlayerPrefs.")]
@@ -8,7 +8,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
     {
         public override TaskStatus OnUpdate()
         {
-            UnityEngine.PlayerPrefs.DeleteAll();
+            PlayerPrefs.DeleteAll();
 
             return TaskStatus.Success;
         }

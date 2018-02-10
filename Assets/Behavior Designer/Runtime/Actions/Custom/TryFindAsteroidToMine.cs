@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using Assets.Behavior_Designer.Runtime;
 using Assets.Behavior_Designer.Runtime.Variables;
-using Assets.Scripts.Classes.Static;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
-namespace Assets.Behavior_Designer.Runtime.Actions.Custom
+namespace Assets.Scripts.Classes.Helper.Pilot
 {
     class TryFindAsteroidToMine : Action
     {

@@ -1,25 +1,24 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CapsuleCollider
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
 {
     [TaskCategory("Basic/CapsuleCollider")]
     [TaskDescription("Sets the height of the CapsuleCollider. Returns Success.")]
     public class SetHeight : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The height of the CapsuleCollider")]
+        [Tooltip("The height of the CapsuleCollider")]
         public SharedFloat direction;
 
-        private UnityEngine.CapsuleCollider capsuleCollider;
-        private UnityEngine.GameObject prevGameObject;
+        private CapsuleCollider capsuleCollider;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                capsuleCollider = currentGameObject.GetComponent<UnityEngine.CapsuleCollider>();
+                capsuleCollider = currentGameObject.GetComponent<CapsuleCollider>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +26,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CapsuleCollider
         public override TaskStatus OnUpdate()
         {
             if (capsuleCollider == null) {
-                UnityEngine.Debug.LogWarning("CapsuleCollider is null");
+                Debug.LogWarning("CapsuleCollider is null");
                 return TaskStatus.Failure;
             }
 

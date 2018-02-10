@@ -1,25 +1,24 @@
-﻿using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Stores the acceleration value.")]
     public class GetAcceleration : Action
     {
         [RequiredField]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
+        [Tooltip("The stored result")]
         public SharedVector3 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Input.acceleration;
+            storeResult.Value = Input.acceleration;
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            storeResult = UnityEngine.Vector3.zero;
+            storeResult = Vector3.zero;
         }
     }
 }

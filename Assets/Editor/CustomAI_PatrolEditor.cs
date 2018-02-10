@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets.Scripts.Classes.Helper.Pilot;
+using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,31 +1,30 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Move from the current position to the target position.")]
     public class MoveTowards : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The current position")]
+        [Tooltip("The current position")]
         public SharedVector2 currentPosition;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The target position")]
+        [Tooltip("The target position")]
         public SharedVector2 targetPosition;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The movement speed")]
+        [Tooltip("The movement speed")]
         public SharedFloat speed;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The move resut")]
+        [Tooltip("The move resut")]
         [RequiredField]
         public SharedVector2 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Vector2.MoveTowards(currentPosition.Value, targetPosition.Value, speed.Value * UnityEngine.Time.deltaTime);
+            storeResult.Value = Vector2.MoveTowards(currentPosition.Value, targetPosition.Value, speed.Value * Time.deltaTime);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            currentPosition = targetPosition = storeResult = UnityEngine.Vector2.zero;
+            currentPosition = targetPosition = storeResult = Vector2.zero;
             speed = 0;
         }
     }

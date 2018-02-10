@@ -1,25 +1,24 @@
-﻿using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Stores the mouse position.")]
     public class GetMousePosition : Action
     {
         [RequiredField]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
+        [Tooltip("The stored result")]
         public SharedVector2 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Input.mousePosition;
+            storeResult.Value = Input.mousePosition;
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            storeResult = UnityEngine.Vector2.zero;
+            storeResult = Vector2.zero;
         }
     }
 }

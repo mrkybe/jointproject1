@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Gets the avatar delta rotation for the last evaluated frame. Returns Success.")]
     public class GetDeltaRotation : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The avatar delta rotation")]
+        [Tooltip("The avatar delta rotation")]
         [RequiredField]
         public SharedQuaternion storeValue;
 
-        private UnityEngine.Animator animator;
-        private UnityEngine.GameObject prevGameObject;
+        private Animator animator;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
+                animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                UnityEngine.Debug.LogWarning("Animator is null");
+                Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 
@@ -40,7 +39,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
         public override void OnReset()
         {
             if (storeValue != null) {
-                storeValue.Value = UnityEngine.Quaternion.identity;
+                storeValue.Value = Quaternion.identity;
             }
         }
     }

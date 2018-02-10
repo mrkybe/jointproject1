@@ -1,6 +1,4 @@
-using BehaviorDesigner.Runtime;
-
-namespace Assets.Behavior_Designer.Runtime
+namespace BehaviorDesigner.Runtime
 {
     [System.Serializable]
     public class ExternalBehaviorTree : ExternalBehavior

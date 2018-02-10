@@ -1,17 +1,15 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Log is a simple task which will output the specified text and return success. It can be used for debugging.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=16")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=16")]
     [TaskIcon("{SkinColor}LogIcon.png")]
     public class Log : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Text to output to the log")]
+        [Tooltip("Text to output to the log")]
         public SharedString text;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Is this text an error?")]
+        [Tooltip("Is this text an error?")]
         public SharedBool logError;
         
         public override TaskStatus OnUpdate()

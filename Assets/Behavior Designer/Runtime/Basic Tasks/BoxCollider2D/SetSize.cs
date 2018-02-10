@@ -1,25 +1,24 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.BoxCollider2D
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBoxCollider2D
 {
     [TaskCategory("Basic/BoxCollider2D")]
     [TaskDescription("Sets the size of the BoxCollider2D. Returns Success.")]
     public class SetSize : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The size of the BoxCollider2D")]
+        [Tooltip("The size of the BoxCollider2D")]
         public SharedVector2 size;
 
-        private UnityEngine.BoxCollider2D boxCollider2D;
-        private UnityEngine.GameObject prevGameObject;
+        private BoxCollider2D boxCollider2D;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                boxCollider2D = currentGameObject.GetComponent<UnityEngine.BoxCollider2D>();
+                boxCollider2D = currentGameObject.GetComponent<BoxCollider2D>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +26,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.BoxCollider2D
         public override TaskStatus OnUpdate()
         {
             if (boxCollider2D == null) {
-                UnityEngine.Debug.LogWarning("BoxCollider2D is null");
+                Debug.LogWarning("BoxCollider2D is null");
                 return TaskStatus.Failure;
             }
 
@@ -39,7 +38,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.BoxCollider2D
         public override void OnReset()
         {
             targetGameObject = null;
-            size = UnityEngine.Vector2.zero;
+            size = Vector2.zero;
         }
     }
 }

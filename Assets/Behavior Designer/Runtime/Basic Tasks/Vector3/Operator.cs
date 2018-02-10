@@ -1,7 +1,6 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Performs a math operation on two Vector3s: Add, Subtract, Multiply, Divide, Min, or Max.")]
@@ -14,13 +13,13 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
             Scale
         }
 
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The operation to perform")]
+        [Tooltip("The operation to perform")]
         public Operation operation;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first Vector3")]
+        [Tooltip("The first Vector3")]
         public SharedVector3 firstVector3;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The second Vector3")]
+        [Tooltip("The second Vector3")]
         public SharedVector3 secondVector3;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
+        [Tooltip("The variable to store the result")]
         public SharedVector3 storeResult;
 
         public override TaskStatus OnUpdate()
@@ -33,7 +32,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
                     storeResult.Value = firstVector3.Value - secondVector3.Value;
                     break;
                 case Operation.Scale:
-                    storeResult.Value = UnityEngine.Vector3.Scale(firstVector3.Value, secondVector3.Value);
+                    storeResult.Value = Vector3.Scale(firstVector3.Value, secondVector3.Value);
                     break;
             }
             return TaskStatus.Success;
@@ -42,7 +41,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
         public override void OnReset()
         {
             operation = Operation.Add;
-            firstVector3 = secondVector3 = storeResult = UnityEngine.Vector3.zero;
+            firstVector3 = secondVector3 = storeResult = Vector3.zero;
         }
     }
 }

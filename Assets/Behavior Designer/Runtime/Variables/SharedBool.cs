@@ -1,6 +1,4 @@
-using BehaviorDesigner.Runtime;
-
-namespace Assets.Behavior_Designer.Runtime.Variables
+namespace BehaviorDesigner.Runtime
 {
     [System.Serializable]
     public class SharedBool : SharedVariable<bool>

@@ -1,9 +1,14 @@
-﻿using Assets.Scripts.Classes.Helper.ShipInternals;
-using BehaviorDesigner.Editor;
+﻿using BehaviorDesigner.Editor;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Assets.Scripts.Classes.WorldSingleton;
+using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Behavior_Designer.Editor.Object_Drawers
+namespace Assets.Editor
 {
     [CustomObjectDrawer(typeof(CargoItem))]
     class CustomCargoItemDrawer : ObjectDrawer

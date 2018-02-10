@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Classes.WorldSingleton;
+using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 

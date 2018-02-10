@@ -1,26 +1,25 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Stores the current gravity weight based on current animations that are played. Returns Success.")]
     public class GetGravityWeight : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value of the gravity weight")]
+        [Tooltip("The value of the gravity weight")]
         [RequiredField]
         public SharedFloat storeValue;
 
-        private UnityEngine.Animator animator;
-        private UnityEngine.GameObject prevGameObject;
+        private Animator animator;
+        private GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
+                animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +27,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                UnityEngine.Debug.LogWarning("Animator is null");
+                Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 

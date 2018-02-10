@@ -1,8 +1,8 @@
-using Assets.Behavior_Designer.Runtime;
-using BehaviorDesigner.Editor;
+using UnityEngine;
 using UnityEditor;
+using BehaviorDesigner.Runtime;
 
-namespace Assets.Behavior_Designer.Editor
+namespace BehaviorDesigner.Editor
 {
     [CustomEditor(typeof(ExternalBehaviorTree))]
     public class ExternalBehaviorTreeInspector : ExternalBehaviorInspector

@@ -1,23 +1,22 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Stores the value with the specified key from the PlayerPrefs.")]
     public class GetString : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to store")]
+        [Tooltip("The key to store")]
         public SharedString key;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The default value")]
+        [Tooltip("The default value")]
         public SharedString defaultValue;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value retrieved from the PlayerPrefs")]
+        [Tooltip("The value retrieved from the PlayerPrefs")]
         [RequiredField]
         public SharedString storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.PlayerPrefs.GetString(key.Value, defaultValue.Value);
+            storeResult.Value = PlayerPrefs.GetString(key.Value, defaultValue.Value);
 
             return TaskStatus.Success;
         }

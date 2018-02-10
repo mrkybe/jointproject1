@@ -1,20 +1,19 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Sets the value with the specified key from the PlayerPrefs.")]
     public class SetFloat : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to store")]
+        [Tooltip("The key to store")]
         public SharedString key;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set")]
+        [Tooltip("The value to set")]
         public SharedFloat value;
 
         public override TaskStatus OnUpdate()
         {
-            UnityEngine.PlayerPrefs.SetFloat(key.Value, value.Value);
+            PlayerPrefs.SetFloat(key.Value, value.Value);
 
             return TaskStatus.Success;
         }

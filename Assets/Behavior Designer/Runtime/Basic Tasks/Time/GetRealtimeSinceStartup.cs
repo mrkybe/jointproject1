@@ -1,18 +1,17 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Time
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTime
 {
     [TaskCategory("Basic/Time")]
     [TaskDescription("Returns the real time in seconds since the game started.")]
     public class GetRealtimeSinceStartup : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
+        [Tooltip("The variable to store the result")]
         public SharedFloat storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Time.realtimeSinceStartup;
+            storeResult.Value = Time.realtimeSinceStartup;
             return TaskStatus.Success;
         }
 

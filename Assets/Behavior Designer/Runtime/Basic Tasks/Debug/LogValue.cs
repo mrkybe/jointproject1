@@ -1,18 +1,17 @@
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Debug
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
 {
     [TaskCategory("Basic/Debug")]
     [TaskDescription("Log a variable value.")]
     public class LogValue : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to output")]
+        [Tooltip("The variable to output")]
         public SharedGenericVariable variable;
 
         public override TaskStatus OnUpdate()
         {
-            UnityEngine.Debug.Log(variable.Value.value.GetValue());
+            Debug.Log(variable.Value.value.GetValue());
 
             return TaskStatus.Success;
         }

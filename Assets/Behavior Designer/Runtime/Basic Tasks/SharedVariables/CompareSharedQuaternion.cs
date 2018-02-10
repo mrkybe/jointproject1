@@ -1,15 +1,14 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
+namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Returns success if the variable value is equal to the compareTo value.")]
     public class CompareSharedQuaternion : Conditional
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first variable to compare")]
+        [Tooltip("The first variable to compare")]
         public SharedQuaternion variable;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to compare to")]
+        [Tooltip("The variable to compare to")]
         public SharedQuaternion compareTo;
 
         public override TaskStatus OnUpdate()
@@ -19,8 +18,8 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 
         public override void OnReset()
         {
-            variable = UnityEngine.Quaternion.identity;
-            compareTo = UnityEngine.Quaternion.identity;
+            variable = Quaternion.identity;
+            compareTo = Quaternion.identity;
         }
     }
 }

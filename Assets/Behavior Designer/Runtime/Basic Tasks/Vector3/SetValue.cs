@@ -1,15 +1,14 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Sets the value of the Vector3.")]
     public class SetValue : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 to get the values of")]
+        [Tooltip("The Vector3 to get the values of")]
         public SharedVector3 vector3Value;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 to set the values of")]
+        [Tooltip("The Vector3 to set the values of")]
         public SharedVector3 vector3Variable;
 
         public override TaskStatus OnUpdate()
@@ -20,7 +19,7 @@ namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 
         public override void OnReset()
         {
-            vector3Value = vector3Variable = UnityEngine.Vector3.zero;
+            vector3Value = vector3Variable = Vector3.zero;
         }
     }
 }

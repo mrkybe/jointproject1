@@ -1,31 +1,30 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Stores the rotation which rotates the specified degrees around the specified axis.")]
     public class AngleAxis : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The number of degrees")]
+        [Tooltip("The number of degrees")]
         public SharedFloat degrees;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The axis direction")]
+        [Tooltip("The axis direction")]
         public SharedVector3 axis;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
+        [Tooltip("The stored result")]
         [RequiredField]
         public SharedQuaternion storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = UnityEngine.Quaternion.AngleAxis(degrees.Value, axis.Value);
+            storeResult.Value = Quaternion.AngleAxis(degrees.Value, axis.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
             degrees = 0;
-            axis = UnityEngine.Vector3.zero;
-            storeResult = UnityEngine.Quaternion.identity;
+            axis = Vector3.zero;
+            storeResult = Quaternion.identity;
         }
     }
 }

@@ -1,24 +1,22 @@
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using System;
+using System.Reflection;
 
-namespace Assets.Behavior_Designer.Runtime.Actions.Reflection
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Sets the property to the value specified. Returns success if the property was set.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=150")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=150")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class SetPropertyValue : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to set the property on")]
+        [Tooltip("The GameObject to set the property on")]
         public SharedGameObject targetGameObject;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to set the property on")]
+        [Tooltip("The component to set the property on")]
         public SharedString componentName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the property")]
+        [Tooltip("The name of the property")]
         public SharedString propertyName;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set")]
+        [Tooltip("The value to set")]
         public SharedVariable propertyValue;
 
         public override TaskStatus OnUpdate()

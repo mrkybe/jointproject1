@@ -1,21 +1,19 @@
-﻿using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Wait a specified amount of time. The task will return running until the task is done waiting. It will return success after the wait time has elapsed.")]
-    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=22")]
+    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=22")]
     [TaskIcon("{SkinColor}WaitIcon.png")]
     public class Wait : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount of time to wait")]
+        [Tooltip("The amount of time to wait")]
         public SharedFloat waitTime = 1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("Should the wait be randomized?")]
+        [Tooltip("Should the wait be randomized?")]
         public SharedBool randomWait = false;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The minimum wait time if random wait is enabled")]
+        [Tooltip("The minimum wait time if random wait is enabled")]
         public SharedFloat randomWaitMin = 1;
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum wait time if random wait is enabled")]
+        [Tooltip("The maximum wait time if random wait is enabled")]
         public SharedFloat randomWaitMax = 1;
 
         // The time to wait

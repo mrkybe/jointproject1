@@ -1,22 +1,21 @@
+using UnityEngine;
 using System.Collections.Generic;
-using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime.Tasks;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
+namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedGameObjectList values from the GameObjects. Returns Success.")]
     public class SharedGameObjectsToGameObjectList : Action
     {
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObjects value")]
+        [Tooltip("The GameObjects value")]
         public SharedGameObject[] gameObjects;
         [RequiredField]
-        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedTransformList to set")]
+        [Tooltip("The SharedTransformList to set")]
         public SharedGameObjectList storedGameObjectList;
 
         public override void OnAwake()
         {
-            storedGameObjectList.Value = new List<UnityEngine.GameObject>();
+            storedGameObjectList.Value = new List<GameObject>();
         }
 
         public override TaskStatus OnUpdate()

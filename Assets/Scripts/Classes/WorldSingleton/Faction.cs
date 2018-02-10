@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton

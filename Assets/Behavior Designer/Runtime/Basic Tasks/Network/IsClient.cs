@@ -1,7 +1,6 @@
-using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine.Networking;
 
-namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Network
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityNetwork
 {
     public class IsClient : Conditional
     {
