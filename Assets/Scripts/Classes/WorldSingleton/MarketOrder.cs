@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShipInternals;
+using Assets.Scripts.Classes.Helper.ShipInternals;
+using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
