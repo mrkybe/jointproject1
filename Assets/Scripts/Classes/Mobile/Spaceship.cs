@@ -45,7 +45,6 @@ namespace Assets.Scripts.Classes.Mobile {
         private float throttle_input;
         private float old_throttleInput;
         private CargoHold myStorage;
-        private SensorArray mySensorArray;
         private ModelSwitcher myModelSwitcher;
         // Use this for initialization
 
