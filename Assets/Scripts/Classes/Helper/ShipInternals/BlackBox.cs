@@ -15,9 +15,9 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         public string Title;
         public string Message;
         // Ship location in Overmap at time of entry.
-        public Vector3 GPS;
+        public Vector3 GPS = Vector3.zero;
         // Ship location in Combat map at time of entry.
-        public Vector3 LPS;
+        public Vector3 LPS = Vector3.zero;
 
         BlackBoxEntry()
         {

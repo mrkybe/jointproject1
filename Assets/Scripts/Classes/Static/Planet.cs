@@ -122,7 +122,7 @@ namespace Assets.Scripts.Classes.Static {
         }
 	
         // Update is called once per frame
-        private new void Update ()
+        private void Update ()
         {
             transform.Rotate(Vector3.up, Time.deltaTime * -1f);
         }

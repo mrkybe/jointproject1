@@ -31,7 +31,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public static Overseer Main;
 
         //float timeScale;
-        new void Awake()
+        void Awake()
         {
             if (Main == null)
             {
@@ -166,7 +166,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
             Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
             Saturn.name = "Saturn";
             int numMoons = 50;
-            float minSaturnDistance = 75f;
             Queue<string> moon_names = new Queue<string>(ListOfSaturnMoonNames());
             List<Vector3> moon_positions = GenerateMoonPositions(numMoons, 10);
             List<Planet> moon_scripts = new List<Planet>();
@@ -249,13 +248,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 // 
             }
             return true;
-        }
-
-        void FixedUpdate()
-        {
-            if (inTime)
-            {
-            }
         }
 
         private void TickPlanets()

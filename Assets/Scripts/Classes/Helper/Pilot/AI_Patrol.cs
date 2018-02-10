@@ -30,9 +30,10 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
 
         private BehaviorTree behaviorTree;
         private float interactionDistance = 5f;
-        private Rigidbody rigidbody;
+        private new Rigidbody rigidbody;
         public float Speed;
         public SharedFloat TargetSpeed;
+
 
         // Use this for initialization
         public void Awake()

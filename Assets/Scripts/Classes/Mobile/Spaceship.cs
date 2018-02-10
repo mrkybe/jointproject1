@@ -95,7 +95,7 @@ namespace Assets.Scripts.Classes.Mobile {
             modelChoice = (int)(Random.value * 11);
         }
 
-        new void Start ()
+        void Start ()
         {
             inTime = true;
             MyRigidbody = GetComponent<Rigidbody>();
@@ -118,7 +118,7 @@ namespace Assets.Scripts.Classes.Mobile {
             dAngularVelocity = (MyRigidbody.angularVelocity - old_angularVelocity) / Time.fixedDeltaTime;
         }
 
-        new void Update ()
+        void Update ()
         {
             if (inTime && pilot)
             {
