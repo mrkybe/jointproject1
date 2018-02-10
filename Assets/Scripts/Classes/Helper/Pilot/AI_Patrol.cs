@@ -6,13 +6,10 @@ using Assets.Scripts.Classes.WorldSingleton;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 
-/* AI_Patrol is the AI for the ships/fleets on the Overmap.
- * It contains all of the atomic AI methods that are used by the AI behavior tree.
- * It provides public functions for Factions/Planets to give orders through.
- * These orders are fulfilled by replacing the current BehaviorTree with a new one.
- */
-
 namespace Assets.Scripts.Classes.Helper.Pilot {
+    /// <summary>
+    /// The AI for the ships/fleets on the Overmap.  Executes a Behavior Tree.  Provides methods for changing it.
+    /// </summary>
     public class AI_Patrol : PilotInterface
     {
         public ExternalBehaviorTree ExternalMiningBehaviorTree;
