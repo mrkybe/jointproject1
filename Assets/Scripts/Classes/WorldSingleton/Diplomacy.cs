@@ -5,9 +5,6 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
-    /// <summary>
-    /// The part of the singleton that manages inter-faction relationships.
-    /// </summary>
     public partial class Overseer : Static.Static
     {
         [SerializeField]

@@ -22,21 +22,35 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         }
 
+        /// <summary>
+        /// A Buy or Sell order.
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="item"></param>
         public MarketOrder(Planet origin, CargoItem item)
         {
             this.origin = origin;
             this.item = item;
         }
 
+        /// <summary>
+        /// A Market order that is to be carried out.
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="destination"></param>
+        /// <param name="item"></param>
         public MarketOrder(Planet origin, Planet destination, CargoItem item)
         {
             this.origin = origin;
             this.item = item;
             this.destination = destination;
         }
-
-        // returns a MarketOrder that is sent to a Planet to be delivered.
-        // checks if this order is Done and if the sellOrder is done.
+        
+        /// <summary>
+        /// Applys sell order to this MarketOrder.  Checks if this order is Done and if the sellOrder is also done.
+        /// </summary>
+        /// <param name="sellOrder">The sell order to apply.</param>
+        /// <returns>Returns a MarketOrder that is sent to a Planet to be delivered.</returns>
         public MarketOrder ApplySellOrder(MarketOrder sellOrder)
         {
             int buyAmount = item.Count;
@@ -62,27 +76,43 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
+        /// <summary>
+        /// Sends this order to the planet it came from.
+        /// </summary>
         public void SendToPlanet()
         {
             origin.AddToDeliveryQueue(this);
         }
 
+        /// <summary>
+        /// Combines this order with another order.
+        /// </summary>
+        /// <param name="order"></param>
         public void Combine(MarketOrder order)
         {
             item.Count += order.item.Count;
         }
 
+        /// <summary>
+        /// Called when the order is completed (including delivery).
+        /// </summary>
         public void Succeed()
         {
             origin.CompleteOrder(this);
         }
 
+        /// <summary>
+        /// Called when the order fails.
+        /// </summary>
         public void Fail()
         {
             origin.FailOrder(this);
         }
     }
 
+    /// <summary>
+    /// Compares market orders with regards to a Planet.
+    /// </summary>
     [Serializable]
     public class MarketOrderComparer : IComparer<MarketOrder>
     {

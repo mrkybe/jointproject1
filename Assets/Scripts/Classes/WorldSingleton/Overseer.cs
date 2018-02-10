@@ -12,15 +12,16 @@ namespace Assets.Scripts.Classes.WorldSingleton
 {
     /// <summary>
     /// The Singleton that manages the systems in the game.  Organized into partial classes.
-    ///     Overseer.cs  - Main
-    ///     Market.cs    - Economy
+    ///     Overseer.cs  - Main,
+    ///     Market.cs    - Economy,
     ///     Diplomacy.cs - Factions
     /// </summary>
     public partial class Overseer : Static.Static
     {
         [SerializeField]
         public static GameObject Sky;
-        float timeScaleOriginal;
+
+        private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
         private float worldSize = 800f;
@@ -31,7 +32,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public static Overseer Main;
 
         //float timeScale;
-        void Awake()
+        private void Awake()
         {
             if (Main == null)
             {
@@ -58,7 +59,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             InvokeRepeating("TickPlanets", 1f, 1f);
         }
 
-        new void Start()
+        private new void Start()
         {
             base.Start();
             // Initialize Stuff Above
@@ -75,20 +76,20 @@ namespace Assets.Scripts.Classes.WorldSingleton
             BehaviorManager.instance.MaxTaskExecutionsPerTick = 1;
         }
 
-        bool CreateSky()
+        private bool CreateSky()
         {
             GameObject sky = Instantiate(Sky, new Vector3(0,-16,0), Quaternion.identity);
             return true;
         }
 
-        Vector3 PolarCoordinates(float rad, float distance)
+        private Vector3 PolarCoordinates(float rad, float distance)
         {
             float x = Mathf.Sin(2 * rad * Mathf.PI) * distance;
             float z = Mathf.Cos(2 * rad * Mathf.PI) * distance;
             return new Vector3(x, 0, z);
         }
 
-        Planet FindClosest(List<Planet> list, Planet current)
+        private Planet FindClosest(List<Planet> list, Planet current)
         {
             Planet result = list[0];
             float best = Vector3.Distance(list[0].transform.position, current.transform.position);
@@ -104,7 +105,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return result;
         }
 
-        Vector3 FindClosest(List<Vector3> list, Vector3 current)
+        private Vector3 FindClosest(List<Vector3> list, Vector3 current)
         {
             Vector3 result = list[0];
             float best = Vector3.Distance(list[0], current);
@@ -120,7 +121,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return result;
         }
 
-        Vector3 GetBestCandidate(List<Vector3> samples, int numCandidates)
+        private Vector3 GetBestCandidate(List<Vector3> samples, int numCandidates)
         {
             Vector3 bestCandidate = Vector3.zero;
             float bestDistance = 0;
@@ -139,7 +140,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return bestCandidate;
         }
 
-        List<Vector3> GenerateMoonPositions(int numMoons, int numCandidates, List<Vector3> alsoAvoid = null)
+        private List<Vector3> GenerateMoonPositions(int numMoons, int numCandidates, List<Vector3> alsoAvoid = null)
         {
             List<Vector3> activeSamples = new List<Vector3>();
             if (alsoAvoid != null)
@@ -160,7 +161,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return result;
         }
 
-        void CreateSaturnSystem()
+        private void CreateSaturnSystem()
         {
             Saturn = Instantiate((GameObject)Resources.Load("Prefabs/Saturn"), new Vector3(0, 0, 0), Quaternion.identity);
             Saturn.transform.localScale += (new Vector3(30,30,30) - Saturn.transform.localScale);
@@ -233,7 +234,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
-        bool CreatePlanetNodes()
+        private bool CreatePlanetNodes()
         {
             var planets = GameObject.FindObjectsOfType<Planet>();
         
@@ -276,7 +277,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space) && Spaceship.inTime)
             {
@@ -290,7 +291,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
-        List<string> ListOfSaturnMoonNames()
+        private List<string> ListOfSaturnMoonNames()
         {
             return new List<string>
                    {

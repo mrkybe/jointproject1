@@ -31,6 +31,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
+        /// <summary>
+        /// Adds a MarketOrder containing resources for sale.
+        /// </summary>
+        /// <param name="order"></param>
         public void PlaceSellOrder(MarketOrder order)
         {
             foreach (MarketOrder existing in sellingOrdersByPlanet[order.origin])
@@ -45,6 +49,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
             sellingOrdersByPlanet[order.origin].Add(order);
         }
 
+        /// <summary>
+        /// Adds a MarketOrder containing resources to buy.
+        /// </summary>
+        /// <param name="order"></param>
         public void PlaceBuyOrder(MarketOrder order)
         {
             foreach (MarketOrder existing in buyingOrdersByPlanet[order.origin])
@@ -58,12 +66,15 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             buyingOrdersByPlanet[order.origin].Add(order);
         }
-
-        public void StartMatchingOrders()
+        
+        private void StartMatchingOrders()
         {
-            //InvokeRepeating("MatchOrders", 1f, 1f);
+            InvokeRepeating("MatchOrders", 1f, 1f);
         }
 
+        /// <summary>
+        /// Allows the Unity Editor to call this method.  Don't use this unless you know what you're doing.
+        /// </summary>
         public void MatchOrders()
         {
             StartCoroutine(MatchOrdersCoroutine());
