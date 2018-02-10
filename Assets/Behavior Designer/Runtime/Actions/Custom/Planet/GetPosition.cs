@@ -37,7 +37,6 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom.Planet
         {
             if (targetTransform == null)
             {
-                Debug.LogWarning("Planet is null");
                 return TaskStatus.Failure;
             }
 
