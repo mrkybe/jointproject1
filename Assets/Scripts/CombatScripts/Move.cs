@@ -18,33 +18,19 @@ public class Move : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-<<<<<<< HEAD
-		rb = gameObject.GetComponent<Rigidbody>();
-=======
+
         rb = gameObject.GetComponent<Rigidbody>();
->>>>>>> master
     }
 
 	void Update()
 	{
 		timeMove ();
-<<<<<<< HEAD
-		//checkCont ();
-=======
->>>>>>> master
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-<<<<<<< HEAD
-		//forceMove ();
+		look();
 		rb.velocity = velocity;
-        look();
-=======
-		
-        look();
-		rb.velocity = velocity;
->>>>>>> master
     }
 
 	//<summary>
@@ -66,21 +52,15 @@ public class Move : MonoBehaviour {
 		float angle = Mathf.Atan2 (rx, rz) * Mathf.Rad2Deg;
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
-<<<<<<< HEAD
         */
 		velocity = move * speed;
 	}
 		
-
-=======
-        velocity = move * speed;
-	}
 	//<summary>
 	// look function handles both mouse and controller inputs. Using the mouse, generate a ray at the mouse screen position and rotate the player
 	// to face that mouse position. For the controller, get the axis values from the right stick and calculate a vector3 direction. Rotate the player
 	// to face that vector3 direction.
 	//</summary>
->>>>>>> master
     void look()
     {
         
