@@ -25,8 +25,10 @@ public class TradeMenuMk2 : MonoBehaviour
     private Vector2 on;
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
+
     private bool isRightOff;
     private bool isLeftOff;
+
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
 
@@ -43,28 +45,9 @@ public class TradeMenuMk2 : MonoBehaviour
         ship = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
         buttonListLeft = new List<Button>();
         buttonListRight = new List<Button>();
-        int i = 0;
 
-        for (i = 0; i < 15; i++)                                        // Only 15 buttons per panel.  Look into later.
-        {
-            Button myButton1 = Instantiate(buttonPrefab1);
-            buttonListLeft.Add(myButton1);
-            Button myButton2 = Instantiate(buttonPrefab2);
-            myButton2.onClick.AddListener(MakeTrade);
-            buttonListRight.Add(myButton2);
-        }
-
-        foreach (var b in buttonListLeft)                                 // List of buttons so they can be edited and set active or inactive.
-        {
-            b.transform.SetParent(leftPanel, false);
-            b.gameObject.SetActive(false);
-        }
-
-        foreach (var b in buttonListRight)
-        {
-            b.transform.SetParent(rightPanel, false);
-            b.gameObject.SetActive(false);
-        }
+        PopulatePanel(buttonListLeft, buttonPrefab1, leftPanel);
+        PopulatePanel(buttonListRight, buttonPrefab2, rightPanel);
     }
 
 
@@ -82,7 +65,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
                 int i = 0;
 
-                if (shipsInRange.Count <= 15)                            // I only made 15 buttons, for now.  Might add scrolling, later.
+                if (shipsInRange.Count <= buttonListLeft.Count)
                 {
                     for (i = 0; i < shipsInRange.Count; i++)
                     {
@@ -90,6 +73,7 @@ public class TradeMenuMk2 : MonoBehaviour
                         buttonListLeft[i].gameObject.SetActive(true);
                         buttonListLeft[i].onClick.AddListener(() => { OpenInventory(buttonListLeft[i]); });
                         print(buttonListLeft[i].GetComponentInChildren<Text>().text);
+
                         if (shipsInRange.Count < 15)
                         {
                             int j = 0;
@@ -118,7 +102,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     buttonListLeft[i].GetComponentInChildren<Text>().text = "";            // Clear list of buttons on menu closing.
                     buttonListLeft[i].gameObject.SetActive(false);
                 }
-                Time.timeScale = 1;                                                     // Again, might not be the best way to pause/unpause.
+                Time.timeScale = 1;
                 leftPanel.anchoredPosition = leftOffPosition;
                 isLeftOff = true;
             }
@@ -130,14 +114,37 @@ public class TradeMenuMk2 : MonoBehaviour
         if (isRightOff)
         {
             rightPanel.anchoredPosition = on;
-            print(butt.GetComponentInChildren<Text>().text);
+            buttonListRight[0].GetComponentInChildren<Text>().text = butt.GetComponentInChildren<Text>().text;
+            buttonListRight[0].gameObject.SetActive(true);
+            buttonListRight[0].onClick.AddListener(MakeTrade);
             isRightOff = false;
         }
     }
 
     private void MakeTrade()
     {
-        throw new NotImplementedException();
+        if (!isRightOff)
+        {
+            rightPanel.anchoredPosition = rightOffPosition;
+            isRightOff = true;
+        }
+    }
+
+    private void PopulatePanel(List<Button> list, Button butt, RectTransform panel)
+    {
+        int i = 0;
+
+        for (i = 0; i < 15; i++)                                        // Only 15 buttons per panel.  Look into later.
+        {
+            butt = Instantiate(buttonPrefab1);
+            list.Add(butt);
+        }
+
+        foreach (var b in list)                                         // List of buttons so they can be edited and set active or inactive.
+        {
+            b.transform.SetParent(panel, false);
+            b.gameObject.SetActive(false);
+        }
     }
 }
 
