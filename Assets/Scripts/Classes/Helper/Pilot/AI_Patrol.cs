@@ -24,7 +24,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private SharedBool FreshKill;
         private SharedBool Safe;
         private SharedVector2 ControlStick;
-        private SharedFloat TargetSpeed;
         private SharedPlanet HomePlanet;
         private SharedSpaceship shipScript;
         private SharedSpaceship AttackTarget;
@@ -33,6 +32,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private float interactionDistance = 5f;
         private Rigidbody rigidbody;
         public float Speed;
+        public SharedFloat TargetSpeed;
 
         // Use this for initialization
         public void Awake()
@@ -74,8 +74,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             {
                 targetFaceDirection = transform.forward;
             }
-            targetSpeed = TargetSpeed.Value;
-            float ratio = Mathf.Clamp((targetSpeed - Speed), -1.0f, 1.0f);
+
+            float ratio = Mathf.Clamp((TargetSpeed.Value - Speed), -1.0f, 1.0f);
             if (float.IsNaN(ratio))
             {
                 ratio = 0;

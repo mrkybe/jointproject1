@@ -59,7 +59,7 @@ namespace Assets.Scripts.Classes.Mobile {
         static public bool inTime;
         private Vector3 gravityVector;
 
-        public Rigidbody rigidbody;
+        public Rigidbody MyRigidbody;
         // Use this for initialization
 
         [SerializeField]
@@ -98,7 +98,7 @@ namespace Assets.Scripts.Classes.Mobile {
         new void Start ()
         {
             inTime = true;
-            rigidbody = GetComponent<Rigidbody>();
+            MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetModel(modelChoice);
         }
@@ -114,8 +114,8 @@ namespace Assets.Scripts.Classes.Mobile {
             torquey = Vector3.SignedAngle(transform.forward, pilot.TargetFaceDirection, Vector3.up);
             dTorquey = (torquey - old_torquey) / Time.fixedDeltaTime;
 
-            dVelocity = (rigidbody.velocity - old_velocity) / Time.fixedDeltaTime;
-            dAngularVelocity = (rigidbody.angularVelocity - old_angularVelocity) / Time.fixedDeltaTime;
+            dVelocity = (MyRigidbody.velocity - old_velocity) / Time.fixedDeltaTime;
+            dAngularVelocity = (MyRigidbody.angularVelocity - old_angularVelocity) / Time.fixedDeltaTime;
         }
 
         new void Update ()
@@ -127,11 +127,11 @@ namespace Assets.Scripts.Classes.Mobile {
                 direction = transform.forward;
                 velocity = engineRunSpeed;
 
-                float av = rigidbody.angularVelocity.y;
+                float av = MyRigidbody.angularVelocity.y;
                 float max_torq = TurningSpeed;
                 float nT = (dTorquey / 2f);
                 float torq = Mathf.Clamp(torquey + nT, -max_torq - av, max_torq - av);
-                rigidbody.AddTorque(new Vector3(0, torq, 0));
+                MyRigidbody.AddTorque(new Vector3(0, torq, 0));
                 Move();
             }
         }
@@ -142,8 +142,8 @@ namespace Assets.Scripts.Classes.Mobile {
         public void LateUpdate()
         {
             old_throttleInput = throttle_input;
-            old_angularVelocity = rigidbody.angularVelocity;
-            old_velocity = rigidbody.velocity;
+            old_angularVelocity = MyRigidbody.angularVelocity;
+            old_velocity = MyRigidbody.velocity;
             old_torquey = torquey;
         }
 
@@ -151,10 +151,10 @@ namespace Assets.Scripts.Classes.Mobile {
         {
             Vector3 engineVel = (direction.normalized * pilot.Throttle);
             Vector3 finalVel = (engineVel) * Time.deltaTime * engineAcceleration;
-            float velmax = ((rigidbody.velocity.magnitude) / maxSpeed);
-            rigidbody.AddForce(finalVel);
-            float dot = Vector3.Dot(rigidbody.velocity.normalized, rigidbody.transform.forward);
-            rigidbody.velocity = rigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + rigidbody.transform.forward * rigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
+            float velmax = ((MyRigidbody.velocity.magnitude) / maxSpeed);
+            MyRigidbody.AddForce(finalVel);
+            float dot = Vector3.Dot(MyRigidbody.velocity.normalized, MyRigidbody.transform.forward);
+            MyRigidbody.velocity = MyRigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + MyRigidbody.transform.forward * MyRigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
         }
 
         public void SensorEnter(Collider other)

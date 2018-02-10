@@ -9,7 +9,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         protected Vector2 control_stickDirection;
         protected Vector3 targetFaceDirection;
         protected Vector3 targetVelocity;
-        protected float targetSpeed;
         protected float throttle = 0f;
 
         public SensorArray SensorArray
@@ -25,7 +24,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             targetFaceDirection = transform.forward;
             targetVelocity = Vector3.zero;
             throttle = 0f;
-            targetSpeed = 0f;
         }
 
         protected void Update()
@@ -45,15 +43,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
                 return targetFaceDirection;
             }
             set { targetFaceDirection = value; }
-        }
-
-        public float TargetSpeed
-        {
-            get
-            {
-                //Debug.Log("Tried to get targetSpeed, gonna tell him " + targetSpeed);
-                return targetSpeed;
-            }
         }
 
         public abstract void Die();
