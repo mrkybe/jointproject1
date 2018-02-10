@@ -1,25 +1,26 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Light
 {
     [TaskCategory("Basic/Light")]
     [TaskDescription("Sets the shadow strength of the light.")]
     public class SetShadowSoftnessStrength : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The shadow strength to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The shadow strength to set")]
         public SharedFloat shadowStrength;
 
         // cache the light component
-        private Light light;
-        private GameObject prevGameObject;
+        private UnityEngine.Light light;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                light = currentGameObject.GetComponent<Light>();
+                light = currentGameObject.GetComponent<UnityEngine.Light>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
         public override TaskStatus OnUpdate()
         {
             if (light == null) {
-                Debug.LogWarning("Light is null");
+                UnityEngine.Debug.LogWarning("Light is null");
                 return TaskStatus.Failure;
             }
 

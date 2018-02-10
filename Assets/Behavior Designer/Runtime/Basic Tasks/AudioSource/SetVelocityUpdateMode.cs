@@ -1,24 +1,26 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.AudioSource
 {
     [TaskCategory("Basic/AudioSource")]
     [TaskDescription("Sets the rolloff mode of the AudioSource. Returns Success.")]
     public class SetVelocityUpdateMode : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The velocity update mode of the AudioSource")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The velocity update mode of the AudioSource")]
         public AudioVelocityUpdateMode velocityUpdateMode;
 
-        private AudioSource audioSource;
-        private GameObject prevGameObject;
+        private UnityEngine.AudioSource audioSource;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                audioSource = currentGameObject.GetComponent<AudioSource>();
+                audioSource = currentGameObject.GetComponent<UnityEngine.AudioSource>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
         public override TaskStatus OnUpdate()
         {
             if (audioSource == null) {
-                Debug.LogWarning("AudioSource is null");
+                UnityEngine.Debug.LogWarning("AudioSource is null");
                 return TaskStatus.Failure;
             }
 

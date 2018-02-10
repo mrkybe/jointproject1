@@ -1,22 +1,24 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
-using System;
-using System.Reflection;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Actions.Reflection
 {
     [TaskDescription("Gets the value from the field specified. Returns success if the field was retrieved.")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=147")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=147")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class GetFieldValue : Action
     {
-        [Tooltip("The GameObject to get the field on")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to get the field on")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The component to get the field on")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to get the field on")]
         public SharedString componentName;
-        [Tooltip("The name of the field")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the field")]
         public SharedString fieldName;
-        [Tooltip("The value of the field")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value of the field")]
         [RequiredField]
         public SharedVariable fieldValue;
 

@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CharacterController
 {
     [TaskCategory("Basic/CharacterController")]
     [TaskDescription("Sets the slope limit of the CharacterController. Returns Success.")]
     public class SetSlopeLimit : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The slope limit of the CharacterController")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The slope limit of the CharacterController")]
         public SharedFloat slopeLimit;
 
-        private CharacterController characterController;
-        private GameObject prevGameObject;
+        private UnityEngine.CharacterController characterController;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                characterController = currentGameObject.GetComponent<CharacterController>();
+                characterController = currentGameObject.GetComponent<UnityEngine.CharacterController>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
         public override TaskStatus OnUpdate()
         {
             if (characterController == null) {
-                Debug.LogWarning("CharacterController is null");
+                UnityEngine.Debug.LogWarning("CharacterController is null");
                 return TaskStatus.Failure;
             }
 

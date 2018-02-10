@@ -1,4 +1,6 @@
-namespace BehaviorDesigner.Runtime.Tasks
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Composites
 {
     [TaskDescription("Similar to the sequence task, the parallel task will run each child task until a child task returns failure. " +
                      "The difference is that the parallel task will run all of its children tasks simultaneously versus running each task one at a time. " +

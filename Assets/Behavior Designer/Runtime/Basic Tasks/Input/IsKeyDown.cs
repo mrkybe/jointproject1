@@ -1,17 +1,18 @@
-﻿using UnityEngine;
+﻿using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Returns success when the specified key is pressed.")]
     public class IsKeyDown : Conditional
     {
-        [Tooltip("The key to test")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to test")]
         public KeyCode key;
 
         public override TaskStatus OnUpdate()
         {
-            return Input.GetKeyDown(key) ? TaskStatus.Success : TaskStatus.Failure;
+            return UnityEngine.Input.GetKeyDown(key) ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()

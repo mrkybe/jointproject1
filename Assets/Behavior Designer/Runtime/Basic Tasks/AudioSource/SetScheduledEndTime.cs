@@ -1,25 +1,26 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.AudioSource
 {
     [TaskCategory("Basic/AudioSource")]
     [TaskDescription("Changes the time at which a sound that has already been scheduled to play will end. Notice that depending on the " +
                      "timing not all rescheduling requests can be fulfilled. Returns Success.")]
     public class SetScheduledEndTime : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("Time in seconds")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Time in seconds")]
         public SharedFloat time = 0;
 
-        private AudioSource audioSource;
-        private GameObject prevGameObject;
+        private UnityEngine.AudioSource audioSource;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                audioSource = currentGameObject.GetComponent<AudioSource>();
+                audioSource = currentGameObject.GetComponent<UnityEngine.AudioSource>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
         public override TaskStatus OnUpdate()
         {
             if (audioSource == null) {
-                Debug.LogWarning("AudioSource is null");
+                UnityEngine.Debug.LogWarning("AudioSource is null");
                 return TaskStatus.Failure;
             }
 

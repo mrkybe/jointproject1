@@ -1,12 +1,8 @@
-namespace ShipInternals
+using System;
+using System.Collections.Generic;
+
+namespace Assets.Scripts.Classes.Helper.ShipInternals
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using UnityEngine;
-
-
     /// <summary>
     /// A CargoItem keeps track of a single kind of resource in a CargoHold.
     /// </summary>

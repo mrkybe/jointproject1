@@ -1,19 +1,20 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Sets the value with the specified key from the PlayerPrefs.")]
     public class SetInt : Action
     {
-        [Tooltip("The key to store")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to store")]
         public SharedString key;
-        [Tooltip("The value to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set")]
         public SharedInt value;
 
         public override TaskStatus OnUpdate()
         {
-            PlayerPrefs.SetInt(key.Value, value.Value);
+            UnityEngine.PlayerPrefs.SetInt(key.Value, value.Value);
 
             return TaskStatus.Success;
         }

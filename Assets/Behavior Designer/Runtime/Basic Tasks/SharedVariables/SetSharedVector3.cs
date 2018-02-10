@@ -1,15 +1,16 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedVector3 variable to the specified object. Returns Success.")]
     public class SetSharedVector3 : Action
     {
-        [Tooltip("The value to set the SharedVector3 to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set the SharedVector3 to")]
         public SharedVector3 targetValue;
         [RequiredField]
-        [Tooltip("The SharedVector3 to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedVector3 to set")]
         public SharedVector3 targetVariable;
 
         public override TaskStatus OnUpdate()
@@ -21,8 +22,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 
         public override void OnReset()
         {
-            targetValue = Vector3.zero;
-            targetVariable = Vector3.zero;
+            targetValue = UnityEngine.Vector3.zero;
+            targetVariable = UnityEngine.Vector3.zero;
         }
     }
 }

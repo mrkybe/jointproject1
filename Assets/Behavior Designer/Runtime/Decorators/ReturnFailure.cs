@@ -1,4 +1,6 @@
-namespace BehaviorDesigner.Runtime.Tasks
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Decorators
 {
     [TaskDescription("The return failure task will always return failure except when the child task is running.")]
     [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=38")]

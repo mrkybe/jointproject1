@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Transform
 {
     [TaskCategory("Basic/Transform")]
     [TaskDescription("Returns Success if the transform is a child of the specified GameObject.")]
     public class IsChildOf : Conditional
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The interested transform")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The interested transform")]
         public SharedTransform transformName;
 
-        private Transform targetTransform;
-        private GameObject prevGameObject;
+        private UnityEngine.Transform targetTransform;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                targetTransform = currentGameObject.GetComponent<Transform>();
+                targetTransform = currentGameObject.GetComponent<UnityEngine.Transform>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override TaskStatus OnUpdate()
         {
             if (targetTransform == null) {
-                Debug.LogWarning("Transform is null");
+                UnityEngine.Debug.LogWarning("Transform is null");
                 return TaskStatus.Failure;
             }
 

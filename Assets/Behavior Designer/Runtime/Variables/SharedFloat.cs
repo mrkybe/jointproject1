@@ -1,4 +1,6 @@
-namespace BehaviorDesigner.Runtime
+using BehaviorDesigner.Runtime;
+
+namespace Assets.Behavior_Designer.Runtime.Variables
 {
     [System.Serializable]
     public class SharedFloat : SharedVariable<float>

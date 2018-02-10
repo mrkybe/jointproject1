@@ -1,6 +1,7 @@
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine.Networking;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityNetwork
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Network
 {
     public class IsServer : Conditional
     {

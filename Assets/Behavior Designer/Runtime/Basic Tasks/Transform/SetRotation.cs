@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Transform
 {
     [TaskCategory("Basic/Transform")]
     [TaskDescription("Sets the rotation of the Transform. Returns Success.")]
     public class SetRotation : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The rotation of the Transform")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The rotation of the Transform")]
         public SharedQuaternion rotation;
 
-        private Transform targetTransform;
-        private GameObject prevGameObject;
+        private UnityEngine.Transform targetTransform;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                targetTransform = currentGameObject.GetComponent<Transform>();
+                targetTransform = currentGameObject.GetComponent<UnityEngine.Transform>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override TaskStatus OnUpdate()
         {
             if (targetTransform == null) {
-                Debug.LogWarning("Transform is null");
+                UnityEngine.Debug.LogWarning("Transform is null");
                 return TaskStatus.Failure;
             }
 
@@ -38,7 +39,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override void OnReset()
         {
             targetGameObject = null;
-            rotation = Quaternion.identity;
+            rotation = UnityEngine.Quaternion.identity;
         }
     }
 }

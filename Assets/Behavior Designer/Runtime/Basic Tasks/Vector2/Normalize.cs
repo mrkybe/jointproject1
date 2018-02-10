@@ -1,14 +1,15 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Normalize the Vector2.")]
     public class Normalize : Action
     {
-        [Tooltip("The Vector2 to normalize")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector2 to normalize")]
         public SharedVector2 vector2Variable;
-        [Tooltip("The normalized resut")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The normalized resut")]
         [RequiredField]
         public SharedVector2 storeResult;
 
@@ -20,7 +21,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
 
         public override void OnReset()
         {
-            vector2Variable = storeResult = Vector2.zero;
+            vector2Variable = storeResult = UnityEngine.Vector2.zero;
         }
     }
 }

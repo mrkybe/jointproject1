@@ -1,16 +1,18 @@
-﻿using UnityEngine;
+﻿using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Sends a message to the target GameObject. Returns Success.")]
     public class SendMessage : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The message to send")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The message to send")]
         public SharedString message;
-        [Tooltip("The value to send")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to send")]
         public SharedGenericVariable value;
 
         public override TaskStatus OnUpdate()

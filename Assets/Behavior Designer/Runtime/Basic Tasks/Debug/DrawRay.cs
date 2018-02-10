@@ -1,29 +1,31 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Debug
 {
     [TaskCategory("Basic/Debug")]
     [TaskDescription("Draws a debug ray")]
     public class DrawRay : Action
     {
-        [Tooltip("The position")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The position")]
         public SharedVector3 start;
-        [Tooltip("The direction")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The direction")]
         public SharedVector3 direction;
-        [Tooltip("The color")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The color")]
         public SharedColor color = Color.white;
 
         public override TaskStatus OnUpdate()
         {
-            Debug.DrawRay(start.Value, direction.Value, color.Value);
+            UnityEngine.Debug.DrawRay(start.Value, direction.Value, color.Value);
 
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            start = Vector3.zero;
-            direction = Vector3.zero;
+            start = UnityEngine.Vector3.zero;
+            direction = UnityEngine.Vector3.zero;
             color = Color.white;
         }
     }

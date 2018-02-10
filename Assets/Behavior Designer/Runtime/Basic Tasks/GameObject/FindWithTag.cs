@@ -1,20 +1,21 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Finds a GameObject by tag. Returns Success.")]
     public class FindWithTag : Action
     {
-        [Tooltip("The tag of the GameObject to find")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The tag of the GameObject to find")]
         public SharedString tag;
-        [Tooltip("The object found by name")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The object found by name")]
         [RequiredField]
         public SharedGameObject storeValue;
 
         public override TaskStatus OnUpdate()
         {
-            storeValue.Value = GameObject.FindWithTag(tag.Value);
+            storeValue.Value = UnityEngine.GameObject.FindWithTag(tag.Value);
 
             return TaskStatus.Success;
         }

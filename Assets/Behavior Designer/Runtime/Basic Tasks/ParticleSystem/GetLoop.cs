@@ -1,25 +1,26 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityParticleSystem
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.ParticleSystem
 {
     [TaskCategory("Basic/ParticleSystem")]
     [TaskDescription("Stores if the Particle System should loop.")]
     public class GetLoop : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("Should the ParticleSystem loop?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Should the ParticleSystem loop?")]
         [RequiredField]
         public SharedBool storeResult;
 
-        private ParticleSystem particleSystem;
-        private GameObject prevGameObject;
+        private UnityEngine.ParticleSystem particleSystem;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                particleSystem = currentGameObject.GetComponent<ParticleSystem>();
+                particleSystem = currentGameObject.GetComponent<UnityEngine.ParticleSystem>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityParticleSystem
         public override TaskStatus OnUpdate()
         {
             if (particleSystem == null) {
-                Debug.LogWarning("ParticleSystem is null");
+                UnityEngine.Debug.LogWarning("ParticleSystem is null");
                 return TaskStatus.Failure;
             }
 

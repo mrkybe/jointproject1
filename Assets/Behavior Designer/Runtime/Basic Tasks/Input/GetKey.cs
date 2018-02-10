@@ -1,20 +1,22 @@
-﻿using UnityEngine;
+﻿using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Stores the pressed state of the specified key.")]
     public class GetKey : Action
     {
-        [Tooltip("The key to test.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The key to test.")]
         public KeyCode key;
         [RequiredField]
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         public SharedBool storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Input.GetKey(key);
+            storeResult.Value = UnityEngine.Input.GetKey(key);
             return TaskStatus.Success;
         }
 

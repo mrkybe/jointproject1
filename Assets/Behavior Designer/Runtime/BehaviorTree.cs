@@ -1,6 +1,7 @@
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime
+namespace Assets.Behavior_Designer.Runtime
 {
     // Wrapper for the Behavior class
     [AddComponentMenu("Behavior Designer/Behavior Tree")]

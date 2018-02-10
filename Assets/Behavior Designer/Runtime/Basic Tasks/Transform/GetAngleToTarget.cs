@@ -1,31 +1,32 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Transform
 {
     [TaskCategory("Basic/Transform")]
     [TaskDescription("Gets the Angle between a GameObject's forward direction and a target. Returns Success.")]
     public class GetAngleToTarget : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The target object to measure the angle to. If null the targetPosition will be used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The target object to measure the angle to. If null the targetPosition will be used.")]
         public SharedGameObject targetObject;
-        [Tooltip("The world position to measure an angle to. If the targetObject is also not null, this value is used as an offset from that object's position.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The world position to measure an angle to. If the targetObject is also not null, this value is used as an offset from that object's position.")]
         public SharedVector3 targetPosition;
-        [Tooltip("Ignore height differences when calculating the angle?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Ignore height differences when calculating the angle?")]
         public SharedBool ignoreHeight = true;
-        [Tooltip("The angle to the target")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The angle to the target")]
         [RequiredField]
         public SharedFloat storeValue;
 
-        private Transform targetTransform;
-        private GameObject prevGameObject;
+        private UnityEngine.Transform targetTransform;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                targetTransform = currentGameObject.GetComponent<Transform>();
+                targetTransform = currentGameObject.GetComponent<UnityEngine.Transform>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -33,11 +34,11 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override TaskStatus OnUpdate()
         {
             if (targetTransform == null) {
-                Debug.LogWarning("Transform is null");
+                UnityEngine.Debug.LogWarning("Transform is null");
                 return TaskStatus.Failure;
             }
 
-            Vector3 targetPos;
+            UnityEngine.Vector3 targetPos;
             if (targetObject.Value != null) {
                 targetPos = targetObject.Value.transform.InverseTransformPoint(targetPosition.Value);
             } else {
@@ -49,7 +50,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
             }
 
             var targetDir = targetPos - targetTransform.position;
-            storeValue.Value = Vector3.Angle(targetDir, targetTransform.forward);
+            storeValue.Value = UnityEngine.Vector3.Angle(targetDir, targetTransform.forward);
 
             return TaskStatus.Success;
         }
@@ -58,7 +59,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         {
             targetGameObject = null;
             targetObject = null;
-            targetPosition = Vector3.zero;
+            targetPosition = UnityEngine.Vector3.zero;
             ignoreHeight = true;
             storeValue = 0;
         }

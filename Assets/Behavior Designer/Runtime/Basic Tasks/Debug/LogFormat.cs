@@ -1,6 +1,8 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Debug
 {
     [TaskDescription("LogFormat is analgous to Debug.LogFormat().\n" +
         "It takes format string, substitutes arguments supplied a '{0-4}' and returns success.\n" +
@@ -9,10 +11,10 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
     [TaskIcon("{SkinColor}LogIcon.png")]
     public class LogFormat : Action
     {
-        [Tooltip("Text format with {0}, {1}, etc")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Text format with {0}, {1}, etc")]
         public SharedString textFormat;
 
-        [Tooltip("Is this text an error?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Is this text an error?")]
         public SharedBool logError;
 
         public SharedVariable arg0;
@@ -25,9 +27,9 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
             var paramsArray = buildParamsArray();
             // Log the text and return success
             if (logError.Value) {
-                Debug.LogErrorFormat(textFormat.Value, paramsArray);
+                UnityEngine.Debug.LogErrorFormat(textFormat.Value, paramsArray);
             } else {
-                Debug.LogFormat(textFormat.Value, paramsArray);
+                UnityEngine.Debug.LogFormat(textFormat.Value, paramsArray);
             }
             return TaskStatus.Success;
         }

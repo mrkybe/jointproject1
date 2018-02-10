@@ -1,20 +1,21 @@
-﻿using UnityEngine;
+﻿using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Stores the state of the specified button.")]
     public class GetButton : Action
     {
-        [Tooltip("The name of the button")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the button")]
         public SharedString buttonName;
         [RequiredField]
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         public SharedBool storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Input.GetButton(buttonName.Value);
+            storeResult.Value = UnityEngine.Input.GetButton(buttonName.Value);
             return TaskStatus.Success;
         }
 

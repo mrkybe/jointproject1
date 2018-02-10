@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Composites
 {
     [TaskDescription("Similar to the selector task, the priority selector task will return success as soon as a child task returns success. " +
                       "Instead of running the tasks sequentially from left to right within the tree, the priority selector will ask the task what its priority is to determine the order. " +

@@ -1,20 +1,21 @@
-﻿using UnityEngine;
+﻿using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityInput
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Input
 {
     [TaskCategory("Basic/Input")]
     [TaskDescription("Stores the state of the specified mouse button.")]
     public class GetMouseButton : Action
     {
-        [Tooltip("The index of the button")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The index of the button")]
         public SharedInt buttonIndex;
         [RequiredField]
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         public SharedBool storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Input.GetMouseButton(buttonIndex.Value);
+            storeResult.Value = UnityEngine.Input.GetMouseButton(buttonIndex.Value);
             return TaskStatus.Success;
         }
 

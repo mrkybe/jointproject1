@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Instantiates a new GameObject. Returns Success.")]
     public class Instantiate : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The position of the new GameObject")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The position of the new GameObject")]
         public SharedVector3 position;
-        [Tooltip("The rotation of the new GameObject")]
-        public SharedQuaternion rotation = Quaternion.identity;
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The rotation of the new GameObject")]
+        public SharedQuaternion rotation = UnityEngine.Quaternion.identity;
         [SharedRequired]
-        [Tooltip("The instantiated GameObject")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The instantiated GameObject")]
         public SharedGameObject storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = GameObject.Instantiate(targetGameObject.Value, position.Value, rotation.Value) as GameObject;
+            storeResult.Value = UnityEngine.GameObject.Instantiate(targetGameObject.Value, position.Value, rotation.Value) as UnityEngine.GameObject;
 
             return TaskStatus.Success;
         }
@@ -26,8 +27,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
         public override void OnReset()
         {
             targetGameObject = null;
-            position = Vector3.zero;
-            rotation = Quaternion.identity;
+            position = UnityEngine.Vector3.zero;
+            rotation = UnityEngine.Quaternion.identity;
         }
     }
 }

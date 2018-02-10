@@ -1,16 +1,18 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Clamps the float between two values.")]
     public class FloatClamp : Action
     {
-        [Tooltip("The float to clamp")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The float to clamp")]
         public SharedFloat floatVariable;
-        [Tooltip("The maximum value of the float")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum value of the float")]
         public SharedFloat minValue;
-        [Tooltip("The maximum value of the float")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum value of the float")]
         public SharedFloat maxValue;
 
         public override TaskStatus OnUpdate()

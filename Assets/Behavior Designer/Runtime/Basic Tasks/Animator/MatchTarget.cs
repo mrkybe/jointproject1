@@ -1,36 +1,38 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Automatically adjust the gameobject position and rotation so that the AvatarTarget reaches the matchPosition when the current state is at the specified progress. Returns Success.")]
     public class MatchTarget : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The position we want the body part to reach")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The position we want the body part to reach")]
         public SharedVector3 matchPosition;
-        [Tooltip("The rotation in which we want the body part to be")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The rotation in which we want the body part to be")]
         public SharedQuaternion matchRotation;
-        [Tooltip("The body part that is involved in the match")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The body part that is involved in the match")]
         public AvatarTarget targetBodyPart;
-        [Tooltip("Weights for matching position")]
-        public Vector3 weightMaskPosition;
-        [Tooltip("Weights for matching rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Weights for matching position")]
+        public UnityEngine.Vector3 weightMaskPosition;
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Weights for matching rotation")]
         public float weightMaskRotation;
-        [Tooltip("Start time within the animation clip")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Start time within the animation clip")]
         public float startNormalizedTime;
-        [Tooltip("End time within the animation clip")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("End time within the animation clip")]
         public float targetNormalizedTime = 1;
 
-        private Animator animator;
-        private GameObject prevGameObject;
+        private UnityEngine.Animator animator;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<Animator>();
+                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -38,7 +40,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                Debug.LogWarning("Animator is null");
+                UnityEngine.Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 
@@ -50,10 +52,10 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
         public override void OnReset()
         {
             targetGameObject = null;
-            matchPosition = Vector3.zero;
-            matchRotation = Quaternion.identity;
+            matchPosition = UnityEngine.Vector3.zero;
+            matchRotation = UnityEngine.Quaternion.identity;
             targetBodyPart = AvatarTarget.Root;
-            weightMaskPosition = Vector3.zero;
+            weightMaskPosition = UnityEngine.Vector3.zero;
             weightMaskRotation = 0;
             startNormalizedTime = 0;
             targetNormalizedTime = 1;

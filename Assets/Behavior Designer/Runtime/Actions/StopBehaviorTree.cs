@@ -1,17 +1,19 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Actions
 {
     [TaskDescription("Pause or disable a behavior tree and return success after it has been stopped.")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=21")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=21")]
     [TaskIcon("{SkinColor}StopBehaviorTreeIcon.png")]
     public class StopBehaviorTree : Action
     {
-        [Tooltip("The GameObject of the behavior tree that should be stopped. If null use the current behavior")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject of the behavior tree that should be stopped. If null use the current behavior")]
         public SharedGameObject behaviorGameObject;
-        [Tooltip("The group of the behavior tree that should be stopped")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The group of the behavior tree that should be stopped")]
         public SharedInt group;
-        [Tooltip("Should the behavior be paused or completely disabled")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Should the behavior be paused or completely disabled")]
         public SharedBool pauseBehavior = false;
 
         private Behavior behavior;

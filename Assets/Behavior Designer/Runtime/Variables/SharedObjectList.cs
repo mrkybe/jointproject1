@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections.Generic;
+using BehaviorDesigner.Runtime;
+using UnityEngine;
 
-namespace BehaviorDesigner.Runtime
+namespace Assets.Behavior_Designer.Runtime.Variables
 {
     [System.Serializable]
     public class SharedObjectList : SharedVariable<List<Object>>

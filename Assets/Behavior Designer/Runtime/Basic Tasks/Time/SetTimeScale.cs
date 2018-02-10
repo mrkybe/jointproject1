@@ -1,17 +1,18 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTime
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Time
 {
     [TaskCategory("Basic/Time")]
     [TaskDescription("Sets the scale at which time is passing.")]
     public class SetTimeScale : Action
     {
-        [Tooltip("The timescale")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The timescale")]
         public SharedFloat timeScale;
 
         public override TaskStatus OnUpdate()
         {
-            Time.timeScale = timeScale.Value;
+            UnityEngine.Time.timeScale = timeScale.Value;
             return TaskStatus.Success;
         }
 

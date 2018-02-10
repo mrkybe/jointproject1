@@ -1,12 +1,14 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Stores the absolute value of the float.")]
     public class FloatAbs : Action
     {
-        [Tooltip("The float to return the absolute value of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The float to return the absolute value of")]
         public SharedFloat floatVariable;
 
         public override TaskStatus OnUpdate()

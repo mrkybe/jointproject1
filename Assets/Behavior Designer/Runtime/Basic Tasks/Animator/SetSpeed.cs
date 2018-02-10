@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Sets the playback speed of the Animator. 1 is normal playback speed. Returns Success.")]
     public class SetSpeed : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The playback speed of the Animator")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The playback speed of the Animator")]
         public SharedFloat speed;
 
-        private Animator animator;
-        private GameObject prevGameObject;
+        private UnityEngine.Animator animator;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<Animator>();
+                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                Debug.LogWarning("Animator is null");
+                UnityEngine.Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 

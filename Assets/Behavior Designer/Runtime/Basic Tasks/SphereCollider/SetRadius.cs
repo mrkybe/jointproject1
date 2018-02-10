@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnitySphereCollider
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SphereCollider
 {
     [TaskCategory("Basic/SphereCollider")]
     [TaskDescription("Sets the radius of the SphereCollider. Returns Success.")]
     public class SetRadius : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The radius of the SphereCollider")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The radius of the SphereCollider")]
         public SharedFloat radius;
 
-        private SphereCollider sphereCollider;
-        private GameObject prevGameObject;
+        private UnityEngine.SphereCollider sphereCollider;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                sphereCollider = currentGameObject.GetComponent<SphereCollider>();
+                sphereCollider = currentGameObject.GetComponent<UnityEngine.SphereCollider>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnitySphereCollider
         public override TaskStatus OnUpdate()
         {
             if (sphereCollider == null) {
-                Debug.LogWarning("SphereCollider is null");
+                UnityEngine.Debug.LogWarning("SphereCollider is null");
                 return TaskStatus.Failure;
             }
 

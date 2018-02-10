@@ -1,22 +1,23 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CharacterController
 {
     [TaskCategory("Basic/CharacterController")]
     [TaskDescription("Returns Success if the character is grounded, otherwise Failure.")]
     public class IsGrounded : Conditional
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
 
-        private CharacterController characterController;
-        private GameObject prevGameObject;
+        private UnityEngine.CharacterController characterController;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                characterController = currentGameObject.GetComponent<CharacterController>();
+                characterController = currentGameObject.GetComponent<UnityEngine.CharacterController>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -24,7 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
         public override TaskStatus OnUpdate()
         {
             if (characterController == null) {
-                Debug.LogWarning("CharacterController is null");
+                UnityEngine.Debug.LogWarning("CharacterController is null");
                 return TaskStatus.Failure;
             }
 

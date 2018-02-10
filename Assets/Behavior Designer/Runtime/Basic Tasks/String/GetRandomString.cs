@@ -1,14 +1,16 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityString
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.String
 {
     [TaskCategory("Basic/String")]
     [TaskDescription("Randomly selects a string from the array of strings.")]
     public class GetRandomString : Action
     {
-        [Tooltip("The array of strings")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The array of strings")]
         public SharedString[] source;
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         [RequiredField]
         public SharedString storeResult;
 

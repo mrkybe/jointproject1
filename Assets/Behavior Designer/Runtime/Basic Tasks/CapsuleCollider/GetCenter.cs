@@ -1,25 +1,26 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CapsuleCollider
 {
     [TaskCategory("Basic/CapsuleCollider")]
     [TaskDescription("Stores the center of the CapsuleCollider. Returns Success.")]
     public class GetCenter : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The center of the CapsuleCollider")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The center of the CapsuleCollider")]
         [RequiredField]
         public SharedVector3 storeValue;
 
-        private CapsuleCollider capsuleCollider;
-        private GameObject prevGameObject;
+        private UnityEngine.CapsuleCollider capsuleCollider;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                capsuleCollider = currentGameObject.GetComponent<CapsuleCollider>();
+                capsuleCollider = currentGameObject.GetComponent<UnityEngine.CapsuleCollider>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
         public override TaskStatus OnUpdate()
         {
             if (capsuleCollider == null) {
-                Debug.LogWarning("CapsuleCollider is null");
+                UnityEngine.Debug.LogWarning("CapsuleCollider is null");
                 return TaskStatus.Failure;
             }
 
@@ -39,7 +40,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
         public override void OnReset()
         {
             targetGameObject = null;
-            storeValue = Vector3.zero;
+            storeValue = UnityEngine.Vector3.zero;
         }
     }
 }

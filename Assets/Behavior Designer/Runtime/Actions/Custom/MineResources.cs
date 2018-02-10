@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using Assets.Behavior_Designer.Runtime;
 using Assets.Behavior_Designer.Runtime.Variables;
-using BehaviorDesigner.Runtime;
+using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.Static;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
-namespace Assets.Behavior_Designer.Runtime.Actions
+namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
     [TaskCategory("Custom/Spaceship")]
     class MineResources : Action

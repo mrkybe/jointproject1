@@ -1,12 +1,14 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Sets a random bool value")]
     public class RandomBool : Action
     {
-        [Tooltip("The variable to store the result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
         public SharedBool storeResult;
 
         public override TaskStatus OnUpdate()

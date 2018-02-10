@@ -1,4 +1,6 @@
-namespace BehaviorDesigner.Runtime.Tasks
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Composites
 {
     [TaskDescription("Similar to the selector task, the parallel selector task will return success as soon as a child task returns success. " +
                      "The difference is that the parallel task will run all of its children tasks simultaneously versus running each task one at a time. " +

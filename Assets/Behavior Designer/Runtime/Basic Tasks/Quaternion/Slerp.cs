@@ -1,30 +1,31 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Spherically lerp between two quaternions.")]
     public class Slerp : Action
     {
-        [Tooltip("The from rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The from rotation")]
         public SharedQuaternion fromQuaternion;
-        [Tooltip("The to rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The to rotation")]
         public SharedQuaternion toQuaternion;
-        [Tooltip("The amount to lerp")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount to lerp")]
         public SharedFloat amount;
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         [RequiredField]
         public SharedQuaternion storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Quaternion.Slerp(fromQuaternion.Value, toQuaternion.Value, amount.Value);
+            storeResult.Value = UnityEngine.Quaternion.Slerp(fromQuaternion.Value, toQuaternion.Value, amount.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            fromQuaternion = toQuaternion = storeResult = Quaternion.identity;
+            fromQuaternion = toQuaternion = storeResult = UnityEngine.Quaternion.identity;
             amount = 0;
         }
     }

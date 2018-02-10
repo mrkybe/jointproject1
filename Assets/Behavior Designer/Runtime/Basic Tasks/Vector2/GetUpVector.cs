@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Stores the up vector value.")]
     public class GetUpVector : Action
     {
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         [RequiredField]
         public SharedVector2 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Vector2.up;
+            storeResult.Value = UnityEngine.Vector2.up;
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            storeResult = Vector2.zero;
+            storeResult = UnityEngine.Vector2.zero;
         }
     }
 }

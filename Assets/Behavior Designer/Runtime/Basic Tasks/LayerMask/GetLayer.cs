@@ -1,21 +1,22 @@
-﻿using UnityEngine;
+﻿using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLayerMask
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.LayerMask
 {
     [TaskCategory("Basic/LayerMask")]
     [TaskDescription("Gets the layer of a GameObject.")]
     public class GetLayer : Action
     {
-        [Tooltip("The GameObject to set the layer of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to set the layer of")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The name of the layer to get")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the layer to get")]
         [RequiredField]
         public SharedString storeResult;
 
         public override TaskStatus OnUpdate()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            storeResult.Value = LayerMask.LayerToName(currentGameObject.layer);
+            storeResult.Value = UnityEngine.LayerMask.LayerToName(currentGameObject.layer);
             return TaskStatus.Success;
         }
 

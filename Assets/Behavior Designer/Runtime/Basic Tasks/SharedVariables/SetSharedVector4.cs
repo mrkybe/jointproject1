@@ -1,15 +1,17 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedVector4 variable to the specified object. Returns Success.")]
     public class SetSharedVector4 : Action
     {
-        [Tooltip("The value to set the SharedVector4 to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set the SharedVector4 to")]
         public SharedVector4 targetValue;
         [RequiredField]
-        [Tooltip("The SharedVector4 to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedVector4 to set")]
         public SharedVector4 targetVariable;
 
         public override TaskStatus OnUpdate()

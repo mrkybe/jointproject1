@@ -1,6 +1,6 @@
 ﻿using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.ObjectDrawers
+namespace Assets.Behavior_Designer.Runtime.Object_Drawers
 {
     public class IntSliderAttribute : ObjectDrawerAttribute
     {

@@ -1,28 +1,29 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Stores the angle in degrees between two rotations.")]
     public class Angle : Action
     {
-        [Tooltip("The first rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first rotation")]
         public SharedQuaternion firstRotation;
-        [Tooltip("The second rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The second rotation")]
         public SharedQuaternion secondRotation;
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         [RequiredField]
         public SharedFloat storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Quaternion.Angle(firstRotation.Value, secondRotation.Value);
+            storeResult.Value = UnityEngine.Quaternion.Angle(firstRotation.Value, secondRotation.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            firstRotation = secondRotation = Quaternion.identity;
+            firstRotation = secondRotation = UnityEngine.Quaternion.identity;
             storeResult = 0;
         }
     }

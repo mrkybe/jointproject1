@@ -1,29 +1,30 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Stores a rotation which rotates from the first direction to the second.")]
     public class FromToRotation : Action
     {
-        [Tooltip("The from rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The from rotation")]
         public SharedVector3 fromDirection;
-        [Tooltip("The to rotation")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The to rotation")]
         public SharedVector3 toDirection;
-        [Tooltip("The stored result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored result")]
         [RequiredField]
         public SharedQuaternion storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Quaternion.FromToRotation(fromDirection.Value, toDirection.Value);
+            storeResult.Value = UnityEngine.Quaternion.FromToRotation(fromDirection.Value, toDirection.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            fromDirection = toDirection = Vector3.zero;
-            storeResult = Quaternion.identity;
+            fromDirection = toDirection = UnityEngine.Vector3.zero;
+            storeResult = UnityEngine.Quaternion.identity;
         }
     }
 }

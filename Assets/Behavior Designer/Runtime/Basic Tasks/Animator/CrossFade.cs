@@ -1,30 +1,31 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Creates a dynamic transition between the current state and the destination state. Returns Success.")]
     public class CrossFade : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The name of the state")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the state")]
         public SharedString stateName;
-        [Tooltip("The duration of the transition. Value is in source state normalized time")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The duration of the transition. Value is in source state normalized time")]
         public SharedFloat transitionDuration;
-        [Tooltip("The layer where the state is")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The layer where the state is")]
         public int layer = -1;
-        [Tooltip("The normalized time at which the state will play")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The normalized time at which the state will play")]
         public float normalizedTime = float.NegativeInfinity;
 
-        private Animator animator;
-        private GameObject prevGameObject;
+        private UnityEngine.Animator animator;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                animator = currentGameObject.GetComponent<Animator>();
+                animator = currentGameObject.GetComponent<UnityEngine.Animator>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -32,7 +33,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
         public override TaskStatus OnUpdate()
         {
             if (animator == null) {
-                Debug.LogWarning("Animator is null");
+                UnityEngine.Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 

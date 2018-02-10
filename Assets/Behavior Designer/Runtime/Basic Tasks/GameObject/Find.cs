@@ -1,20 +1,21 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Finds a GameObject by name. Returns Success.")]
     public class Find : Action
     {
-        [Tooltip("The GameObject name to find")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject name to find")]
         public SharedString gameObjectName;
-        [Tooltip("The object found by name")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The object found by name")]
         [RequiredField]
         public SharedGameObject storeValue;
 
         public override TaskStatus OnUpdate()
         {
-            storeValue.Value = GameObject.Find(gameObjectName.Value);
+            storeValue.Value = UnityEngine.GameObject.Find(gameObjectName.Value);
 
             return TaskStatus.Success;
         }

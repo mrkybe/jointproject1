@@ -1,19 +1,21 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Actions
 {
     [TaskDescription("Start a new behavior tree and return success after it has been started.")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=20")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=20")]
     [TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
     public class StartBehaviorTree : Action
     {
-        [Tooltip("The GameObject of the behavior tree that should be started. If null use the current behavior")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject of the behavior tree that should be started. If null use the current behavior")]
         public SharedGameObject behaviorGameObject;
-        [Tooltip("The group of the behavior tree that should be started")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The group of the behavior tree that should be started")]
         public SharedInt group;
-        [Tooltip("Should this task wait for the behavior tree to complete?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Should this task wait for the behavior tree to complete?")]
         public SharedBool waitForCompletion = false;
-        [Tooltip("Should the variables be synchronized?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Should the variables be synchronized?")]
         public SharedBool synchronizeVariables;
 
         private bool behaviorComplete;

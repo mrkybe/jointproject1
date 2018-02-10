@@ -1,14 +1,15 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityGameObject
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.GameObject
 {
     [TaskCategory("Basic/GameObject")]
     [TaskDescription("Returns Success if tags match, otherwise Failure.")]
     public class CompareTag : Conditional
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The tag to compare against")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The tag to compare against")]
         public SharedString tag;
 
         public override TaskStatus OnUpdate()

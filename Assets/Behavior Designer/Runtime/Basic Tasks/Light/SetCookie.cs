@@ -1,25 +1,27 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Light
 {
     [TaskCategory("Basic/Light")]
     [TaskDescription("Sets the cookie of the light.")]
     public class SetCookie : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The cookie to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The cookie to set")]
         public Texture2D cookie;
 
         // cache the light component
-        private Light light;
-        private GameObject prevGameObject;
+        private UnityEngine.Light light;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                light = currentGameObject.GetComponent<Light>();
+                light = currentGameObject.GetComponent<UnityEngine.Light>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +29,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
         public override TaskStatus OnUpdate()
         {
             if (light == null) {
-                Debug.LogWarning("Light is null");
+                UnityEngine.Debug.LogWarning("Light is null");
                 return TaskStatus.Failure;
             }
 

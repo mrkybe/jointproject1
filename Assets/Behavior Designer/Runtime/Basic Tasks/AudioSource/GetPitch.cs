@@ -1,25 +1,26 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.AudioSource
 {
     [TaskCategory("Basic/AudioSource")]
     [TaskDescription("Stores the pitch value of the AudioSource. Returns Success.")]
     public class GetPitch : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The pitch value of the AudioSource")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The pitch value of the AudioSource")]
         [RequiredField]
         public SharedFloat storeValue;
 
-        private AudioSource audioSource;
-        private GameObject prevGameObject;
+        private UnityEngine.AudioSource audioSource;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                audioSource = currentGameObject.GetComponent<AudioSource>();
+                audioSource = currentGameObject.GetComponent<UnityEngine.AudioSource>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -27,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
         public override TaskStatus OnUpdate()
         {
             if (audioSource == null) {
-                Debug.LogWarning("AudioSource is null");
+                UnityEngine.Debug.LogWarning("AudioSource is null");
                 return TaskStatus.Failure;
             }
 

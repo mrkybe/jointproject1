@@ -1,33 +1,35 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody
 {
     [TaskCategory("Basic/Rigidbody")]
     [TaskDescription("Applies a force to the rigidbody that simulates explosion effects. Returns Success.")]
     public class AddExplosionForce : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The force of the explosion")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The force of the explosion")]
         public SharedFloat explosionForce;
-        [Tooltip("The position of the explosion")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The position of the explosion")]
         public SharedVector3 explosionPosition;
-        [Tooltip("The radius of the explosion")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The radius of the explosion")]
         public SharedFloat explosionRadius;
-        [Tooltip("Applies the force as if it was applied from beneath the object")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Applies the force as if it was applied from beneath the object")]
         public float upwardsModifier = 0;
-        [Tooltip("The type of force")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The type of force")]
         public ForceMode forceMode = ForceMode.Force;
 
         // cache the rigidbody component
-        private Rigidbody rigidbody;
-        private GameObject prevGameObject;
+        private UnityEngine.Rigidbody rigidbody;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                rigidbody = currentGameObject.GetComponent<Rigidbody>();
+                rigidbody = currentGameObject.GetComponent<UnityEngine.Rigidbody>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -35,7 +37,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
         public override TaskStatus OnUpdate()
         {
             if (rigidbody == null) {
-                Debug.LogWarning("Rigidbody is null");
+                UnityEngine.Debug.LogWarning("Rigidbody is null");
                 return TaskStatus.Failure;
             }
 
@@ -48,7 +50,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
         {
             targetGameObject = null;
             explosionForce = 0;
-            explosionPosition = Vector3.zero;
+            explosionPosition = UnityEngine.Vector3.zero;
             explosionRadius = 0;
             upwardsModifier = 0;
             forceMode = ForceMode.Force;

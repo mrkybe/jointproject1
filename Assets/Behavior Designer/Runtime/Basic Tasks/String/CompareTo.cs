@@ -1,4 +1,7 @@
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityString
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.String
 {
     [TaskCategory("Basic/String")]
     [TaskDescription("Compares the first string to the second string. Returns an int which indicates whether the first string precedes, matches, or follows the second string.")]

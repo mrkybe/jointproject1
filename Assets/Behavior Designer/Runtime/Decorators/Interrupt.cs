@@ -1,4 +1,7 @@
-namespace BehaviorDesigner.Runtime.Tasks
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Decorators
 {
     [TaskDescription("The interrupt task will stop all child tasks from running if it is interrupted. The interruption can be triggered by the perform interruption task. " +
                      "The interrupt task will keep running its child until this interruption is called. If no interruption happens and the child task completed its " +

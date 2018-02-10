@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.CapsuleCollider
 {
     [TaskCategory("Basic/CapsuleCollider")]
     [TaskDescription("Sets the radius of the CapsuleCollider. Returns Success.")]
     public class SetRadius : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The radius of the CapsuleCollider")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The radius of the CapsuleCollider")]
         public SharedFloat radius;
 
-        private CapsuleCollider capsuleCollider;
-        private GameObject prevGameObject;
+        private UnityEngine.CapsuleCollider capsuleCollider;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                capsuleCollider = currentGameObject.GetComponent<CapsuleCollider>();
+                capsuleCollider = currentGameObject.GetComponent<UnityEngine.CapsuleCollider>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
         public override TaskStatus OnUpdate()
         {
             if (capsuleCollider == null) {
-                Debug.LogWarning("CapsuleCollider is null");
+                UnityEngine.Debug.LogWarning("CapsuleCollider is null");
                 return TaskStatus.Failure;
             }
 

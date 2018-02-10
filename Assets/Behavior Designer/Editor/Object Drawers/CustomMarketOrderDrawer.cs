@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Classes.WorldSingleton;
+﻿using Assets.Scripts.Classes.WorldSingleton;
 using BehaviorDesigner.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Editor
+namespace Assets.Behavior_Designer.Editor.Object_Drawers
 {
     [CustomObjectDrawer(typeof(MarketOrder))]
     class CustomMarketOrderDrawer : ObjectDrawer

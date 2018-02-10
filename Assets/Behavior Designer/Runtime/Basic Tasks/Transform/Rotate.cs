@@ -1,26 +1,28 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Transform
 {
     [TaskCategory("Basic/Transform")]
     [TaskDescription("Applies a rotation. Returns Success.")]
     public class Rotate : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("Amount to rotate")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Amount to rotate")]
         public SharedVector3 eulerAngles;
-        [Tooltip("Specifies which axis the rotation is relative to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Specifies which axis the rotation is relative to")]
         public Space relativeTo = Space.Self;
 
-        private Transform targetTransform;
-        private GameObject prevGameObject;
+        private UnityEngine.Transform targetTransform;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                targetTransform = currentGameObject.GetComponent<Transform>();
+                targetTransform = currentGameObject.GetComponent<UnityEngine.Transform>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -28,7 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override TaskStatus OnUpdate()
         {
             if (targetTransform == null) {
-                Debug.LogWarning("Transform is null");
+                UnityEngine.Debug.LogWarning("Transform is null");
                 return TaskStatus.Failure;
             }
 
@@ -40,7 +42,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override void OnReset()
         {
             targetGameObject = null;
-            eulerAngles = Vector3.zero;
+            eulerAngles = UnityEngine.Vector3.zero;
             relativeTo = Space.Self;
         }
     }

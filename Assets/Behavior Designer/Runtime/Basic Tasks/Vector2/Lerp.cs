@@ -1,30 +1,31 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Lerp the Vector2 by an amount.")]
     public class Lerp : Action
     {
-        [Tooltip("The from value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The from value")]
         public SharedVector2 fromVector2;
-        [Tooltip("The to value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The to value")]
         public SharedVector2 toVector2;
-        [Tooltip("The amount to lerp")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount to lerp")]
         public SharedFloat lerpAmount;
-        [Tooltip("The lerp resut")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The lerp resut")]
         [RequiredField]
         public SharedVector2 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Vector2.Lerp(fromVector2.Value, toVector2.Value, lerpAmount.Value);
+            storeResult.Value = UnityEngine.Vector2.Lerp(fromVector2.Value, toVector2.Value, lerpAmount.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            fromVector2 = toVector2 = storeResult = Vector2.zero;
+            fromVector2 = toVector2 = storeResult = UnityEngine.Vector2.zero;
             lerpAmount = 0;
         }
     }

@@ -1,4 +1,5 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using Assets.Scripts.Classes.Static;
+using BehaviorDesigner.Runtime;
 
 namespace Assets.Behavior_Designer.Runtime.Variables
 {

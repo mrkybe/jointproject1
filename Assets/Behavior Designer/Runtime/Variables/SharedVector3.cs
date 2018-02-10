@@ -1,6 +1,7 @@
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime
+namespace Assets.Behavior_Designer.Runtime.Variables
 {
     [System.Serializable]
     public class SharedVector3 : SharedVariable<Vector3>

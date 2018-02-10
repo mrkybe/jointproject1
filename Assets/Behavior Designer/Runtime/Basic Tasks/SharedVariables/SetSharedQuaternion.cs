@@ -1,14 +1,16 @@
-using UnityEngine;
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
+
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedQuaternion variable to the specified object. Returns Success.")]
     public class SetSharedQuaternion : Action
     {
-        [Tooltip("The value to set the SharedQuaternion to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set the SharedQuaternion to")]
         public SharedQuaternion targetValue;
         [RequiredField]
-        [Tooltip("The SharedQuaternion to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedQuaternion to set")]
         public SharedQuaternion targetVariable;
 
         public override TaskStatus OnUpdate()
@@ -20,8 +22,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 
         public override void OnReset()
         {
-            targetValue = Quaternion.identity;
-            targetVariable = Quaternion.identity;
+            targetValue = UnityEngine.Quaternion.identity;
+            targetVariable = UnityEngine.Quaternion.identity;
         }
     }
 }

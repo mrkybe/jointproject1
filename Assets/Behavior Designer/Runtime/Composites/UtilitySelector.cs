@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Composites
 {
     [TaskDescription("The utility selector task evaluates the child tasks using Utility Theory AI. The child task can override the GetUtility method and return the utility value " +
                      "at that particular time. The task with the highest utility value will be selected and the existing running task will be aborted. The utility selector " +

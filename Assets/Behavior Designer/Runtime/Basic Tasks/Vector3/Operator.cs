@@ -1,6 +1,7 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Performs a math operation on two Vector3s: Add, Subtract, Multiply, Divide, Min, or Max.")]
@@ -13,13 +14,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
             Scale
         }
 
-        [Tooltip("The operation to perform")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The operation to perform")]
         public Operation operation;
-        [Tooltip("The first Vector3")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first Vector3")]
         public SharedVector3 firstVector3;
-        [Tooltip("The second Vector3")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The second Vector3")]
         public SharedVector3 secondVector3;
-        [Tooltip("The variable to store the result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
         public SharedVector3 storeResult;
 
         public override TaskStatus OnUpdate()
@@ -32,7 +33,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
                     storeResult.Value = firstVector3.Value - secondVector3.Value;
                     break;
                 case Operation.Scale:
-                    storeResult.Value = Vector3.Scale(firstVector3.Value, secondVector3.Value);
+                    storeResult.Value = UnityEngine.Vector3.Scale(firstVector3.Value, secondVector3.Value);
                     break;
             }
             return TaskStatus.Success;
@@ -41,7 +42,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
         public override void OnReset()
         {
             operation = Operation.Add;
-            firstVector3 = secondVector3 = storeResult = Vector3.zero;
+            firstVector3 = secondVector3 = storeResult = UnityEngine.Vector3.zero;
         }
     }
 }

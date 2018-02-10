@@ -1,20 +1,21 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BehaviorDesigner.Runtime.Tasks;
+using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Composites
 {
     [TaskDescription("Similar to the selector task, the random selector task will return success as soon as a child task returns success.  " +
                      "The difference is that the random selector class will run its children in a random order. The selector task is deterministic " +
                      "in that it will always run the tasks from left to right within the tree. The random selector task shuffles the child tasks up and then begins " +
                      "execution in a random order. Other than that the random selector class is the same as the selector class. It will continue running tasks " +
                      "until a task completes successfully. If no child tasks return success then it will return failure.")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=30")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=30")]
     [TaskIcon("{SkinColor}RandomSelectorIcon.png")]
     public class RandomSelector : Composite
     {
-        [Tooltip("Seed the random number generator to make things easier to debug")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Seed the random number generator to make things easier to debug")]
         public int seed = 0;
-        [Tooltip("Do we want to use the seed?")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Do we want to use the seed?")]
         public bool useSeed = false;
 
         // A list of indexes of every child task. This list is used by the Fischer-Yates shuffle algorithm.

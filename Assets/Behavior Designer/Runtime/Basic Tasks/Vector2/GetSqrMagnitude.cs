@@ -1,14 +1,15 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Stores the square magnitude of the Vector2.")]
     public class GetSqrMagnitude : Action
     {
-        [Tooltip("The Vector2 to get the square magnitude of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector2 to get the square magnitude of")]
         public SharedVector2 vector2Variable;
-        [Tooltip("The square magnitude of the vector")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The square magnitude of the vector")]
         [RequiredField]
         public SharedFloat storeResult;
 
@@ -20,7 +21,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
 
         public override void OnReset()
         {
-            vector2Variable = Vector2.zero;
+            vector2Variable = UnityEngine.Vector2.zero;
             storeResult = 0;
         }
     }

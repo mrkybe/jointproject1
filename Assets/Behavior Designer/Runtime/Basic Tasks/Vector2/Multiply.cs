@@ -1,16 +1,17 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Multiply the Vector2 by a float.")]
     public class Multiply : Action
     {
-        [Tooltip("The Vector2 to multiply of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector2 to multiply of")]
         public SharedVector2 vector2Variable;
-        [Tooltip("The value to multiply the Vector2 of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to multiply the Vector2 of")]
         public SharedFloat multiplyBy;
-        [Tooltip("The multiplication resut")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The multiplication resut")]
         [RequiredField]
         public SharedVector2 storeResult;
 
@@ -22,7 +23,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
 
         public override void OnReset()
         {
-            vector2Variable = storeResult = Vector2.zero;
+            vector2Variable = storeResult = UnityEngine.Vector2.zero;
             multiplyBy = 0;
         }
     }

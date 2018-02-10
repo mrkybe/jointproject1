@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Behavior_Designer.Runtime.Variables;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
@@ -46,11 +47,11 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
         private List<Vector3> GetHuntingAreas()
         {
             List<Vector3> huntingPositions = new List<Vector3>();
-            foreach (global::Planet p in global::Planet.listOfPlanetObjects)
+            foreach (global::Assets.Scripts.Classes.Static.Planet p in global::Assets.Scripts.Classes.Static.Planet.listOfPlanetObjects)
             {
-                List<global::Planet> nearestPlanets = new List<global::Planet>(global::Planet.listOfPlanetObjects);
+                List<global::Assets.Scripts.Classes.Static.Planet> nearestPlanets = new List<global::Assets.Scripts.Classes.Static.Planet>(global::Assets.Scripts.Classes.Static.Planet.listOfPlanetObjects);
                 nearestPlanets.Remove(p);
-                global::Planet.PlanetComparer sortComparer = new global::Planet.PlanetComparer(p);
+                global::Assets.Scripts.Classes.Static.Planet.PlanetComparer sortComparer = new global::Assets.Scripts.Classes.Static.Planet.PlanetComparer(p);
                 nearestPlanets.Sort(sortComparer);
                 for (int i = 0; i < 3 && i < nearestPlanets.Count; i++)
                 {

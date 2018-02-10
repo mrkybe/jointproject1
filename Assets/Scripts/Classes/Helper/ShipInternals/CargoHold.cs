@@ -1,10 +1,9 @@
-﻿namespace ShipInternals
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Assets.Scripts.Classes.Helper.ShipInternals
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using UnityEngine;
     /* How Cargo should work in theory:
          * 1.  I have a class that needs to store Cargo
          * 2.  I attach a CargoHold to that class

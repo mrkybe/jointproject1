@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBoxCollider
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.BoxCollider
 {
     [TaskCategory("Basic/BoxCollider")]
     [TaskDescription("Sets the center of the BoxCollider. Returns Success.")]
     public class SetCenter : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The center of the BoxCollider")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The center of the BoxCollider")]
         public SharedVector3 center;
 
-        private BoxCollider boxCollider;
-        private GameObject prevGameObject;
+        private UnityEngine.BoxCollider boxCollider;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                boxCollider = currentGameObject.GetComponent<BoxCollider>();
+                boxCollider = currentGameObject.GetComponent<UnityEngine.BoxCollider>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBoxCollider
         public override TaskStatus OnUpdate()
         {
             if (boxCollider == null) {
-                Debug.LogWarning("BoxCollider is null");
+                UnityEngine.Debug.LogWarning("BoxCollider is null");
                 return TaskStatus.Failure;
             }
 
@@ -38,7 +39,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBoxCollider
         public override void OnReset()
         {
             targetGameObject = null;
-            center = Vector3.zero;
+            center = UnityEngine.Vector3.zero;
         }
     }
 }

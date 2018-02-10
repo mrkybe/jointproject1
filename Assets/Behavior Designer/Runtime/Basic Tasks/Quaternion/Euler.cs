@@ -1,27 +1,28 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityQuaternion
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Quaternion
 {
     [TaskCategory("Basic/Quaternion")]
     [TaskDescription("Stores the quaternion of a euler vector.")]
     public class Euler : Action
     {
-        [Tooltip("The euler vector")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The euler vector")]
         public SharedVector3 eulerVector;
-        [Tooltip("The stored quaternion")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The stored quaternion")]
         [RequiredField]
         public SharedQuaternion storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Quaternion.Euler(eulerVector.Value);
+            storeResult.Value = UnityEngine.Quaternion.Euler(eulerVector.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            eulerVector = Vector3.zero;
-            storeResult = Quaternion.identity;
+            eulerVector = UnityEngine.Vector3.zero;
+            storeResult = UnityEngine.Quaternion.identity;
         }
     }
 }

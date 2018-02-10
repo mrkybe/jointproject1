@@ -1,24 +1,25 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityParticleSystem
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.ParticleSystem
 {
     [TaskCategory("Basic/ParticleSystem")]
     [TaskDescription("Simulate the Particle System.")]
     public class Simulate : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("Time to fastfoward the Particle System to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Time to fastfoward the Particle System to")]
         public SharedFloat time;
 
-        private ParticleSystem particleSystem;
-        private GameObject prevGameObject;
+        private UnityEngine.ParticleSystem particleSystem;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                particleSystem = currentGameObject.GetComponent<ParticleSystem>();
+                particleSystem = currentGameObject.GetComponent<UnityEngine.ParticleSystem>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -26,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityParticleSystem
         public override TaskStatus OnUpdate()
         {
             if (particleSystem == null) {
-                Debug.LogWarning("ParticleSystem is null");
+                UnityEngine.Debug.LogWarning("ParticleSystem is null");
                 return TaskStatus.Failure;
             }
 

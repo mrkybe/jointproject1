@@ -1,18 +1,20 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.Math
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Math
 {
     [TaskCategory("Basic/Math")]
     [TaskDescription("Lerp the angle by an amount.")]
     public class LerpAngle : Action
     {
-        [Tooltip("The from value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The from value")]
         public SharedFloat fromValue;
-        [Tooltip("The to value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The to value")]
         public SharedFloat toValue;
-        [Tooltip("The amount to lerp")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount to lerp")]
         public SharedFloat lerpAmount;
-        [Tooltip("The lerp resut")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The lerp resut")]
         [RequiredField]
         public SharedFloat storeResult;
 

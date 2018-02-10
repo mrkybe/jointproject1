@@ -1,6 +1,6 @@
-using UnityEngine;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.PlayerPrefs
 {
     [TaskCategory("Basic/PlayerPrefs")]
     [TaskDescription("Saves the PlayerPrefs.")]
@@ -8,7 +8,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs
     {
         public override TaskStatus OnUpdate()
         {
-            PlayerPrefs.Save();
+            UnityEngine.PlayerPrefs.Save();
 
             return TaskStatus.Success;
         }

@@ -1,15 +1,17 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Sets the SharedColor variable to the specified object. Returns Success.")]
     public class SetSharedColor : Action
     {
-        [Tooltip("The value to set the SharedColor to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set the SharedColor to")]
         public SharedColor targetValue;
         [RequiredField]
-        [Tooltip("The SharedColor to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The SharedColor to set")]
         public SharedColor targetVariable;
 
         public override TaskStatus OnUpdate()

@@ -1,22 +1,24 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
-using System;
-using System.Reflection;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Actions.Reflection
 {
     [TaskDescription("Sets the field to the value specified. Returns success if the field was set.")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=149")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=149")]
     [TaskCategory("Reflection")]
     [TaskIcon("{SkinColor}ReflectionIcon.png")]
     public class SetFieldValue : Action
     {
-        [Tooltip("The GameObject to set the field on")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to set the field on")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The component to set the field on")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The component to set the field on")]
         public SharedString componentName;
-        [Tooltip("The name of the field")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the field")]
         public SharedString fieldName;
-        [Tooltip("The value to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The value to set")]
         public SharedVariable fieldValue;
 
         public override TaskStatus OnUpdate()

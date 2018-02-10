@@ -1,28 +1,29 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Transform
 {
     [TaskCategory("Basic/Transform")]
     [TaskDescription("Applies a rotation. Returns Success.")]
     public class RotateAround : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("Point to rotate around")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Point to rotate around")]
         public SharedVector3 point;
-        [Tooltip("Axis to rotate around")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Axis to rotate around")]
         public SharedVector3 axis;
-        [Tooltip("Amount to rotate")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("Amount to rotate")]
         public SharedFloat angle;
 
-        private Transform targetTransform;
-        private GameObject prevGameObject;
+        private UnityEngine.Transform targetTransform;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                targetTransform = currentGameObject.GetComponent<Transform>();
+                targetTransform = currentGameObject.GetComponent<UnityEngine.Transform>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -30,7 +31,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override TaskStatus OnUpdate()
         {
             if (targetTransform == null) {
-                Debug.LogWarning("Transform is null");
+                UnityEngine.Debug.LogWarning("Transform is null");
                 return TaskStatus.Failure;
             }
 
@@ -42,8 +43,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTransform
         public override void OnReset()
         {
             targetGameObject = null;
-            point = Vector3.zero;
-            axis = Vector3.zero;
+            point = UnityEngine.Vector3.zero;
+            axis = UnityEngine.Vector3.zero;
             angle = 0;
         }
     }

@@ -1,15 +1,17 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks
+namespace Assets.Behavior_Designer.Runtime.Conditionals.Physics
 {
     [TaskDescription("Returns success when an object enters the trigger. This task will only receive the physics callback if it is being reevaluated (with a conditional abort or under a parallel task).")]
     [TaskCategory("Physics")]
-    [HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=110")]
+    [BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.opsive.com/assets/BehaviorDesigner/documentation.php?id=110")]
     public class HasEnteredTrigger : Conditional
     {
-        [Tooltip("The tag of the GameObject to check for a trigger against")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The tag of the GameObject to check for a trigger against")]
         public SharedString tag = "";
-        [Tooltip("The object that entered the trigger")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The object that entered the trigger")]
         public SharedGameObject otherGameObject;
 
         private bool enteredTrigger = false;

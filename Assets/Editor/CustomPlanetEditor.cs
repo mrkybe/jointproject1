@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using ShipInternals;
+using Assets.Scripts.Classes.Helper.ShipInternals;
+using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.Static;
 using UnityEditor;
 using UnityEngine;
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Assets.Behavior_Designer.Runtime;
 using Assets.Behavior_Designer.Runtime.Variables;
+using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -30,7 +31,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
         public override TaskStatus OnUpdate()
         {
-            List<global::Planet> planets = shipScript.GetInInteractionRange<global::Planet>();
+            List<global::Assets.Scripts.Classes.Static.Planet> planets = shipScript.GetInInteractionRange<global::Assets.Scripts.Classes.Static.Planet>();
             if (planets.Contains(DropOffDestination.Value))
             {
                 if (MiningTargetsList.Value.Count != 0)

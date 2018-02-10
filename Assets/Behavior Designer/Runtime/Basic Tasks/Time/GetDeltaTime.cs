@@ -1,17 +1,18 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityTime
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Time
 {
     [TaskCategory("Basic/Time")]
     [TaskDescription("Returns the time in seconds it took to complete the last frame.")]
     public class GetDeltaTime : Action
     {
-        [Tooltip("The variable to store the result")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to store the result")]
         public SharedFloat storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Time.deltaTime;
+            storeResult.Value = UnityEngine.Time.deltaTime;
             return TaskStatus.Success;
         }
 

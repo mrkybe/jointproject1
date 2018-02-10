@@ -1,14 +1,15 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Returns success if the variable value is equal to the compareTo value.")]
     public class CompareSharedVector3 : Conditional
     {
-        [Tooltip("The first variable to compare")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The first variable to compare")]
         public SharedVector3 variable;
-        [Tooltip("The variable to compare to")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The variable to compare to")]
         public SharedVector3 compareTo;
 
         public override TaskStatus OnUpdate()
@@ -18,8 +19,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
 
         public override void OnReset()
         {
-            variable = Vector3.zero;
-            compareTo = Vector3.zero;
+            variable = UnityEngine.Vector3.zero;
+            compareTo = UnityEngine.Vector3.zero;
         }
     }
 }

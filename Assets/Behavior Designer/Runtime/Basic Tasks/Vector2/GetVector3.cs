@@ -1,14 +1,15 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector2
 {
     [TaskCategory("Basic/Vector2")]
     [TaskDescription("Stores the Vector3 value of the Vector2.")]
     public class GetVector3 : Action
     {
-        [Tooltip("The Vector2 to get the Vector3 value of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector2 to get the Vector3 value of")]
         public SharedVector2 vector3Variable;
-        [Tooltip("The Vector3 value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Vector3 value")]
         [RequiredField]
         public SharedVector3 storeResult;
 
@@ -20,8 +21,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector2
 
         public override void OnReset()
         {
-            vector3Variable = Vector2.zero;
-            storeResult = Vector3.zero;
+            vector3Variable = UnityEngine.Vector2.zero;
+            storeResult = UnityEngine.Vector3.zero;
         }
     }
 }

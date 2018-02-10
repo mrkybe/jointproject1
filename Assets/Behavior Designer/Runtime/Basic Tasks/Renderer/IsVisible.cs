@@ -1,23 +1,24 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRenderer
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Renderer
 {
     [TaskCategory("Basic/Renderer")]
     [TaskDescription("Returns Success if the Renderer is visible, otherwise Failure.")]
     public class IsVisible : Conditional
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
 
         // cache the renderer component
-        private Renderer renderer;
-        private GameObject prevGameObject;
+        private UnityEngine.Renderer renderer;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                renderer = currentGameObject.GetComponent<Renderer>();
+                renderer = currentGameObject.GetComponent<UnityEngine.Renderer>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -25,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRenderer
         public override TaskStatus OnUpdate()
         {
             if (renderer == null) {
-                Debug.LogWarning("Renderer is null");
+                UnityEngine.Debug.LogWarning("Renderer is null");
                 return TaskStatus.Failure;
             }
 

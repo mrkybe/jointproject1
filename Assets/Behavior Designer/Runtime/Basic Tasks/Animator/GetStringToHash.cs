@@ -1,20 +1,21 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimator
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Animator
 {
     [TaskCategory("Basic/Animator")]
     [TaskDescription("Converts the state name to its corresponding hash code. Returns Success.")]
     public class GetStringToHash : Action
     {
-        [Tooltip("The name of the state to convert to a hash code")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The name of the state to convert to a hash code")]
         public SharedString stateName;
-        [Tooltip("The hash value")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The hash value")]
         [RequiredField]
         public SharedInt storeValue;
 
         public override TaskStatus OnUpdate()
         {
-            storeValue.Value = Animator.StringToHash(stateName.Value);
+            storeValue.Value = UnityEngine.Animator.StringToHash(stateName.Value);
 
             return TaskStatus.Success;
         }

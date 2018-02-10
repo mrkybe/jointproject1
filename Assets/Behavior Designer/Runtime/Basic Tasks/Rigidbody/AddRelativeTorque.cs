@@ -1,27 +1,29 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody
 {
     [TaskCategory("Basic/Rigidbody")]
     [TaskDescription("Applies a torque to the rigidbody relative to its coordinate system. Returns Success.")]
     public class AddRelativeTorque : Action
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The amount of torque to apply")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount of torque to apply")]
         public SharedVector3 torque;
-        [Tooltip("The type of torque")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The type of torque")]
         public ForceMode forceMode = ForceMode.Force;
 
         // cache the rigidbody component
-        private Rigidbody rigidbody;
-        private GameObject prevGameObject;
+        private UnityEngine.Rigidbody rigidbody;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                rigidbody = currentGameObject.GetComponent<Rigidbody>();
+                rigidbody = currentGameObject.GetComponent<UnityEngine.Rigidbody>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -36,7 +38,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
         public override void OnReset()
         {
             targetGameObject = null;
-            torque = Vector3.zero;
+            torque = UnityEngine.Vector3.zero;
             forceMode = ForceMode.Force;
         }
     }

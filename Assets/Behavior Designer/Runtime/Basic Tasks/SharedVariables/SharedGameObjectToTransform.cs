@@ -1,15 +1,16 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.SharedVariables
 {
     [TaskCategory("Basic/SharedVariable")]
     [TaskDescription("Gets the Transform from the GameObject. Returns Success.")]
     public class SharedGameObjectToTransform : Action
     {
-        [Tooltip("The GameObject to get the Transform of")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject to get the Transform of")]
         public SharedGameObject sharedGameObject;
         [RequiredField]
-        [Tooltip("The Transform to set")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The Transform to set")]
         public SharedTransform sharedTransform;
 
         public override TaskStatus OnUpdate()
@@ -18,7 +19,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.SharedVariables
                 return TaskStatus.Failure;
             }
 
-            sharedTransform.Value = sharedGameObject.Value.GetComponent<Transform>();
+            sharedTransform.Value = sharedGameObject.Value.GetComponent<UnityEngine.Transform>();
 
             return TaskStatus.Success;
         }

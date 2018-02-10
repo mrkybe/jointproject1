@@ -1,22 +1,23 @@
-using UnityEngine;
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody2D
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Rigidbody2D
 {
     [TaskCategory("Basic/Rigidbody2D")]
     [TaskDescription("Returns Success if the Rigidbody2D is sleeping, otherwise Failure.")]
     public class IsSleeping : Conditional
     {
-        [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
 
-        private Rigidbody2D rigidbody2D;
-        private GameObject prevGameObject;
+        private UnityEngine.Rigidbody2D rigidbody2D;
+        private UnityEngine.GameObject prevGameObject;
 
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
-                rigidbody2D = currentGameObject.GetComponent<Rigidbody2D>();
+                rigidbody2D = currentGameObject.GetComponent<UnityEngine.Rigidbody2D>();
                 prevGameObject = currentGameObject;
             }
         }
@@ -24,7 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody2D
         public override TaskStatus OnUpdate()
         {
             if (rigidbody2D == null) {
-                Debug.LogWarning("Rigidbody2D is null");
+                UnityEngine.Debug.LogWarning("Rigidbody2D is null");
                 return TaskStatus.Failure;
             }
 

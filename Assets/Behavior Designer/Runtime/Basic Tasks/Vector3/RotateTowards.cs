@@ -1,32 +1,34 @@
+using Assets.Behavior_Designer.Runtime.Variables;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityVector3
+namespace Assets.Behavior_Designer.Runtime.Basic_Tasks.Vector3
 {
     [TaskCategory("Basic/Vector3")]
     [TaskDescription("Rotate the current rotation to the target rotation.")]
     public class RotateTowards : Action
     {
-        [Tooltip("The current rotation in euler angles")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The current rotation in euler angles")]
         public SharedVector3 currentRotation;
-        [Tooltip("The target rotation in euler angles")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The target rotation in euler angles")]
         public SharedVector3 targetRotation;
-        [Tooltip("The maximum delta of the degrees")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum delta of the degrees")]
         public SharedFloat maxDegreesDelta;
-        [Tooltip("The maximum delta of the magnitude")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The maximum delta of the magnitude")]
         public SharedFloat maxMagnitudeDelta;
-        [Tooltip("The rotation resut")]
+        [BehaviorDesigner.Runtime.Tasks.Tooltip("The rotation resut")]
         [RequiredField]
         public SharedVector3 storeResult;
 
         public override TaskStatus OnUpdate()
         {
-            storeResult.Value = Vector3.RotateTowards(currentRotation.Value, targetRotation.Value, maxDegreesDelta.Value * Mathf.Deg2Rad * Time.deltaTime, maxMagnitudeDelta.Value);
+            storeResult.Value = UnityEngine.Vector3.RotateTowards(currentRotation.Value, targetRotation.Value, maxDegreesDelta.Value * Mathf.Deg2Rad * UnityEngine.Time.deltaTime, maxMagnitudeDelta.Value);
             return TaskStatus.Success;
         }
 
         public override void OnReset()
         {
-            currentRotation = targetRotation = storeResult = Vector3.zero;
+            currentRotation = targetRotation = storeResult = UnityEngine.Vector3.zero;
             maxDegreesDelta = maxMagnitudeDelta = 0;
         }
     }
