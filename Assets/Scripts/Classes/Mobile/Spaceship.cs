@@ -73,8 +73,6 @@ namespace Assets.Scripts.Classes.Mobile {
                 pilot = GetComponent<PlayerPilot>();
             }
 
-            pilot.SensorArray = mySensorArray;
-
             engineRunSpeed = 0;
             targetSpeed = -999;
             throttle_input = 0;
@@ -89,8 +87,6 @@ namespace Assets.Scripts.Classes.Mobile {
                 targetSpeed = 0;
             }
             myStorage = new CargoHold(100);
-
-            mySensorArray = new SensorArray(gameObject);
             modelChoice = (int)(Random.value * 11);
         }
 
