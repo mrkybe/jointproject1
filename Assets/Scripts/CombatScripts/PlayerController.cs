@@ -23,14 +23,12 @@ public class PlayerController : MonoBehaviour {
     private CameraController cc;
     private CameraFollow cf;
     private LaserFire lf;
-	private Timer tm;
 	// Use this for initialization
 	void Start () {
         move = player.GetComponent<Move>();
         sp = ai_player.GetComponent<Spaceship>();
         fire = player.GetComponent<Fire>();
         lf = player.GetComponent<LaserFire>();
-		tm = GetComponent<Timer> ();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
 	}
@@ -67,7 +65,6 @@ public class PlayerController : MonoBehaviour {
             cc.enabled = true;
             cf.enabled = false;
             lf.enabled = false;
-			tm.Pause (false);
 			combatField.SetActive (true);
 			player.transform.position = new Vector3 (combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
 			cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.y+20, cameraObject.transform.position.z);
