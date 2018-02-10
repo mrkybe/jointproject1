@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.WorldSingleton;
-using ShipInternals;
 using UnityEditor;
 using UnityEngine;
 

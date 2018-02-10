@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

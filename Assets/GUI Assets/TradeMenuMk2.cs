@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;

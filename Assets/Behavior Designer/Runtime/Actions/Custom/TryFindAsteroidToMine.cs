@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Assets.Behavior_Designer.Runtime;
 using Assets.Behavior_Designer.Runtime.Variables;
+using Assets.Scripts.Classes.Static;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;

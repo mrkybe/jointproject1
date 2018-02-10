@@ -1,12 +1,9 @@
-﻿namespace ShipInternals
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using UnityEngine;
+﻿using Assets.Scripts.Classes.Mobile;
+using UnityEngine;
 
-	public class SensorArray
+namespace Assets.Scripts.Classes.Helper.ShipInternals
+{
+    public class SensorArray
 	{
 	    GameObject _owner;
 	    Spaceship myShipScript;
