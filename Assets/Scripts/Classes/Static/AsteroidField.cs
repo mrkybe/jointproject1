@@ -39,7 +39,9 @@ namespace Assets.Scripts.Classes.Static {
         {
         
         }
-
+        /// <summary>
+        /// Returns the Cargohold of the AsteroidField.
+        /// </summary>
         public CargoHold CargoHold
         {
             get; private set;
@@ -55,33 +57,7 @@ namespace Assets.Scripts.Classes.Static {
             transform.Rotate(Vector3.up, Time.deltaTime * rotationSpeed * -1f);
         }
 
-        Mesh GenerateAsteroidField()
-        {
-            System.Random r = new System.Random(this.GetInstanceID());
-            Mesh mesh = new Mesh();
-            List<Mesh> subAsteroids = new List<Mesh>();
-            for (int i = 0; i < 2; i++)
-            {
-                float size = 1f;///((float)r.NextDouble() + 0.2f) * 1f;
-                float offset_x = ((float)r.NextDouble() - 0.5f) * 10f;
-                float offset_y = ((float)r.NextDouble() - 0.5f) * 10f;
-                float offset_z = ((float)r.NextDouble() - 0.5f) * 10f;
-                Vector3 offset = new Vector3(offset_x,offset_y,offset_z);
-                Mesh asteroid = GenerateAsteroid(size, offset);
-                subAsteroids.Add(asteroid);
-            }
-            CombineInstance[] combine = new CombineInstance[subAsteroids.Count];
-            for (int i = 0; i < subAsteroids.Count; i++)
-            {
-                combine[i].mesh = subAsteroids[i];
-                combine[i].transform = Matrix4x4.identity;
-            }
-            mesh.CombineMeshes(combine);
-            mesh.name = subAsteroids[0].name;
-            return mesh;
-        }
-
-        Mesh GenerateAsteroid(float size, Vector3 displacement)
+        private Mesh GenerateAsteroid(float size, Vector3 displacement)
         {
             System.Random r = new System.Random(this.GetInstanceID());
             Mesh mesh = new Mesh();
@@ -113,7 +89,7 @@ namespace Assets.Scripts.Classes.Static {
             return mesh;
         }
 
-        void GenerateMesh()
+        private void GenerateMesh()
         {
             System.Random r = new System.Random(this.GetInstanceID());
             Mesh mesh = new Mesh();
@@ -154,7 +130,7 @@ namespace Assets.Scripts.Classes.Static {
         }
 
         // Update is called once per frame
-        new void FixedUpdate ()
+        private new void FixedUpdate ()
         {
         
             if (inTime)

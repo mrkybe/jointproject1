@@ -64,12 +64,14 @@ namespace Assets.Scripts.Classes.Static {
             reservedStorage = new CargoHold(50000);
 
             SetupBuildings();
-            SetupMarket();
             PlanetBTSetup();
             //behaviorTree; // Was causing compile errors
         }
 
-
+        /// <summary>
+        /// Set the faction of the Planet.
+        /// </summary>
+        /// <param name="f"></param>
         public void SetFaction(Faction f)
         {
             if (Faction != null)
@@ -84,6 +86,9 @@ namespace Assets.Scripts.Classes.Static {
             mr.material.color = f.ColorPrimary;
         }
 
+        /// <summary>
+        /// Creates a random assortment of buildings on the Planet.
+        /// </summary>
         public void SetupBuildings()
         {
             System.Random random = new System.Random(GetInstanceID());
@@ -103,12 +108,9 @@ namespace Assets.Scripts.Classes.Static {
             TickBuildings(random.Next(25) + 25);
         }
 
-        public void SetupMarket()
-        {
-
-
-        }
-
+        /// <summary>
+        /// Randomizes the Size of the Planet.
+        /// </summary>
         public void RandomizeSize()
         {
             System.Random random = new System.Random(GetInstanceID());
@@ -146,16 +148,27 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
+        /// <summary>
+        /// Returns the Cargohold of the Planet.
+        /// </summary>
         public CargoHold GetCargoHold
         {
             get { return myStorage; }
         }
 
+        /// <summary>
+        /// Returns the Cargohold of the Planet for resources that are already committed.
+        /// </summary>
         public CargoHold GetReserveCargoHold
         {
             get { return reservedStorage; }
         }
 
+        /// <summary>
+        /// Returns a list of the buildings in the planet as a string.
+        /// </summary>
+        /// <param name="seperator"></param>
+        /// <returns></returns>
         public string BuildingsToString(string seperator = "\n")
         {
             string BuildingsNamed = "";
@@ -166,6 +179,10 @@ namespace Assets.Scripts.Classes.Static {
             return BuildingsNamed;
         }
 
+        /// <summary>
+        /// Sets the name of the Planet.
+        /// </summary>
+        /// <param name="val"></param>
         public void SetName(string val)
         {
             MyName = val;
@@ -173,13 +190,16 @@ namespace Assets.Scripts.Classes.Static {
 
 
         /// <summary>
-        /// Called by Overseer.cs.  Not every planet has its Tick called at the same time.  You have been warned.
+        /// Takes a step forward in time.  Called by Overseer.cs.  Not every planet has its Tick called at the same time.  You have been warned.
         /// </summary>
         public void Tick()
         {
             TickBuildings();
         }
 
+        /// <summary>
+        /// Compares Planets.
+        /// </summary>
         public class PlanetComparer : IComparer<Planet>
         {
             private Planet origin;
@@ -206,6 +226,12 @@ namespace Assets.Scripts.Classes.Static {
                 }
             }
 
+            /// <summary>
+            /// Returns which planet is closer to the origin planet.
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
             public int Compare(Planet x, Planet y)
             {
                 return CompareClosest(x, y);
@@ -232,6 +258,5 @@ namespace Assets.Scripts.Classes.Static {
             base.OnDestroy();
             listOfPlanetObjects.Remove(this);
         }
-
     }
 }

@@ -8,13 +8,25 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.Helper
 {
+    /// <summary>
+    /// Handles the in game apperence of the Spaceships.
+    /// </summary>
     class ModelSwitcher : MonoBehaviour
     {
+        /// <summary>
+        /// The state of the ship.
+        /// </summary>
         public enum States { ALIVE, DEAD }
 
+        /// <summary>
+        /// List of 3d Models for the Spaceships
+        /// </summary>
         [SerializeField]
         public List<GameObject> Meshes = new List<GameObject>();
 
+        /// <summary>
+        /// Which model to use.
+        /// </summary>
         [SerializeField]
         [Range(0, 11)]
         public int modelNumber = 0;
@@ -42,6 +54,11 @@ namespace Assets.Scripts.Classes.Helper
             }
         }
 
+        /// <summary>
+        /// Changes the model of the ship.
+        /// </summary>
+        /// <param name="num">Which number to use.</param>
+        /// <param name="randomize_scale"></param>
         public void SetModel(int num, bool randomize_scale = true)
         {
             if (num < Meshes.Count)
@@ -73,7 +90,6 @@ namespace Assets.Scripts.Classes.Helper
         public void OnTriggerEnter(Collider collider)
         {
             mySpaceshipScript.SensorEnter(collider);
-
         }
 
         public void OnTriggerExit(Collider collider)
@@ -84,6 +100,9 @@ namespace Assets.Scripts.Classes.Helper
         private Vector3 randomRotationAxis;
         private float rotationSpeed;
 
+        /// <summary>
+        /// Make the ship appear dead.
+        /// </summary>
         public void BecomeGraveyard()
         {
             State = States.DEAD;

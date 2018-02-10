@@ -9,13 +9,10 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.Static {
     /// <summary>
-    /// The AI portion of the class.
+    /// The AI portion of the Planet class.
     /// </summary>
     public partial class Planet: Static
     {
-        /*protected Root behaviorTree;
-	private Blackboard blackboard;*/
-
         private List<CargoItem> consumableCargoItems;
         private List<CargoItem> producableCargoItems;
         private List<CargoItem> itemsNetChange;
@@ -76,6 +73,10 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
+        /// <summary>
+        /// Returns the net gain/loss of resources as a result of the Planet's Buildings operating one tick.
+        /// </summary>
+        /// <returns></returns>
         public CargoHold CalculateNetDemand()
         {
             CargoHold temp = new CargoHold(Int32.MaxValue);
@@ -162,6 +163,12 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
+        /// <summary>
+        /// Allows the Unity Editor to call this method.  Don't use this unless you know what you're doing.
+        /// </summary>
+        /// <param name="typename"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
         public Spaceship SpawnSpaceship(string typename, int number)
         {
             Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
@@ -179,6 +186,11 @@ namespace Assets.Scripts.Classes.Static {
             return shipScript;
         }
 
+        /// <summary>
+        /// Allows the Unity Editor to call this method.  Don't use this unless you know what you're doing.
+        /// </summary>
+        /// <param name="miningTargetList"></param>
+        /// <returns></returns>
         public Spaceship SpawnMiningShip(List<string> miningTargetList)
         {
             Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
@@ -228,22 +240,39 @@ namespace Assets.Scripts.Classes.Static {
             WorkerShips.Add(ship.gameObject);
         }
 
+        /// <summary>
+        /// Registers a Delivery Ship as having docked to the Planet.
+        /// </summary>
+        /// <param name="aiPatrol"></param>
         public void ReturnDeliveryShip(AI_Patrol aiPatrol)
         {
             ReadyDeliveryShips.Remove(aiPatrol.gameObject);
             DeliveryShipCount++;
         }
 
+        /// <summary>
+        /// Adds an MarketOrder to be fulfilled by the Planet.
+        /// </summary>
+        /// <param name="marketOrder"></param>
         public void AddToDeliveryQueue(MarketOrder marketOrder)
         {
             deliveryList.Add(marketOrder);
         }
 
+        /// <summary>
+        /// Registers a Delivery Ship as having parked in orbit around the Planet.
+        /// </summary>
+        /// <param name="aiPatrol"></param>
         public void AddToAvailableDeliveryShips(AI_Patrol aiPatrol)
         {
             ReadyDeliveryShips.Add(aiPatrol.gameObject);
         }
 
+
+        /// <summary>
+        /// Registers a MarketOrder as completed.
+        /// </summary>
+        /// <param name="marketOrder"></param>
         public void CompleteOrder(MarketOrder marketOrder)
         {
             if (deliveryInProgressList.Contains(marketOrder))
@@ -256,6 +285,10 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
+        /// <summary>
+        /// Registers a MarketOrder as failed to complete.  ie: Pirates killed the delivery ship.
+        /// </summary>
+        /// <param name="marketOrder"></param>
         public void FailOrder(MarketOrder marketOrder)
         {
             if (deliveryInProgressList.Contains(marketOrder))
