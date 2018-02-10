@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Classes;
+using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 
 
