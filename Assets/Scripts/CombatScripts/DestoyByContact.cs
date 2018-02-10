@@ -9,9 +9,9 @@ public class DestoyByContact : MonoBehaviour {
 	void Start () {
 		
 	}
-	//<summary>
-	// When bullet hits the enemy, destory both bullet and enemy objects.
-	//</summary>
+	///<summary>
+	/// When bullet hits the enemy, destory both bullet and enemy objects.
+	///</summary>
 	void OnTriggerEnter(Collider other) {
 		//other.gameObject.GetComponent<DestroyByTime>().enabled = false;
         if (other.gameObject.CompareTag("Enemy"))

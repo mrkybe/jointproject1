@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//<summary>
-// LaserFire class is used for firing a laser by utilizing Unity's LineRenderer component.
-//</summary>
+///<summary>
+/// LaserFire class is used for firing a laser by utilizing Unity's LineRenderer component.
+///</summary>
 public class LaserFire : MonoBehaviour {
     private LineRenderer laser;
     // Use this for initialization
@@ -14,9 +14,9 @@ public class LaserFire : MonoBehaviour {
         laser.enabled = false;
 	}
 	
-	//<summary>
-	// Check every frame if the fire button has been pressed, and starts coroutine FireLaser until the player lets go of the fir button.
-	//</summary>
+	///<summary>
+	/// Check every frame if the fire button has been pressed, and starts coroutine FireLaser until the player lets go of the fir button.
+	///</summary>
 	void Update ()
     {
 	    if (Input.GetButtonDown("Fire1"))
@@ -26,10 +26,10 @@ public class LaserFire : MonoBehaviour {
         }	
 	}
 
-	//<summary>
-	// IEnumerator function FireLaser is used to enable the LineRenderer and use a ray forward to check for a hit.
-	// If the ray hits an object, and if the object is an enemy, then destroy it. IEnumerator is used to create a sustained laser using coroutines. 
-	//</summary>
+	///<summary>
+	/// IEnumerator function FireLaser is used to enable the LineRenderer and use a ray forward to check for a hit.
+	/// If the ray hits an object, and if the object is an enemy, then destroy it. IEnumerator is used to create a sustained laser using coroutines. 
+	///</summary>
     IEnumerator FireLaser()
     {
         laser.enabled = true;
