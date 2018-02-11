@@ -159,6 +159,11 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             Alive.SetValue(false);
         }
 
+        /// <summary>
+        /// Called when a ship that is in sensor range is killed, so that we know its dead.
+        /// </summary>
+        /// <param name="victim"></param>
+        /// <param name="killer"></param>
         public override void NotifyKilled(Spaceship victim, Spaceship killer = null)
         {
             base.NotifyKilled(victim, killer);
@@ -173,8 +178,13 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             }
         }
 
+        /// <summary>
+        /// Called when a new ship enters our sensor range.
+        /// </summary>
+        /// <param name="contact"></param>
         public void NotifyShip(Spaceship contact)
         {
+            // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
             if (HasVictim != null && AttackTarget != null && FreshKill != null)
             {
                 if (contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)

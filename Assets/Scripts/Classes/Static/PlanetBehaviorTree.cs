@@ -21,7 +21,7 @@ namespace Assets.Scripts.Classes.Static {
         private List<MarketOrder> deliveryFailedList;
         private List<GameObject> ReadyDeliveryShips;
         private GameObject DeliveryShip;
-        public int DeliveryShipCount = 1;
+        public int DeliveryShipCount = 0;
         private float LastDeliveryShipDeployment = 0;
 
         void PlanetBTSetup()
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Classes.Static {
             //blackboard = behaviorTree.Blackboard;
 
             // attach the debugger component if executed in editor (helps to debug in the inspector) 
-
+            DeliveryShipCount = (Random.value > 0.5f ? 1 : 0);
             consumableCargoItems = new List<CargoItem>();
             producableCargoItems = new List<CargoItem>();
             itemsNetChange = new List<CargoItem>();

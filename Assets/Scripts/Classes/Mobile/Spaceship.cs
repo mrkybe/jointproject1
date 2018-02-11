@@ -160,7 +160,7 @@ namespace Assets.Scripts.Classes.Mobile {
             inSensorRange.Add(other.gameObject.transform.root.gameObject);
             if (pilot.GetType() == typeof(AI_Patrol)) // If we're an AI ship...
             {
-                Spaceship contact = other.gameObject.GetComponent<Spaceship>();
+                Spaceship contact = other.GetComponent<Spaceship>();
                 if (contact)
                 {
                     ((AI_Patrol)pilot).NotifyShip(contact);
@@ -337,6 +337,7 @@ namespace Assets.Scripts.Classes.Mobile {
 
         private void Die(Spaceship killer = null)
         {
+            // Tell every ship that has us on sensors that we died.
             Collider[] f = Physics.OverlapSphere(transform.position, NotificationRange, NotificationLayerMask, QueryTriggerInteraction.Collide);
             foreach(Collider c in f)
             {
@@ -346,6 +347,8 @@ namespace Assets.Scripts.Classes.Mobile {
                     comms.NotifyKilled(this, killer);
                 }
             }
+            
+            // Change apperance to destroyed.
             myModelSwitcher.BecomeGraveyard();
             Alive = false;
             GetPilot.Die();

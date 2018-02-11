@@ -47,7 +47,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
             {
                 FleeDirection.Value = Vector3.zero;
             }
-            //BehaviorTree.Blackboard["fearLevel"] = fear_level;
+
             return TaskStatus.Success;
         }
 

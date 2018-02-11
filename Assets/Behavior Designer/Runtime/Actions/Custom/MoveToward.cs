@@ -23,6 +23,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
         public SharedFloat TargetSpeed;
         public SharedFloat MaxSpeed = 3f;
         public SharedFloat AcceptableDistance = 1;
+        public SharedFloat StopShort = 0f;
         public SharedBool SlowArrive = true;
 
         private float stoppingDistance = 0f;
@@ -56,6 +57,11 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 Target.Value = TargetSpaceship.Value.transform.position;
             }
             Vector3 targetPosition = Target.Value;
+            if (StopShort.Value != 0)
+            {
+                Vector3 stoppingOffset = (this.transform.position - targetPosition).normalized * StopShort.Value;
+                targetPosition += stoppingOffset;
+            }
             Vector2 stick = new Vector2();
             float targetAngle = Vector3.Angle((transform.forward).normalized, (targetPosition - transform.position).normalized);
             if (isLeft(transform.position, transform.position + transform.forward * 500, targetPosition))
@@ -78,9 +84,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot
             {
                 Vector3 proj = Math3d.ProjectPointOnLine(transform.position, transform.forward, targetPosition);
                 int result = Math3d.PointOnWhichSideOfLineSegment(transform.position,
-                    transform.position + transform.forward * stoppingDistance, proj);
+                    transform.position + transform.forward * stoppingDistance, proj); // Check if our target position is closer than our stopping distance.
                 
-                if (result == 0)
+                if (result == 0) // It is.
                 {
                     TargetSpeed.Value = 0;
                 }
