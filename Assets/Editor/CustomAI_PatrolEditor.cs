@@ -32,9 +32,9 @@ namespace Assets.Editor
                         string s1 = "Throttle:";
                         string s2 = "TargetSpeed:";
                         string s3 = "Speed:";
-                        string s1x = s1 + tgt.Throttle.ToString();
-                        string s2x = s2 + tgt.TargetSpeed.ToString();
-                        string s3x = s3 + tgt.Speed.ToString();
+                        string s1x = s1 + string.Format("{0:0.00}", tgt.Throttle);
+                        string s2x = s2 + string.Format("{0:0.00}", tgt.TargetSpeed);
+                        string s3x = s3 + string.Format("{0:0.00}", tgt.Speed);
                         Handles.Label(tgt.transform.position + Vector3.up * 5, s1x + "\n" + s2x + "\n" + s3x, style);
                     }
                 }

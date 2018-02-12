@@ -17,13 +17,14 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public ExternalBehaviorTree ExternalPirateBehaviorTree;
 
         private SharedBool Alive;
-        private SharedBool HasVictim;
+        private SharedBool Afraid;
         private SharedBool FreshKill;
         private SharedBool Safe;
         private SharedVector2 ControlStick;
         private SharedPlanet HomePlanet;
         private SharedSpaceship shipScript;
         private SharedSpaceship AttackTarget;
+        private SharedSpaceship AttackTargetMIA;
         private SharedFloat CruiseSpeed;
         private SharedFloat EmergencySpeed;
 
@@ -52,6 +53,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             rigidbody = GetComponent<Rigidbody>();
 
             Alive = (SharedBool)behaviorTree.GetVariable("Alive");
+            Afraid = (SharedBool)behaviorTree.GetVariable("Afraid");
             ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
             TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
             HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
@@ -155,15 +157,15 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             InitializeBehaviorTreeVariableReferences();
 
             AttackTarget = (SharedSpaceship)behaviorTree.GetVariable("AttackTarget");
-            HasVictim = (SharedBool)behaviorTree.GetVariable("HasVictim");
+            AttackTargetMIA = (SharedSpaceship)behaviorTree.GetVariable("AttackTargetMIA");
             FreshKill = (SharedBool)behaviorTree.GetVariable("FreshKill");
 
             AttackTarget.Value = null;
-            HasVictim.Value = false;
+            AttackTargetMIA.Value = null;
             FreshKill.Value = false;
 
             shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
-            shipScript.Value.EngineAcceleration = 75f;
+            shipScript.Value.EngineAcceleration = 500f;
             shipScript.Value.MaxSpeed = 10f;
             StartBehaviorTree();
         }
@@ -185,9 +187,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public override void NotifyKilled(Spaceship victim, Spaceship killer = null)
         {
             base.NotifyKilled(victim, killer);
-            if (AttackTarget != null && HasVictim != null && AttackTarget.Value == victim)
+            if (AttackTarget != null && AttackTarget.Value == victim)
             {
-                HasVictim.Value = false;
                 if (killer == shipScript.Value)
                 {
                     FreshKill.Value = true;
@@ -201,14 +202,32 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         /// <param name="contact"></param>
         public void NotifyShip(Spaceship contact)
         {
-            // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
-            if (HasVictim != null && AttackTarget != null && FreshKill != null)
+            // If we find the ship we were just chasing, set it as our target again.
+            if (AttackTargetMIA != null && AttackTargetMIA.Value == contact)
             {
-                if (contact.Alive && contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)
+                if (contact.Alive)
                 {
-                    HasVictim.Value = true;
+                    AttackTarget.Value = contact;
+                    AttackTargetMIA.Value = null;
+                }
+            }
+
+            // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
+            if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA.Value == null && FreshKill != null)
+            {
+                if (contact.Alive && contact.GetScaryness(shipScript.Value) < 0 && !FreshKill.Value)
+                {
                     AttackTarget.Value = contact;
                 }
+            }
+        }
+
+        public void NotifyShipMissing(Spaceship contact)
+        {
+            if (AttackTarget != null && AttackTargetMIA != null && contact == AttackTarget.Value)
+            {
+                AttackTargetMIA.Value = contact;
+                AttackTarget.Value = null;
             }
         }
     }

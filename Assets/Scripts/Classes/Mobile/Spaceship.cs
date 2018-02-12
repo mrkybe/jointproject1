@@ -69,14 +69,6 @@ namespace Assets.Scripts.Classes.Mobile {
         private void Awake()
         {
             pilot = GetComponent<AI_Patrol>();
-            if (pilot == null)
-            {
-                pilot = GetComponent<PlayerPilot>();
-                if (pilot)
-                {
-                    Faction = Overseer.Main.GetFaction("Player");
-                }
-            }
             
             targetSpeed = -999;
             throttle_input = 0;
@@ -97,6 +89,14 @@ namespace Assets.Scripts.Classes.Mobile {
         private void Start ()
         {
             inTime = true;
+            if (pilot == null)
+            {
+                pilot = GetComponent<PlayerPilot>();
+                if (pilot)
+                {
+                    Faction = Overseer.Main.GetFaction("Player");
+                }
+            }
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetModel(modelChoice);
@@ -185,6 +185,14 @@ namespace Assets.Scripts.Classes.Mobile {
         {
             // Entity leaves sensor range.
             inSensorRange.Remove(other.gameObject.transform.root.gameObject);
+            if (pilot.GetType() == typeof(AI_Patrol)) // If we're an AI ship...
+            {
+                Spaceship contact = other.GetComponent<Spaceship>();
+                if (contact)
+                {
+                    ((AI_Patrol)pilot).NotifyShipMissing(contact);
+                }
+            }
         }
         
         private void SensorListRemoveNulls()
@@ -358,9 +366,12 @@ namespace Assets.Scripts.Classes.Mobile {
             {
                 if (source != null)
                 {
-                    source.pilot.NotifyKilled(this);
+                    Die(source);
                 }
-                Die();
+                else
+                {
+                    Die();
+                }
             }
         }
 

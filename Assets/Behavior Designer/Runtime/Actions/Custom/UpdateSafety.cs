@@ -18,7 +18,17 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
     class UpdateSafety : Action
     {
         public SharedSpaceship SpaceshipScript;
-        public SharedVector3 FleeDirection;
+        public SharedVector3 FleePosition;
+        public SharedBool Afraid;
+        public SharedInt Bravery;
+
+        private List<Spaceship> resultsList;
+
+        public override void OnAwake()
+        {
+            base.OnAwake();
+            resultsList = new List<Spaceship>();
+        }
 
         public override TaskStatus OnUpdate()
         {
@@ -38,14 +48,23 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 averageScaryPosition += f.transform.position;
             }
             averageScaryPosition /= scaryList.Count;
-            
+
             if (scaryList.Count > 0)
             {
-                FleeDirection.Value = ((averageScaryPosition - transform.position) * -1).normalized;
+                FleePosition.Value = transform.position + ((averageScaryPosition - transform.position) * -1).normalized * 1000f;
             }
             else
             {
-                FleeDirection.Value = Vector3.zero;
+                FleePosition.Value = Vector3.zero;
+            }
+
+            if (fear_level > Bravery.Value)
+            {
+                Afraid.Value = true;
+            }
+            else
+            {
+                Afraid.Value = false;
             }
 
             return TaskStatus.Success;
@@ -54,11 +73,11 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
         List<Spaceship> GetHostileShipsInRange()
         {
             Faction myFaction = SpaceshipScript.Value.Faction;
-            List<Spaceship> resultsList = new List<Spaceship>();
+            resultsList.Clear();
 
             foreach (Spaceship f in SpaceshipScript.Value.GetInSensorRange<Spaceship>())
             {
-                if (f.Faction.HostileWith(myFaction) && f.Alive)
+                if (f.Faction != null && f.Faction.HostileWith(myFaction) && f.Alive)
                 {
                     resultsList.Add(f);
                 }
