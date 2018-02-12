@@ -51,11 +51,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
             if (scaryList.Count > 0)
             {
-                FleePosition.Value = transform.position + ((averageScaryPosition - transform.position) * -1).normalized * 1000f;
-            }
-            else
-            {
-                FleePosition.Value = Vector3.zero;
+                FleePosition.Value = transform.position + ((averageScaryPosition - transform.position) * -1).normalized * 350f;
             }
 
             if (fear_level > Bravery.Value)

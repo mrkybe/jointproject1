@@ -166,7 +166,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
 
             shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
             shipScript.Value.EngineAcceleration = 500f;
-            shipScript.Value.MaxSpeed = 10f;
+            shipScript.Value.MaxSpeed = 5f;
             StartBehaviorTree();
         }
 
