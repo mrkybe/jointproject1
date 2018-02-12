@@ -11,6 +11,15 @@ namespace Assets.Editor {
     {
         private CargoHold hold;
 
+        private GUIStyle style;
+
+        public void OnEnable()
+        {
+            style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.font = Resources.Load<Font>("Fonts/VeraMono");
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -49,7 +58,7 @@ namespace Assets.Editor {
             {
                 List<string> miningTargetList = new List<string>();
                 miningTargetList.Add("Gold");
-                Spaceship ship = myTarget.SpawnMiningShip(miningTargetList);
+                myTarget.SpawnMiningShip(miningTargetList);
             }
             if (GUILayout.Button("and Select It"))
             {
@@ -61,6 +70,33 @@ namespace Assets.Editor {
             GUILayout.EndHorizontal();
 
             base.OnInspectorGUI();
+        }
+
+        public void OnSceneGUI()
+        {
+            if (target)
+            {
+                Planet myTarget = target as Planet;
+                if (myTarget)
+                {
+                    if (myTarget.GetCargoHold != null)
+                    {
+                        hold = myTarget.GetCargoHold;
+
+                        string holdString = hold.ToString();
+                        string reserveString = myTarget.GetReserveCargoHold.ToString();
+
+                        Handles.color = Color.blue;
+                        string s1 = holdString;
+                        string s2 = reserveString;
+                        string s3 = myTarget.BuildingsToString();
+                        string s1x = "== Main Cargohold ======\n" + s1;
+                        string s2x = "== Reserved Cargohold ==\n" + s2;
+                        string s3x = "== Buildings ===========\n" + s3;
+                        Handles.Label(myTarget.transform.position + Vector3.up * -5, s1x + "\n" + s2x + "\n" + s3x, style);
+                    }
+                }
+            }
         }
     }
 }
