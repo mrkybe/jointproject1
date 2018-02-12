@@ -33,7 +33,7 @@ namespace Assets.Scripts.Classes.Static {
             //blackboard = behaviorTree.Blackboard;
 
             // attach the debugger component if executed in editor (helps to debug in the inspector) 
-            DeliveryShipCount = (Random.value <= 0.75f ? 1 : 0);
+            DeliveryShipCount = (Random.value <= 0.75f ? 2 : 1);
             consumableCargoItems = new List<CargoItem>();
             producableCargoItems = new List<CargoItem>();
             itemsNetChange = new List<CargoItem>();

@@ -136,7 +136,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                     Shipscript.GetPilot.TargetFaceDirection = transform.forward;
                     return TaskStatus.Success;
                 }
-                Debug.DrawLine(transform.position + transform.forward * stoppingDistance, transform.position + transform.forward * stoppingDistance + transform.up * 10f);
+                Debug.DrawLine(transform.position + transform.forward * stoppingDistance, transform.position + transform.forward * stoppingDistance + transform.up * 10f, Color.yellow);
             }
             else
             {
