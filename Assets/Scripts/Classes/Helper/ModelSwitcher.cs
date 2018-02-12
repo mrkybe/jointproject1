@@ -35,6 +35,7 @@ namespace Assets.Scripts.Classes.Helper
         private MeshRenderer myMeshRenderer;
         private ParticleSystem myParticleSystem;
         private Spaceship mySpaceshipScript;
+        private SphereCollider mySensorCollider;
         private States State = States.ALIVE;
 
         
@@ -44,6 +45,7 @@ namespace Assets.Scripts.Classes.Helper
             myMeshRenderer = this.GetComponent<MeshRenderer>();
             myParticleSystem = this.GetComponent<ParticleSystem>();
             mySpaceshipScript = this.transform.parent.GetComponent<Spaceship>();
+            mySensorCollider = this.GetComponent<SphereCollider>();
 
             myParticleSystem.Stop();
 
@@ -79,6 +81,13 @@ namespace Assets.Scripts.Classes.Helper
             this.transform.localScale = scale;
         }
 
+        public void SetSensorRange(float radius)
+        {
+            Vector3 localScale = this.transform.localScale;
+            float scaleMultiplier = Mathf.Max(localScale.x, localScale.y, localScale.z);
+            mySensorCollider.radius = radius / scaleMultiplier;
+        }
+
         public void Update()
         {
             if (State == States.DEAD)
@@ -89,7 +98,9 @@ namespace Assets.Scripts.Classes.Helper
 
         public void OnTriggerEnter(Collider collider)
         {
-            mySpaceshipScript.SensorEnter(collider);
+            // Don't detect ourselves... obviously.
+            if(collider.GetComponent<Spaceship>() != mySpaceshipScript)
+                mySpaceshipScript.SensorEnter(collider);
         }
 
         public void OnTriggerExit(Collider collider)

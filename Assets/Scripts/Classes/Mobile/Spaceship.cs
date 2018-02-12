@@ -32,9 +32,9 @@ namespace Assets.Scripts.Classes.Mobile {
         [SerializeField]
         public float InteractionRange = 5f;
         [SerializeField]
-        public float SensorRange = 40f;
-        [SerializeField]
         public float NotificationRange = 50f;
+        [SerializeField]
+        private float sensorRange;
         [SerializeField]
         public LayerMask NotificationLayerMask;
 
@@ -94,6 +94,7 @@ namespace Assets.Scripts.Classes.Mobile {
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetModel(modelChoice);
+            myModelSwitcher.SetSensorRange(SensorRange);
         }
 
         // Update is called once per frame
@@ -132,6 +133,7 @@ namespace Assets.Scripts.Classes.Mobile {
         private Vector3 old_angularVelocity = Vector3.zero;
         private Vector3 old_velocity = Vector3.zero;
         private float old_torquey = 0;
+
         public void LateUpdate()
         {
             old_throttleInput = throttle_input;
@@ -220,6 +222,18 @@ namespace Assets.Scripts.Classes.Mobile {
                 }
             }
             return targets;
+        }
+        /// <summary>
+        /// Returns the sensor range of the ship.
+        /// </summary>
+        public float SensorRange
+        {
+            get { return sensorRange; }
+            set
+            {
+                sensorRange = value;
+                myModelSwitcher.SetSensorRange(value);
+            }
         }
 
         /// <summary>

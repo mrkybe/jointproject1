@@ -36,6 +36,19 @@ namespace Assets.Editor {
                     myTarget.TakeDamage(100);
                 }
             }
+            if (pilot != null)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Sensor Range + 10"))
+                {
+                    myTarget.SensorRange += 10;
+                }
+                if (GUILayout.Button("Sensor Range - 10"))
+                {
+                    myTarget.SensorRange -= 10;
+                }
+                GUILayout.EndHorizontal();
+            }
             if (hold != null)
             {
                 EditorGUILayout.TextArea(hold.ToString(), GUILayout.MaxHeight(75));
