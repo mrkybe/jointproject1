@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Source = https://wiki.unity3d.com/index.php/3d_Math_functions
+// Source/Credit to https://wiki.unity3d.com/index.php/3d_Math_functions
 namespace Assets.Scripts.Classes.Libraries {
     public class Math3d
     {

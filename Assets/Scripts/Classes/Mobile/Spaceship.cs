@@ -20,6 +20,7 @@ namespace Assets.Scripts.Classes.Mobile {
         [SerializeField]
         private float turningSpeed;
         [SerializeField]
+        [Range(0,1)]
         private float manuverability;
         [SerializeField]
         private AI_Type desired_AI_Type;
@@ -43,6 +44,7 @@ namespace Assets.Scripts.Classes.Mobile {
         private float targetSpeed;
         private float throttle_input;
         private float old_throttleInput;
+        private float grip = 0;
         private CargoHold myStorage;
         private ModelSwitcher myModelSwitcher;
         // Use this for initialization
@@ -70,6 +72,10 @@ namespace Assets.Scripts.Classes.Mobile {
             if (pilot == null)
             {
                 pilot = GetComponent<PlayerPilot>();
+                if (pilot)
+                {
+                    Faction = Overseer.Main.GetFaction("Player");
+                }
             }
             
             targetSpeed = -999;
@@ -146,7 +152,8 @@ namespace Assets.Scripts.Classes.Mobile {
         {
             Vector3 engineVel = (direction.normalized * pilot.Throttle);
             Vector3 finalVel = (engineVel) * Time.deltaTime * engineAcceleration;
-            float velmax = ((MyRigidbody.velocity.magnitude) / maxSpeed);
+            float velmax = Mathf.Min(Manuverability, (MyRigidbody.velocity.magnitude) / maxSpeed);
+            Grip = velmax;
             MyRigidbody.AddForce(finalVel);
             float dot = Vector3.Dot(MyRigidbody.velocity.normalized, MyRigidbody.transform.forward);
             MyRigidbody.velocity = MyRigidbody.velocity * Mathf.Clamp(velmax, 0.0f, 1f) + MyRigidbody.transform.forward * MyRigidbody.velocity.magnitude * Mathf.Clamp(1.0f-velmax, 0, 1.0f) * (((1+dot)/2));
@@ -279,6 +286,15 @@ namespace Assets.Scripts.Classes.Mobile {
         {
             get { return targetSpeed; }
             set { targetSpeed = value; }
+        }
+
+        /// <summary>
+        /// Returns the amount of grip the ship has.
+        /// </summary>
+        public float Grip
+        {
+            get { return grip; }
+            private set { grip = value; }
         }
 
         /// <summary>

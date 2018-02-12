@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Classes.Mobile;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using Random = UnityEngine.Random;
 
 namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 {
@@ -38,6 +40,9 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 }
             }
             Target.Value = closestPos;
+            float randomOffsetScale = Random.value * (GetComponent<Spaceship>().SensorRange/3f);
+            Vector3 randomOffsetPos = (new Vector3(Random.value - 0.5f, 0, Random.value - 0.5f).normalized) * randomOffsetScale;
+            Target.Value += randomOffsetPos;
             PreviousPositions.Add(closestPos);
             return TaskStatus.Success;
         }

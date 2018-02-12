@@ -35,8 +35,10 @@ namespace Assets.Scripts.Classes.Helper
         private MeshRenderer myMeshRenderer;
         private ParticleSystem myParticleSystem;
         private Spaceship mySpaceshipScript;
+        private Rigidbody mySpaceshipParentRigidbody;
         private SphereCollider mySensorCollider;
         private States State = States.ALIVE;
+        private Quaternion initialRotation;
 
         
         private void Awake()
@@ -46,6 +48,8 @@ namespace Assets.Scripts.Classes.Helper
             myParticleSystem = this.GetComponent<ParticleSystem>();
             mySpaceshipScript = this.transform.parent.GetComponent<Spaceship>();
             mySensorCollider = this.GetComponent<SphereCollider>();
+            mySpaceshipParentRigidbody = mySpaceshipScript.GetComponent<Rigidbody>();
+            initialRotation = transform.localRotation;
 
             myParticleSystem.Stop();
 
@@ -93,6 +97,12 @@ namespace Assets.Scripts.Classes.Helper
             if (State == States.DEAD)
             {
                 transform.Rotate(randomRotationAxis, rotationSpeed * Time.deltaTime);
+            }
+            else
+            {
+                //Vector3 angVel = mySpaceshipParentRigidbody.angularVelocity;
+                //transform.Rotate(Vector3.up, angVel.y * Time.deltaTime * -75f);
+                //transform.localRotation = Quaternion.Lerp(transform.localRotation, initialRotation, Time.deltaTime);
             }
         }
 

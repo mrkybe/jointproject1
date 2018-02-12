@@ -5,6 +5,7 @@ using System.Text;
 using Assets.Behavior_Designer.Runtime.Variables;
 using Assets.Scripts.Classes.Libraries;
 using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.Static;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
@@ -25,8 +26,15 @@ namespace Assets.Scripts.Classes.Helper.Pilot
         public SharedFloat AcceptableDistance = 1;
         public SharedFloat StopShort = 0f;
         public SharedBool SlowArrive = true;
+        public SharedBool AvoidPlanets = false;
+        public SharedFloat AvoidStrength = 0.5f;
+        public SharedFloat AvoidDistance = 0.5f;
 
         private float stoppingDistance = 0f;
+        private Rigidbody targetRigidbody = null;
+        private Vector3 targetSpaceshipAcceleration = Vector3.zero;
+        private Vector3 targetSpaceshipOldVelocity = Vector3.zero;
+        private float targetSpaceshipOldVelocityTime = 0;
         private Rigidbody rigidbody;
         private Spaceship Shipscript;
         private bool arriving = false;
@@ -44,6 +52,12 @@ namespace Assets.Scripts.Classes.Helper.Pilot
             base.OnStart();
             rigidbody = GetComponent<Rigidbody>();
             Shipscript = GetComponent<Spaceship>();
+        }
+
+        public override void OnEnd()
+        {
+            targetRigidbody = null;
+            stoppingDistance = 0f;
         }
 
         public override TaskStatus OnUpdate()
@@ -72,13 +86,39 @@ namespace Assets.Scripts.Classes.Helper.Pilot
             Vector3 temp = targetPosition - transform.position;
             
             stick = new Vector2(temp.x, temp.z).normalized;
+            if (AvoidPlanets.Value)
+            {
+                var planets = Shipscript.GetInSensorRange<Planet>();
+                if (planets.Count > 0)
+                {
+                    Vector3 pos1 = transform.position;
+                    Vector3 pos2 = transform.position + transform.forward;
+                    Vector3 pushVector = Vector3.zero;
+                    foreach (var p in planets)
+                    {
+                        Vector3 ppos = Math3d.ProjectPointOnLine(pos1, pos2, p.transform.position);
+                        int result = Math3d.PointOnWhichSideOfLineSegment(pos1, pos2, ppos);
+                        float mul = 0;
+                        if (result == 2 || result == 1)
+                        {
+                             mul = 1 - Mathf.Clamp01(Vector3.Distance(p.transform.position, transform.position) / (Shipscript.SensorRange * AvoidDistance.Value));
+                        }
+                        Vector3 dir = (p.transform.position - transform.position).normalized *  mul;
+                        pushVector += dir;
+                    }
+                    pushVector /= planets.Count;
+                    stick += new Vector2(pushVector.x, pushVector.z) * -AvoidStrength.Value;
+                    stick = stick.normalized;
+                }
+            }
 
             Debug.DrawLine(transform.position, targetPosition, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
             Debug.DrawLine(transform.position, transform.position + transform.forward, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
 
             ControlStick.Value = stick;
-            float dot = Vector3.Dot(temp, transform.forward);
-            TargetSpeed.Value = Mathf.Clamp(dot * MaxSpeed.Value, 0f, MaxSpeed.Value);
+            float dot = Mathf.Clamp(Vector3.Dot(temp, transform.forward), -1f, 1f);
+            float d2 = Mathf.Max(dot, Shipscript.Grip);
+            TargetSpeed.Value = Mathf.Clamp(d2 * MaxSpeed.Value, 0f, MaxSpeed.Value);
 
             if (SlowArrive.Value)
             {
@@ -90,7 +130,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 {
                     TargetSpeed.Value = 0;
                 }
-                if (rigidbody.velocity.magnitude < 0.05f && Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
+                if (rigidbody.velocity.magnitude < 0.5f && Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
                 {
                     TargetSpeed.Value = 0;
                     Shipscript.GetPilot.TargetFaceDirection = transform.forward;
@@ -108,7 +148,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
 
             return TaskStatus.Running;
         }
-        
+
         /// <summary>
         /// Returns whether checkPoint is on the left side of the line defined by pos1 and pos2.
         /// </summary>

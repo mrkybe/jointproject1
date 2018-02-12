@@ -39,13 +39,13 @@ namespace Assets.Editor {
             if (pilot != null)
             {
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Sensor Range + 10"))
+                if (GUILayout.Button("Sensor Range + 5"))
                 {
-                    myTarget.SensorRange += 10;
+                    myTarget.SensorRange += 5;
                 }
-                if (GUILayout.Button("Sensor Range - 10"))
+                if (GUILayout.Button("Sensor Range - 5"))
                 {
-                    myTarget.SensorRange -= 10;
+                    myTarget.SensorRange -= 5;
                 }
                 GUILayout.EndHorizontal();
             }

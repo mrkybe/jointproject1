@@ -24,12 +24,15 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private SharedPlanet HomePlanet;
         private SharedSpaceship shipScript;
         private SharedSpaceship AttackTarget;
+        private SharedFloat CruiseSpeed;
+        private SharedFloat EmergencySpeed;
+
+        public SharedFloat TargetSpeed;
 
         private BehaviorTree behaviorTree;
         private float interactionDistance = 5f;
         private new Rigidbody rigidbody;
         public float Speed;
-        public SharedFloat TargetSpeed;
 
 
         // Use this for initialization
@@ -53,6 +56,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
             HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
             shipScript = (SharedSpaceship)behaviorTree.GetVariable("Shipscript");
+            CruiseSpeed = (SharedFloat)behaviorTree.GetVariable("CruiseSpeed");
+            EmergencySpeed = (SharedFloat)behaviorTree.GetVariable("EmergencySpeed");
 
             shipScript.Value = transform.GetComponent<Spaceship>();
         }
@@ -99,6 +104,13 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             return behaviorTree;
         }
 
+        private void StartBehaviorTree()
+        {
+            CruiseSpeed.Value = shipScript.Value.MaxSpeed / 2f;
+            EmergencySpeed.Value = shipScript.Value.MaxSpeed / 1.1f;
+            behaviorTree.Start();
+        }
+
         /// <summary>
         /// Sets the Behavior Tree the one for mining.
         /// </summary>
@@ -111,8 +123,10 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
 
             HomePlanet.Value = homePlanet;
             behaviorTree.GetVariable("MiningTargets").SetValue(miningTargets);
+            shipScript.Value.EngineAcceleration = 25f + Random.value * 25f;
+            shipScript.Value.MaxSpeed = 3f + Random.value * 2.5f;
 
-            behaviorTree.Start();
+            StartBehaviorTree();
         }
 
         /// <summary>
@@ -127,7 +141,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             HomePlanet.Value = order.origin;
             behaviorTree.GetVariable("DeliveryOrder").SetValue(order);
             behaviorTree.GetVariable("DeliveryPlanet").SetValue(order.destination);
-            behaviorTree.Start();
+            shipScript.Value.EngineAcceleration = 25f + Random.value * 25f;
+            shipScript.Value.MaxSpeed = 5f + Random.value * 2.5f;
+            StartBehaviorTree();
         }
 
         /// <summary>
@@ -147,7 +163,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             FreshKill.Value = false;
 
             shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
-            behaviorTree.Start();
+            shipScript.Value.EngineAcceleration = 75f;
+            shipScript.Value.MaxSpeed = 10f;
+            StartBehaviorTree();
         }
 
         /// <summary>
@@ -169,7 +187,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             base.NotifyKilled(victim, killer);
             if (AttackTarget != null && HasVictim != null && AttackTarget.Value == victim)
             {
-                AttackTarget.Value = null;
                 HasVictim.Value = false;
                 if (killer == shipScript.Value)
                 {
@@ -187,7 +204,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
             if (HasVictim != null && AttackTarget != null && FreshKill != null)
             {
-                if (contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)
+                if (contact.Alive && contact.GetScaryness(shipScript.Value) < 0 && !HasVictim.Value && !FreshKill.Value)
                 {
                     HasVictim.Value = true;
                     AttackTarget.Value = contact;
