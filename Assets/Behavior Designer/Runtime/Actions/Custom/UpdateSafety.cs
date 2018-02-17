@@ -68,12 +68,12 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
         List<Spaceship> GetHostileShipsInRange()
         {
-            Faction myFaction = SpaceshipScript.Value.Faction;
+            Faction myFaction = SpaceshipScript.Value.Pilot.Faction;
             resultsList.Clear();
 
             foreach (Spaceship f in SpaceshipScript.Value.GetInSensorRange<Spaceship>())
             {
-                if (f.Faction != null && f.Faction.HostileWith(myFaction) && f.Alive)
+                if (f.Pilot.Faction != null && f.Pilot.Faction.HostileWith(myFaction) && f.Alive)
                 {
                     resultsList.Add(f);
                 }

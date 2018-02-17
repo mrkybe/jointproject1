@@ -29,7 +29,7 @@ namespace Assets.Scripts.Classes.Helper
         /// </summary>
         [SerializeField]
         [Range(0, 11)]
-        public int modelNumber = 0;
+        private int modelNumber = 0;
 
         private MeshFilter myMesh;
         private MeshRenderer myMeshRenderer;
@@ -53,10 +53,18 @@ namespace Assets.Scripts.Classes.Helper
 
             myParticleSystem.Stop();
 
-            if (modelNumber < Meshes.Count)
+            /*if (modelNumber < Meshes.Count)
             {
                 myMesh.mesh = Meshes[modelNumber].GetComponent<MeshFilter>().sharedMesh;
                 myMeshRenderer.material = Meshes[modelNumber].GetComponent<MeshRenderer>().sharedMaterial;
+            }*/
+        }
+
+        public void Start()
+        {
+            if (mySpaceshipScript.Pilot != null && mySpaceshipScript.Pilot.Faction != null)
+            {
+                SetColor(mySpaceshipScript.Pilot.Faction.ColorPrimary);
             }
         }
 
@@ -78,11 +86,22 @@ namespace Assets.Scripts.Classes.Helper
             float z = (Random.value * 2 + 4); // height
             if (Random.value > 0.5f)
             {
-                z = z * -1;
+                //z = z * -1;
             }
 
             Vector3 scale = new Vector3(x,y,z);
             this.transform.localScale = scale;
+            this.modelNumber = num;
+
+            if (mySpaceshipScript.Pilot != null && mySpaceshipScript.Pilot.Faction != null)
+            {
+                SetColor(mySpaceshipScript.Pilot.Faction.ColorPrimary);
+            }
+        }
+
+        public void SetColor(Color color)
+        {
+            myMeshRenderer.material.color = color;
         }
 
         public void SetSensorRange(float radius)

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: cb405336307e7bc48a109e8431a1e3f2
+timeCreated: 1518865851
+licenseType: Free
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _DiffuseTexture: {fileID: 2800000, guid: da7589a7e296af74f8d393218a15f3b5, type: 3}
+  - _NormalMap: {fileID: 2800000, guid: b141d26d0241c29458094655cd594f7f, type: 3}
+  - _PaintMask: {fileID: 2800000, guid: 6f9db3b323048af4c9e17549b227bd5b, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

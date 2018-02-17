@@ -16,6 +16,10 @@ namespace Assets.Editor {
             {
                 myTarget.MatchOrders();
             }
+            if (GUILayout.Button("Spawn Pirate"))
+            {
+                myTarget.SpawnPirateSpaceship();
+            }
 
             base.OnInspectorGUI();
         }

@@ -33,7 +33,7 @@ namespace Assets.Scripts.Classes.Static {
             //blackboard = behaviorTree.Blackboard;
 
             // attach the debugger component if executed in editor (helps to debug in the inspector) 
-            DeliveryShipCount = (Random.value <= 0.75f ? 2 : 1);
+            DeliveryShipCount = (Random.value <= 0.75f ? 0 : 1);
             consumableCargoItems = new List<CargoItem>();
             producableCargoItems = new List<CargoItem>();
             itemsNetChange = new List<CargoItem>();
@@ -181,7 +181,7 @@ namespace Assets.Scripts.Classes.Static {
             AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
             Spaceship shipScript = ship.GetComponent<Spaceship>();
             ship.name = "S_" + typename + "_" + this.Faction.Name + "_" + this.MyName + "_" + number;
-            shipScript.Faction = Faction;
+            shipScript.Pilot.Faction = Faction;
 
             return shipScript;
         }
@@ -194,7 +194,7 @@ namespace Assets.Scripts.Classes.Static {
         public Spaceship SpawnMiningShip(List<string> miningTargetList)
         {
             Spaceship shipScript = SpawnSpaceship("Miner", DeliveryShipCount + WorkerShips.Count);
-            AI_Patrol pilot = (AI_Patrol)shipScript.GetPilot;
+            AI_Patrol pilot = (AI_Patrol)shipScript.Pilot;
         
             CargoHold shipHold = shipScript.GetCargoHold;
             foreach(string resource in miningTargetList)
@@ -210,6 +210,7 @@ namespace Assets.Scripts.Classes.Static {
         private void SendDeliveryShip(MarketOrder order)
         {
             Spaceship shipScript = null;
+            bool reused = false;
             if (ReadyDeliveryShips.Count == 0)
             {
                 shipScript = SpawnSpaceship("Transport", DeliveryShipCount);
@@ -219,6 +220,7 @@ namespace Assets.Scripts.Classes.Static {
             {
                 shipScript = ReadyDeliveryShips[0].GetComponent<Spaceship>();
                 ReadyDeliveryShips.RemoveAt(0);
+                reused = true;
             }
             GameObject ship = shipScript.gameObject;
         
@@ -235,7 +237,7 @@ namespace Assets.Scripts.Classes.Static {
             AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
             if (pilot != null)
             {
-                pilot.StartDelivery(order);
+                pilot.StartDelivery(order, !reused);
             }
             WorkerShips.Add(ship.gameObject);
         }

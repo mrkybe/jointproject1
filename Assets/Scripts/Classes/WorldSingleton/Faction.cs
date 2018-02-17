@@ -16,6 +16,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public Color ColorPrimary;
         public Color ColorSecondary;
         public List<FactionLink> MyLinks;
+        public bool SelfHostile = false;
         private List<Planet> OwnedPlanets;
 
         public Faction(String name)
@@ -66,6 +67,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public bool HostileWith(Faction myFaction)
         {
+            if (this == myFaction && SelfHostile)
+            {
+                return true;
+            }
             foreach (FactionLink link in MyLinks)
             {
                 if (link.a == myFaction || link.b == myFaction)

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Classes.Helper.Pilot;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.Mobile;
 using BehaviorDesigner.Runtime;
@@ -29,7 +30,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private static GameObject Saturn;
         private static List<GameObject> Moons = new List<GameObject>();
         private static List<GameObject> AsteroidFields = new List<GameObject>();
+        [SerializeField]
+        private static List<Spaceship> PirateShips = new List<Spaceship>();
         public static Overseer Main;
+        private GameObject PirateShip;
 
         //float timeScale;
         private void Awake()
@@ -48,6 +52,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
             //Debug.unityLogger.logEnabled = false; 
             Sky = Resources.Load("Prefabs/SkyPrefab", typeof(GameObject)) as GameObject;
+            PirateShip = (GameObject)Resources.Load("Prefabs/AI_ship");
             RootNode = GameObject.FindWithTag("RootNode");
 
             CreateFactions();
@@ -57,6 +62,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateMarket();
 
             InvokeRepeating("TickPlanets", 1f, 1f);
+            InvokeRepeating("ManagePirateCount", 1f, 60f);
         }
 
         private new void Start()
@@ -274,6 +280,45 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
             }
             MatchOrders();
+        }
+
+        public void ManagePirateCount()
+        {
+            PirateShips.RemoveAll(x => x == null || x.Alive == false);
+            if (PirateShips.Count < 5)
+            {
+                SpawnPirateSpaceship();
+                PirateShipCounter++;
+            }
+        }
+
+        /// <summary>
+        /// Allows the Unity Editor to call this method.  Don't use this unless you know what you're doing.
+        /// </summary>
+        /// <param name="typename"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        private int PirateShipCounter = 0;
+        public Spaceship SpawnPirateSpaceship()
+        {
+            Vector3 position = PolarCoordinates((float)(Math.PI * 2 * Random.value), worldSize / 1.75f);
+            Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
+            Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
+
+            Quaternion shipRotation = Quaternion.LookRotation(offset3d, Vector3.up);
+            GameObject ship = null;
+
+            ship = Instantiate(PirateShip, position + offset3d, shipRotation);
+            AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
+            Spaceship shipScript = ship.GetComponent<Spaceship>();
+            ship.name = "S_" + "Pirate" + "_" + PirateShipCounter;
+            shipScript.Pilot.Faction = GetFaction("Pirates");
+
+            pilot.StartPirate();
+
+            PirateShips.Add(shipScript);
+            PirateShipCounter++;
+            return shipScript;
         }
 
         // Update is called once per frame

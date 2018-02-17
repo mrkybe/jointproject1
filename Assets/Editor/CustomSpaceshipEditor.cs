@@ -15,7 +15,7 @@ namespace Assets.Editor {
             serializedObject.Update();
 
             Spaceship myTarget = (Spaceship)target;
-            PilotInterface pilot = myTarget.GetPilot;
+            PilotInterface pilot = myTarget.Pilot;
             hold = myTarget.GetCargoHold;
 
             if(pilot != null)
@@ -26,6 +26,10 @@ namespace Assets.Editor {
                     {
                         ((AI_Patrol)pilot).StartPirate();
                         myTarget.PowerLevel = 150;
+                    }
+                    if (GUILayout.Button("Become Scrapper"))
+                    {
+                        ((AI_Patrol)pilot).StartScrapper();
                     }
                 }
             }

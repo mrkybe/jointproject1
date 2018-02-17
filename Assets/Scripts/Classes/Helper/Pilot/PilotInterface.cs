@@ -1,10 +1,12 @@
 ﻿using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.WorldSingleton;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.Pilot {
     public abstract class PilotInterface : MonoBehaviour
     {
+        public Faction Faction;
         protected Vector2 control_stickDirection;
         protected Vector3 targetFaceDirection;
         protected Vector3 targetVelocity;

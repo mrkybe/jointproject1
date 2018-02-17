@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Classes.Helper;
 using Assets.Scripts.Classes.Helper.Pilot;
@@ -19,13 +20,12 @@ namespace Assets.Scripts.Classes.Mobile {
         private float maxSpeed;
         [SerializeField]
         private float turningSpeed;
+
         [SerializeField]
         [Range(0,1)]
         private float manuverability;
         [SerializeField]
         private AI_Type desired_AI_Type;
-        [SerializeField]
-        public Faction Faction;
         [SerializeField]
         public int PowerLevel;
         [SerializeField]
@@ -83,23 +83,13 @@ namespace Assets.Scripts.Classes.Mobile {
                 targetSpeed = 0;
             }
             myStorage = new CargoHold(100);
-            modelChoice = (int)(Random.value * 11);
         }
 
         private void Start ()
         {
             inTime = true;
-            if (pilot == null)
-            {
-                pilot = GetComponent<PlayerPilot>();
-                if (pilot)
-                {
-                    Faction = Overseer.Main.GetFaction("Player");
-                }
-            }
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
-            myModelSwitcher.SetModel(modelChoice);
             myModelSwitcher.SetSensorRange(SensorRange);
         }
 
@@ -331,7 +321,7 @@ namespace Assets.Scripts.Classes.Mobile {
         /// <summary>
         /// Returns the ship's pilot.
         /// </summary>
-        public PilotInterface GetPilot
+        public PilotInterface Pilot
         {
             get { return pilot; }
         }
@@ -392,9 +382,14 @@ namespace Assets.Scripts.Classes.Mobile {
             // Change apperance to destroyed.
             myModelSwitcher.BecomeGraveyard();
             Alive = false;
-            GetPilot.Die();
+            Pilot.Die();
         }
-        
+
+        public void DeleteSelf()
+        {
+            Destroy(gameObject, 2);
+        }
+
         private void CalculateGravityVector()
         {
             //Debug.Log("GRAVITY VECTOR " + Planet.listOfPlanetObjects.Count);

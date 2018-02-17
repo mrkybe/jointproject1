@@ -111,6 +111,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private void MakePiratesHostileWithAll()
         {
             Faction f = GetFaction("Pirates");
+            f.SelfHostile = true;
             foreach (var link in f.MyLinks)
             {
                 link.Friendlyness = -100f;
@@ -139,8 +140,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         /// <returns></returns>
         public BattleResult ResolveShipCombat(Spaceship attacker_ship, Spaceship defender_ship)
         {
-            IEnumerable<Spaceship> ship1_allies = attacker_ship.GetInInteractionRange<Spaceship>().Where(x => x.Faction == attacker_ship.Faction);
-            IEnumerable<Spaceship> ship2_allies = defender_ship.GetInInteractionRange<Spaceship>().Where(x => x.Faction == defender_ship.Faction);
+            IEnumerable<Spaceship> ship1_allies = attacker_ship.GetInInteractionRange<Spaceship>().Where(x => x.Pilot.Faction == attacker_ship.Pilot.Faction);
+            IEnumerable<Spaceship> ship2_allies = defender_ship.GetInInteractionRange<Spaceship>().Where(x => x.Pilot.Faction == defender_ship.Pilot.Faction);
 
             int attacker_power = attacker_ship.PowerLevel + ship1_allies.Sum(x => x.PowerLevel);
             int defender_power = defender_ship.PowerLevel + ship2_allies.Sum(x => x.PowerLevel);

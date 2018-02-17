@@ -12,8 +12,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         {
             base.Start();
             myShip = GetComponent<Spaceship>();
-            Faction myFaction = Overseer.Main.GetFaction("Player");
-            myShip.Faction = myFaction;
+            Faction = Overseer.Main.GetFaction("Player");
         }
 	
         // Update is called once per frame

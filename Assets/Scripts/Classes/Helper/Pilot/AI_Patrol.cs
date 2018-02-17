@@ -15,9 +15,11 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public ExternalBehaviorTree ExternalMiningBehaviorTree;
         public ExternalBehaviorTree ExternalDeliveryBehaviorTree;
         public ExternalBehaviorTree ExternalPirateBehaviorTree;
+        public ExternalBehaviorTree ExternalScrapperBehaviorTree;
 
         private SharedBool Alive;
         private SharedBool Afraid;
+        private SharedInt Bravery;
         private SharedBool FreshKill;
         private SharedBool Safe;
         private SharedVector2 ControlStick;
@@ -54,6 +56,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
 
             Alive = (SharedBool)behaviorTree.GetVariable("Alive");
             Afraid = (SharedBool)behaviorTree.GetVariable("Afraid");
+            Bravery = (SharedInt)behaviorTree.GetVariable("Bravery");
             ControlStick = (SharedVector2)behaviorTree.GetVariable("ControlStick");
             TargetSpeed = (SharedFloat)behaviorTree.GetVariable("TargetSpeed");
             HomePlanet = (SharedPlanet)behaviorTree.GetVariable("HomePlanet");
@@ -128,6 +131,15 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             shipScript.Value.EngineAcceleration = 25f + Random.value * 25f;
             shipScript.Value.MaxSpeed = 3f + Random.value * 2.5f;
 
+            ModelSwitcher modelSwitcher = shipScript.Value.GetComponentInChildren<ModelSwitcher>();
+            if (modelSwitcher)
+            {
+                int[] choices = { 10 };
+                int modelChoice = (int)(Random.value * choices.Length);
+                Debug.Log(choices[modelChoice]);
+                modelSwitcher.SetModel(choices[modelChoice], true);
+            }
+
             StartBehaviorTree();
         }
 
@@ -135,7 +147,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         /// Sets the Behavior Tree the one for delivering an order.
         /// </summary>
         /// <param name="order">The order that the ship is responsible for completing.</param>
-        public void StartDelivery(MarketOrder order)
+        /// <param name="randomModel">Choose a new random model/mesh for this ship?.</param>
+        public void StartDelivery(MarketOrder order, bool randomModel = false)
         {
             behaviorTree.ExternalBehavior = ExternalDeliveryBehaviorTree;
             InitializeBehaviorTreeVariableReferences();
@@ -145,6 +158,19 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             behaviorTree.GetVariable("DeliveryPlanet").SetValue(order.destination);
             shipScript.Value.EngineAcceleration = 25f + Random.value * 25f;
             shipScript.Value.MaxSpeed = 5f + Random.value * 2.5f;
+            shipScript.Value.PowerLevel = 5 + (int)(Random.value * 5);
+
+            if (randomModel)
+            {
+                ModelSwitcher modelSwitcher = shipScript.Value.GetComponentInChildren<ModelSwitcher>();
+                if (modelSwitcher)
+                {
+                    int[] choices = {0, 1, 2, 3, 6, 7, 8, 9};
+                    int modelChoice = (int)(Random.value * choices.Length);
+                    modelSwitcher.SetModel(choices[modelChoice], true);
+                }
+            }
+
             StartBehaviorTree();
         }
 
@@ -164,9 +190,43 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             AttackTargetMIA.Value = null;
             FreshKill.Value = false;
 
-            shipScript.Value.Faction = Overseer.Main.GetFaction("Pirates");
-            shipScript.Value.EngineAcceleration = 500f;
-            shipScript.Value.MaxSpeed = 5f;
+            shipScript.Value.Pilot.Faction = Overseer.Main.GetFaction("Pirates");
+            shipScript.Value.EngineAcceleration = 150f + Random.value * 300f;
+            shipScript.Value.MaxSpeed = 4f + Random.value * 3f;
+            shipScript.Value.TurningSpeed = 0.8f + Random.value;
+            shipScript.Value.PowerLevel = 7 + (int) (Random.value * 7);
+
+            ModelSwitcher modelSwitcher = shipScript.Value.GetComponentInChildren<ModelSwitcher>();
+            if (modelSwitcher)
+            {
+                int[] choices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11};
+                int modelChoice = (int)(Random.value * choices.Length);
+                //Debug.Log(choices[modelChoice]);
+                modelSwitcher.SetModel(choices[modelChoice], true);
+            }
+
+            StartBehaviorTree();
+        }
+
+        /// <summary>
+        /// Sets the Behavior Tree to the one for scrapping.
+        /// </summary>
+        public void StartScrapper()
+        {
+            behaviorTree.ExternalBehavior = ExternalScrapperBehaviorTree;
+            InitializeBehaviorTreeVariableReferences();
+
+            Faction = Overseer.Main.GetFaction("Robots");
+            AttackTarget = (SharedSpaceship)behaviorTree.GetVariable("AttackTarget");
+            AttackTarget.Value = null;
+
+            ModelSwitcher modelSwitcher = shipScript.Value.GetComponentInChildren<ModelSwitcher>();
+            if (modelSwitcher)
+            {
+                int[] choices = { 5 };
+                int modelChoice = (int)(Random.value * choices.Length);
+                modelSwitcher.SetModel(choices[modelChoice], true);
+            }
             StartBehaviorTree();
         }
 
@@ -202,6 +262,16 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         /// <param name="contact"></param>
         public void NotifyShip(Spaceship contact)
         {
+            // FOR SCRAPPER //
+            if (AttackTarget != null && AttackTarget.Value == null)
+            {
+                if (!contact.Alive)
+                {
+                    AttackTarget.Value = contact;
+                }
+            }
+
+            // FOR PIRATES  //
             // If we find the ship we were just chasing, set it as our target again.
             if (AttackTargetMIA != null && AttackTargetMIA.Value == contact)
             {
@@ -213,9 +283,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             }
 
             // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
-            if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA.Value == null && FreshKill != null)
+            if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA != null && AttackTargetMIA.Value == null && FreshKill != null)
             {
-                if (contact.Alive && contact.GetScaryness(shipScript.Value) < 0 && !FreshKill.Value)
+                if (contact.Alive && contact.GetScaryness(shipScript.Value) < Bravery.Value && !FreshKill.Value)
                 {
                     AttackTarget.Value = contact;
                 }

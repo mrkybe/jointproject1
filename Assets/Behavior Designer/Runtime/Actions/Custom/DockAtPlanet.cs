@@ -28,7 +28,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 List<global::Assets.Scripts.Classes.Static.Planet> planets = SpaceshipScript.Value.GetInInteractionRange<global::Assets.Scripts.Classes.Static.Planet>();
                 if (planets.Contains(TargetPlanet.Value))
                 {
-                    TargetPlanet.Value.AddToAvailableDeliveryShips((AI_Patrol)SpaceshipScript.Value.GetPilot);
+                    TargetPlanet.Value.AddToAvailableDeliveryShips((AI_Patrol)SpaceshipScript.Value.Pilot);
                     return TaskStatus.Success;
                 }
                 return TaskStatus.Failure;
@@ -38,7 +38,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 List<global::Assets.Scripts.Classes.Static.Planet> planets = SpaceshipScript.Value.GetInInteractionRange<global::Assets.Scripts.Classes.Static.Planet>();
                 if (planets.Contains(TargetPlanet.Value))
                 {
-                    TargetPlanet.Value.ReturnDeliveryShip((AI_Patrol)SpaceshipScript.Value.GetPilot);
+                    TargetPlanet.Value.ReturnDeliveryShip((AI_Patrol)SpaceshipScript.Value.Pilot);
                     GameObject.Destroy(SpaceshipScript.Value.gameObject);
                     return TaskStatus.Success;
                 }

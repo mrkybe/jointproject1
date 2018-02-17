@@ -133,7 +133,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 if (rigidbody.velocity.magnitude < 0.5f && Vector3.Magnitude(transform.position - Target.Value) < AcceptableDistance.Value)
                 {
                     TargetSpeed.Value = 0;
-                    Shipscript.GetPilot.TargetFaceDirection = transform.forward;
+                    Shipscript.Pilot.TargetFaceDirection = transform.forward;
                     return TaskStatus.Success;
                 }
                 Debug.DrawLine(transform.position + transform.forward * stoppingDistance, transform.position + transform.forward * stoppingDistance + transform.up * 10f, Color.yellow);
