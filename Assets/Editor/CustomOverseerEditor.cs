@@ -18,7 +18,7 @@ namespace Assets.Editor {
             }
             if (GUILayout.Button("Spawn Pirate"))
             {
-                myTarget.SpawnPirateSpaceship();
+                myTarget.SpawnSpaceshipOnOutskirts();
             }
 
             base.OnInspectorGUI();

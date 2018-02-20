@@ -67,9 +67,9 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public bool HostileWith(Faction myFaction)
         {
-            if (this == myFaction && SelfHostile)
+            if (this == myFaction)
             {
-                return true;
+                return SelfHostile;
             }
             foreach (FactionLink link in MyLinks)
             {

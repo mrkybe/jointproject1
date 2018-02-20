@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Scripts.Classes.Helper.ShipInternals;
+using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public Planet destination = null;
         public CargoItem item;
         public bool Done = false;
+        public Spaceship ship = null;
+        public enum OrderStatus { FAIL_SHIP_DEAD, FAIL_NO_MONEY, IN_PROGRESS, SUCCEED}
+        private OrderStatus orderStatus = OrderStatus.IN_PROGRESS;
 
         private MarketOrder()
         {
@@ -98,15 +102,25 @@ namespace Assets.Scripts.Classes.WorldSingleton
         /// </summary>
         public void Succeed()
         {
+            orderStatus = OrderStatus.SUCCEED;
             origin.CompleteOrder(this);
         }
 
         /// <summary>
         /// Called when the order fails.
         /// </summary>
-        public void Fail()
+        public void Fail(OrderStatus cause)
         {
+            orderStatus = cause;
             origin.FailOrder(this);
+        }
+
+        /// <summary>
+        /// Returns the status of the order.
+        /// </summary>
+        public OrderStatus GetOrderStatus()
+        {
+            return orderStatus;
         }
     }
 

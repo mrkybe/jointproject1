@@ -31,7 +31,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             else if (controlMode == ControlMode.CONTROLLER)
             {
                 Vector3 fd = new Vector3(Input.GetAxis("Horizontal"), 0 , Input.GetAxis("Vertical"));
-                Debug.Log(fd);
                 throttle = Input.GetAxis("RightTrigger") - Input.GetAxis("LeftTrigger");
                 if (fd.magnitude > 0.01f)
                 {
@@ -44,7 +43,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public override void Die()
         {
             // Game Over!
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

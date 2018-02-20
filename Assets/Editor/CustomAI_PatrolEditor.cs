@@ -35,18 +35,20 @@ namespace Assets.Editor
                     if (myTarget)
                     {
                         Handles.color = Color.blue;
-                        string s1  = "Throttle    : ";
-                        string s1d = "Throttle    : ";
+                        string sx = "";
+                        if (myTarget.Faction != null)
+                        {
+                            sx = myTarget.Faction.Name + "\n" + myTarget.gameObject.name;
+                        }
+                        string s1  = sx + "\nThrottle    : ";
                         string s2  = "TargetSpeed : ";
-                        string s2d = "TargetSpeed : ";
                         string s3  = "Speed       : ";
-                        string s3d = "Speed       : ";
-                        string s1x = myTarget.Throttle          < 0 ? s1 : s1d;
-                        string s2x = myTarget.TargetSpeed.Value < 0 ? s2 : s2d;
-                        string s3x = myTarget.Speed             < 0 ? s3 : s3d;
-                        s1x += string.Format("{0:0.00}", myTarget.Throttle);
-                        s2x += string.Format("{0:0.00}", myTarget.TargetSpeed.Value);
-                        s3x += string.Format("{0:0.00}", myTarget.Speed);
+                        string s4  = "Hull        : ";
+
+                        s1 += string.Format("{0:0.00}", myTarget.Throttle);
+                        s2 += string.Format("{0:0.00}", myTarget.TargetSpeed.Value);
+                        s3 += string.Format("{0:0.00}", myTarget.Speed);
+                        s4 += string.Format("{0:0.00}", mySpaceship.HullHealth);
                         string holdString = "";
                         if (mySpaceship != null)
                         {
@@ -56,7 +58,7 @@ namespace Assets.Editor
                                 holdString = "== Main Cargohold ======\n" + hold.ToString();
                             }
                         }
-                        Handles.Label(myTarget.transform.position + Vector3.up * -2f, s1x + "\n" + s2x + "\n" + s3x + "\n" + holdString, style);
+                        Handles.Label(myTarget.transform.position + Vector3.up * -2f, s1 + "\n" + s2 + "\n" + s3 + "\n" + s4 + "\n" + holdString, style);
                     }
                 }
             }

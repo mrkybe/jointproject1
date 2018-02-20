@@ -31,7 +31,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private static List<GameObject> Moons = new List<GameObject>();
         private static List<GameObject> AsteroidFields = new List<GameObject>();
         [SerializeField]
-        private static List<Spaceship> PirateShips = new List<Spaceship>();
+        private static List<Spaceship> OutskirtShips = new List<Spaceship>();
         public static Overseer Main;
         private GameObject PirateShip;
 
@@ -62,7 +62,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateMarket();
 
             InvokeRepeating("TickPlanets", 1f, 1f);
-            InvokeRepeating("ManagePirateCount", 1f, 60f);
+            InvokeRepeating("ManagePirateCount", 1f, 1f);
         }
 
         private new void Start()
@@ -284,11 +284,24 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public void ManagePirateCount()
         {
-            PirateShips.RemoveAll(x => x == null || x.Alive == false);
-            if (PirateShips.Count < 5)
+            OutskirtShips.RemoveAll(x => x == null || x.Alive == false);
+            var PirateShips = OutskirtShips.Where(x => x.Pilot.Faction == GetFaction("Pirates"));
+            var BountyHunters = OutskirtShips.Where(x => x.Pilot.Faction == GetFaction("Independent"));
+            var RobotShips = OutskirtShips.Where(x => x.Pilot.Faction == GetFaction("Robots"));
+            if (PirateShips.Count() < 5)
             {
-                SpawnPirateSpaceship();
-                PirateShipCounter++;
+                SpawnSpaceshipOnOutskirts();
+                OutskirtShipCounter++;
+            }
+            if (BountyHunters.Count() < 5)
+            {
+                SpawnSpaceshipOnOutskirts(GetFaction("Independent"));
+                OutskirtShipCounter++;
+            }
+            if (RobotShips.Count() < 5)
+            {
+                SpawnSpaceshipOnOutskirts(GetFaction("Robots"));
+                OutskirtShipCounter++;
             }
         }
 
@@ -298,9 +311,13 @@ namespace Assets.Scripts.Classes.WorldSingleton
         /// <param name="typename"></param>
         /// <param name="number"></param>
         /// <returns></returns>
-        private int PirateShipCounter = 0;
-        public Spaceship SpawnPirateSpaceship()
+        private int OutskirtShipCounter = 0;
+        public Spaceship SpawnSpaceshipOnOutskirts(Faction faction = null)
         {
+            if (faction == null)
+            {
+                faction = GetFaction("Pirates");
+            }
             Vector3 position = PolarCoordinates((float)(Math.PI * 2 * Random.value), worldSize / 1.75f);
             Vector2 offset = Random.insideUnitCircle.normalized * (this.transform.localScale.magnitude + 1);
             Vector3 offset3d = new Vector3(offset.x, 0, offset.y);
@@ -311,13 +328,20 @@ namespace Assets.Scripts.Classes.WorldSingleton
             ship = Instantiate(PirateShip, position + offset3d, shipRotation);
             AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
             Spaceship shipScript = ship.GetComponent<Spaceship>();
-            ship.name = "S_" + "Pirate" + "_" + PirateShipCounter;
-            shipScript.Pilot.Faction = GetFaction("Pirates");
+            ship.name = "S_" + faction.Name + "_" + OutskirtShipCounter;
+            shipScript.Pilot.Faction = faction;
 
-            pilot.StartPirate();
+            if (faction.Name == "Pirates" || faction.Name == "Independent")
+            {
+                pilot.StartPirate();
+            }
+            else if (faction.Name == "Robots")
+            {
+                pilot.StartScrapper();
+            }
 
-            PirateShips.Add(shipScript);
-            PirateShipCounter++;
+            OutskirtShips.Add(shipScript);
+            OutskirtShipCounter++;
             return shipScript;
         }
 

@@ -32,13 +32,13 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 "Communist",
                 "Libertarian",
                 "Freedom",
-                "Duty",
-                "Independent"
+                "Duty"
             };
             FactionNamesListOther = new List<string>
             {
                 "Robots",
                 "Pirates",
+                "Independent",
                 "Player"
             };
             Factions = new List<Faction>();
@@ -99,7 +99,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
 
             MakePiratesHostileWithAll();
-
+            MakeRobotsNotHostileWithAll();
             //Debug.Log("Created Factions!");
 
             foreach (var link in Links)
@@ -115,6 +115,15 @@ namespace Assets.Scripts.Classes.WorldSingleton
             foreach (var link in f.MyLinks)
             {
                 link.Friendlyness = -100f;
+            }
+        }
+
+        private void MakeRobotsNotHostileWithAll()
+        {
+            Faction f = GetFaction("Robots");
+            foreach (var link in f.MyLinks)
+            {
+                link.Friendlyness = 0;
             }
         }
 

@@ -33,7 +33,7 @@ namespace Assets.Scripts.Classes.Static {
             //blackboard = behaviorTree.Blackboard;
 
             // attach the debugger component if executed in editor (helps to debug in the inspector) 
-            DeliveryShipCount = (Random.value <= 0.75f ? 0 : 1);
+            DeliveryShipCount = 1;
             consumableCargoItems = new List<CargoItem>();
             producableCargoItems = new List<CargoItem>();
             itemsNetChange = new List<CargoItem>();
@@ -286,7 +286,7 @@ namespace Assets.Scripts.Classes.Static {
                 Debug.Log("TRIED TO COMPLETE ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
             }
         }
-
+        
         /// <summary>
         /// Registers a MarketOrder as failed to complete.  ie: Pirates killed the delivery ship.
         /// </summary>
@@ -297,6 +297,10 @@ namespace Assets.Scripts.Classes.Static {
             {
                 deliveryInProgressList.Remove(marketOrder);
                 deliveryFailedList.Add(marketOrder);
+                if (marketOrder.GetOrderStatus() == MarketOrder.OrderStatus.FAIL_SHIP_DEAD)
+                {
+                    DeliveryShipCount++;
+                }
             }
             else
             {

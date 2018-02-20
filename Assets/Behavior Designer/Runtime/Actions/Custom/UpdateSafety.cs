@@ -75,6 +75,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
             {
                 if (f.Pilot.Faction != null && f.Pilot.Faction.HostileWith(myFaction) && f.Alive)
                 {
+                    Debug.DrawLine(this.transform.position+Vector3.up / 5f, f.transform.position + Vector3.up/5f, Color.red, 0.2f);
                     resultsList.Add(f);
                 }
             }

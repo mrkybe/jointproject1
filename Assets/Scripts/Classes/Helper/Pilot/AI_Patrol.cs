@@ -159,6 +159,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             shipScript.Value.EngineAcceleration = 25f + Random.value * 25f;
             shipScript.Value.MaxSpeed = 5f + Random.value * 2.5f;
             shipScript.Value.PowerLevel = 5 + (int)(Random.value * 5);
+            order.ship = shipScript.Value;
 
             if (randomModel)
             {
@@ -189,8 +190,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             AttackTarget.Value = null;
             AttackTargetMIA.Value = null;
             FreshKill.Value = false;
-
-            shipScript.Value.Pilot.Faction = Overseer.Main.GetFaction("Pirates");
+            
             shipScript.Value.EngineAcceleration = 150f + Random.value * 300f;
             shipScript.Value.MaxSpeed = 4f + Random.value * 3f;
             shipScript.Value.TurningSpeed = 0.8f + Random.value;
@@ -237,6 +237,16 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public override void Die()
         {
             Alive.SetValue(false);
+
+            // FOR DELIVERY SHIPS, PROPAGATE ORDER FAILURE
+            SharedMarketOrder myOrder = (SharedMarketOrder)behaviorTree.GetVariable("DeliveryOrder");
+            if (myOrder != null && myOrder.Value != null)
+            {
+                if (myOrder.Value.GetOrderStatus() == MarketOrder.OrderStatus.IN_PROGRESS)
+                {
+                    myOrder.Value.Fail(MarketOrder.OrderStatus.FAIL_SHIP_DEAD);
+                }
+            }
         }
 
         /// <summary>
@@ -285,7 +295,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
             if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA != null && AttackTargetMIA.Value == null && FreshKill != null)
             {
-                if (contact.Alive && contact.GetScaryness(shipScript.Value) < Bravery.Value && !FreshKill.Value)
+                if (contact.Alive && contact.GetScaryness(shipScript.Value) < Bravery.Value && !FreshKill.Value && contact.Pilot.Faction.HostileWith(Faction))
                 {
                     AttackTarget.Value = contact;
                 }
