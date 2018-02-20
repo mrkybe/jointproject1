@@ -8,9 +8,15 @@ using UnityEngine;
 public class Fire : MonoBehaviour {
 
 	public float speed = 2;
+	public GameObject bullet;
+	public GameObject laser;
 	public GameObject ammo;
 	private int bulletCount = 0;
 	private Rigidbody rb;
+	void Start()
+	{
+		ammo = bullet;
+	}
 	///<summary>
 	/// Check every frame if the fire button has been pressed, then call the Shoot function.
 	///</summary>
@@ -20,6 +26,7 @@ public class Fire : MonoBehaviour {
 		{
 			Shoot ();
 		}
+
 	}
     ///<summary>
 	/// Shoot function sends a message to console saying "shoot" and then creates a bullet using Unity's Instantiate() function.
@@ -29,12 +36,12 @@ public class Fire : MonoBehaviour {
 	void Shoot()
 	{
 		Debug.Log ("shoot");
-        //float dist  = transform.position.z + 3f;
-        GameObject bulletClone = Instantiate(ammo, transform.position, transform.rotation);
-        rb = bulletClone.GetComponent<Rigidbody>();
+        float dist  = transform.position.z + 3f;
+		GameObject clone = Instantiate(ammo, new Vector3 (transform.position.x,transform.position.y, dist), transform.rotation);
+        rb = clone.GetComponent<Rigidbody>();
         // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
         //rb.AddForce(rb.transform.forward * speed);
-        rb.velocity = bulletClone.transform.forward * speed;
-        Destroy(bulletClone, 1.5f);
+        rb.velocity = clone.transform.forward * speed;
+        Destroy(clone, 1.5f);
     }
 }

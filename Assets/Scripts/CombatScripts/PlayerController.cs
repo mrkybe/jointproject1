@@ -22,15 +22,17 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if(Input.GetButtonDown("LB") && fire.enabled == true)
+		//&& fire.enabled == true)
+		if(Input.GetButtonDown("LB") )
         {
-            fire.enabled = false;
-            lf.enabled = true;
+            //fire.enabled = false;
+            //lf.enabled = true;
+			fire.ammo = fire.laser;
         }
         if (Input.GetButtonDown("LB") && lf.enabled == true)
         {
-            lf.enabled = false;
-            fire.enabled = true;
+            //lf.enabled = false;
+            //fire.enabled = true;
         }
     }
 }
