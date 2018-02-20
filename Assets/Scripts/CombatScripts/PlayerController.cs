@@ -13,24 +13,32 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Fire fire;
-    private LaserFire lf;
+  //  private LaserFire lf;
     // Use this for initialization
     void Start()
     {
         fire = GetComponent<Fire>();
-        lf = GetComponent<LaserFire>();
+        //lf = GetComponent<LaserFire>();
     }
     private void Update()
     {
-        if(Input.GetButtonDown("LB") && fire.enabled == true)
+		//&& fire.enabled == true)
+		if(Input.GetButtonDown("LB") && fire.ammo.name.Equals("Bullet"))
         {
-            fire.enabled = false;
-            lf.enabled = true;
+			Debug.Log ("Switching");
+            //fire.enabled = false;
+            //lf.enabled = true;
+			fire.speed = 15f;
+			fire.ammo = fire.laser;
+
         }
-        if (Input.GetButtonDown("LB") && lf.enabled == true)
+		else if (Input.GetButtonDown("LB") && fire.ammo.name.Equals("Laser"))
         {
-            lf.enabled = false;
-            fire.enabled = true;
+			Debug.Log ("Switching");
+            //lf.enabled = false;
+            //fire.enabled = true;
+			fire.speed = 3f;
+			fire.ammo = fire.bullet;
         }
     }
 }
