@@ -7,7 +7,7 @@ using UnityEngine;
 ///</summary>
 public class Fire : MonoBehaviour {
 
-	public float speed = 2;
+	public float speed;
 	public GameObject bullet;
 	public GameObject laser;
 	public GameObject ammo;
@@ -16,6 +16,7 @@ public class Fire : MonoBehaviour {
 	void Start()
 	{
 		ammo = bullet;
+		speed = 3f;
 	}
 	///<summary>
 	/// Check every frame if the fire button has been pressed, then call the Shoot function.
