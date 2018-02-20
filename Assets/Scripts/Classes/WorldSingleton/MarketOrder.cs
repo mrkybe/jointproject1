@@ -115,7 +115,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
     /// </summary>
     [Serializable]
     public class MarketOrderComparer : IComparer<MarketOrder>
-    {
+	{
         private Planet buyer;
 
         public MarketOrderComparer(Planet buyer)

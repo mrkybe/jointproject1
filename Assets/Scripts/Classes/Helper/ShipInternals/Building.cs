@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Classes.Helper.ShipInternals;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals {
     public class Building
@@ -288,7 +289,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
                                    });
         }
 
-        /*
+    /*
 	public class BuildingResourceComparer : IComparer<Building>
 	{
 		private Building resources;
@@ -300,15 +301,15 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 
 		public List<CargoItem> CompareResources(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
 		{
-			
-			if (Building1Cost < Building2Cost)
-			{
-				return Building1Cost;
-			}
-			else
-			{
-				return Building2Cost;
-			}
+
+				for (int i = 0; i <= Building1Cost.Count; i++) {
+
+					if (Building1Cost[i] < Building2Cost[i]) {
+						return Building1Cost;
+					} else {
+						return Building2Cost;
+					}
+				}
 		}
 
 		public List<CargoItem> Compare(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
@@ -316,8 +317,8 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 			return CompareResources(Building1Cost,Building2Cost);
 		}
 
-	*/
+	 }
+	 */
+	}
 
-
-    }
 }
