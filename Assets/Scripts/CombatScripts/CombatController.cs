@@ -1,45 +1,54 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Classes;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CombatController : MonoBehaviour {
+    public GameObject enemySpawner;
+    public GameObject cameraObject;
+    public GameObject combatField;
+    public GameObject ai_player;
+    public GameObject player;
 
-	public GameObject[] hazards;
-	public Vector3 spawnValues;
-	public GameObject player;  
-	public int hazardCount; 
-	public float spawnWait;
-	public float startWait;
-	public float waveWait;
-	// Use this for initialization
-	void Start () {
-		StartCoroutine (SpawnWaves ());
-	}
-
-	///<summary>
-	/// Spawning asteriods waves at random locations around the player. Different asteriods are defined in the hazards.
-	///</summary>
-
-	IEnumerator SpawnWaves ()
-	{
-
-		yield return new WaitForSeconds (startWait);
-		while (true)
-		{
-			for (int i = 0; i < hazardCount; i++) 
-			{
-
-				GameObject hazard = hazards[Random.Range(0, hazards.Length)];
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, Random.Range (-spawnValues.z, spawnValues.z));
-				//Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRptation = Quaternion.identity;
-				Instantiate (hazard, spawnPosition, spawnRptation);
-
-				yield return new WaitForSeconds (spawnWait);
-			}
-			yield return new WaitForSeconds (waveWait);
-
-		}
-	}
-
+    private bool flag = false;
+    private Move move;
+    private Fire fire;
+    private CameraController cc;
+    private CameraFollow cf;
+    private LaserFire lf;
+    // Use this for initialization
+    void Start()
+    {
+        move = player.GetComponent<Move>();
+        fire = player.GetComponent<Fire>();
+        lf = player.GetComponent<LaserFire>();
+        cc = cameraObject.GetComponent<CameraController>();
+        cf = cameraObject.GetComponent<CameraFollow>();
+    }
+    ///<summary>
+    /// Checks every frame if player has pressed the corresponding button that switches between fire and laser fire scripts.
+    /// This is how we will handle "switching" between weapons.
+    ///</summary>
+    private void Update()
+    {
+        if (Input.GetButtonDown("Y") && flag == false)
+        {
+            flag = true;
+            ai_player.SetActive(false);
+            player.SetActive(true);
+            // move.enabled = true;
+            // fire.enabled = true;
+            cc.enabled = true;
+            cf.enabled = false;
+            lf.enabled = false;
+            combatField.SetActive(true);
+            player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
+            cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 20, cameraObject.transform.position.z);
+            enemySpawner.GetComponent<EnemySpawner>().enabled = true;
+        }
+    }
+    ///<summary>
+    /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
+    /// pressing the "Y" button.
+    ///</summary>
 }
