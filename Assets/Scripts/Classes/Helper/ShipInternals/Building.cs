@@ -291,7 +291,7 @@ public class Building
 			});
     }
 
-	/*
+
 	public class BuildingResourceComparer : IComparer<Building>
 	{
 		private Building resources;
@@ -319,7 +319,7 @@ public class Building
 			return CompareResources(Building1Cost,Building2Cost);
 		}
 
-	*/
+	
 
 
 }
