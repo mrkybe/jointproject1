@@ -6,7 +6,10 @@ using UnityEngine;
 namespace Assets.Scripts.Classes.Helper.Pilot {
     public class PlayerPilot : PilotInterface
     {
+        public enum ControlMode { CONTROLLER, KEYBOARD};
         private Spaceship myShip = null;
+
+        public ControlMode controlMode = ControlMode.CONTROLLER;
         // Use this for initialization
         new void Start ()
         {
@@ -19,13 +22,23 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         new void Update ()
         {
             base.Update();
-            throttle = Input.GetAxis("Vertical");
-
-
-            //Vector3.RotateTowards(targetFaceDirection);
-            //Quaternion rot = Quaternion.Euler(Input.GetAxis("Horizontal") * Vector3.up);
-            Quaternion rot = Quaternion.Euler(Input.GetAxis("Horizontal") * Vector3.up * Time.deltaTime * 120f);
-            targetFaceDirection = rot * targetFaceDirection;
+            if (controlMode == ControlMode.KEYBOARD)
+            {
+                throttle = Input.GetAxis("Vertical");
+                Quaternion rot = Quaternion.Euler(Input.GetAxis("Horizontal") * Vector3.up * Time.deltaTime * 120f);
+                targetFaceDirection = rot * targetFaceDirection;
+            }
+            else if (controlMode == ControlMode.CONTROLLER)
+            {
+                Vector3 fd = new Vector3(Input.GetAxis("Horizontal"), 0 , Input.GetAxis("Vertical"));
+                Debug.Log(fd);
+                throttle = Input.GetAxis("RightTrigger") - Input.GetAxis("LeftTrigger");
+                if (fd.magnitude > 0.01f)
+                {
+                    fd.Normalize();
+                    targetFaceDirection = fd;
+                }
+            }
         }
 
         public override void Die()

@@ -68,8 +68,8 @@ namespace Assets.Scripts.Classes.Mobile {
         private int modelChoice = 0;
         private void Awake()
         {
-            pilot = GetComponent<AI_Patrol>();
-            
+            pilot = GetComponent<PilotInterface>();
+
             targetSpeed = -999;
             throttle_input = 0;
             old_throttleInput = 0;
