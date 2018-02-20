@@ -13,26 +13,27 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Fire fire;
-    private LaserFire lf;
+  //  private LaserFire lf;
     // Use this for initialization
     void Start()
     {
         fire = GetComponent<Fire>();
-        lf = GetComponent<LaserFire>();
+        //lf = GetComponent<LaserFire>();
     }
     private void Update()
     {
 		//&& fire.enabled == true)
-		if(Input.GetButtonDown("LB") )
+		if(Input.GetButtonDown("LB"))
         {
             //fire.enabled = false;
             //lf.enabled = true;
 			fire.ammo = fire.laser;
         }
-        if (Input.GetButtonDown("LB") && lf.enabled == true)
+		if (Input.GetButtonDown("LB"))
         {
             //lf.enabled = false;
             //fire.enabled = true;
+			fire.ammo = fire.bullet;
         }
     }
 }

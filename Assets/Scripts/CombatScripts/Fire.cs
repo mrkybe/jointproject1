@@ -37,11 +37,12 @@ public class Fire : MonoBehaviour {
 	{
 		Debug.Log ("shoot");
         float dist  = transform.position.z + 3f;
-		GameObject clone = Instantiate(ammo, new Vector3 (transform.position.x,transform.position.y, dist), transform.rotation);
+		GameObject clone = Instantiate(ammo, transform.position, transform.rotation);
         rb = clone.GetComponent<Rigidbody>();
         // rb.AddForce(new Vector3(transform.position.x, transform.position.y, transform.position.z * speed), ForceMode.Force);
         //rb.AddForce(rb.transform.forward * speed);
-        rb.velocity = clone.transform.forward * speed;
+        //rb.velocity = clone.transform.forward * speed;
+		rb.AddForce (clone.transform.forward * speed, ForceMode.Impulse);
         Destroy(clone, 1.5f);
     }
 }
