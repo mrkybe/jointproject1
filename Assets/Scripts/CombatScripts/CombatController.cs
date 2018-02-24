@@ -42,7 +42,7 @@ public class CombatController : MonoBehaviour {
             cf.enabled = false;
             lf.enabled = false;
             combatField.SetActive(true);
-            player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y, combatField.transform.position.z);
+            player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
             cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 20, cameraObject.transform.position.z);
             enemySpawner.GetComponent<EnemySpawner>().enabled = true;
         }
