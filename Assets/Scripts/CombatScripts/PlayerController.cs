@@ -22,23 +22,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-		//&& fire.enabled == true)
-		if(Input.GetButtonDown("LB") && fire.ammo.name.Equals("Bullet"))
-        {
-			Debug.Log ("Switching");
-            //fire.enabled = false;
-            //lf.enabled = true;
-			fire.speed = 15f;
-			fire.ammo = fire.laser;
 
-        }
-		else if (Input.GetButtonDown("LB") && fire.ammo.name.Equals("Laser"))
-        {
-			Debug.Log ("Switching");
-            //lf.enabled = false;
-            //fire.enabled = true;
-			fire.speed = 3f;
-			fire.ammo = fire.bullet;
-        }
     }
 }
