@@ -25,7 +25,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
-        private float worldSize = 800f;
+        public float worldSize = 800f;
 
         private static GameObject Saturn;
         private static List<GameObject> Moons = new List<GameObject>();
@@ -55,6 +55,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
             PirateShip = (GameObject)Resources.Load("Prefabs/AI_ship");
             RootNode = GameObject.FindWithTag("RootNode");
 
+
+            CreateResourceTypes();
             CreateFactions();
             CreateSaturnSystem();
             CreatePlanetNodes();
