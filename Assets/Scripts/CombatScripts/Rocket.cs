@@ -14,7 +14,7 @@ public class Rocket : MonoBehaviour {
 		if (Input.GetButton ("Fire1") && Time.time > nextFire && amount != 0) 
 		{
 			nextFire = Time.time + fireRate;
-			Instantiate (ammo, ammo.transform.position, ammo.transform.rotation);
+			Instantiate (ammo, transform.position, transform.rotation);
 			amount--;
 		}
 	}
