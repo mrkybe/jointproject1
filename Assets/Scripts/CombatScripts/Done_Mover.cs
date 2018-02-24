@@ -7,6 +7,7 @@ public class Done_Mover : MonoBehaviour
 
 	void Start ()
 	{
+		Destroy (gameObject, 3f);
 		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 }

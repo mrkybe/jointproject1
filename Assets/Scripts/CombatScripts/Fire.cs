@@ -11,7 +11,7 @@ public class Fire : MonoBehaviour {
 	public Transform shotSpawn;
 	public float fireRate;
 	public GameObject shot;
-	private float nextFire;
+	private float nextFire = 2;
 
 
 	void Update ()
