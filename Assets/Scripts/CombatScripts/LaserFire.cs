@@ -21,7 +21,7 @@ public class LaserFire : MonoBehaviour {
     {
 	    if (Input.GetButtonDown("Fire1"))
         {
-            StopCoroutine("FireLaser");
+            //StopCoroutine("FireLaser");
             StartCoroutine("FireLaser");
         }	
 	}
@@ -32,17 +32,19 @@ public class LaserFire : MonoBehaviour {
 	///</summary>
     IEnumerator FireLaser()
     {
-        laser.enabled = true;
+        
         while (Input.GetButton("Fire1"))
         {
             Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hit;
 
-            laser.SetPosition(0, ray.origin);
-            laser.SetPosition(1, ray.GetPoint(100));
-
             if (Physics.Raycast(ray,out hit))
             {
+				laser.enabled = true;
+				float dist = transform.InverseTransformVector(transform.position - hit.point).magnitude;
+				laser.SetPosition(1, new Vector3(0, 0, dist));
+				//laser.SetPosition(0, ray.origin);
+				//laser.SetPosition(1, ray.GetPoint(hit.distance));
                 Debug.Log("hit:");
                 if (hit.transform.gameObject.CompareTag("Enemy"))
                 {

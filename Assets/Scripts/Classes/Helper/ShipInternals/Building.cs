@@ -9,6 +9,8 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         private List<CargoItem> Produce;
         private List<CargoItem> Cost;
         private List<Building> SortedFactories;
+		private List<Building> Building1Cost;
+		private List<Building> Building2Cost;
         private int spaceFreed = 0;
         private int spaceConsumed = 0;
         private int buildingCost = 0;
@@ -288,7 +290,27 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
                                        new CargoItem("Iron Ore", 6), new CargoItem("Gold", 13)
                                    });
         }
+	
+		bool CheckMatch()
+		{
+			if (Building1Cost == null && Building2Cost == null) {
+				return true;
+			} else if (Building1Cost == null || Building2Cost == null) {
+				return false;
+			}
 
+			if (Building1Cost.Count != Building2Cost.Count)
+				return false;
+			for (int i = 0; i < Building1Cost.Count; i++) {
+				if (Building1Cost [i] != Building2Cost [i])
+					return false;
+			}
+			return true;
+
+
+
+
+		}
     /*
 	public class BuildingResourceComparer : IComparer<Building>
 	{
@@ -302,9 +324,9 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 		public List<CargoItem> CompareResources(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
 		{
 
-				for (int i = 0; i <= Building1Cost.Count; i++) {
+				foreach (CargoItem item in Building1Cost){
 
-					if (Building1Cost[i] < Building2Cost[i]) {
+					if (Building1Cost < Building2Cost) {
 						return Building1Cost;
 					} else {
 						return Building2Cost;
@@ -314,11 +336,13 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 
 		public List<CargoItem> Compare(List<CargoItem> Building1Cost, List<CargoItem>Building2Cost)
 		{
+				
 			return CompareResources(Building1Cost,Building2Cost);
 		}
-
+		
 	 }
-	 */
+*/
 	}
+
 
 }
