@@ -16,6 +16,7 @@ public class CombatController : MonoBehaviour {
     private CameraController cc;
     private CameraFollow cf;
     private LaserFire lf;
+	private LineRenderer lr;
     // Use this for initialization
     void Start()
     {
@@ -24,6 +25,7 @@ public class CombatController : MonoBehaviour {
         lf = player.GetComponent<LaserFire>();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
+		lr = player.GetComponent<LineRenderer> ();
     }
     ///<summary>
     /// Checks every frame if player has pressed the corresponding button that switches between fire and laser fire scripts.
@@ -36,6 +38,7 @@ public class CombatController : MonoBehaviour {
             flag = true;
             ai_player.SetActive(false);
             player.SetActive(true);
+			lr.enabled = false;
             // move.enabled = true;
             // fire.enabled = true;
             cc.enabled = true;
