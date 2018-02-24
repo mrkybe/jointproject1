@@ -15,7 +15,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         private int spaceConsumed = 0;
         private int buildingCost = 0;
 
-        private Building(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost)
+        public Building(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost)
         {
             Name = name ?? "Building";
             Consume = consume ?? new List<CargoItem>();
@@ -307,9 +307,6 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 			}
 			return true;
 
-
-
-
 		}
     /*
 	public class BuildingResourceComparer : IComparer<Building>
@@ -341,7 +338,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 		}
 		
 	 }
-*/
+     */
 	}
 
 

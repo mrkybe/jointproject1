@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
@@ -66,7 +67,22 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             buyingOrdersByPlanet[order.origin].Add(order);
         }
-        
+
+
+        private void CreateResourceTypes()
+        {
+            List<Resource> resources = new List<Resource>()
+            {
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1),
+                new Resource("Dirt", 1, 1)
+            };
+        }
+
         private void StartMatchingOrders()
         {
             InvokeRepeating("MatchOrders", 1f, 1f);
