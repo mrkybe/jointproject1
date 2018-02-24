@@ -16,12 +16,14 @@ public class CombatController : MonoBehaviour {
     private CameraController cc;
     private CameraFollow cf;
     private LaserFire lf;
+	private Rocket rk;
 	private LineRenderer lr;
     // Use this for initialization
     void Start()
     {
         move = player.GetComponent<Move>();
         fire = player.GetComponent<Fire>();
+		rk = player.GetComponent<Rocket> ();
         lf = player.GetComponent<LaserFire>();
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
@@ -44,6 +46,7 @@ public class CombatController : MonoBehaviour {
             cc.enabled = true;
             cf.enabled = false;
             lf.enabled = false;
+			rk.enabled = false;
             combatField.SetActive(true);
             player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
             cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 20, cameraObject.transform.position.z);

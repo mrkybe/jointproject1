@@ -14,31 +14,39 @@ public class PlayerController : MonoBehaviour
 {
     private Fire fire;
 	private LaserFire lf;
+	private Rocket rk;
     // Use this for initialization
     void Start()
     {
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
+		rk = GetComponent<Rocket> ();
     }
     private void Update()
     {
 		//&& fire.enabled == true)
-		if(Input.GetButtonDown("LB") && fire.enabled == true)
-        {
+		if (Input.GetButtonDown ("LB") && fire.enabled == true) {
 			Debug.Log ("Switching");
-            fire.enabled = false;
-            lf.enabled = true;
+			fire.enabled = false;
+			lf.enabled = true;
+			rk.enabled = false;
 			//fire.speed = 15f;
 			//fire.ammo = fire.laser;
 
-        }
-		else if (Input.GetButtonDown("LB") && lf.enabled == true)
-        {
+		} else if (Input.GetButtonDown ("LB") && lf.enabled == true) {
 			Debug.Log ("Switching");
-            lf.enabled = false;
-            fire.enabled = true;
+			fire.enabled = false;
+			lf.enabled = false;
+			rk.enabled = true;
 			//fire.speed = 3f;
 			//fire.ammo = fire.bullet;
-        }
+		}
+		else if (Input.GetButtonDown ("LB") && rk.enabled == true) 
+		{
+			Debug.Log ("Switching");
+			fire.enabled = true;
+			lf.enabled = false;
+			rk.enabled = false;
+		}
     }
 }

@@ -15,7 +15,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         private int spaceConsumed = 0;
         private int buildingCost = 0;
 
-        private Building(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost)
+        public Building(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost)
         {
             Name = name ?? "Building";
             Consume = consume ?? new List<CargoItem>();
@@ -113,7 +113,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         //public static List<Building> AllFactories = new List<Building>();
 
         public delegate Building BasicEnviroment();
-        public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
+		public static BasicEnviroment[] BasicEnviroments = { GetEnviromentDirtFactory, GetEnviromentCometFactory, GetEnviromentRockFactory, GetEnviromentOreFactory };
 
         public delegate Building BasicIndustrial();
         public static BasicIndustrial[] BasicIndustry = { GetFoodFactory, GetSteelFactory, GetCopperFactory, GetTitaniumFactory, GetSiliconFactory };
@@ -326,9 +326,6 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 			}
 			return true;
 
-
-
-
 		}
     /*
 	public class BuildingResourceComparer : IComparer<Building>
@@ -360,7 +357,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
 		}
 		
 	 }
-*/
+     */
 	}
 
 
