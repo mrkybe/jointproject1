@@ -22,8 +22,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-
-
 		//&& fire.enabled == true)
 		if(Input.GetButtonDown("LB") && fire.enabled == true)
         {
@@ -34,7 +32,7 @@ public class PlayerController : MonoBehaviour
 			//fire.ammo = fire.laser;
 
         }
-		else if (Input.GetButtonDown("LB") && fire.enabled == true)
+		else if (Input.GetButtonDown("LB") && lf.enabled == true)
         {
 			Debug.Log ("Switching");
             lf.enabled = false;
