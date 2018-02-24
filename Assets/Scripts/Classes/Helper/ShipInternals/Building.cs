@@ -88,7 +88,26 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         {
             return Cost;
         }
-		
+
+        public int GetBaseProfit()
+        {
+            int costs = 0;
+            int revenue = 0;
+            foreach (var item in Consume)
+            {
+                costs += item.Cost;
+            }
+            foreach (var item in Produce)
+            {
+                revenue += item.Cost;
+            }
+            return revenue - costs;
+        }
+
+        public override string ToString()
+        {
+            return Name + " " + GetBaseProfit();
+        }
 
 
         //public static List<Building> AllFactories = new List<Building>();

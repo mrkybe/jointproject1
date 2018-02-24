@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals
 {
@@ -9,9 +10,9 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
     {
         private string _name;
         private int _size;
-        private float _baseValue;
+        private int _baseValue;
 
-        public Resource(string name, int size, float baseValue)
+        public Resource(string name, int size, int baseValue)
         {
             _name = name;
             _size = size;
@@ -29,7 +30,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             get { return _size; }
         }
 
-        public float BaseValue
+        public int BaseValue
         {
             get { return _baseValue; }
         }
@@ -65,12 +66,12 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             FullConstructor(name_in, count_in, size_in);
         }
 
-        public CargoItem(string name_in, int count_in, int size_in, float base_value)
+        public CargoItem(string name_in, int count_in, int size_in, int base_value)
         {
             FullConstructor(name_in, count_in, size_in, base_value);
         }
 
-        private void FullConstructor(string name_in, int count_in = 0, int size_in = 1, float base_value = 1)
+        private void FullConstructor(string name_in, int count_in = 0, int size_in = 1, int base_value = 1)
         {
             if (resources_in_use.Count != 0)
             {
@@ -78,6 +79,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             }
             if (myResource == null)
             {
+                Debug.Log("WARNING, had to create new resource: '" + name_in + "' outside of Overseer.CreateResourceTypes!");
                 myResource = new Resource(name_in, size_in, base_value);
             }
             _count = count_in;
@@ -104,7 +106,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             get { return Size * Count; }
         }
 
-        public float Cost
+        public int Cost
         {
             get { return Count * myResource.BaseValue; }
         }

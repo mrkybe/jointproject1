@@ -279,9 +279,9 @@ namespace Assets.Scripts.Classes.Static {
         {
             if (deliveryInProgressList.Contains(marketOrder))
             {
-                deliveryInProgressList.Remove(marketOrder);
                 Planet customer = marketOrder.destination;
                 customer.Pay(this, marketOrder);
+                deliveryInProgressList.Remove(marketOrder);
             }
             else
             {
@@ -289,7 +289,12 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
-        private float money = 10000f;
+        private int money = 1000000;
+
+        public int Money
+        {
+            get { return money; }
+        }
         /// <summary>
         /// Takes money from this and gives money to the charger, based on the bill of goods.
         /// </summary>
@@ -297,14 +302,14 @@ namespace Assets.Scripts.Classes.Static {
         /// <param name="marketOrder"></param>
         public void Pay(Planet charger, MarketOrder marketOrder)
         {
-            float cost = marketOrder.item.Cost;
+            int cost = marketOrder.item.Cost;
             float distance = (Vector3.Distance(charger.transform.position, this.transform.position) / Overseer.Main.worldSize) + 1;
-            float finalValue = cost * distance;
-            money = money - cost;
-            charger.AddMoney(cost);
+            int finalCost = (int)(cost * distance);
+            money = money - finalCost;
+            charger.AddMoney(finalCost);
         }
 
-        public void AddMoney(float amount)
+        public void AddMoney(int amount)
         {
             money += amount;
         }
