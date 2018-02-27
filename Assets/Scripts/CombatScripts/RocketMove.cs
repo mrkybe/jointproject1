@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RocketMove : MonoBehaviour {
 	public float speed = 1f;
+	public 
 	// Use this for initialization
 	void Start () {
 		Destroy (gameObject, 10f);
@@ -14,4 +15,14 @@ public class RocketMove : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	void OnCollisionEnter(Collision col)
+	{
+		if (col.gameObject.CompareTag ("Enemy")) {
+
+		} else if (col.gameObject.CompareTag ("Asteroid")) {
+
+		}
+	}
+
 }
