@@ -95,7 +95,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 new Resource("Processor", 1, 2000),
 
                 new Resource("Basic Ship Components", 10, 6000),
-                new Resource("Advanced Components", 1, 10000)
+                new Resource("Advanced Components", 1, 10000),
+
+                new Resource("Ship Machine Gun", 1, 10000),
+                new Resource("Ship Laser Beam", 1, 10000),
+                new Resource("Ship Missile Battery", 1, 10000)
             };
         }
 
