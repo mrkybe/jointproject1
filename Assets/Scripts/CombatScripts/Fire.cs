@@ -14,6 +14,13 @@ public class Fire : MonoBehaviour {
 	private float nextFire = 2;
 
 
+
+
+
+
+
+
+
 	void Update ()
 	{
 		if (Input.GetButton("Fire1") && Time.time > nextFire) 
