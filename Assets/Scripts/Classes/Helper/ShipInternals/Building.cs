@@ -309,7 +309,8 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
                                        new CargoItem("Iron Ore", 6), new CargoItem("Gold", 13)
                                    });
         }
-	
+
+		//Checks the Building cost list. Needs to implement comparison outcome.
 		bool CheckMatch()
 		{
 			if (Building1Cost == null && Building2Cost == null) {
