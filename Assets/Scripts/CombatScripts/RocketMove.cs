@@ -20,8 +20,11 @@ public class RocketMove : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col)
 	{
+		ps.Play();
+		Destroy(gameObject,.5f);
 		if (col.gameObject.CompareTag ("Enemy")) {
 			ps.Play ();
+			Destroy (gameObject);
 		} else if (col.gameObject.CompareTag ("Asteroid")) {
 
 		}

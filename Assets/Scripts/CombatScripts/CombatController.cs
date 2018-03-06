@@ -28,6 +28,7 @@ public class CombatController : MonoBehaviour {
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
 		lr = player.GetComponent<LineRenderer> ();
+
     }
     ///<summary>
     /// Checks every frame if player has pressed the corresponding button that switches between fire and laser fire scripts.
