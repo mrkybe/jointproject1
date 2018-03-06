@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
@@ -66,7 +67,42 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
             buyingOrdersByPlanet[order.origin].Add(order);
         }
-        
+
+
+        private void CreateResourceTypes()
+        {
+            List<Resource> resources = new List<Resource>()
+            {
+                new Resource("Food", 1, 100),
+
+                new Resource("Dirt", 1, 10),
+                new Resource("Rock", 1, 10),
+                new Resource("Water", 1, 20),
+
+                new Resource("Iron Ore", 1, 150),
+                new Resource("Copper Ore", 1, 200),
+                new Resource("Titanium Ore", 1, 250),
+                new Resource("Gold Ore", 1, 1000),
+
+                new Resource("Iron", 1, 200),
+                new Resource("Steel", 1, 300),
+                new Resource("Copper", 1, 400),
+                new Resource("Titanium", 1, 500),
+                new Resource("Gold", 1, 5000),
+
+                new Resource("Silicon", 1, 250),
+
+                new Resource("Processor", 1, 2000),
+
+                new Resource("Basic Ship Components", 10, 6000),
+                new Resource("Advanced Components", 1, 10000),
+
+                new Resource("Ship Machine Gun", 1, 10000),
+                new Resource("Ship Laser Beam", 1, 10000),
+                new Resource("Ship Missile Battery", 1, 10000)
+            };
+        }
+
         private void StartMatchingOrders()
         {
             InvokeRepeating("MatchOrders", 1f, 1f);

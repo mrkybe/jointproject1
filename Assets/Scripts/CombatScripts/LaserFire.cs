@@ -7,6 +7,7 @@ using UnityEngine;
 ///</summary>
 public class LaserFire : MonoBehaviour {
     private LineRenderer laser;
+	public bool rayhit;
     // Use this for initialization
 	void Start ()
     {
@@ -23,7 +24,11 @@ public class LaserFire : MonoBehaviour {
         {
             //StopCoroutine("FireLaser");
             StartCoroutine("FireLaser");
-        }	
+        }
+
+		if (!rayhit)
+			StopCoroutine("FireLaser");
+
 	}
 
 	///<summary>
@@ -40,17 +45,19 @@ public class LaserFire : MonoBehaviour {
 
             if (Physics.Raycast(ray,out hit))
             {
+				rayhit = true;
 				laser.enabled = true;
 				float dist = transform.InverseTransformVector(transform.position - hit.point).magnitude;
-				laser.SetPosition(1, new Vector3(0, 0, dist));
+				laser.SetPosition(1, new Vector3(0, 0, dist + hit.distance));
 				//laser.SetPosition(0, ray.origin);
 				//laser.SetPosition(1, ray.GetPoint(hit.distance));
                 Debug.Log("hit:");
                 if (hit.transform.gameObject.CompareTag("Enemy"))
                 {
                     Destroy(hit.transform.gameObject);
+					rayhit = false;
                 }
-            }   
+            }  
 
             yield return null;
         }

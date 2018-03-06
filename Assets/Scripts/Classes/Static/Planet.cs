@@ -176,7 +176,7 @@ namespace Assets.Scripts.Classes.Static {
             string BuildingsNamed = "";
             foreach (var building in myBuildings)
             {
-                BuildingsNamed += building.Name + seperator;
+                BuildingsNamed += building.ToString() + seperator;
             }
             return BuildingsNamed;
         }

@@ -279,6 +279,8 @@ namespace Assets.Scripts.Classes.Static {
         {
             if (deliveryInProgressList.Contains(marketOrder))
             {
+                Planet customer = marketOrder.destination;
+                customer.Pay(this, marketOrder);
                 deliveryInProgressList.Remove(marketOrder);
             }
             else
@@ -286,7 +288,32 @@ namespace Assets.Scripts.Classes.Static {
                 Debug.Log("TRIED TO COMPLETE ORDER THAT ISN'T IN PROGRESS - BIG PROBLEM");
             }
         }
-        
+
+        private int money = 1000000;
+
+        public int Money
+        {
+            get { return money; }
+        }
+        /// <summary>
+        /// Takes money from this and gives money to the charger, based on the bill of goods.
+        /// </summary>
+        /// <param name="charger"></param>
+        /// <param name="marketOrder"></param>
+        public void Pay(Planet charger, MarketOrder marketOrder)
+        {
+            int cost = marketOrder.item.Cost;
+            float distance = (Vector3.Distance(charger.transform.position, this.transform.position) / Overseer.Main.worldSize) + 1;
+            int finalCost = (int)(cost * distance);
+            money = money - finalCost;
+            charger.AddMoney(finalCost);
+        }
+
+        public void AddMoney(int amount)
+        {
+            money += amount;
+        }
+
         /// <summary>
         /// Registers a MarketOrder as failed to complete.  ie: Pirates killed the delivery ship.
         /// </summary>

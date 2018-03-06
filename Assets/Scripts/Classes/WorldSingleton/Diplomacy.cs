@@ -139,6 +139,28 @@ namespace Assets.Scripts.Classes.WorldSingleton
             return null;
         }
 
+        private void StartRandomizingDiplomacy()
+        {
+            InvokeRepeating("RandomWalkDiplomacy", 30f, 30f);
+        }
+
+
+        /// <summary>
+        /// Allows the Unity Editor to call this method.  Don't use this unless you know what you're doing.
+        /// </summary>
+        public void RandomWalkDiplomacy()
+        {
+            foreach (Faction f1 in MainFactions)
+            {
+                foreach (Faction f2 in MainFactions)
+                {
+                    if (f1 != f2)
+                    {
+                        f1.AddKarma(f2, Random.value * 25f);
+                    }
+                }
+            }
+        }
 
         public enum BattleResult { ATTACK_WIN, TIE, DEFEND_WIN}
         /// <summary>

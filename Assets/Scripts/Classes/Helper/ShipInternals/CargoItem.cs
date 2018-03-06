@@ -1,18 +1,50 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals
 {
-    /// <summary>
-    /// A CargoItem keeps track of a single kind of resource in a CargoHold.
-    /// </summary>
     [Serializable]
-    public class CargoItem
+    public class Resource
     {
-        public static List<String> types_in_use = new List<string>();
         private string _name;
         private int _size;
         private int _baseValue;
+
+        public Resource(string name, int size, int baseValue)
+        {
+            _name = name;
+            _size = size;
+            _baseValue = baseValue;
+            CargoItem.resources_in_use.Add(this);
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public int Size
+        {
+            get { return _size; }
+        }
+
+        public int BaseValue
+        {
+            get { return _baseValue; }
+        }
+    }
+
+    /// <summary>
+    /// A CargoItem keeps track of a single kind of resource in a CargoHold.
+    /// </summary>
+
+    [Serializable]
+    public class CargoItem
+    {
+        public static List<Resource> resources_in_use = new List<Resource>();
+        private Resource myResource = null;
         private int _count;
 
         private CargoItem()
@@ -21,32 +53,41 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 
         public CargoItem(string name_in)
         {
-            _name = name_in;
-            _size = 1;
-            _count = 0;
-            types_in_use.Add(name_in);
+            FullConstructor(name_in);
         }
 
         public CargoItem(string name_in, int count_in)
         {
-            _name = name_in;
-            _count = count_in;
-            _size = 1;
-            types_in_use.Add(name_in);
+            FullConstructor(name_in, count_in);
         }
 
         public CargoItem(string name_in, int count_in, int size_in)
         {
-            _name = name_in;
-            _size = size_in;
+            FullConstructor(name_in, count_in, size_in);
+        }
+
+        public CargoItem(string name_in, int count_in, int size_in, int base_value)
+        {
+            FullConstructor(name_in, count_in, size_in, base_value);
+        }
+
+        private void FullConstructor(string name_in, int count_in = 0, int size_in = 1, int base_value = 1)
+        {
+            if (resources_in_use.Count != 0)
+            {
+                myResource = resources_in_use.FirstOrDefault(x => x.Name == name_in);
+            }
+            if (myResource == null)
+            {
+                Debug.Log("WARNING, had to create new resource: '" + name_in + "' outside of Overseer.CreateResourceTypes!");
+                myResource = new Resource(name_in, size_in, base_value);
+            }
             _count = count_in;
-            types_in_use.Add(name_in);
         }
 
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return myResource.Name; }
         }
 
         public int Count
@@ -57,13 +98,17 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 
         public int Size
         {
-            get { return _size; }
-            set { _size = value; }
+            get { return myResource.Size; }
         }
 
         public int Volume
         {
             get { return Size * Count; }
+        }
+
+        public int Cost
+        {
+            get { return Count * myResource.BaseValue; }
         }
 
         /// <summary>
@@ -78,7 +123,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 
         internal CargoItem Copy()
         {
-            return new CargoItem(_name, _count, _size);
+            return new CargoItem(myResource.Name, _count);
         }
     }
 }

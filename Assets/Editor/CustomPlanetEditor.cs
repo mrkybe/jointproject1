@@ -91,9 +91,10 @@ namespace Assets.Editor {
                         string s2 = reserveString;
                         string s3 = myTarget.BuildingsToString();
                         string s1x = "== Main Cargohold ======\n" + s1;
+                        string s11 = "== Money : " + myTarget.Money;
                         string s2x = "== Reserved Cargohold ==\n" + s2;
                         string s3x = "== Buildings ===========\n" + s3;
-                        Handles.Label(myTarget.transform.position + Vector3.up * -5, s1x + "\n" + s2x + "\n" + s3x, style);
+                        Handles.Label(myTarget.transform.position + Vector3.up * -5, s11 + "\n" + s1x + "\n" + s2x + "\n" + s3x, style);
                     }
                 }
             }

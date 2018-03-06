@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
@@ -18,6 +19,9 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public List<FactionLink> MyLinks;
         public bool SelfHostile = false;
         private List<Planet> OwnedPlanets;
+        public enum DiplomacyTrend { WAR, PEACE, NONE, RETALIATE }
+        public DiplomacyTrend MyDiplomacyTrend = DiplomacyTrend.NONE;
+        private Faction nemisis = null;
 
         public Faction(String name)
         {
@@ -29,9 +33,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
         }
 
         // adjust relations between myself and named faction by amount
-        public bool AddKarma(string name, float amount)
+        public bool AddKarma(Faction faction, float amount)
         {
-            throw new NotImplementedException();
+            FactionLink link = MyLinks.FirstOrDefault(x => x.a == faction || x.b == faction);
+            link.Friendlyness += amount;
+            return true;
         }
 
         // assess total value of my assets
@@ -89,7 +95,13 @@ namespace Assets.Scripts.Classes.WorldSingleton
     {
         public Faction a;
         public Faction b;
-        public float Friendlyness = 0f;
+        private float _friendlyness;
+
+        public float Friendlyness
+        {
+            get { return _friendlyness; }
+            set { _friendlyness = Mathf.Clamp(value, -100f, 100f); }
+        }
 
         public FactionLink(Faction a_in, Faction b_in)
         {
