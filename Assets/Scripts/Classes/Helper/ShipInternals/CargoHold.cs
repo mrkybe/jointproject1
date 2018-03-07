@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals
@@ -14,20 +15,24 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
     [Serializable]
     public class CargoHold
     {
+        private bool _real; 
         private int _maxHold;
+        private MonoBehaviour _owner;
         private List<CargoItem> _cargoItems;
 
         // CargoHolds should always be declared with the maximum amount of space they contain in units.
-        public CargoHold(int maxHold_in)
+        public CargoHold(MonoBehaviour owner, int maxHold_in)
         {
             _maxHold = maxHold_in;
             _cargoItems = new List<CargoItem>();
+            _owner = owner;
         }
 
-        private CargoHold(List<CargoItem> items)
+        private CargoHold(MonoBehaviour owner, List<CargoItem> items)
         {
             _cargoItems = items;
             _maxHold = GetTotalHold();
+            _owner = owner;
         }
 
         public void AddHoldType(String type)
@@ -166,7 +171,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         }
 
         // 
-        public static CargoHold GenerateAsteroidFieldCargoHold()
+        public static CargoHold GenerateAsteroidFieldCargoHold(AsteroidField field)
         {
             List<CargoItem> items = new List<CargoItem>();
             int hashcode = UnityEngine.Random.value.GetHashCode();
@@ -180,7 +185,12 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             RandomAdder("Titanium Ore", random.Next(250) - 200                   , items);
             RandomAdder("Gold"        , random.Next(100) - 75                    , items);
 
-            return new CargoHold(items);
+            return new CargoHold(field, items);
+        }
+
+        public MonoBehaviour Owner()
+        {
+            return _owner;
         }
 
         private static void RandomAdder(string itemName, int add, List<CargoItem> items)

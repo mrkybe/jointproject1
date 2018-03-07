@@ -14,22 +14,17 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 		private int spaceConsumed = 0;
 		private int ShipCost = 0;
 
-		public ShipFactory(string name, List<CargoItem> consume, List<CargoItem> produce, List<CargoItem> cost): base (name, consume, produce, cost)
+		public ShipFactory(string name, List<CargoItem> consume, List<CargoItem> cost): base (name, consume, null ,cost)
 		{
 
 			Name = name ?? "ShipFactory";
 			Consume = consume ?? new List<CargoItem>();
-			Produce = produce ?? new List<CargoItem>();
 			Cost = cost ?? new List<CargoItem> ();
 
 
 			foreach (var item in Consume)
 			{
 				spaceFreed += item.Volume;
-			}
-			foreach (var item in Produce)
-			{
-				spaceConsumed += item.Volume;
 			}
 			foreach (var item in Cost) 
 			{
@@ -39,7 +34,10 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 		public delegate ShipFactory ShipResource();
 		//public static ShipResource[] ShipElements = { base.GetEnviromentDirtFactory, base.GetEnviromentCometFactory, base.GetEnviromentRockFactory, base.GetEnviromentOreFactory };
 	
-	
+		override public bool Tick(CargoHold workspace)
+		{
+		
+		}
 	
 	
 	

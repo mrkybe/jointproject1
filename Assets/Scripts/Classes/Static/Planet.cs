@@ -60,8 +60,8 @@ namespace Assets.Scripts.Classes.Static {
             TimeToSpawn.Loop(true);
         
 
-            myStorage = new CargoHold(50000);
-            reservedStorage = new CargoHold(50000);
+            myStorage = new CargoHold(this, 50000);
+            reservedStorage = new CargoHold(this, 50000);
 
             SetupBuildings();
             PlanetBTSetup();
