@@ -41,7 +41,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
         /// Produces resources by consuming resources.  Operates on a given CargoHold.  Returns true if successful.
         /// </summary>
         /// <param name="workspace">The cargohold that the building takes resources from and places results into.</param>
-        public bool Tick(CargoHold workspace)
+        virtual public bool Tick(CargoHold workspace)
         {
             // if it doesn't have that kind of item or doesn't have enough of it...
             foreach (var item in Consume)

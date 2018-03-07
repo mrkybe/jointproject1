@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Classes.Helper.ShipInternals;
+using Assets.Scripts.Classes.Static;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals 
 {
 	public class ShipFactory:Building
 	{
-		public readonly string Name;
 		private List<CargoItem> Consume;
 		private List<CargoItem> Produce;
 		private List<CargoItem> Cost;
@@ -17,7 +17,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 		public ShipFactory(string name, List<CargoItem> consume, List<CargoItem> cost): base (name, consume, null ,cost)
 		{
 
-			Name = name ?? "ShipFactory";
+			//Name = name ?? "ShipFactory";
 			Consume = consume ?? new List<CargoItem>();
 			Cost = cost ?? new List<CargoItem> ();
 
@@ -36,7 +36,16 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 	
 		override public bool Tick(CargoHold workspace)
 		{
-		
+			Planet planet = (Planet) CargoHold.Owner();
+			planet.DeliveryShipCount += 1;
+
+			// consume the goods to be used up
+			foreach (var item in Consume)
+			{
+				workspace.TakeFromHold(item);
+			}
+
+			return true;
 		}
 	
 	
