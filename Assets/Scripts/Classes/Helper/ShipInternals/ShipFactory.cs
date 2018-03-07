@@ -36,7 +36,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 	
 		override public bool Tick(CargoHold workspace)
 		{
-			Planet planet = (Planet) CargoHold.Owner();
+			Planet planet = (Planet)workspace.Owner();
 			planet.DeliveryShipCount += 1;
 
 			// consume the goods to be used up
