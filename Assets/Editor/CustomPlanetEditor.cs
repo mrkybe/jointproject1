@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.Static;
@@ -85,13 +86,14 @@ namespace Assets.Editor {
 
                         string holdString = hold.ToString();
                         string reserveString = myTarget.GetReserveCargoHold.ToString();
-
+                        string goodsValue = hold.GetMoneyValue().ToString();
+                        string reserveGoodsValue = myTarget.GetReserveCargoHold.GetMoneyValue().ToString();
                         Handles.color = Color.blue;
                         string s1 = holdString;
                         string s2 = reserveString;
                         string s3 = myTarget.BuildingsToString();
                         string s1x = "== Main Cargohold ======\n" + s1;
-                        string s11 = "== Money : " + myTarget.Money;
+                        string s11 = "== Money : " + myTarget.Money + " | " + goodsValue + " | " + reserveGoodsValue;
                         string s2x = "== Reserved Cargohold ==\n" + s2;
                         string s3x = "== Buildings ===========\n" + s3;
                         Handles.Label(myTarget.transform.position + Vector3.up * -5, s11 + "\n" + s1x + "\n" + s2x + "\n" + s3x, style);

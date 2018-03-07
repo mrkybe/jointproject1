@@ -223,7 +223,7 @@ namespace Assets.Scripts.Classes.Static {
                 reused = true;
             }
             GameObject ship = shipScript.gameObject;
-        
+            //shipScript.CheatSpeed = true;
             CargoHold shipHold = shipScript.GetCargoHold;
             shipHold.AddHoldType(order.item.Name);
             int transfered = shipHold.Credit(order.item.Name, reservedStorage, order.item.Count);
@@ -231,13 +231,16 @@ namespace Assets.Scripts.Classes.Static {
             if (order.item.Count == 0)
             {
                 deliveryList.Remove(order);
-                deliveryInProgressList.Add(order);
             }
+
+            MarketOrder shipManifest = order.Copy();
+            shipManifest.item.Count = transfered;
+            deliveryInProgressList.Add(shipManifest);
 
             AI_Patrol pilot = ship.GetComponent<AI_Patrol>();
             if (pilot != null)
             {
-                pilot.StartDelivery(order, !reused);
+                pilot.StartDelivery(shipManifest, !reused);
             }
             WorkerShips.Add(ship.gameObject);
         }
@@ -289,11 +292,11 @@ namespace Assets.Scripts.Classes.Static {
             }
         }
 
-        private int money = 1000000;
+        private int _money = 0;
 
         public int Money
         {
-            get { return money; }
+            get { return _money; }
         }
         /// <summary>
         /// Takes money from this and gives money to the charger, based on the bill of goods.
@@ -305,13 +308,13 @@ namespace Assets.Scripts.Classes.Static {
             int cost = marketOrder.item.Cost;
             float distance = (Vector3.Distance(charger.transform.position, this.transform.position) / Overseer.Main.worldSize) + 1;
             int finalCost = (int)(cost * distance);
-            money = money - finalCost;
+            _money = _money - finalCost;
             charger.AddMoney(finalCost);
         }
 
         public void AddMoney(int amount)
         {
-            money += amount;
+            _money += amount;
         }
 
         /// <summary>
