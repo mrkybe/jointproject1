@@ -34,7 +34,10 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
 		public delegate ShipFactory ShipResource();
 		//public static ShipResource[] ShipElements = { base.GetEnviromentDirtFactory, base.GetEnviromentCometFactory, base.GetEnviromentRockFactory, base.GetEnviromentOreFactory };
 	
-	
+		override public bool Tick(CargoHold workspace)
+		{
+		
+		}
 	
 	
 	
