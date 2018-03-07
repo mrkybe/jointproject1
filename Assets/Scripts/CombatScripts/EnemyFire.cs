@@ -25,6 +25,7 @@ public class EnemyFire : MonoBehaviour {
 	void Update ()
 	{
 		if (InRange) {
+			gameObject.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 			gameObject.GetComponent<AI_Enemy> ().enabled = false;
 			gameObject.transform.LookAt (Player.transform);
 		}
