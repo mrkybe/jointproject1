@@ -79,7 +79,7 @@ namespace Assets.Scripts.Classes.Static {
         /// <returns></returns>
         public CargoHold CalculateNetDemand()
         {
-            CargoHold temp = new CargoHold(Int32.MaxValue);
+            CargoHold temp = new CargoHold(this, Int32.MaxValue);
             CalculateProducableResources();
             CalculateConsumableResources();
             foreach (CargoItem item in producableCargoItems)

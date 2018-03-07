@@ -17,7 +17,7 @@ namespace Assets.Scripts.Classes.Static {
         protected new void Start ()
         {
             base.Start();
-            CargoHold = CargoHold.GenerateAsteroidFieldCargoHold();
+            CargoHold = CargoHold.GenerateAsteroidFieldCargoHold(this);
             //GenerateMesh();
             System.Random r = new System.Random(this.GetInstanceID());
             float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
