@@ -75,7 +75,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             }
             else
             {
-                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instace!");
+                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instance!");
             }
         }
 
