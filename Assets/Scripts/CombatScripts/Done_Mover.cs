@@ -28,10 +28,10 @@ public class Done_Mover : MonoBehaviour
 
 	
 	}
-	void OnTriggerEnter(Collider col)
-	{
-		if (col.gameObject.CompareTag ("Player")) {
-			col.gameObject.GetComponent<PlayerController> ().Depletion(10);
-		}
-	}
+//	void OnTriggerEnter(Collider col)
+//	{
+//		if (col.gameObject.CompareTag ("Player")) {
+//			col.gameObject.GetComponent<PlayerController> ().Depletion(10);
+//		}
+//	}
 }
