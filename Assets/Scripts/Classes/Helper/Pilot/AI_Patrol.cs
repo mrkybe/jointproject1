@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Behavior_Designer.Runtime.Variables;
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.Helper.Pilot {
     /// <summary>
@@ -306,11 +308,23 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
             if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA != null && AttackTargetMIA.Value == null && FreshKill != null)
             {
-                bool scary = contact.GetScaryness(shipScript.Value) < Bravery.Value;
-                bool hostile = contact.Pilot.Faction.HostileWith(Faction);
-                if (contact.Alive && scary && !FreshKill.Value && hostile)
+                try
                 {
-                    AttackTarget.Value = contact;
+                    bool scary = contact.GetScaryness(shipScript.Value) < Bravery.Value;
+                    bool hostile = contact.Pilot.Faction.HostileWith(Faction);
+                    if (contact.Alive && scary && !FreshKill.Value && hostile)
+                    {
+                        AttackTarget.Value = contact;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    bool scary = contact.GetScaryness(shipScript.Value) < Bravery.Value;
+                    bool hostile = contact.Pilot.Faction.HostileWith(Faction);
+                    if (contact.Alive && scary && !FreshKill.Value && hostile)
+                    {
+                        AttackTarget.Value = contact;
+                    }
                 }
             }
         }

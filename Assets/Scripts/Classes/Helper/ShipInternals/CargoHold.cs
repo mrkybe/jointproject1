@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes.Static;
+using ShaderForge;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals
@@ -20,6 +21,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         private int _maxHold;
         private MonoBehaviour _owner;
         private List<CargoItem> _cargoItems;
+        private SerializableDictionary<string, float> supplyDemandCostModifier;
 
         // CargoHolds should always be declared with the maximum amount of space they contain in units.
         public CargoHold(MonoBehaviour owner, int maxHold_in)
@@ -27,6 +29,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             _maxHold = maxHold_in;
             _cargoItems = new List<CargoItem>();
             _owner = owner;
+            supplyDemandCostModifier = new SerializableDictionary<string, float>();
         }
 
         private CargoHold(MonoBehaviour owner, List<CargoItem> items)
@@ -34,6 +37,25 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             _cargoItems = items;
             _maxHold = GetTotalHold();
             _owner = owner;
+            supplyDemandCostModifier = new SerializableDictionary<string, float>();
+        }
+
+        public IEnumerable<CargoItem> CargoItems
+        {
+            get
+            {
+                List<CargoItem> result = new List<CargoItem>();
+                foreach (CargoItem r in _cargoItems)
+                {
+                    result.Add(r.Copy());
+                }
+                return result;
+            }
+        }
+
+        public void SetCostModifier(string ResourceName, float mulitplier)
+        {
+            supplyDemandCostModifier[ResourceName] = mulitplier;
         }
 
         public void AddHoldType(String type)
@@ -42,6 +64,10 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             if (!Contains(type))
             {
                 _cargoItems.Add(new CargoItem(type));
+                if (!supplyDemandCostModifier.ContainsKey(type))
+                {
+                    supplyDemandCostModifier.Add(type, 1.0f);
+                }
             }
             else
             {
@@ -210,6 +236,14 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         public int GetMoneyValue()
         {
             return _cargoItems.Sum(x => x.Cost);
+        }
+
+        public int GetCargoItemValue(string name)
+        {
+            if (Contains(name))
+                return (int) (supplyDemandCostModifier[name] * _cargoItems.First(x => x.Name == name).Cost);
+            else
+                return 0;
         }
     }
 }

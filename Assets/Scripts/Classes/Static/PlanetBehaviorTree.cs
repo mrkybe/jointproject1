@@ -13,6 +13,7 @@ namespace Assets.Scripts.Classes.Static {
     /// </summary>
     public partial class Planet: Static
     {
+        private Dictionary<string, float> supplyDemandCostMultiplier = new Dictionary<string, float>();
         private List<CargoItem> consumableCargoItems;
         private List<CargoItem> producableCargoItems;
         private List<CargoItem> itemsNetChange;
@@ -43,8 +44,23 @@ namespace Assets.Scripts.Classes.Static {
             ReadyDeliveryShips = new List<GameObject>();
             DeliveryShip = (GameObject)Resources.Load("Prefabs/AI_ship");
             InvokeRepeating("UpdateEverything", 1, 0.75f + (Random.value/2f));
-        
+            CalculateSupplyDemand();
             //behaviorTree.Start();
+        }
+
+        private void CalculateSupplyDemand()
+        {
+            CargoHold net = CalculateNetDemand();
+            foreach (CargoItem i in net.CargoItems)
+            {
+                myStorage.SetCostModifier(i.Name, 1 - Mathf.Clamp(i.Count / 10.0f, 0.5f, 1.0f));
+                reservedStorage.SetCostModifier(i.Name, 1 - Mathf.Clamp(i.Count / 10.0f, 0.5f, 1.0f));
+            }
+        }
+
+        public Dictionary<string, float> GetCostModifier()
+        {
+            return supplyDemandCostMultiplier;
         }
 
         private void UpdateEverything()
@@ -305,7 +321,8 @@ namespace Assets.Scripts.Classes.Static {
         /// <param name="marketOrder"></param>
         public void Pay(Planet charger, MarketOrder marketOrder)
         {
-            int cost = marketOrder.item.Cost;
+            
+            int cost = (int)(charger.GetCargoHold.GetCargoItemValue(marketOrder.item.Name));
             float distance = (Vector3.Distance(charger.transform.position, this.transform.position) / Overseer.Main.worldSize) + 1;
             int finalCost = (int)(cost * distance);
             _money = _money - finalCost;

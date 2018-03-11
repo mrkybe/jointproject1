@@ -417,6 +417,27 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
+        private bool cheatMove = false;
+        public void ToggleCheatMoveShips()
+        {
+            if (cheatMove)
+            {
+                cheatMove = false;
+                foreach (Spaceship s in FindObjectsOfType(typeof(Spaceship)))
+                {
+                    s.CheatSpeed = cheatMove;
+                }
+            }
+            else
+            {
+                cheatMove = true;
+                foreach (Spaceship s in FindObjectsOfType(typeof(Spaceship)))
+                {
+                    s.CheatSpeed = cheatMove;
+                }
+            }
+        }
+
         private List<string> ListOfSaturnMoonNames()
         {
             return new List<string>
