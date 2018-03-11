@@ -55,7 +55,7 @@ public class AI_Enemy : MonoBehaviour {
 		float step = speed * Time.deltaTime;
 		if (dist < radius) {
 			gameObject.transform.LookAt (Player.transform);
-			gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
+			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
 		} else {
 
 			tiempo += Time.deltaTime;
