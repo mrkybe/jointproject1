@@ -21,7 +21,6 @@ public class EnemyFire : MonoBehaviour {
 
 	void Start ()
 	{
-		 
 		SphereCollider sphereCollider = DetectionRange.GetComponent<SphereCollider> ();
 		sphereCollider.radius = radius; 
 		Player = GameObject.Find ("Combat_ship_player");

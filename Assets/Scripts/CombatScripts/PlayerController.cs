@@ -12,6 +12,8 @@ using UnityEngine;
 ///</summary>
 public class PlayerController : MonoBehaviour
 {
+	public int health;
+
     private Fire fire;
 	private LaserFire lf;
 	private Rocket rk;
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
 		rk = GetComponent<Rocket> ();
+		Debug.Log ("Health is:" + health);
     }
     private void Update()
     {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Classes.Mobile;
 
 public class CombatController : MonoBehaviour {
     public GameObject enemySpawner;
@@ -14,10 +15,12 @@ public class CombatController : MonoBehaviour {
     private Move move;
     private Fire fire;
     private CameraController cc;
+	private PlayerController pc;
     private CameraFollow cf;
     private LaserFire lf;
 	private Rocket rk;
 	private LineRenderer lr;
+	private Spaceship s;
     // Use this for initialization
     void Start()
     {
@@ -28,7 +31,9 @@ public class CombatController : MonoBehaviour {
         cc = cameraObject.GetComponent<CameraController>();
         cf = cameraObject.GetComponent<CameraFollow>();
 		lr = player.GetComponent<LineRenderer> ();
-
+		s = ai_player.GetComponent<Spaceship>();
+		pc = player.GetComponent<PlayerController> ();
+		pc.health = s.HullHealth;
     }
     ///<summary>
     /// Checks every frame if player has pressed the corresponding button that switches between fire and laser fire scripts.
@@ -38,24 +43,33 @@ public class CombatController : MonoBehaviour {
     {
         if (Input.GetButtonDown("Y") && flag == false)
         {
-            flag = true;
-            ai_player.SetActive(false);
-            player.SetActive(true);
-			lr.enabled = false;
-            // move.enabled = true;
-            // fire.enabled = true;
-            cc.enabled = true;
-            cf.enabled = false;
-            lf.enabled = false;
-			rk.enabled = false;
-            combatField.SetActive(true);
-            player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
-            cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 20, cameraObject.transform.position.z);
-            enemySpawner.GetComponent<EnemySpawner>().enabled = true;
+			CombatStart ();
         }
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
     /// pressing the "Y" button.
     ///</summary>
+	public void CombatStart()
+	{
+		flag = true;
+		ai_player.SetActive(false);
+		player.SetActive(true);
+		lr.enabled = false;
+		// move.enabled = true;
+		// fire.enabled = true;
+		cc.enabled = true;
+		cf.enabled = false;
+		lf.enabled = false;
+		rk.enabled = false;
+		combatField.SetActive(true);
+		player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
+		cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, cameraObject.transform.position.y + 20, cameraObject.transform.position.z);
+		enemySpawner.GetComponent<EnemySpawner>().enabled = true;
+	}
+
+	public void CombatEnd()
+	{
+
+	}
 }
