@@ -8,6 +8,7 @@ public class Rocket : MonoBehaviour {
 	public float amount = 3;
 	public float fireRate = 5;
 	public float nextFire;
+	public Transform shotSpawn;
 	public AudioClip shootSound;
 
 	private AudioSource source;
@@ -22,16 +23,9 @@ public class Rocket : MonoBehaviour {
 		if (Input.GetButtonDown ("Fire1") && Time.time > nextFire && amount != 0) 
 		{
 			nextFire = Time.time + fireRate;
-			Instantiate (ammo, transform.position, transform.rotation);
+			Instantiate (ammo, shotSpawn.position, shotSpawn.rotation);
 			source.PlayOneShot (shootSound);
 			amount--;
 		}
-	}
-		
-
-	//need to show explosion particle effect.
-	void OnCollisionEnter()
-	{
-
 	}
 }

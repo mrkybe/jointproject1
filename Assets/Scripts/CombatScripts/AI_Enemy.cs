@@ -101,10 +101,12 @@ public class AI_Enemy : MonoBehaviour {
 		if (other.gameObject.CompareTag("Rocket"))
 		{
 			health = health - rocketDMG;
+			other.gameObject.GetComponent<ParticleSystem> ().Play();
 			Destroy (other.gameObject);
 			if (health < 0) {
 				Destroy (gameObject);
 			}
+
 		}
 	}
 }
