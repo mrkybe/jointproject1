@@ -407,7 +407,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
                 foreach (Static.Static st in Static.Static.listOfStaticObjects)
                 {
-                    st.Unpause();
+                    st.UnpauseOvermap();
                 }
                 overmap_pause_count--;
             }
