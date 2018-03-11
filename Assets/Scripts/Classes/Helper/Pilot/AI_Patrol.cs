@@ -266,6 +266,17 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             }
         }
 
+        public override void Pause()
+        {
+            behaviorTree.PauseWhenDisabled = true;
+            behaviorTree.DisableBehavior(true);
+        }
+
+        public override void Unpause()
+        {
+            behaviorTree.EnableBehavior();
+        }
+
         /// <summary>
         /// Called when a new ship enters our sensor range.
         /// </summary>

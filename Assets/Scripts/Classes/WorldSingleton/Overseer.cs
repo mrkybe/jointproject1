@@ -268,6 +268,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             int counter = 0;
             int planets_to_do_per_iteration = 10;
+            if (overmap_pause == true)
+            {
+                yield return null;
+            }
             foreach (Planet p in Planet.listOfPlanetObjects)
             {
                 if (counter > planets_to_do_per_iteration)
@@ -286,6 +290,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public void ManagePirateCount()
         {
+            if (overmap_pause == true)
+            {
+                return;
+            }
             OutskirtShips.RemoveAll(x => x == null || x.Alive == false);
             var PirateShips = OutskirtShips.Where(x => x.Pilot.Faction == GetFaction("Pirates"));
             var BountyHunters = OutskirtShips.Where(x => x.Pilot.Faction == GetFaction("Independent"));
@@ -350,15 +358,41 @@ namespace Assets.Scripts.Classes.WorldSingleton
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && Spaceship.inTime)
+            if (Input.GetKeyDown(KeyCode.Space) && IsOvermapPaused())
             {
-                Spaceship.inTime = false;
-                Static.Static.inTime = false;
+                UnpauseOvermap();
             }
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsOvermapPaused())
             {
-                Spaceship.inTime = true;
-                Static.Static.inTime = true;
+                PauseOvermap();
+            }
+        }
+
+        private bool overmap_pause = false;
+        public bool IsOvermapPaused()
+        {
+            return overmap_pause;
+        }
+
+        public void PauseOvermap()
+        {
+            overmap_pause = true;
+            foreach (Spaceship ship in FindObjectsOfType(typeof(Spaceship)))
+            {
+                ship.Pause();
+            }
+            foreach (Static.Static st in Static.Static.listOfStaticObjects)
+            {
+                st.Pause();
+            }
+        }
+
+        public void UnpauseOvermap()
+        {
+            overmap_pause = false;
+            foreach (Spaceship ship in FindObjectsOfType(typeof(Spaceship)))
+            {
+                ship.Unpause();
             }
         }
 
