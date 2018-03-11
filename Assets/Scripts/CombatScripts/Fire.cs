@@ -12,19 +12,23 @@ public class Fire : MonoBehaviour {
 	public float fireRate;
 	public GameObject shot;
 	private float nextFire = 2;
+	public AudioClip shootSound;
+
+	private AudioSource source;
 
 
+	void Awake(){
 
-
-
-
-
+		source = GetComponent <AudioSource> ();
+	}
+		
 
 
 	void Update ()
 	{
 		if (Input.GetButton("Fire1") && Time.time > nextFire) 
 		{
+			source.PlayOneShot (shootSound);
 			nextFire = Time.time + fireRate;
 			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
 		}
