@@ -49,7 +49,7 @@ public class LaserFire : MonoBehaviour {
     IEnumerator FireLaser()
     {
         
-        while (Input.GetButton("Fire1"))
+        while (Input.GetButtonDown("Fire1"))
         {
             Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hit;
@@ -62,14 +62,17 @@ public class LaserFire : MonoBehaviour {
 				laser.SetPosition(0, ray.origin);
 				//laser.SetPosition(1, new Vector3(0, 0, dist + hit.distance));
 				laser.SetPosition(1, ray.GetPoint(hit.distance));
-                Debug.Log("hit:");
+                //Debug.Log("hit:");
                 if (hit.transform.gameObject.CompareTag("Enemy"))
                 {
-                    Destroy(hit.transform.gameObject);
+					int health = hit.transform.gameObject.GetComponent<AI_Enemy> ().health;
+					int dmg = hit.transform.gameObject.GetComponent<AI_Enemy> ().laserDMG;
+					health -= dmg;
+                    //Destroy(hit.transform.gameObject);
 					rayhit = false;
+					//laser.enabled = false;
                 }
             }  
-
             yield return null;
         }
         laser.enabled = false;
