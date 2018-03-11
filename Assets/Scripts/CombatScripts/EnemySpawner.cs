@@ -43,7 +43,7 @@ public class EnemySpawner : MonoBehaviour {
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
 				count = count+3;
-				Debug.Log (count);
+
 				if (totalAmount < count) {
 				
 					yield break;
