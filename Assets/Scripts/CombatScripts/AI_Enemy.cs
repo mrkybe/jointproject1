@@ -10,11 +10,13 @@ public class AI_Enemy : MonoBehaviour {
 	public float zMax;
 	public float xMin;
 	public float zMin;
+	public int health = 3;
 
 	private float x;
 	private float z;
 	private float tiempo;
 	private float angulo;
+
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +26,7 @@ public class AI_Enemy : MonoBehaviour {
 		z = Random.Range(-velocidadMax, velocidadMax);
 		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
 		transform.localRotation = Quaternion.Euler( 0, angulo, 0);
+
 	}
 
 	// Update is called once per frame
@@ -66,5 +69,21 @@ public class AI_Enemy : MonoBehaviour {
 		}
 
 		transform.localPosition = new Vector3(transform.localPosition.x + x, transform.localPosition.y, transform.localPosition.z + z);
+
+
+
+	}
+
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.CompareTag("Bullet"))
+		{
+			health--;
+			Destroy (other.gameObject);
+			if (health == 0) {
+				Destroy (gameObject);
+			}
+		}
 	}
 }

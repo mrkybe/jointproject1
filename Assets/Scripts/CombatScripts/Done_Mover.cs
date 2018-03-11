@@ -19,14 +19,12 @@ public class Done_Mover : MonoBehaviour
 //	}
 
 
-	void OnTriggerEnter(Collider colidedObj)
+	void OnCollisionEnter (Collision col)
 	{
 		//Debug.Log (colidedObj.name);
-		if (colidedObj.name == "Roamer(Clone)") {
-			Destroy (gameObject);
-			Destroy (colidedObj.gameObject);
-		
-		}
+
+			
+			//Destroy (colidedObj.gameObject);
 
 	
 	}

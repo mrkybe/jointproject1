@@ -45,34 +45,34 @@ public class EnemyDetect : MonoBehaviour {
 			//gameObject.GetComponent<AI_Enemy> ().enabled = true;
 		}
 	}
-	public void OnTriggerEnter (Collider col)
-	{
-		//Debug.Log (col.name);
-		if (col.name == "Combat_ship_player")
-		{   
-			Debug.Log("Player in range");
-			InRange = true; 
-			gameObject.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
-
-			gameObject.transform.LookAt (Player.transform);
-
-
-		}
-	}
-
-	public void OnTriggerStay (Collider col)
-	{
-		if (col.name == "Combat_ship_player") {
-			
-			Debug.Log("11");
-		}
-	}
-
-	public void OnTriggerExit (Collider col)
-	{
-
-		InRange = false;
-		//Debug.Log("Player is out of range");
-	}
+//	public void OnTriggerEnter (Collider col)
+//	{
+//		//Debug.Log (col.name);
+//		if (col.name == "Combat_ship_player")
+//		{   
+//			Debug.Log("Player in range");
+//			InRange = true; 
+//			gameObject.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
+//
+//			gameObject.transform.LookAt (Player.transform);
+//
+//
+//		}
+//	}
+//
+//	public void OnTriggerStay (Collider col)
+//	{
+//		if (col.name == "Combat_ship_player") {
+//			
+//			Debug.Log("11");
+//		}
+//	}
+//
+//	public void OnTriggerExit (Collider col)
+//	{
+//
+//		InRange = false;
+//		//Debug.Log("Player is out of range");
+//	}
 		
 }
