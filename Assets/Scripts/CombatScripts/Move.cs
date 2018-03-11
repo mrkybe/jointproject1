@@ -24,11 +24,12 @@ public class Move : MonoBehaviour {
 
 	void Update()
 	{
-		timeMove ();
+		//timeMove ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
+		ForceMove ();
 		look();
 		rb.velocity = velocity;
     }
@@ -53,7 +54,16 @@ public class Move : MonoBehaviour {
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
         */
-		velocity = move * speed;
+		velocity = move * speed * Time.deltaTime;
+	}
+	void ForceMove()
+	{
+		float x = Input.GetAxis("Horizontal");
+		float z = Input.GetAxis("Vertical");
+
+		Vector3 move = new Vector3 (x, 0, z);
+
+		rb.AddForce (move * speed);
 	}
 		
 	///<summary>
