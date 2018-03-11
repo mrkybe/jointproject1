@@ -9,8 +9,7 @@ using UnityEngine;
 public class Move : MonoBehaviour {
 
     public float speed = 10f;
-	public float rotateSpeed = .05f;
-    public bool controller;
+	public bool controller;
 
     private Rigidbody rb;
 	private Vector3 lookPos;
@@ -18,18 +17,17 @@ public class Move : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
 	void Update()
 	{
-		//timeMove ();
+		timeMove ();
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		ForceMove ();
+		//ForceMove ();
 		look();
 		rb.velocity = velocity;
     }
@@ -54,7 +52,7 @@ public class Move : MonoBehaviour {
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
         */
-		velocity = move * speed * Time.deltaTime;
+		velocity = move * speed;
 	}
 	void ForceMove()
 	{
@@ -63,7 +61,7 @@ public class Move : MonoBehaviour {
 
 		Vector3 move = new Vector3 (x, 0, z);
 
-		rb.AddForce (move * speed);
+		rb.AddForce (move * speed,ForceMode.Acceleration);
 	}
 		
 	///<summary>

@@ -8,7 +8,7 @@ public class RocketMove : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Destroy (gameObject, 10f);
-		GetComponent<Rigidbody>().AddForce(transform.forward * speed, ForceMode.Impulse);
+		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 		ps = GetComponent<ParticleSystem> ();
 		ps.Stop ();
 	}

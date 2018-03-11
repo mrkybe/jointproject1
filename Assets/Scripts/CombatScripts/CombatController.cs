@@ -14,6 +14,7 @@ public class CombatController : MonoBehaviour {
     public GameObject player;
 
     private bool flag = false;
+	private int depletion = 0;
     private Move move;
     private Fire fire;
     private CameraController cc;
@@ -84,5 +85,7 @@ public class CombatController : MonoBehaviour {
 		combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
 		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
+		depletion = 100 - pc.health;
+		s.TakeDamage (depletion, null);
 	}
 }
