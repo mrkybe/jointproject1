@@ -52,4 +52,9 @@ public class PlayerController : MonoBehaviour
 			rk.enabled = false;
 		}
     }
+
+	public void Depletion(int damage)
+	{
+		health -= damage;
+	}
 }

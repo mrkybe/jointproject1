@@ -61,7 +61,7 @@ public class Move : MonoBehaviour {
 
 		Vector3 move = new Vector3 (x, 0, z);
 
-		rb.AddForce (move * speed,ForceMode.Acceleration);
+		rb.AddForce (move * speed,ForceMode.Force);
 	}
 		
 	///<summary>

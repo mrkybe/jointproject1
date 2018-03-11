@@ -31,8 +31,7 @@ public class Done_Mover : MonoBehaviour
 	void OnTriggerEnter(Collider col)
 	{
 		if (col.gameObject.CompareTag ("Player")) {
-			int health = col.gameObject.GetComponent<PlayerController> ().health;
-			health -= 10;
+			col.gameObject.GetComponent<PlayerController> ().Depletion(10);
 		}
 	}
 }
