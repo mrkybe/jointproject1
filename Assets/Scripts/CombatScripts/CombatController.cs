@@ -41,10 +41,11 @@ public class CombatController : MonoBehaviour {
     ///</summary>
     private void Update()
     {
-        if (Input.GetButtonDown("Y") && flag == false)
-        {
+		if (Input.GetButtonDown ("Y") && flag == false) {
 			CombatStart ();
-        }
+		} else if (Input.GetButtonDown ("Y") && flag == true) {
+			CombatEnd ();
+		}
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
@@ -70,6 +71,11 @@ public class CombatController : MonoBehaviour {
 
 	public void CombatEnd()
 	{
-
+		flag = false;
+		ai_player.SetActive(true);
+		player.SetActive (false);
+		combatField.SetActive (false);
+		cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
+		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
 	}
 }
