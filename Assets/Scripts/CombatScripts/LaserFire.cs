@@ -8,6 +8,16 @@ using UnityEngine;
 public class LaserFire : MonoBehaviour {
     private LineRenderer laser;
 	public bool rayhit;
+
+	public AudioClip shootSound;
+
+	private AudioSource source;
+
+
+	void Awake(){
+
+		source = GetComponent <AudioSource> ();
+	}
     // Use this for initialization
 	void Start ()
     {
@@ -24,6 +34,7 @@ public class LaserFire : MonoBehaviour {
         {
             //StopCoroutine("FireLaser");
             StartCoroutine("FireLaser");
+			source.PlayOneShot (shootSound);
         }
 
 		if (!rayhit)
