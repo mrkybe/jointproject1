@@ -7,7 +7,6 @@ namespace Assets.Scripts.Classes.Static
     [SelectionBase]
     public class Static : MonoBehaviour
     {
-        static public bool inTime = true;
         protected int loadPriority = 0;
         protected int loadPriorityInital = 5;
         protected float interactionRange = 1;
@@ -39,6 +38,16 @@ namespace Assets.Scripts.Classes.Static
         protected void OnDestroy()
         {
             listOfStaticObjects.Remove(this);
+        }
+
+        public void Pause()
+        {
+
+        }
+
+        public void Unpause()
+        {
+
         }
     }
 }

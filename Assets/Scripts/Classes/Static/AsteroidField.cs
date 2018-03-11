@@ -132,20 +132,16 @@ namespace Assets.Scripts.Classes.Static {
         // Update is called once per frame
         private new void FixedUpdate ()
         {
-        
-            if (inTime)
+            base.FixedUpdate();
+            ///////////////////
+            if (loadPriority == 0)
             {
-                base.FixedUpdate();
-                ///////////////////
-                if (loadPriority == 0)
-                {
-                    DelayedLoad();
-                    loadPriority = -1;
-                }
-                else if (loadPriority > 0)
-                {
-                    loadPriority--;
-                }
+                DelayedLoad();
+                loadPriority = -1;
+            }
+            else if (loadPriority > 0)
+            {
+                loadPriority--;
             }
         }
     }

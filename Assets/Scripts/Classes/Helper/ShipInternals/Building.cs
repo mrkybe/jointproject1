@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Classes.Helper.ShipInternals;
+using System.Security.Cryptography;
+using System.Linq;
+using NUnit.Framework;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals {
     public class Building
@@ -103,6 +106,16 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
             }
             return revenue - costs;
         }
+
+		public int GetConstructionCostMoney()
+		{
+			int costs = 0;
+			foreach (var item in Cost)
+			{
+				costs += item.Cost;
+			}
+			return costs;
+		}
 
         public override string ToString()
         {
@@ -309,6 +322,19 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals {
                                        new CargoItem("Iron Ore", 6), new CargoItem("Gold", 13)
                                    });
         }
+
+		/*
+		public static Building TotalBuildingCost()
+		{
+			List<Building> AllBuildingsList = new List<Building> ();
+			foreach (var item in AllBuildings) {
+				AllBuildingsList.Add(item());
+			}
+
+			AllBuildingsList.Sum (x => x.GetConstructionCostMoney ());
+			return AllBuildingsList;
+		}
+		*/
 
 		//Checks the Building cost list. Needs to implement comparison outcome.
 		bool CheckMatch()
