@@ -7,11 +7,16 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 
 /// <summary>
-///
-/// 
-/// 
+/// Press Space to open list of nearby moons and ships.
+/// Click on one to open inventory.
+/// Click on items in inventory to place on center panel.
+/// Click buttons in center panel to increase or decrease amount to be traded.
+/// Click submit button to confirm trade.
+/// Press Space to return to list of nearby agents.
+/// Press Space again to close menu.
 /// </summary>
 public class TradeMenuMk2 : MonoBehaviour
 {
@@ -34,7 +39,13 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform theirInventoryPanel;
     private RectTransform leftButtonPanel;
     private RectTransform rightButtonPanel;
+    private RectTransform leftValuesPanel;
+    private RectTransform rightValuesPanel;
 
+    private RectTransform leftTitleBar;
+
+    private RectTransform myPricesPanel;
+    private RectTransform theirPricesPanel;
     private RectTransform myAmountPanel;
     private RectTransform theirAmountPanel;
 
@@ -58,7 +69,10 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Text> theirAmountSelect;
     private List<Text> myInventoryAmounts;
     private List<Text> theirInventoryAmounts;
-    
+    private List<Text> myValues;
+    private List<Text> theirValues;
+    private List<Text> myPrices;
+    private List<Text> theirPrices;
 
     private Spaceship otherShip;
     private Spaceship ship;
@@ -84,6 +98,13 @@ public class TradeMenuMk2 : MonoBehaviour
         myAmountPanel = GameObject.Find("My Numbers").GetComponent<RectTransform>();
         myInventoryPanel = GameObject.Find("Left Panel Numbers").GetComponent<RectTransform>();
         theirInventoryPanel = GameObject.Find("Right Panel Numbers").GetComponent<RectTransform>();
+        leftValuesPanel = GameObject.Find("Left Panel Values").GetComponent<RectTransform>();
+        rightValuesPanel = GameObject.Find("Right Panel Values").GetComponent<RectTransform>();
+        myPricesPanel = GameObject.Find("My Price").GetComponent<RectTransform>();
+        theirPricesPanel = GameObject.Find("Their Price").GetComponent<RectTransform>();
+        leftTitleBar = GameObject.Find("Left Title Bar").GetComponent<RectTransform>();
+
+        leftTitleBar.gameObject.SetActive(false);
 
         ship = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
 
@@ -109,6 +130,10 @@ public class TradeMenuMk2 : MonoBehaviour
         theirAmountSelect = new List<Text>();
         myInventoryAmounts = new List<Text>();
         theirInventoryAmounts = new List<Text>();
+        myValues = new List<Text>();
+        theirValues = new List <Text>();
+        myPrices = new List<Text>();
+        theirPrices = new List<Text>();
 
         otherShip = new Spaceship();
         planet = new Planet();
@@ -129,12 +154,17 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(theirAmountSelect, textPrefab, theirAmountPanel, 10);
         PopulateNumberPanel(myInventoryAmounts, textPrefab, myInventoryPanel, 15);
         PopulateNumberPanel(theirInventoryAmounts, textPrefab, theirInventoryPanel, 15);
+        PopulateNumberPanel(myValues, textPrefab, leftValuesPanel, 15);
+        PopulateNumberPanel(theirValues, textPrefab, rightValuesPanel, 15);
+        PopulateNumberPanel(myPrices, textPrefab, myPricesPanel, 10);
+        PopulateNumberPanel(theirPrices, textPrefab, theirPricesPanel, 10);
 
         submitButton.onClick.AddListener(MakeTrade);
 
 
         //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
+        myHold.AddHoldType("Water");
         myHold.AddToHold("Dirt", 100);
         //</FOR TESTING>
     }
@@ -148,15 +178,17 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 ShowAgentsInRange();
                 centerPanel.gameObject.SetActive(false);
+                leftTitleBar.gameObject.SetActive(false);
             }
             else if (!isLeftOff && isRightOff)
             {
-                Time.timeScale = 1;
+                Overseer.Main.Unpause();
                 leftPanel.anchoredPosition = leftOffPosition;
                 isLeftOff = true;
                 clearPanel(buttonListLeft);
                 clearNumberPanel(myInventoryAmounts);
                 centerPanel.gameObject.SetActive(false);
+                leftTitleBar.gameObject.SetActive(false);
             }
             else if (!isLeftOff && !isRightOff)
             {
@@ -164,6 +196,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 isRightOff = true;
                 ShowAgentsInRange();
                 centerPanel.gameObject.SetActive(false);
+                leftTitleBar.gameObject.SetActive(false);
 
                 MassClear();
                 
@@ -173,7 +206,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void ShowAgentsInRange()
     {
-        Time.timeScale = 0;                                     // Not sure this is the best way to pause the game.
+        Overseer.Main.Pause();
         leftPanel.anchoredPosition = on;
         isLeftOff = false;
 
@@ -287,6 +320,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int myCargoSize = myHold.GetCargoItems().Count;
 
+        leftTitleBar.gameObject.SetActive(true);
+
         int i = 0;
 
         for (i = 0; i < otherCargoSize; i++)
@@ -297,6 +332,8 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
+            theirValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE 
+            theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
         }
 
@@ -310,6 +347,8 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
+            myValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
         }
     }
@@ -328,6 +367,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int myCargoSize = myHold.GetCargoItems().Count;
 
+        leftTitleBar.gameObject.SetActive(true);
+
         int i = 0;
 
         for (i = 0; i < otherCargoSize; i++)
@@ -338,6 +379,8 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
+            theirValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
         }
 
@@ -351,6 +394,8 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
+            myValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(()=> { Trade1(s); });
         }
     }
@@ -370,6 +415,9 @@ public class TradeMenuMk2 : MonoBehaviour
 
                 myAmountSelect[i].gameObject.SetActive(true);
                 myAmountSelect[i].text = "0";
+
+                myPrices[i].gameObject.SetActive(true);
+                myPrices[i].text = "0";
 
                 int j = i;
 
@@ -402,6 +450,9 @@ public class TradeMenuMk2 : MonoBehaviour
                 theirAmountSelect[i].gameObject.SetActive(true);
                 theirAmountSelect[i].text = "0";
 
+                theirPrices[i].gameObject.SetActive(true);
+                theirPrices[i].text = "0";
+
                 int j = i;
 
                 theirSelectorListDown[i].onClick.AddListener(() => { Decrease(j, c, false); });
@@ -420,6 +471,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private void Increase(int i, String c, bool mine)
     {
         int x = 0;
+        int y = 0;
         if (mine)
         {
             x = int.Parse(myAmountSelect[i].text);
@@ -427,6 +479,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x + 1;
                 myAmountSelect[i].text = x.ToString();
+                myPrices[i].text = (new CargoItem(c).Cost*x).ToString(); /// REPLACE
             }
         }
         else
@@ -436,6 +489,8 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x+1;
                 theirAmountSelect[i].text = x.ToString();
+                theirPrices[i].text = (new CargoItem(c).Cost*x).ToString();  /// REPLACE
+                print(theirPrices[i].text);
             }
         }
     }
@@ -450,6 +505,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x-1;
                 myAmountSelect[i].text = x.ToString();
+                myPrices[i].text = (new CargoItem(c).Cost * x).ToString();
             }
         }
         else
@@ -459,6 +515,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x - 1;
                 theirAmountSelect[i].text = x.ToString();
+                theirPrices[i].text = (new CargoItem(c).Cost * x).ToString();
             }
         }
     }
@@ -520,5 +577,7 @@ public class TradeMenuMk2 : MonoBehaviour
         clearNumberPanel(myAmountSelect);
         clearNumberPanel(theirInventoryAmounts);
         clearNumberPanel(myInventoryAmounts);
+        clearNumberPanel(myValues);
+        clearNumberPanel(theirValues);
     }
 }
