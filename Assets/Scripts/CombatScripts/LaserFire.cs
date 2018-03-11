@@ -49,7 +49,7 @@ public class LaserFire : MonoBehaviour {
     IEnumerator FireLaser()
     {
         
-        while (Input.GetButtonDown("Fire1"))
+        while (Input.GetButton("Fire1"))
         {
             Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hit;
@@ -69,12 +69,13 @@ public class LaserFire : MonoBehaviour {
 					int dmg = hit.transform.gameObject.GetComponent<AI_Enemy> ().laserDMG;
 					health -= dmg;
                     //Destroy(hit.transform.gameObject);
-					rayhit = false;
+					//rayhit = false;
 					//laser.enabled = false;
                 }
             }  
             yield return null;
+			laser.enabled = false;
         }
-        laser.enabled = false;
+       // laser.enabled = false;
     }
 }
