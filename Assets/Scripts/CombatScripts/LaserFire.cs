@@ -63,15 +63,16 @@ public class LaserFire : MonoBehaviour {
 				//laser.SetPosition(1, new Vector3(0, 0, dist + hit.distance));
 				laser.SetPosition(1, ray.GetPoint(hit.distance));
                 //Debug.Log("hit:");
-                if (hit.transform.gameObject.CompareTag("Enemy"))
-                {
-					int health = hit.transform.gameObject.GetComponent<AI_Enemy> ().health;
-					int dmg = hit.transform.gameObject.GetComponent<AI_Enemy> ().laserDMG;
-					health -= dmg;
-                    //Destroy(hit.transform.gameObject);
+				if (hit.transform.gameObject.CompareTag ("Enemy")) {
+					hit.transform.gameObject.GetComponent<AI_Enemy> ().DepleteHealth (1);
+					//Destroy(hit.transform.gameObject);
 					//rayhit = false;
 					//laser.enabled = false;
-                }
+				} else if (hit.transform.gameObject.CompareTag ("Bullet")) {
+					Destroy (hit.transform.gameObject);
+				} else if (hit.transform.gameObject.CompareTag ("Rocket")) {
+					Destroy (hit.transform.gameObject);
+				}
             }  
             yield return null;
 			laser.enabled = false;

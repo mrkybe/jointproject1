@@ -45,7 +45,7 @@ public class AI_Enemy : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		KillYourself ();
 		if (count == 0) {
 			Player = GameObject.FindGameObjectWithTag("Player");
 			count++;
@@ -130,5 +130,16 @@ public class AI_Enemy : MonoBehaviour {
 			}
 
 		}
+	}
+
+	private void KillYourself()
+	{
+		if (health <= 0)
+			Destroy (gameObject);
+	}
+
+	public void DepleteHealth(int dmg)
+	{
+		health -= dmg;
 	}
 }
