@@ -18,6 +18,16 @@ public class PlayerController : MonoBehaviour
 	private LaserFire lf;
 	private Rocket rk;
     // Use this for initialization
+	public AudioClip shootSound;
+
+	private AudioSource source;
+
+
+	void Awake(){
+
+		source = GetComponent <AudioSource> ();
+	}
+
     void Start()
     {
         fire = GetComponent<Fire>();
@@ -30,6 +40,7 @@ public class PlayerController : MonoBehaviour
 		//&& fire.enabled == true)
 		if (Input.GetButtonDown ("LB") && fire.enabled == true) {
 			Debug.Log ("Switching");
+			source.PlayOneShot (shootSound);
 			fire.enabled = false;
 			lf.enabled = true;
 			rk.enabled = false;
@@ -41,6 +52,7 @@ public class PlayerController : MonoBehaviour
 			fire.enabled = false;
 			lf.enabled = false;
 			rk.enabled = true;
+			source.PlayOneShot (shootSound);
 			//fire.speed = 3f;
 			//fire.ammo = fire.bullet;
 		}
@@ -50,6 +62,7 @@ public class PlayerController : MonoBehaviour
 			fire.enabled = true;
 			lf.enabled = false;
 			rk.enabled = false;
+			source.PlayOneShot (shootSound);
 		}
     }
 
