@@ -59,7 +59,6 @@ namespace Assets.Scripts.Classes.Mobile {
         [SerializeField]
         protected bool isAffectedByGravity;
         protected PilotInterface pilot;
-        static public bool inTime;
         private Vector3 gravityVector;
 
         public Rigidbody MyRigidbody;
@@ -90,10 +89,36 @@ namespace Assets.Scripts.Classes.Mobile {
 
         private void Start ()
         {
-            inTime = true;
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetSensorRange(SensorRange);
+        }
+
+
+        private Vector3 savedVelocity = Vector3.zero;
+        private Vector3 savedAngularVelocity = Vector3.zero;
+        public void Pause()
+        {
+            savedVelocity = MyRigidbody.velocity;
+            savedAngularVelocity = MyRigidbody.angularVelocity;
+            MyRigidbody.freezeRotation = true;
+            MyRigidbody.velocity = Vector3.zero;
+            MyRigidbody.angularVelocity = Vector3.zero;
+            if (pilot)
+            {
+                pilot.Pause();
+            }
+        }
+
+        public void Unpause()
+        {
+            MyRigidbody.freezeRotation = false;
+            MyRigidbody.velocity = savedVelocity;
+            MyRigidbody.angularVelocity = savedAngularVelocity;
+            if (pilot)
+            {
+                pilot.Unpause();
+            }
         }
 
         // Update is called once per frame
@@ -113,7 +138,7 @@ namespace Assets.Scripts.Classes.Mobile {
 
         private void Update ()
         {
-            if (inTime && pilot)
+            if (!Overseer.Main.IsOvermapPaused() && pilot)
             {
                 UpdateDerivatives();
 

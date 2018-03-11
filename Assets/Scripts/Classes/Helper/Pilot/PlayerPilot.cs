@@ -45,5 +45,15 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             // Game Over!
             //throw new NotImplementedException();
         }
+
+        public override void Pause()
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void Unpause()
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

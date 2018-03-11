@@ -46,5 +46,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         {
             // a winner is you!
         }
+
+        public abstract void Pause();
+        public abstract void Unpause();
     }
 }

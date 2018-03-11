@@ -133,10 +133,7 @@ namespace Assets.Scripts.Classes.Static {
 
         private new void FixedUpdate()
         {
-            if (inTime)
-            {
-            
-            }
+
         }
 
         private void TickBuildings(int multiplier = 1)
