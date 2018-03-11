@@ -356,15 +356,18 @@ namespace Assets.Scripts.Classes.WorldSingleton
         }
 
         // Update is called once per frame
+        private bool pausekey = false;
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && IsOvermapPaused())
-            {
-                UnpauseOvermap();
-            }
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsOvermapPaused())
+            if (Input.GetKeyDown(KeyCode.Space) && !pausekey)
             {
                 PauseOvermap();
+                pausekey = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space) && pausekey)
+            {
+                UnpauseOvermap();
+                pausekey = false;
             }
         }
         

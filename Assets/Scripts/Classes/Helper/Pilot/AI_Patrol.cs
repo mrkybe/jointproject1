@@ -306,7 +306,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             // Basically, if we're a pirate, check whether we're hunting for our next victim and set this ship to be our new target if we are.
             if (AttackTarget != null && AttackTarget.Value == null && AttackTargetMIA != null && AttackTargetMIA.Value == null && FreshKill != null)
             {
-                if (contact.Alive && contact.GetScaryness(shipScript.Value) < Bravery.Value && !FreshKill.Value && contact.Pilot.Faction.HostileWith(Faction))
+                bool scary = contact.GetScaryness(shipScript.Value) < Bravery.Value;
+                bool hostile = contact.Pilot.Faction.HostileWith(Faction);
+                if (contact.Alive && scary && !FreshKill.Value && hostile)
                 {
                     AttackTarget.Value = contact;
                 }
