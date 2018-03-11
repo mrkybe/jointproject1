@@ -132,8 +132,11 @@ public class TradeMenuMk2 : MonoBehaviour
 
         submitButton.onClick.AddListener(MakeTrade);
 
+
+        //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
         myHold.AddToHold("Dirt", 100);
+        //</FOR TESTING>
     }
 
 
@@ -463,38 +466,44 @@ public class TradeMenuMk2 : MonoBehaviour
     private void MakeTrade()
     {
         int i = 0;
+        int j = 0;
         int x = 0;
+        int y = 0;
         for (i = 0; i < myAmountSelect.Count; i++)
         {
-            if (myAmountSelect[i].gameObject.activeInHierarchy)
+            for (j = 0; j < theirAmountSelect.Count; j++)
             {
-                x = int.Parse(myAmountSelect[i].text);
-                String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
-                if (x <= myHold.GetAmountInHold(e))
+                if (myAmountSelect[i].gameObject.activeInHierarchy && theirAmountSelect[j].gameObject.activeInHierarchy)
                 {
-                    if (otherHold.Contains(e))
+                    x = int.Parse(myAmountSelect[i].text);
+                    y = int.Parse(theirAmountSelect[j].text);
+                    String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
+                    String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
+                    if (x <= myHold.GetAmountInHold(e) && y <= otherHold.GetAmountInHold(f))
                     {
-                        myHold.AddToHold(e, -x);
-                        otherHold.AddToHold(e, x);
+                        if (otherHold.Contains(e) && myHold.Contains(f))
+                        {
+                            myHold.AddToHold(e, -x);
+                            otherHold.AddToHold(e, x);
+                            myHold.AddToHold(f, y);
+                            otherHold.AddToHold(f, -y);
+                        }
                     }
                 }
             }
         }
-        for (i = 0; i < theirAmountSelect.Count; i++)
+
+        for (i = 0; i < myInventoryAmounts.Count; i++)
         {
-            if (theirAmountSelect[i].gameObject.activeInHierarchy)
-            {
-                x = int.Parse(theirAmountSelect[i].text);
-                String e = buttonElementListTo[i].GetComponentInChildren<Text>().text;
-                if (x <= otherHold.GetAmountInHold(e))
-                {
-                    if (myHold.Contains(e))
-                    {
-                        myHold.AddToHold(e, x);
-                        otherHold.AddToHold(e, -x);
-                    }
-                }
-            }
+            String e = buttonListLeft[i].GetComponentInChildren<Text>().text;
+            int a = myHold.GetAmountInHold(e);
+            myInventoryAmounts[i].text = a.ToString();
+        }
+        for (i = 0; i < theirInventoryAmounts.Count; i++)
+        {
+            String e = buttonListRight[i].GetComponentInChildren<Text>().text;
+            int a = otherHold.GetAmountInHold(e);
+            theirInventoryAmounts[i].text = a.ToString();
         }
     }
 

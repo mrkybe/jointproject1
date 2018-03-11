@@ -42,7 +42,6 @@ public class RoamerAI : MonoBehaviour {
 		Vector3 randDirection = Random.insideUnitSphere * roamRadius;
 		randDirection.y = 0;
 		randDirection = randDirection + startPosition;
-		Debug.Log (randDirection);
 		movement = randDirection * speed;
 	}
 

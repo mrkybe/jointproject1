@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
 		rk = GetComponent<Rocket> ();
-		Debug.Log ("Health is:" + health);
+		//Debug.Log ("Health is:" + health);
     }
     private void Update()
     {
