@@ -20,6 +20,10 @@ namespace Assets.Editor {
             {
                 myTarget.SpawnSpaceshipOnOutskirts();
             }
+            if (GUILayout.Button("Toggle Cheat Movespeed"))
+            {
+                myTarget.ToggleCheatMoveShips();
+            }
 
             base.OnInspectorGUI();
         }
