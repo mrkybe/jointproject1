@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFire : MonoBehaviour {
+public class EnemyDetect : MonoBehaviour {
 
 	public GameObject Player;
 	public GameObject DetectionRange;
@@ -33,16 +33,10 @@ public class EnemyFire : MonoBehaviour {
 	void Update ()
 	{
 		if (InRange) {
-			gameObject.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
-//			//gameObject.GetComponent<AI_Enemy> ().enabled = false;
-			gameObject.transform.LookAt (Player.transform);
+
 //
 //
-//			if (Time.time > nextFire) 
-//			{
-//				nextFire = Time.time + fireRate;
-//				Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
-//			}
+//	
 
 
 
@@ -51,17 +45,26 @@ public class EnemyFire : MonoBehaviour {
 			//gameObject.GetComponent<AI_Enemy> ().enabled = true;
 		}
 	}
+	public void OnTriggerEnter (Collider col)
+	{
+		//Debug.Log (col.name);
+		if (col.name == "Combat_ship_player")
+		{   
+			Debug.Log("Player in range");
+			InRange = true; 
+			gameObject.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 
+			gameObject.transform.LookAt (Player.transform);
+
+
+		}
+	}
 
 	public void OnTriggerStay (Collider col)
 	{
-		Debug.Log (col.name);
-		if (col.name == "Combat_ship_player")
-		{
-			InRange = true; 
-
-	
-			//Debug.Log("Player in range");
+		if (col.name == "Combat_ship_player") {
+			
+			Debug.Log("11");
 		}
 	}
 
