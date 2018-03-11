@@ -11,6 +11,10 @@ public class AI_Enemy : MonoBehaviour {
 	public float xMin;
 	public float zMin;
 	public int health = 3;
+	public int kineticDMG = 2;
+	public int laserDMG = 3;
+	public int rocketDMG = 4;
+
 
 	private float x;
 	private float z;
@@ -79,9 +83,26 @@ public class AI_Enemy : MonoBehaviour {
 	{
 		if (other.gameObject.CompareTag("Bullet"))
 		{
-			health--;
+			health = health - kineticDMG;
 			Destroy (other.gameObject);
-			if (health == 0) {
+			if (health < 0) {
+				Destroy (gameObject);
+			}
+		}
+
+		if (other.gameObject.CompareTag("Laser"))
+		{
+			health = health - laserDMG;
+			Destroy (other.gameObject);
+			if (health < 0) {
+				Destroy (gameObject);
+			}
+		}
+		if (other.gameObject.CompareTag("Rocket"))
+		{
+			health = health - rocketDMG;
+			Destroy (other.gameObject);
+			if (health < 0) {
 				Destroy (gameObject);
 			}
 		}
