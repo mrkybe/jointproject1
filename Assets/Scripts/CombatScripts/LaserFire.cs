@@ -58,10 +58,10 @@ public class LaserFire : MonoBehaviour {
             {
 				rayhit = true;
 				laser.enabled = true;
-				float dist = transform.InverseTransformVector(transform.position - hit.point).magnitude;
-				laser.SetPosition(1, new Vector3(0, 0, dist + hit.distance));
-				//laser.SetPosition(0, ray.origin);
-				//laser.SetPosition(1, ray.GetPoint(hit.distance));
+				//float dist = transform.InverseTransformVector(transform.position - hit.point).magnitude;
+				laser.SetPosition(0, ray.origin);
+				//laser.SetPosition(1, new Vector3(0, 0, dist + hit.distance));
+				laser.SetPosition(1, ray.GetPoint(hit.distance));
                 Debug.Log("hit:");
                 if (hit.transform.gameObject.CompareTag("Enemy"))
                 {
