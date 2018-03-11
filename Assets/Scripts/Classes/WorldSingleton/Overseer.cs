@@ -359,12 +359,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private bool pausekey = false;
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !pausekey)
+            if (Input.GetKeyDown(KeyCode.P) && !pausekey)
             {
                 PauseOvermap();
                 pausekey = true;
             }
-            else if (Input.GetKeyDown(KeyCode.Space) && pausekey)
+            else if (Input.GetKeyDown(KeyCode.P) && pausekey)
             {
                 UnpauseOvermap();
                 pausekey = false;
