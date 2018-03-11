@@ -182,7 +182,7 @@ public class TradeMenuMk2 : MonoBehaviour
             }
             else if (!isLeftOff && isRightOff)
             {
-                Overseer.Main.Unpause();
+                Overseer.Main.UnpauseOvermap();
                 leftPanel.anchoredPosition = leftOffPosition;
                 isLeftOff = true;
                 clearPanel(buttonListLeft);
@@ -203,51 +203,6 @@ public class TradeMenuMk2 : MonoBehaviour
             }
         }
     }
-
-    private void ShowAgentsInRange()
-    {
-        Overseer.Main.Pause();
-        leftPanel.anchoredPosition = on;
-        isLeftOff = false;
-
-        List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
-        List<Planet> planetsInRange = ship.GetInInteractionRange<Planet>();
-
-        int i = 0;
-
-        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)
-        {
-            for (i = 0; i < planetsInRange.Count; i++)
-            {
-                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].name;
-                buttonListLeft[i].gameObject.SetActive(true);
-                String t = buttonListLeft[i].GetComponentInChildren<Text>().text;
-                buttonListLeft[i].onClick.AddListener(() => { OpenInventoryPlanet(t); });
-            }
-            int j = 0;
-            for (j = 0; j < shipsInRange.Count; j++)
-            {
-                buttonListLeft[j+i].GetComponentInChildren<Text>().text = shipsInRange[j].name;
-                buttonListLeft[j+i].gameObject.SetActive(true);
-                String t = buttonListLeft[i+i].GetComponentInChildren<Text>().text;
-                buttonListLeft[j+i].onClick.AddListener(() => { OpenInventoryShip(t); });
-            }
-            for (i = planetsInRange.Count + shipsInRange.Count; i < buttonListLeft.Count; i++)
-            {
-                  buttonListLeft[i].gameObject.SetActive(false);
-            }
-        }
-        else if (shipsInRange.Count + planetsInRange.Count == 0)
-        {
-            for (i = 0; i < 15; i++)
-            {
-                string nullstring = "";
-                buttonListLeft[i].GetComponentInChildren<Text>().text = nullstring;
-                buttonListLeft[i].gameObject.SetActive(false);
-            }
-        }
-    }
-    
 
     private void clearPanel(List<Button> buttonList)
     {
@@ -303,6 +258,69 @@ public class TradeMenuMk2 : MonoBehaviour
             v.transform.SetParent(panel, true);
             v.transform.localScale = t.transform.localScale;
             v.gameObject.SetActive(false);
+        }
+    }
+
+    private void ShowAgentsInRange()
+    {
+        Overseer.Main.PauseOvermap();
+        leftPanel.anchoredPosition = on;
+        isLeftOff = false;
+
+        List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
+        List<Planet> planetsInRange = ship.GetInInteractionRange<Planet>();
+        Faction myFaction = ship.Pilot.Faction;
+
+        int i = 0;
+
+        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)
+        {
+            for (i = 0; i < planetsInRange.Count; i++)
+            {
+                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].name;
+                buttonListLeft[i].gameObject.SetActive(true);
+                String t = buttonListLeft[i].GetComponentInChildren<Text>().text;
+                buttonListLeft[i].onClick.AddListener(() => { OpenInventoryPlanet(t); });
+                if (planetsInRange[i].Faction.HostileWith(myFaction))
+                {
+                    buttonListLeft[i].interactable = false;
+
+                }
+                ColorBlock cb = buttonListLeft[i].colors;
+                cb.normalColor = planetsInRange[i].Faction.ColorPrimary;
+                cb.disabledColor = cb.normalColor * 0.5f;
+                buttonListLeft[i].colors = cb;
+            }
+            int j = 0;
+            for (j = 0; j < shipsInRange.Count; j++)
+            {
+                buttonListLeft[j + i].GetComponentInChildren<Text>().text = shipsInRange[j].name;
+                buttonListLeft[j + i].gameObject.SetActive(true);
+                String t = buttonListLeft[i + i].GetComponentInChildren<Text>().text;
+                buttonListLeft[j + i].onClick.AddListener(() => { OpenInventoryShip(t); });
+                if (shipsInRange[j].Pilot.Faction.HostileWith(myFaction))
+                {
+                    buttonListLeft[i + j].interactable = false;
+                    
+                }
+                ColorBlock cb = buttonListLeft[i + j].colors;
+                cb.normalColor = shipsInRange[j].Pilot.Faction.ColorPrimary;
+                cb.disabledColor = cb.normalColor * 0.5f;
+                buttonListLeft[i + j].colors = cb;
+            }
+            for (i = planetsInRange.Count + shipsInRange.Count; i < buttonListLeft.Count; i++)
+            {
+                buttonListLeft[i].gameObject.SetActive(false);
+            }
+        }
+        else if (shipsInRange.Count + planetsInRange.Count == 0)
+        {
+            for (i = 0; i < 15; i++)
+            {
+                string nullstring = "";
+                buttonListLeft[i].GetComponentInChildren<Text>().text = nullstring;
+                buttonListLeft[i].gameObject.SetActive(false);
+            }
         }
     }
 
@@ -471,7 +489,6 @@ public class TradeMenuMk2 : MonoBehaviour
     private void Increase(int i, String c, bool mine)
     {
         int x = 0;
-        int y = 0;
         if (mine)
         {
             x = int.Parse(myAmountSelect[i].text);
@@ -505,7 +522,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x-1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (new CargoItem(c).Cost * x).ToString();
+                myPrices[i].text = (new CargoItem(c).Cost * x).ToString();   /// REPLACE
             }
         }
         else
@@ -515,7 +532,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x - 1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (new CargoItem(c).Cost * x).ToString();
+                theirPrices[i].text = (new CargoItem(c).Cost * x).ToString();   /// REPLACE
             }
         }
     }
@@ -524,6 +541,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         int i = 0;
         int j = 0;
+        bool traded = false;
         int x = 0;
         int y = 0;
         for (i = 0; i < myAmountSelect.Count; i++)
@@ -544,10 +562,24 @@ public class TradeMenuMk2 : MonoBehaviour
                             otherHold.AddToHold(e, x);
                             myHold.AddToHold(f, y);
                             otherHold.AddToHold(f, -y);
+                            traded = true;
                         }
                     }
                 }
             }
+        }
+        if (traded)
+        {
+            clearPanel(buttonElementListFrom);
+            clearPanel(buttonElementListTo);
+            clearPanel(theirSelectorListDown);
+            clearPanel(theirSelectorListUp);
+            clearPanel(mySelectorListDown);
+            clearPanel(mySelectorListUp);
+            clearNumberPanel(myAmountSelect);
+            clearNumberPanel(theirAmountSelect);
+            clearNumberPanel(theirPrices);
+            clearNumberPanel(myPrices);
         }
 
         for (i = 0; i < myInventoryAmounts.Count; i++)

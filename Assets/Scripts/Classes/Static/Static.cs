@@ -45,7 +45,7 @@ namespace Assets.Scripts.Classes.Static
 
         }
 
-        public void Unpause()
+        public void UnpauseOvermap()
         {
 
         }
