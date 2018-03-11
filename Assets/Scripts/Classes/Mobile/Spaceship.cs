@@ -92,6 +92,10 @@ namespace Assets.Scripts.Classes.Mobile {
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetSensorRange(SensorRange);
+            if (Overseer.Main.IsOvermapPaused())
+            {
+                Pause();
+            }
         }
 
 
