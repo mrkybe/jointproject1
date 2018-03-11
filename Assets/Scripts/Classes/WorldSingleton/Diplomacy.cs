@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Classes.Helper.Pilot;
 using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 
@@ -162,7 +164,15 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
-        public enum BattleResult { ATTACK_WIN, TIE, DEFEND_WIN}
+        private Spaceship player_spaceship;
+        private Spaceship ai_spaceship;
+        public IEnumerator ResolveShipCombatWithPlayer()
+        {
+
+            return null;
+        }
+
+        public enum BattleResult { ATTACK_WIN, TIE, DEFEND_WIN, PLAYER_COMBAT}
         /// <summary>
         /// Makes two ships fight and returns who did the best.
         /// </summary>
@@ -171,6 +181,23 @@ namespace Assets.Scripts.Classes.WorldSingleton
         /// <returns></returns>
         public BattleResult ResolveShipCombat(Spaceship attacker_ship, Spaceship defender_ship)
         {
+            if (attacker_ship.Pilot.GetType() == typeof(PlayerPilot) || defender_ship.Pilot.GetType() == typeof(PlayerPilot))
+            {
+                Spaceship player_spaceship;
+                Spaceship ai_spaceship;
+                player_spaceship = attacker_ship.Pilot.GetType() == typeof(PlayerPilot)
+                    ? attacker_ship
+                    : defender_ship;
+                ai_spaceship = attacker_ship.Pilot.GetType() == typeof(AI_Patrol)
+                    ? attacker_ship
+                    : defender_ship;
+
+                global::CombatController controller = GetComponent<CombatController>();
+                controller.CombatStart();
+
+                return BattleResult.PLAYER_COMBAT;
+            }
+
             IEnumerable<Spaceship> ship1_allies = attacker_ship.GetInInteractionRange<Spaceship>().Where(x => x.Pilot.Faction == attacker_ship.Pilot.Faction);
             IEnumerable<Spaceship> ship2_allies = defender_ship.GetInInteractionRange<Spaceship>().Where(x => x.Pilot.Faction == defender_ship.Pilot.Faction);
 
