@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             }
             else
             {
-                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instace!");
+                Debug.Log("-WARNING: could not AddToHold(" + type + ") as it does not exist in this instance!");
             }
         }
 
@@ -204,6 +205,11 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         private static int Clamp01(int value)
         {
             return Mathf.Clamp(value, 0, int.MaxValue);
+        }
+
+        public int GetMoneyValue()
+        {
+            return _cargoItems.Sum(x => x.Cost);
         }
     }
 }

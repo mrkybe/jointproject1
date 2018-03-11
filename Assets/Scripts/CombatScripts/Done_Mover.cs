@@ -10,11 +10,24 @@ public class Done_Mover : MonoBehaviour
 		Destroy (gameObject, 3f);
 		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
-	void OnCollisionEnter(Collision col)
+//	void OnCollisionEnter(Collision col)
+//	{
+//		if (col.gameObject.CompareTag ("Enemy")) {
+//			Destroy (gameObject);
+//			Destroy (col.gameObject);
+//		}
+//	}
+
+
+	void OnTriggerEnter(Collider colidedObj)
 	{
-		if (col.gameObject.CompareTag ("Enemy")) {
+		Debug.Log (colidedObj.name);
+		if (colidedObj.name == "Roamer(Clone)") {
 			Destroy (gameObject);
-			Destroy (col.gameObject);
+			Destroy (colidedObj.gameObject);
+		
 		}
+
+	
 	}
 }

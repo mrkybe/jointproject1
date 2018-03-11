@@ -63,7 +63,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot
         public override TaskStatus OnUpdate()
         {
             float stoppingDistanceNew = ((rigidbody.velocity.sqrMagnitude) /
-                                         (2 * rigidbody.mass * Shipscript.EngineAcceleration * Time.fixedDeltaTime)) * 1.05f;
+                                            (2 * rigidbody.mass * Shipscript.EngineAcceleration *
+                                            Time.fixedDeltaTime)) * 1.05f;
             stoppingDistance = (stoppingDistanceNew + stoppingDistance) / 2;
 
             if (TargetSpaceship.Value != null)
@@ -76,50 +77,62 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                 Vector3 stoppingOffset = (this.transform.position - targetPosition).normalized * StopShort.Value;
                 targetPosition += stoppingOffset;
             }
-            Vector2 stick = new Vector2();
-            float targetAngle = Vector3.Angle((transform.forward).normalized, (targetPosition - transform.position).normalized);
-            if (isLeft(transform.position, transform.position + transform.forward * 500, targetPosition))
-            {
-                targetAngle = -targetAngle;
-            }
 
-            Vector3 temp = targetPosition - transform.position;
-            
-            stick = new Vector2(temp.x, temp.z).normalized;
-            if (AvoidPlanets.Value)
+            if (Shipscript.CheatSpeed == false)
             {
-                var planets = Shipscript.GetInSensorRange<Planet>();
-                if (planets.Count > 0)
+                Vector2 stick = new Vector2();
+                float targetAngle = Vector3.Angle((transform.forward).normalized,
+                    (targetPosition - transform.position).normalized);
+                if (isLeft(transform.position, transform.position + transform.forward * 500, targetPosition))
                 {
-                    Vector3 pos1 = transform.position;
-                    Vector3 pos2 = transform.position + transform.forward;
-                    Vector3 pushVector = Vector3.zero;
-                    foreach (var p in planets)
-                    {
-                        Vector3 ppos = Math3d.ProjectPointOnLine(pos1, pos2, p.transform.position);
-                        int result = Math3d.PointOnWhichSideOfLineSegment(pos1, pos2, ppos);
-                        float mul = 0;
-                        if (result == 2 || result == 1)
-                        {
-                             mul = 1 - Mathf.Clamp01(Vector3.Distance(p.transform.position, transform.position) / (Shipscript.SensorRange * AvoidDistance.Value));
-                        }
-                        Vector3 dir = (p.transform.position - transform.position).normalized *  mul;
-                        pushVector += dir;
-                    }
-                    pushVector /= planets.Count;
-                    stick += new Vector2(pushVector.x, pushVector.z) * -AvoidStrength.Value;
-                    stick = stick.normalized;
+                    targetAngle = -targetAngle;
                 }
+
+                Vector3 temp = targetPosition - transform.position;
+
+                stick = new Vector2(temp.x, temp.z).normalized;
+                if (AvoidPlanets.Value)
+                {
+                    var planets = Shipscript.GetInSensorRange<Planet>();
+                    if (planets.Count > 0)
+                    {
+                        Vector3 pos1 = transform.position;
+                        Vector3 pos2 = transform.position + transform.forward;
+                        Vector3 pushVector = Vector3.zero;
+                        foreach (var p in planets)
+                        {
+                            Vector3 ppos = Math3d.ProjectPointOnLine(pos1, pos2, p.transform.position);
+                            int result = Math3d.PointOnWhichSideOfLineSegment(pos1, pos2, ppos);
+                            float mul = 0;
+                            if (result == 2 || result == 1)
+                            {
+                                mul = 1 - Mathf.Clamp01(Vector3.Distance(p.transform.position, transform.position) /
+                                                        (Shipscript.SensorRange * AvoidDistance.Value));
+                            }
+                            Vector3 dir = (p.transform.position - transform.position).normalized * mul;
+                            pushVector += dir;
+                        }
+                        pushVector /= planets.Count;
+                        stick += new Vector2(pushVector.x, pushVector.z) * -AvoidStrength.Value;
+                        stick = stick.normalized;
+                    }
+                }
+
+
+                ControlStick.Value = stick;
+                float dot = Mathf.Clamp(Vector3.Dot(temp, transform.forward), -1f, 1f);
+                float d2 = Mathf.Max(dot, Shipscript.Grip);
+                TargetSpeed.Value = Mathf.Clamp(d2 * MaxSpeed.Value, 0f, MaxSpeed.Value);
             }
-
-            Debug.DrawLine(transform.position, targetPosition, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
-            Debug.DrawLine(transform.position, transform.position + transform.forward, Color.white, BehaviorManager.instance.UpdateIntervalSeconds);
-
-            ControlStick.Value = stick;
-            float dot = Mathf.Clamp(Vector3.Dot(temp, transform.forward), -1f, 1f);
-            float d2 = Mathf.Max(dot, Shipscript.Grip);
-            TargetSpeed.Value = Mathf.Clamp(d2 * MaxSpeed.Value, 0f, MaxSpeed.Value);
-
+            else
+            {
+                Vector3 direction = (targetPosition - transform.position);
+                if (direction.magnitude > 1)
+                {
+                    direction.Normalize();
+                }
+                transform.position += direction * MaxSpeed.Value * Time.deltaTime * 10f;
+            }
             if (SlowArrive.Value)
             {
                 Vector3 proj = Math3d.ProjectPointOnLine(transform.position, transform.forward, targetPosition);
@@ -145,6 +158,11 @@ namespace Assets.Scripts.Classes.Helper.Pilot
                     return TaskStatus.Success;
                 }
             }
+
+            Debug.DrawLine(transform.position, targetPosition, Color.white,
+                BehaviorManager.instance.UpdateIntervalSeconds);
+            Debug.DrawLine(transform.position, transform.position + transform.forward, Color.white,
+                BehaviorManager.instance.UpdateIntervalSeconds);
 
             return TaskStatus.Running;
         }

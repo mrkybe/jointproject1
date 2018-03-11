@@ -41,6 +41,9 @@ namespace Assets.Scripts.Classes.Mobile {
 
         public float EngineForce = 0;
 
+        [SerializeField]
+        public bool CheatSpeed = false;
+
         private float targetSpeed;
         private float throttle_input;
         private float old_throttleInput;

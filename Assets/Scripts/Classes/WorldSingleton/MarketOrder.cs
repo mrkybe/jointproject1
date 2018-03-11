@@ -122,6 +122,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             return orderStatus;
         }
+
+        public MarketOrder Copy()
+        {
+            return new MarketOrder(origin, destination, item.Copy());
+        }
     }
 
     /// <summary>
