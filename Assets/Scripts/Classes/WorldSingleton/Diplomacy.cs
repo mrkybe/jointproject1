@@ -163,9 +163,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
             }
         }
-
-        private Spaceship player_spaceship;
-        private Spaceship ai_spaceship;
+        
         public IEnumerator ResolveShipCombatWithPlayer()
         {
 
@@ -193,7 +191,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                     : defender_ship;
 
                 global::CombatController controller = GetComponent<CombatController>();
-                controller.CombatStart();
+                controller.CombatStart(player_spaceship, ai_spaceship);
 
                 return BattleResult.PLAYER_COMBAT;
             }

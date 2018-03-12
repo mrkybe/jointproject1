@@ -34,4 +34,16 @@ public class Fire : MonoBehaviour {
 		}
 	}
 
+	public void enemyFire()
+	{
+		if (Time.time > nextFire) 
+		{
+			source.PlayOneShot (shootSound);
+			nextFire = Time.time + fireRate;
+			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+
+		}
+
+	}
+
 }
