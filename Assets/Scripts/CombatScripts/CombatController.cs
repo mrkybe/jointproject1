@@ -12,6 +12,8 @@ public class CombatController : MonoBehaviour {
     public GameObject combatField;
     public GameObject ai_player;
     public GameObject combat_player;
+	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
+
 
     private bool flag = false;
 	private int depletion = 0;
@@ -24,10 +26,16 @@ public class CombatController : MonoBehaviour {
 	private LineRenderer lr;
 	private Spaceship playerSpaceship;
 	private Spaceship enemySpaceship;
+	private Spaceship playerTester;
+	private Spaceship[] enemyTesters;
 	private Overseer o;
+	private GameObject[] enemies;
+
+	public static CombatController instance;
     // Use this for initialization
     void Start()
     {
+		instance = this;
 		o = GetComponent<Overseer> ();
         move = combat_player.GetComponent<Move>();
         fire = combat_player.GetComponent<Fire>();
@@ -35,17 +43,23 @@ public class CombatController : MonoBehaviour {
         lf = combat_player.GetComponent<LaserFire>();
 		lr = combat_player.GetComponent<LineRenderer> ();
 		pc = combat_player.GetComponent<PlayerController> ();
+
     }
     ///<summary>
     /// Checks every frame if player has pressed the corresponding button that switches between fire and laser fire scripts.
     /// This is how we will handle "switching" between weapons.
     ///</summary>
+	/// 
     private void Update()
     {
+		playerTester = ai_player.GetComponent<Spaceship> ();
+		enemyTesters = GameObject.FindObjectsOfType<Spaceship> ();
+		int rando = Random.Range (0, enemyTesters.Length);
+		Spaceship tempEnemy = enemyTesters [rando];
 		if (Input.GetButtonDown ("Y") && flag == false) {
-			CombatStart ();
+			CombatStart (playerTester, tempEnemy);
 		} else if (Input.GetButtonDown ("Y") && flag == true) {
-			CombatEnd ();
+			CombatEnd (COMBAT_RESULT.TESTING);
 		}
     }
     ///<summary>
@@ -76,8 +90,9 @@ public class CombatController : MonoBehaviour {
 		pc.health = playerSpaceship.HullHealth;
 	}
 
-	public void CombatEnd()
+	public void CombatEnd(COMBAT_RESULT result)
 	{
+		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
 		flag = false;
 		mainCam.SetActive (true);
@@ -87,8 +102,11 @@ public class CombatController : MonoBehaviour {
 		combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
 		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
-		depletion = 100 - pc.health;
+		depletion = playerSpaceship.HullHealth - pc.health;
 		playerSpaceship.TakeDamage (depletion, enemySpaceship);
 		enemySpaceship.TakeDamage (1000, playerSpaceship);
+
+		foreach (GameObject enemy in enemies)
+			Destroy(enemy);
 	}
 }

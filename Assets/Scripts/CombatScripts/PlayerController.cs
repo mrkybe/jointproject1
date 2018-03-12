@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
 	public AudioClip shootSound;
 
 	private AudioSource source;
+	private CombatController combatController;
 
 
 	void Awake(){
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
 		rk = GetComponent<Rocket> ();
+		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 		//Debug.Log ("Health is:" + health);
     }
     private void Update()
@@ -69,5 +71,13 @@ public class PlayerController : MonoBehaviour
 	public void Depletion(int damage)
 	{
 		health -= damage;
+	}
+
+	public void Dead()
+	{
+		if (health <= 0) {
+			health = 0;
+			combatController.CombatEnd (CombatController.COMBAT_RESULT.PLAYER_DEATH);
+		}
 	}
 }

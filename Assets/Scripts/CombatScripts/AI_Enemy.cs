@@ -25,7 +25,6 @@ public class AI_Enemy : MonoBehaviour {
 	private float angulo;
 	private float dist;
 	private Fire f;
-
 	private int count = 0 ;
 
 
@@ -138,12 +137,18 @@ public class AI_Enemy : MonoBehaviour {
 
 	private void KillYourself()
 	{
-		if (health <= 0)
+		if (health <= 0) {
+			if (gameObject.name.Equals ("Bob")) {
+				CombatController.instance.CombatEnd (CombatController.COMBAT_RESULT.ENEMY_DEATH);
+			}
 			Destroy (gameObject);
+		}
+		
 	}
 
 	public void DepleteHealth(int dmg)
 	{
 		health -= dmg;
 	}
+		
 }
