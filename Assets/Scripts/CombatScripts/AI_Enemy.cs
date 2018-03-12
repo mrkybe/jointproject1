@@ -24,6 +24,7 @@ public class AI_Enemy : MonoBehaviour {
 	private float tiempo;
 	private float angulo;
 	private float dist;
+	private Fire f;
 
 	private int count = 0 ;
 
@@ -37,7 +38,7 @@ public class AI_Enemy : MonoBehaviour {
 		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
 		transform.localRotation = Quaternion.Euler( 0, angulo, 0);
 		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
-
+		f = GetComponent<Fire> ();
 
 		Debug.DrawLine (transform.position, transform.forward);
 
@@ -47,6 +48,7 @@ public class AI_Enemy : MonoBehaviour {
 	void Update () {
 		KillYourself ();
 		if (count == 0) {
+			
 			Player = GameObject.FindGameObjectWithTag("Player");
 			count++;
 		}
@@ -54,7 +56,9 @@ public class AI_Enemy : MonoBehaviour {
 		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
 		float step = speed * Time.deltaTime;
 		if (dist < radius) {
+			
 			gameObject.transform.LookAt (Player.transform);
+			f.enemyFire ();
 			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
 		} else {
 
