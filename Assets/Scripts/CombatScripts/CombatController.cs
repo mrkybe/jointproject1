@@ -89,6 +89,6 @@ public class CombatController : MonoBehaviour {
 		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
 		depletion = 100 - pc.health;
 		playerSpaceship.TakeDamage (depletion, enemySpaceship);
-		enemySpaceship.TakeDamage(1000, playerSpaceship)
+		enemySpaceship.TakeDamage (1000, playerSpaceship);
 	}
 }
