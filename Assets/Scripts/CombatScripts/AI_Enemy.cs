@@ -26,6 +26,16 @@ public class AI_Enemy : MonoBehaviour {
 	private float dist;
 	private Fire f;
 	private int count = 0 ;
+	public AudioClip shootSound;
+
+	private AudioSource source;
+
+
+	void Awake(){
+
+		source = GetComponent <AudioSource> ();
+	}
+
 
 
 	public GameObject Player;
@@ -58,6 +68,7 @@ public class AI_Enemy : MonoBehaviour {
 			
 			gameObject.transform.LookAt (Player.transform);
 			f.enemyFire ();
+			source.PlayOneShot (shootSound);
 			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
 		} else {
 
