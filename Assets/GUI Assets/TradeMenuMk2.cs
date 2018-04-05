@@ -87,7 +87,7 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
         leftButtonPanel = GameObject.Find("Left Panel Buttons").GetComponent<RectTransform>();
         rightButtonPanel = GameObject.Find("Right Panel Buttons").GetComponent<RectTransform>();
-        centerPanel = GameObject.Find("Center Panel").GetComponent<RectTransform>();
+        centerPanel = GameObject.Find("Trade Center Panel").GetComponent<RectTransform>();
         myElementPanel = GameObject.Find("My Element List").GetComponent<RectTransform>();
         theirElementPanel = GameObject.Find("Their Element List").GetComponent<RectTransform>();
         mySelectorUp = GameObject.Find("My Selector Up").GetComponent<RectTransform>();
@@ -273,7 +273,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int i = 0;
 
-        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)
+        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)       // THIS WILL PROBABLY NEVER CAUSE A PROBLEM, BUT IF IT DOES, BLAME MARK WAHLBERG.
         {
             for (i = 0; i < planetsInRange.Count; i++)
             {
@@ -322,6 +322,10 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[i].gameObject.SetActive(false);
             }
         }
+        else
+        {
+            Debug.Log("TOO MANY NEARBY AGENTS.  HONESTLY, I DON'T KNOW HOW THAT MANY GOT THERE");
+        }
     }
 
     private void OpenInventoryShip(String otherName)
@@ -330,7 +334,7 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel.anchoredPosition = on;
         isRightOff = false;
 
-        otherShip = GameObject.Find(otherName).GetComponentInChildren<Spaceship>();
+        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
 
         otherHold = otherShip.GetCargoHold;
 
@@ -350,9 +354,14 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE 
+            theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
             theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
+
+            ColorBlock cb = buttonListRight[i].colors;
+            cb.normalColor = Color.white;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListRight[i].colors = cb;
         }
 
         clearPanel(buttonListLeft);
@@ -365,9 +374,14 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
-            myValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
             myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
+
+            ColorBlock cb = buttonListLeft[i].colors;
+            cb.normalColor = Color.white;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListLeft[i].colors = cb;
         }
     }
 
@@ -397,9 +411,14 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
             theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
+
+            ColorBlock cb = buttonListRight[i].colors;
+            cb.normalColor = Color.white;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListRight[i].colors = cb;
         }
 
         clearPanel(buttonListLeft);
@@ -412,9 +431,14 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
-            myValues[i].text = new CargoItem(s).Cost.ToString();  /// REPLACE
+            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
             myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(()=> { Trade1(s); });
+
+            ColorBlock cb = buttonListLeft[i].colors;
+            cb.normalColor = Color.white;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListLeft[i].colors = cb;
         }
     }
 
@@ -496,7 +520,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x + 1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (new CargoItem(c).Cost*x).ToString(); /// REPLACE
+                myPrices[i].text = (myHold.GetCargoItemValue(c)*x).ToString(); /// REPLACE
             }
         }
         else
@@ -506,8 +530,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x+1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (new CargoItem(c).Cost*x).ToString();  /// REPLACE
-                print(theirPrices[i].text);
+                theirPrices[i].text = (otherHold.GetCargoItemValue(c)*x).ToString();  /// REPLACE
             }
         }
     }
@@ -522,7 +545,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x-1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (new CargoItem(c).Cost * x).ToString();   /// REPLACE
+                myPrices[i].text = (myHold.GetCargoItemValue(c) * x).ToString();   /// REPLACE
             }
         }
         else
@@ -532,7 +555,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x - 1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (new CargoItem(c).Cost * x).ToString();   /// REPLACE
+                theirPrices[i].text = (otherHold.GetCargoItemValue(c)* x).ToString();   /// REPLACE
             }
         }
     }

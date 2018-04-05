@@ -18,7 +18,7 @@ public class Enemy_Done_Mover : MonoBehaviour
 	//		}
 	//	}
 
-
+	/*
 	void OnCollisionEnter (Collision col)
 	{
 		
@@ -27,11 +27,6 @@ public class Enemy_Done_Mover : MonoBehaviour
 						col.gameObject.GetComponent<PlayerController> ().Depletion(1);
 					}
 
-	}
-	//	void OnTriggerEnter(Collider col)
-	//	{
-	//		if (col.gameObject.CompareTag ("Player")) {
-	//			col.gameObject.GetComponent<PlayerController> ().Depletion(10);
-	//		}
-	//	}
+	}*/
+
 }
