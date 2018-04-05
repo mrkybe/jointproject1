@@ -52,7 +52,7 @@ public class Move : MonoBehaviour {
 
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
         */
-		velocity = move * speed;
+		velocity = move.normalized * speed;
 	}
 	void ForceMove()
 	{
