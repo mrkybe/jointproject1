@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
-    public partial class Overseer : Static.Static
+    public partial class Overseer : MonoBehaviour
     {
         // This part of the singleton keeps track of buying and selling resources between planets along with matching orders.
 

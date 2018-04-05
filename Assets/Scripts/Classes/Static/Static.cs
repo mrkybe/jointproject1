@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.Scripts.Classes.Static
 {
     [SelectionBase]
-    public class Static : MonoBehaviour
+    public abstract class Static : MonoBehaviour
     {
         protected int loadPriority = 0;
         protected int loadPriorityInital = 5;
@@ -40,14 +40,8 @@ namespace Assets.Scripts.Classes.Static
             listOfStaticObjects.Remove(this);
         }
 
-        public void Pause()
-        {
+        public abstract void OvermapPause();
 
-        }
-
-        public void UnpauseOvermap()
-        {
-
-        }
+        public abstract void OvermapUnpause();
     }
 }

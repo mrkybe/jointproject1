@@ -257,5 +257,15 @@ namespace Assets.Scripts.Classes.Static {
             base.OnDestroy();
             listOfPlanetObjects.Remove(this);
         }
+
+        public override void OvermapPause()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OvermapUnpause()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

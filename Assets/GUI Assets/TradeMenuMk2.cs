@@ -106,7 +106,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         leftTitleBar.gameObject.SetActive(false);
 
-        ship = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
+        ship = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         centerPanel.gameObject.SetActive(false);
 

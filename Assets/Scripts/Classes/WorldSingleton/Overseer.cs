@@ -17,7 +17,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
     ///     Market.cs    - Economy,
     ///     Diplomacy.cs - Factions
     /// </summary>
-    public partial class Overseer : Static.Static
+    public partial class Overseer : MonoBehaviour
     {
         [SerializeField]
         public static GameObject Sky;
@@ -69,7 +69,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         private new void Start()
         {
-            base.Start();
             // Initialize Stuff Above
             timeScaleOriginal = Time.fixedDeltaTime;
             if(RootNode != null)
@@ -79,7 +78,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
             StartMatchingOrders();
             //TODO: AssignPlanetFactions();
             //Debug.Log("--OVERSEER LOADING COMPLETE");
-
             BehaviorManager.instance.UpdateIntervalSeconds = 0.2f;
             BehaviorManager.instance.MaxTaskExecutionsPerTick = 1;
         }
@@ -387,7 +385,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
                 foreach (Static.Static st in Static.Static.listOfStaticObjects)
                 {
-                    st.Pause();
+                    st.OvermapPause();
                 }
                 overmap_pause_count++;
             }
@@ -407,7 +405,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
                 foreach (Static.Static st in Static.Static.listOfStaticObjects)
                 {
-                    st.UnpauseOvermap();
+                    st.OvermapUnpause();
                 }
                 overmap_pause_count--;
             }

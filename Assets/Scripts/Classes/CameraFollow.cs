@@ -23,19 +23,25 @@ namespace Assets.Scripts.Classes {
             floatieness = floatieness_start;
             float maxl = 0;
             zoomSpeed = zoomSpeed / 500;
+            if (followTarget == null)
+            {
+                followTarget = GameObject.Find("PlayerShip");
+            }
         }
 	
         // Update is called once per frame
         void Update () 
         {
-        
-            floatieness = floatieness_start * ((zoom / zoomMax) * (zoom / zoomMax));
-            targetPosition = (followTarget.transform.position + offset);
-            transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1);
+            if (followTarget != null)
+            {
+                floatieness = floatieness_start * ((zoom / zoomMax) * (zoom / zoomMax));
+                targetPosition = (followTarget.transform.position + offset);
+                transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1);
 
-            zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;
-            zoom = Mathf.Clamp(zoom, 1, zoomMax);
-            //transform.position = followTarget.transform.position + offset;
+                zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;
+                zoom = Mathf.Clamp(zoom, 1, zoomMax);
+                //transform.position = followTarget.transform.position + offset;
+            }
         }
     }
 }

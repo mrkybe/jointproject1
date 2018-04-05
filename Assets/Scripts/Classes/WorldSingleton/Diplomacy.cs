@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes.WorldSingleton
 {
-    public partial class Overseer : Static.Static
+    public partial class Overseer : MonoBehaviour
     {
         [SerializeField]
         public static List<string> FactionNamesListMain;

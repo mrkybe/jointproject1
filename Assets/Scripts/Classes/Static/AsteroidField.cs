@@ -35,6 +35,16 @@ namespace Assets.Scripts.Classes.Static {
             listOfAsteroidFields.Remove(this);
         }
 
+        public override void OvermapPause()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OvermapUnpause()
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected new void DelayedLoad()
         {
         

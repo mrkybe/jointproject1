@@ -37,7 +37,7 @@ public class CombatMenu : MonoBehaviour {
         on = new Vector2(0, 0);
         leftOffPosition = new Vector2(-675, 0);
 
-        ship = GameObject.Find("AI_ship_player").GetComponent<Spaceship>();
+        ship = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
         otherShip = new Spaceship();
 
         PopulatePanel(ships, buttonPrefab, leftPanel, 15);
