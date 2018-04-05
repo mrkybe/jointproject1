@@ -72,7 +72,7 @@ public class CombatController : MonoBehaviour {
 		flag = true;
 		mainCam.SetActive (false);
 		combatCam.SetActive (true);
-		ai_player.SetActive(false);
+		//ai_player.SetActive(false);
 		combat_player.SetActive(true);
 		lr.enabled = false;
 		// move.enabled = true;
@@ -97,7 +97,7 @@ public class CombatController : MonoBehaviour {
 		flag = false;
 		mainCam.SetActive (true);
 		combatCam.SetActive (false);
-		ai_player.SetActive(true);
+		//ai_player.SetActive(true);
 		combat_player.SetActive (false);
 		combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);

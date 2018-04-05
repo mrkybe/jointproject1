@@ -30,6 +30,7 @@ public class AI_Enemy : MonoBehaviour {
 
 	private AudioSource source;
 
+	private ParticleSystem ps; 
 
 	void Awake(){
 
@@ -50,6 +51,9 @@ public class AI_Enemy : MonoBehaviour {
 		f = GetComponent<Fire> ();
 
 		Debug.DrawLine (transform.position, transform.forward);
+
+		ps = GetComponent<ParticleSystem> ();
+		ps.Stop ();
 
 	}
 
@@ -119,6 +123,7 @@ public class AI_Enemy : MonoBehaviour {
 	{
 		if (other.gameObject.CompareTag("Bullet"))
 		{
+			ps.Play ();
 			health = health - kineticDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
@@ -137,7 +142,7 @@ public class AI_Enemy : MonoBehaviour {
 		if (other.gameObject.CompareTag("Rocket"))
 		{
 			health = health - rocketDMG;
-			other.gameObject.GetComponent<ParticleSystem> ().Play();
+			//other.gameObject.GetComponent<ParticleSystem> ().Play();
 			Destroy (other.gameObject);
 			if (health < 0) {
 				Destroy (gameObject);
