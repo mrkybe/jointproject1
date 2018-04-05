@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.WorldSingleton;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,6 +14,7 @@ namespace Assets.Scripts.Classes.Helper
     /// </summary>
     class ModelSwitcher : MonoBehaviour
     {
+
         /// <summary>
         /// The state of the ship.
         /// </summary>
@@ -50,7 +52,6 @@ namespace Assets.Scripts.Classes.Helper
             mySensorCollider = this.GetComponent<SphereCollider>();
             mySpaceshipParentRigidbody = mySpaceshipScript.GetComponent<Rigidbody>();
             initialRotation = transform.localRotation;
-
             myParticleSystem.Stop();
 
             /*if (modelNumber < Meshes.Count)
@@ -147,6 +148,7 @@ namespace Assets.Scripts.Classes.Helper
         {
             State = States.DEAD;
             myParticleSystem.Play();
+            Overseer.Main.DoExplosion(this.transform.position);
             Quaternion randomSpin = Random.rotationUniform;
             //transform.rotation = Random.rotation;
 

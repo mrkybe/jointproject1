@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Assets.Scripts.Classes.Helper.Pilot;
 using Assets.Scripts.Classes.Static;
@@ -21,6 +22,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
     {
         [SerializeField]
         public static GameObject Sky;
+        
+        public static GameObject[] Explosions;
 
         private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
@@ -62,9 +65,40 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreatePlanetNodes();
             CreateSky();
             CreateMarket();
+            LoadExplosions();
 
             InvokeRepeating("TickPlanets", 1f, 1f);
             InvokeRepeating("ManagePirateCount", 1f, 1f);
+        }
+
+        private Queue<GameObject> listOfExplosionObjects = new Queue<GameObject>();
+        public void DoExplosion(Vector3 pos)
+        {
+            int which = Random.Range(0, Explosions.Length);
+            pos = pos + new Vector3(0, 5, 0);
+            GameObject exp = Instantiate(Explosions[which], pos, Quaternion.identity);
+            exp.transform.localScale = Vector3.one * 30.0f;
+            listOfExplosionObjects.Enqueue(exp);
+            Invoke("DestroyLastExplosion",10);
+        }
+
+        private void DestroyLastExplosion()
+        {
+            GameObject exp = listOfExplosionObjects.Dequeue();
+            Destroy(exp);
+        }
+        
+        private void LoadExplosions()
+        {
+            int[] numsToLoad = {3, 5, 7, 8, 9, 10, 12, 13};
+            Explosions = new GameObject[numsToLoad.Length];
+            for (int i = 0; i < numsToLoad.Length; i++)
+            {
+                string root = "Prefabs/PC/";
+                string name = "Explosion" + numsToLoad[i];
+                string path = Path.Combine(root, name);
+                Explosions[i] = (GameObject)Resources.Load(path);
+            }
         }
 
         private new void Start()
