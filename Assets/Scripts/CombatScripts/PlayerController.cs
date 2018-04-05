@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     {
 		//&& fire.enabled == true)
 		if (Input.GetButtonDown ("LB") && fire.enabled == true) {
-			Debug.Log ("Switching");
+			//Debug.Log ("Switching");
 			source.PlayOneShot (shootSound);
 			fire.enabled = false;
 			lf.enabled = true;
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 			//fire.ammo = fire.laser;
 
 		} else if (Input.GetButtonDown ("LB") && lf.enabled == true) {
-			Debug.Log ("Switching");
+			//Debug.Log ("Switching");
 			fire.enabled = false;
 			lf.enabled = false;
 			rk.enabled = true;
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 		}
 		else if (Input.GetButtonDown ("LB") && rk.enabled == true) 
 		{
-			Debug.Log ("Switching");
+			//Debug.Log ("Switching");
 			fire.enabled = true;
 			lf.enabled = false;
 			rk.enabled = false;
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.CompareTag ("Bullet")) {
+		if (other.gameObject.name.Contains("EnemyBullet")) {
 			particleSystem.Play ();
 			Depletion (1);
 			Destroy (other.gameObject);

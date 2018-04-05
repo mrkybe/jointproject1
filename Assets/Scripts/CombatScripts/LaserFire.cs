@@ -65,6 +65,8 @@ public class LaserFire : MonoBehaviour {
                 //Debug.Log("hit:");
 				if (hit.transform.gameObject.CompareTag ("Enemy")) {
 					hit.transform.gameObject.GetComponent<AI_Enemy> ().DepleteHealth (1);
+					ParticleSystem particle = hit.transform.GetComponent<ParticleSystem> ();
+					particle.Play ();
 					//Destroy(hit.transform.gameObject);
 					//rayhit = false;
 					//laser.enabled = false;
