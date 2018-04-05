@@ -30,7 +30,7 @@ public class AI_Enemy : MonoBehaviour {
 
 	private AudioSource source;
 
-	private ParticleSystem ps; 
+	private ParticleSystem ps;
 
 	void Awake(){
 

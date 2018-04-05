@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
 	private AudioSource source;
 	private CombatController combatController;
+	private ParticleSystem particleSystem;
 
 
 	void Awake(){
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
 		rk = GetComponent<Rocket> ();
 		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 		//Debug.Log ("Health is:" + health);
+		particleSystem = GetComponent<ParticleSystem>();
     }
     private void Update()
     {
@@ -78,6 +80,15 @@ public class PlayerController : MonoBehaviour
 		if (health <= 0) {
 			health = 0;
 			combatController.CombatEnd (CombatController.COMBAT_RESULT.PLAYER_DEATH);
+		}
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.CompareTag ("Bullet")) {
+			particleSystem.Play ();
+			Depletion (1);
+			Destroy (other.gameObject);
 		}
 	}
 }
