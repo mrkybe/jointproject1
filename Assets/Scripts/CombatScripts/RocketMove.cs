@@ -9,26 +9,5 @@ public class RocketMove : MonoBehaviour {
 	void Start () {
 		Destroy (gameObject, 10f);
 		GetComponent<Rigidbody>().velocity = transform.forward * speed;
-		ps = GetComponent<ParticleSystem> ();
-		ps.Stop ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	void OnCollisionEnter(Collision col)
-	{
-		ps.Play();
-		Destroy(gameObject,.5f);
-//		if (col.gameObject.CompareTag ("Enemy")) {
-//			ps.Play ();
-//			Destroy (gameObject,.5f);
-//		} else if (col.gameObject.CompareTag ("Asteroid")) {
-//			ps.Play ();
-//			Destroy (gameObject, .5f);
-//		}
-	}
-
 }

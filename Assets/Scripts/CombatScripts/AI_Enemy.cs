@@ -65,7 +65,7 @@ public class AI_Enemy : MonoBehaviour {
 			Player = GameObject.FindGameObjectWithTag("Player");
 			count++;
 		}
-		Debug.Log (Player.transform.position);
+		//Debug.Log (Player.transform.position);
 		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
 		float step = speed * Time.deltaTime;
 		if (dist < radius) {
@@ -133,6 +133,7 @@ public class AI_Enemy : MonoBehaviour {
 
 		if (other.gameObject.CompareTag("Laser"))
 		{
+			ps.Play ();
 			health = health - laserDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
@@ -141,11 +142,11 @@ public class AI_Enemy : MonoBehaviour {
 		}
 		if (other.gameObject.CompareTag("Rocket"))
 		{
+			ps.Play ();
 			health = health - rocketDMG;
-			//other.gameObject.GetComponent<ParticleSystem> ().Play();
 			Destroy (other.gameObject);
 			if (health < 0) {
-				Destroy (gameObject);
+				Destroy (gameObject,2f);
 			}
 
 		}
