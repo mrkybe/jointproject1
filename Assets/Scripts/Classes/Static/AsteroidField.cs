@@ -14,6 +14,8 @@ namespace Assets.Scripts.Classes.Static {
         List<Vector3> vertices = new List<Vector3>();
         public static List<AsteroidField> listOfAsteroidFields = new List<AsteroidField>();
         // Use this for initialization
+
+        private bool AmPaused = false;
         protected new void Start ()
         {
             base.Start();
@@ -37,12 +39,12 @@ namespace Assets.Scripts.Classes.Static {
 
         public override void OvermapPause()
         {
-            throw new System.NotImplementedException();
+            AmPaused = true;
         }
 
         public override void OvermapUnpause()
         {
-            throw new System.NotImplementedException();
+            AmPaused = false;
         }
 
         protected new void DelayedLoad()

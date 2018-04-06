@@ -276,6 +276,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
 
         public override void Unpause()
         {
+            behaviorTree.PauseWhenDisabled = false;
             behaviorTree.EnableBehavior();
         }
 

@@ -49,6 +49,8 @@ namespace Assets.Scripts.Classes.Static {
 
         private Faction faction;
 
+        private bool AmPaused = false;
+
         void Awake()
         {
             WorkerShips = new List<GameObject>();
@@ -260,12 +262,12 @@ namespace Assets.Scripts.Classes.Static {
 
         public override void OvermapPause()
         {
-            throw new NotImplementedException();
+            AmPaused = true;
         }
 
         public override void OvermapUnpause()
         {
-            throw new NotImplementedException();
+            AmPaused = false;
         }
     }
 }
