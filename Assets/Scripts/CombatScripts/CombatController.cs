@@ -6,7 +6,8 @@ using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
 
 public class CombatController : MonoBehaviour {
-    public GameObject enemySpawner;
+	public GameObject [] enemySpawners;
+	public int spawnerCount = 0;
     public GameObject mainCam;
 	public GameObject combatCam;
     public GameObject ai_player;
@@ -83,7 +84,9 @@ public class CombatController : MonoBehaviour {
 		//combatField.SetActive(true);
 		//combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
 		combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y + 20, combatCam.transform.position.z);
-		enemySpawner.GetComponent<EnemySpawner>().enabled = true;
+		for (int i = 0; i < spawnerCount; i++) {
+			enemySpawners[i].GetComponent<EnemySpawner> ().enabled = true;
+		}
 		playerSpaceship = player;
 		enemySpaceship = enemy;
 		pc.health = playerSpaceship.HullHealth;
@@ -100,7 +103,9 @@ public class CombatController : MonoBehaviour {
 		combat_player.SetActive (false);
 		//combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
-		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
+		for (int i = 0; i < spawnerCount; i++) {
+			enemySpawners[i].GetComponent<EnemySpawner> ().enabled = false;
+		}
 		depletion = playerSpaceship.HullHealth - pc.health;
 		playerSpaceship.TakeDamage (depletion, enemySpaceship);
 		enemySpaceship.TakeDamage (1000, playerSpaceship);
