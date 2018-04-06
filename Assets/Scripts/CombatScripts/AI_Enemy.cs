@@ -128,7 +128,7 @@ public class AI_Enemy : MonoBehaviour {
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12);
+			overseer.DoExplosion(transform.position, 12, 2);
 			health = health - kineticDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
@@ -139,21 +139,23 @@ public class AI_Enemy : MonoBehaviour {
 		if (other.gameObject.CompareTag("Laser"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12);
+			overseer.DoExplosion(transform.position, 12, 2);
 			health = health - laserDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
+				overseer.DoExplosion(transform.position, 12, 8);
 				Destroy (gameObject);
 			}
 		}
 		if (other.gameObject.CompareTag("Rocket"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12);
+			overseer.DoExplosion(transform.position, 12, 4);
 			health = health - rocketDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
-				Destroy (gameObject,2f);
+				overseer.DoExplosion(transform.position, 12, 8);
+				Destroy (gameObject);
 			}
 
 		}

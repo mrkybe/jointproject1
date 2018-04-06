@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.Classes;
 using Assets.Scripts.Classes.Mobile;
+using Assets.Scripts.Classes.WorldSingleton;
 using UnityEngine;
 
 
@@ -23,7 +24,8 @@ public class PlayerController : MonoBehaviour
 	private AudioSource source;
 	private CombatController combatController;
 	private ParticleSystem particleSystem;
-
+	private GameObject overseerObject;
+	private Overseer overseer;
 
 	void Awake(){
 
@@ -32,6 +34,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+		overseerObject = GameObject.Find ("Overseer");
+		overseer = overseerObject.GetComponent<Overseer> ();
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
 		rk = GetComponent<Rocket> ();
@@ -86,7 +90,7 @@ public class PlayerController : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.name.Contains("EnemyBullet")) {
-			particleSystem.Play ();
+			overseer.DoExplosion (transform.position, 12, 8);
 			Depletion (1);
 			Destroy (other.gameObject);
 		}
