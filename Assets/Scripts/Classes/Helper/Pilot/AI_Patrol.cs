@@ -39,6 +39,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private new Rigidbody rigidbody;
         public float Speed;
 
+        public int Money = 0;
 
         // Use this for initialization
         public void Awake()
@@ -236,9 +237,12 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         /// This kills the Pilot.  Sets a Flag in the Blackboard for being dead,
         /// Behavior Trees must clean up after themselves and go into their dead state.
         /// </summary>
-        public override void Die()
+        public override void Die(Spaceship killer = null)
         {
             Alive.SetValue(false);
+
+            // Tell our faction to increase the bounty on our killer
+            Faction.NotifyOfAttack(shipScript, killer);
 
             // FOR DELIVERY SHIPS, PROPAGATE ORDER FAILURE
             SharedMarketOrder myOrder = (SharedMarketOrder)behaviorTree.GetVariable("DeliveryOrder");
@@ -264,6 +268,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
                 if (killer == shipScript.Value)
                 {
                     FreshKill.Value = true;
+                    // Since we killed it, try to claim the bounty on it
+
+                    Money += Overseer.Main.ClaimBountyOn(victim);
                 }
             }
         }

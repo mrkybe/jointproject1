@@ -40,10 +40,16 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             }
         }
 
-        public override void Die()
+        public override void Die(Spaceship killer = null)
         {
             // Game Over!
+            Invoke("LoseGame", 1);
             //throw new NotImplementedException();
+        }
+
+        private void LoseGame()
+        {
+            Overseer.Main.PauseOvermap();
         }
 
         public override void Pause()

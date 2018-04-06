@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Behavior_Designer.Runtime.Variables;
+using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.Static;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,6 +24,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public enum DiplomacyTrend { WAR, PEACE, NONE, RETALIATE }
         public DiplomacyTrend MyDiplomacyTrend = DiplomacyTrend.NONE;
         private Faction nemisis = null;
+        public List<Bounty> BountyBoard = new List<Bounty>();
 
         public Faction(String name)
         {
@@ -37,6 +40,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             FactionLink link = MyLinks.FirstOrDefault(x => x.a == faction || x.b == faction);
             link.Friendlyness += amount;
+            link.Friendlyness = Mathf.Clamp(link.Friendlyness, -100, 100);
             return true;
         }
 
@@ -88,6 +92,52 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 }
             }
             return false;
+        }
+
+        public void AddBounty(Bounty b)
+        {
+            Bounty exists = BountyBoard.FirstOrDefault(x => x.Target == b.Target);
+            if (exists != null)
+            {
+                exists.Value += b.Value;
+            }
+            else
+            {
+                BountyBoard.Add(b);
+            }
+        }
+
+        public int ClaimBountyOn(Spaceship ship)
+        {
+            Bounty exists = BountyBoard.FirstOrDefault(x => x.Target == ship);
+            if (exists != null)
+            {
+                BountyBoard.Remove(exists);
+                return exists.Value;
+            }
+            if (ship.Pilot.Faction.Name == "Pirates")
+            {
+                return 5;
+            }
+            return 0;
+        }
+
+        public void NotifyOfAttack(SharedSpaceship victim, Spaceship killer)
+        {
+            AddKarma(killer.Pilot.Faction, -10);
+            AddBounty(new Bounty(killer, 10));
+        }
+    }
+
+    public class Bounty
+    {
+        public Spaceship Target;
+        public int Value;
+
+        public Bounty(Spaceship _target, int _value)
+        {
+            Target = _target;
+            Value = _value;
         }
     }
 

@@ -40,7 +40,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             set { targetFaceDirection = value; }
         }
 
-        public abstract void Die();
+        public abstract void Die(Spaceship killer = null);
 
         public virtual void NotifyKilled(Spaceship victim, Spaceship killer = null)
         {

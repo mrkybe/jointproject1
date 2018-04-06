@@ -44,11 +44,13 @@ namespace Assets.Editor
                         string s2  = "TargetSpeed : ";
                         string s3  = "Speed       : ";
                         string s4  = "Hull        : ";
+                        string s5  = "Money       : ";
 
                         s1 += string.Format("{0:0.00}", myTarget.Throttle);
                         s2 += string.Format("{0:0.00}", myTarget.TargetSpeed.Value);
                         s3 += string.Format("{0:0.00}", myTarget.Speed);
                         s4 += string.Format("{0:0.00}", mySpaceship.HullHealth);
+                        s5 += string.Format("{0:0.00}", myTarget.Money);
                         string holdString = "";
                         if (mySpaceship != null)
                         {
@@ -58,7 +60,13 @@ namespace Assets.Editor
                                 holdString = "== Main Cargohold ======\n" + hold.ToString();
                             }
                         }
-                        Handles.Label(myTarget.transform.position + Vector3.up * -2f, s1 + "\n" + s2 + "\n" + s3 + "\n" + s4 + "\n" + holdString, style);
+                        Handles.Label(myTarget.transform.position + Vector3.up * -2f,
+                            s1 + "\n" + 
+                            s2 + "\n" + 
+                            s3 + "\n" +
+                            s4 + "\n" +
+                            s5 + "\n" +
+                            holdString, style);
                     }
                 }
             }

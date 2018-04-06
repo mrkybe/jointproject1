@@ -414,7 +414,7 @@ namespace Assets.Scripts.Classes.Mobile {
             // Change apperance to destroyed.
             myModelSwitcher.BecomeGraveyard();
             Alive = false;
-            Pilot.Die();
+            Pilot.Die(killer);
         }
 
         public void DeleteSelf()

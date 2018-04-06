@@ -101,6 +101,16 @@ namespace Assets.Scripts.Classes.WorldSingleton
             }
         }
 
+        public int ClaimBountyOn(Spaceship ship)
+        {
+            int totalBounty = 0;
+            foreach (Faction f in Factions)
+            {
+                totalBounty += f.ClaimBountyOn(ship);
+            }
+            return totalBounty;
+        }
+
         private new void Start()
         {
             // Initialize Stuff Above
