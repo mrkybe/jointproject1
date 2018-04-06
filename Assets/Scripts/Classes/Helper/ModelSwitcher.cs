@@ -148,7 +148,7 @@ namespace Assets.Scripts.Classes.Helper
         {
             State = States.DEAD;
             myParticleSystem.Play();
-            Overseer.Main.DoExplosion(this.transform.position);
+            Overseer.Main.DoExplosion(this.transform.position, 11);
             Quaternion randomSpin = Random.rotationUniform;
             //transform.rotation = Random.rotation;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Classes.WorldSingleton;
 
 public class AI_Enemy : MonoBehaviour {
 
@@ -31,9 +32,10 @@ public class AI_Enemy : MonoBehaviour {
 	private AudioSource source;
 
 	private ParticleSystem ps;
+	private GameObject overseerObject;
+	private Overseer overseer;
 
 	void Awake(){
-
 		source = GetComponent <AudioSource> ();
 	}
 
@@ -43,6 +45,8 @@ public class AI_Enemy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		overseerObject = GameObject.Find ("Overseer");
+		overseer = overseerObject.GetComponent<Overseer> ();
 		x = Random.Range(-velocidadMax, velocidadMax);
 		z = Random.Range(-velocidadMax, velocidadMax);
 		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
@@ -123,7 +127,8 @@ public class AI_Enemy : MonoBehaviour {
 	{
 		if (other.gameObject.CompareTag("Bullet"))
 		{
-			ps.Play ();
+			//ps.Play ();
+			overseer.DoExplosion(transform.position, 12);
 			health = health - kineticDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
@@ -133,7 +138,8 @@ public class AI_Enemy : MonoBehaviour {
 
 		if (other.gameObject.CompareTag("Laser"))
 		{
-			ps.Play ();
+			//ps.Play ();
+			overseer.DoExplosion(transform.position, 12);
 			health = health - laserDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {
@@ -142,7 +148,8 @@ public class AI_Enemy : MonoBehaviour {
 		}
 		if (other.gameObject.CompareTag("Rocket"))
 		{
-			ps.Play ();
+			//ps.Play ();
+			overseer.DoExplosion(transform.position, 12);
 			health = health - rocketDMG;
 			Destroy (other.gameObject);
 			if (health < 0) {

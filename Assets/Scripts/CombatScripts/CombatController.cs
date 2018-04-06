@@ -9,7 +9,6 @@ public class CombatController : MonoBehaviour {
     public GameObject enemySpawner;
     public GameObject mainCam;
 	public GameObject combatCam;
-    public GameObject combatField;
     public GameObject ai_player;
     public GameObject combat_player;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
@@ -81,8 +80,8 @@ public class CombatController : MonoBehaviour {
 		//cf.enabled = false;
 		lf.enabled = false;
 		rk.enabled = false;
-		combatField.SetActive(true);
-		combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
+		//combatField.SetActive(true);
+		//combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
 		combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y + 20, combatCam.transform.position.z);
 		enemySpawner.GetComponent<EnemySpawner>().enabled = true;
 		playerSpaceship = player;
@@ -99,7 +98,7 @@ public class CombatController : MonoBehaviour {
 		combatCam.SetActive (false);
 		//ai_player.SetActive(true);
 		combat_player.SetActive (false);
-		combatField.SetActive (false);
+		//combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
 		enemySpawner.GetComponent<EnemySpawner> ().enabled = false;
 		depletion = playerSpaceship.HullHealth - pc.health;
