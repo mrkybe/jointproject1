@@ -72,12 +72,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
         }
 
         private Queue<GameObject> listOfExplosionObjects = new Queue<GameObject>();
-        public void DoExplosion(Vector3 pos)
+        public void DoExplosion(Vector3 pos, float scale = 30.0f)
         {
             int which = Random.Range(0, Explosions.Length);
-            pos = pos + new Vector3(0, 5, 0);
+            pos = pos + new Vector3(0, 1, 0);
             GameObject exp = Instantiate(Explosions[which], pos, Quaternion.identity);
-            exp.transform.localScale = Vector3.one * 30.0f;
+            exp.transform.localScale = Vector3.one * scale;
             listOfExplosionObjects.Enqueue(exp);
             Invoke("DestroyLastExplosion",10);
         }
