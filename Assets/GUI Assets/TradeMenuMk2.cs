@@ -280,7 +280,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].name;
                 buttonListLeft[i].gameObject.SetActive(true);
                 String t = buttonListLeft[i].GetComponentInChildren<Text>().text;
-                buttonListLeft[i].onClick.AddListener(() => { OpenInventoryPlanet(t); });
+                buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(t); });
                 if (planetsInRange[i].Faction.HostileWith(myFaction))
                 {
                     buttonListLeft[i].interactable = false;
@@ -297,7 +297,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[j + i].GetComponentInChildren<Text>().text = shipsInRange[j].name;
                 buttonListLeft[j + i].gameObject.SetActive(true);
                 String t = buttonListLeft[i + i].GetComponentInChildren<Text>().text;
-                buttonListLeft[j + i].onClick.AddListener(() => { OpenInventoryShip(t); });
+                buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(t); });
                 if (shipsInRange[j].Pilot.Faction.HostileWith(myFaction))
                 {
                     buttonListLeft[i + j].interactable = false;
@@ -326,6 +326,51 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             Debug.Log("TOO MANY NEARBY AGENTS.  HONESTLY, I DON'T KNOW HOW THAT MANY GOT THERE");
         }
+    }
+
+    private void SelectShip(string t)
+    {
+        clearPanel(buttonListLeft);
+        clearPanel(buttonListRight);
+        leftTitleBar.gameObject.SetActive(false);
+
+        buttonListLeft[0].gameObject.SetActive(true);
+        buttonListLeft[1].gameObject.SetActive(true);
+
+        buttonListLeft[0].GetComponentInChildren<Text>().text = "Trade";
+        buttonListLeft[1].GetComponentInChildren<Text>().text = "Combat";
+
+        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(t); });
+
+        buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
+    }
+
+    private void StartCombat(string t)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SelectPlanet(string t)
+    {
+        clearPanel(buttonListLeft);
+        clearPanel(buttonListRight);
+        leftTitleBar.gameObject.SetActive(false);
+
+        buttonListLeft[0].gameObject.SetActive(true);
+        buttonListLeft[1].gameObject.SetActive(true);
+
+        buttonListLeft[0].GetComponentInChildren<Text>().text = "Trade";
+        buttonListLeft[1].GetComponentInChildren<Text>().text = "Bounties";
+
+        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryPlanet(t); });
+
+        buttonListLeft[1].onClick.AddListener(() => { ShowBounties(t); });
+
+    }
+
+    private void ShowBounties(string t)
+    {
+        throw new NotImplementedException();
     }
 
     private void OpenInventoryShip(String otherName)
@@ -636,3 +681,13 @@ public class TradeMenuMk2 : MonoBehaviour
         clearNumberPanel(theirValues);
     }
 }
+
+
+
+
+
+/* TODO:
+ *  Create degree of separation between greeting and trade.
+ *  Incorporate combat menu.
+ *  Create and incorporate bounty menu.
+ */
