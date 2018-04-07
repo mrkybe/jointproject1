@@ -18,8 +18,24 @@ namespace Assets.Scripts.Classes.WorldSingleton
     ///     Market.cs    - Economy,
     ///     Diplomacy.cs - Factions
     /// </summary>
-    public partial class Overseer : MonoBehaviour
+	/// 
+	/// 
+	/// 
+    
+
+		
+
+
+
+	public partial class Overseer : MonoBehaviour
     {
+		enum GameStates
+		{
+			GameOver = 0,
+			InOverMap = 1,
+			InCombat = 2,
+			UI = 3
+		}
         [SerializeField]
         public static GameObject Sky;
         
@@ -37,6 +53,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private static List<Spaceship> OutskirtShips = new List<Spaceship>();
         public static Overseer Main;
         private GameObject PirateShip;
+		public GameStates gameState = 1;
 
         //float timeScale;
         private void Awake()
@@ -58,6 +75,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             PirateShip = (GameObject)Resources.Load("Prefabs/AI_ship");
             RootNode = GameObject.FindWithTag("RootNode");
 
+			gameState = 1;
 
             CreateResourceTypes();
             CreateFactions();
