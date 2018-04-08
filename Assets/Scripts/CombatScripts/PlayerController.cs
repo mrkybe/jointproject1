@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Classes;
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
+using UnityEngine.UI;
 using UnityEngine;
 
 
@@ -14,6 +15,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	public int health;
+	public Image currentHealthbar;
+	public Text ratioText;
 
     private Fire fire;
 	private LaserFire lf;
@@ -77,6 +80,11 @@ public class PlayerController : MonoBehaviour
 	public void Depletion(int damage)
 	{
 		health -= damage;
+		float ratio = health / 100;
+		//Debug.Log ("health: " + health); 
+		currentHealthbar.rectTransform.localScale = new Vector3 (ratio, 1, 1);
+		ratioText.text = (ratio * 100).ToString () + '%';
+		//Debug.Log ("Health: " + health);
 	}
 
 	public void Dead()

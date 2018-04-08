@@ -80,6 +80,11 @@ public class AI_Enemy : MonoBehaviour {
 			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
 		} else {
 
+			xMax = Player.transform.position.x + xMax;
+
+			zMax = Player.transform.position.z + xMax;
+			xMin = Player.transform.position.x - xMin;
+			zMin = Player.transform.position.x - zMin;
 			tiempo += Time.deltaTime;
 
 			if (transform.localPosition.x > xMax) {

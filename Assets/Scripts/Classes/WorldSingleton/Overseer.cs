@@ -19,8 +19,24 @@ namespace Assets.Scripts.Classes.WorldSingleton
     ///     Market.cs    - Economy,
     ///     Diplomacy.cs - Factions
     /// </summary>
-    public partial class Overseer : MonoBehaviour
+	/// 
+	/// 
+	/// 
+    
+
+		
+
+
+
+	public partial class Overseer : MonoBehaviour
     {
+		enum GameStates
+		{
+			GameOver = 0,
+			InOverMap = 1,
+			InCombat = 2,
+			UI = 3
+		}
         [SerializeField]
         public static GameObject Sky;
         
@@ -38,6 +54,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private static List<Spaceship> OutskirtShips = new List<Spaceship>();
         public static Overseer Main;
         private GameObject PirateShip;
+		public GameStates gameState = 1;
 
         //float timeScale;
         private void Awake()
@@ -59,6 +76,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             PirateShip = (GameObject)Resources.Load("Prefabs/AI_ship");
             RootNode = GameObject.FindWithTag("RootNode");
 
+			gameState = 1;
 
             CreateResourceTypes();
             CreateFactions();
@@ -73,7 +91,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         }
 
         private Queue<GameObject> listOfExplosionObjects = new Queue<GameObject>();
-		public void DoExplosion(Vector3 pos, int layer, float scale = 30.0f)
+
+		public void DoExplosion(Vector3 pos, int layer, float scale = 0.01f)
         {
             int which = Random.Range(0, Explosions.Length);
             pos = pos + new Vector3(0, 1, 0);
@@ -90,7 +109,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
 			}
             exp.transform.localScale = Vector3.one * scale;
             listOfExplosionObjects.Enqueue(exp);
-            Invoke("DestroyLastExplosion",10);
+            Invoke("DestroyLastExplosion",1);
         }
 
         private void DestroyLastExplosion()
