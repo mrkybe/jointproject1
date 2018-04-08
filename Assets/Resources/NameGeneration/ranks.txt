@@ -1,0 +1,16 @@
+Captain,1
+Admiral,1
+Marshal,1
+Lieutenant,1
+Ensign,1
+Officer,1
+Commander,1
+Corporal,1
+Private,1
+Sergeant,1
+Major,1
+Colonel,1
+General,1
+Adjudant,1
+Chief,1
+
