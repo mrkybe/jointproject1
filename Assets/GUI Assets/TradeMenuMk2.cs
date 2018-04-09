@@ -43,6 +43,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform rightValuesPanel;
 
     private RectTransform leftTitleBar;
+    private RectTransform rightTitleBar;
 
     private RectTransform myPricesPanel;
     private RectTransform theirPricesPanel;
@@ -53,8 +54,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
 
-    private bool isRightOff;
-    private bool isLeftOff;
+    private int menuLevel;
 
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
@@ -80,6 +80,8 @@ public class TradeMenuMk2 : MonoBehaviour
     private CargoHold myHold;
     private CargoHold otherHold;
 
+    private Overseer o;
+
     // Use this for initialization
     void Awake()
     {
@@ -87,7 +89,7 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
         leftButtonPanel = GameObject.Find("Left Panel Buttons").GetComponent<RectTransform>();
         rightButtonPanel = GameObject.Find("Right Panel Buttons").GetComponent<RectTransform>();
-        centerPanel = GameObject.Find("Trade Center Panel").GetComponent<RectTransform>();
+        centerPanel = GameObject.Find("Center Panel").GetComponent<RectTransform>();
         myElementPanel = GameObject.Find("My Element List").GetComponent<RectTransform>();
         theirElementPanel = GameObject.Find("Their Element List").GetComponent<RectTransform>();
         mySelectorUp = GameObject.Find("My Selector Up").GetComponent<RectTransform>();
@@ -103,10 +105,14 @@ public class TradeMenuMk2 : MonoBehaviour
         myPricesPanel = GameObject.Find("My Price").GetComponent<RectTransform>();
         theirPricesPanel = GameObject.Find("Their Price").GetComponent<RectTransform>();
         leftTitleBar = GameObject.Find("Left Title Bar").GetComponent<RectTransform>();
+        rightTitleBar = GameObject.Find("Right Title Bar").GetComponent<RectTransform>();
 
         leftTitleBar.gameObject.SetActive(false);
+        rightTitleBar.gameObject.SetActive(false);
 
         ship = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
+
+        o = GameObject.Find("Overseer").GetComponent<Overseer>();
 
         centerPanel.gameObject.SetActive(false);
 
@@ -114,8 +120,7 @@ public class TradeMenuMk2 : MonoBehaviour
         leftOffPosition = new Vector2(-675, 0);
         rightOffPosition = new Vector2(675, 0);
 
-        isRightOff = true;
-        isLeftOff = true;
+        menuLevel = 0;
 
         buttonListLeft = new List<Button>();
         buttonListRight = new List<Button>();
@@ -161,6 +166,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         submitButton.onClick.AddListener(MakeTrade);
 
+        MassClear();
 
         //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
@@ -172,39 +178,47 @@ public class TradeMenuMk2 : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
+        if (o.gameState == GameState.InOverMap)
         {
-            if (isLeftOff && isRightOff)
+            print(menuLevel);
+            if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {
-                ShowAgentsInRange();
-                centerPanel.gameObject.SetActive(false);
-                leftTitleBar.gameObject.SetActive(false);
-            }
-            else if (!isLeftOff && isRightOff)
-            {
-                Overseer.Main.UnpauseOvermap();
-                leftPanel.anchoredPosition = leftOffPosition;
-                isLeftOff = true;
-                clearPanel(buttonListLeft);
-                clearNumberPanel(myInventoryAmounts);
-                centerPanel.gameObject.SetActive(false);
-                leftTitleBar.gameObject.SetActive(false);
-            }
-            else if (!isLeftOff && !isRightOff)
-            {
-                rightPanel.anchoredPosition = rightOffPosition;
-                isRightOff = true;
-                ShowAgentsInRange();
-                centerPanel.gameObject.SetActive(false);
-                leftTitleBar.gameObject.SetActive(false);
+                if (menuLevel == 0)
+                {
+                    MassClear();
+                    ShowAgentsInRange();
+                    centerPanel.gameObject.SetActive(false);
+                    leftTitleBar.gameObject.SetActive(false);
+                    rightTitleBar.gameObject.SetActive(false);
+                }
+                else if (menuLevel == 1)
+                {
+                    Overseer.Main.UnpauseOvermap();
+                    leftPanel.anchoredPosition = leftOffPosition;
+                    menuLevel = 0;
+                    ClearPanel(buttonListLeft);
+                    ClearNumberPanel(myInventoryAmounts);
+                    centerPanel.gameObject.SetActive(false);
+                    leftTitleBar.gameObject.SetActive(false);
+                    rightTitleBar.gameObject.SetActive(false);
+                }
+                else if (menuLevel > 1)
+                {
+                    rightPanel.anchoredPosition = rightOffPosition;
+                    menuLevel = menuLevel - 1;
+                    ShowAgentsInRange();
+                    centerPanel.gameObject.SetActive(false);
+                    leftTitleBar.gameObject.SetActive(false);
+                    rightTitleBar.gameObject.SetActive(false);
 
-                MassClear();
-                
+                    MassClear();
+
+                }
             }
         }
     }
 
-    private void clearPanel(List<Button> buttonList)
+    private void ClearPanel(List<Button> buttonList)
     {
         int i = 0;
         for(i = 0; i < buttonList.Count; i++)
@@ -215,7 +229,7 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void clearNumberPanel(List<Text> textList)
+    private void ClearNumberPanel(List<Text> textList)
     {
         int i = 0;
         for(i = 0; i < textList.Count; i++)
@@ -265,7 +279,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         Overseer.Main.PauseOvermap();
         leftPanel.anchoredPosition = on;
-        isLeftOff = false;
+        menuLevel = 1;
 
         List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
         List<Planet> planetsInRange = ship.GetInInteractionRange<Planet>();
@@ -330,8 +344,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void SelectShip(string t)
     {
-        clearPanel(buttonListLeft);
-        clearPanel(buttonListRight);
+        ClearPanel(buttonListLeft);
+        ClearPanel(buttonListRight);
         leftTitleBar.gameObject.SetActive(false);
 
         buttonListLeft[0].gameObject.SetActive(true);
@@ -347,13 +361,24 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void StartCombat(string t)
     {
-        throw new NotImplementedException();
+        otherShip = GameObject.Find(t).GetComponent<Spaceship>();
+
+        Overseer.Main.ResolveShipCombat(ship, otherShip);
+
+        leftPanel.anchoredPosition = leftOffPosition;
+        
+        rightPanel.anchoredPosition = rightOffPosition;
+
+        centerPanel.gameObject.SetActive(false);
+
+        menuLevel = 0;
+        MassClear();
     }
 
     private void SelectPlanet(string t)
     {
-        clearPanel(buttonListLeft);
-        clearPanel(buttonListRight);
+        ClearPanel(buttonListLeft);
+        ClearPanel(buttonListRight);
         leftTitleBar.gameObject.SetActive(false);
 
         buttonListLeft[0].gameObject.SetActive(true);
@@ -370,14 +395,49 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void ShowBounties(string t)
     {
-        throw new NotImplementedException();
+        // Planet has a Faction, Faction has a list of bounties.
+        planet = GameObject.Find(t).GetComponent<Planet>();
+
+        List<Bounty> bounties = planet.Faction.BountyBoard;
+
+        rightPanel.anchoredPosition = on;
+        menuLevel = 2;
+
+        int i = 0;
+        if (bounties.Count > 0 && bounties.Count <= buttonListRight.Count)
+        {
+            for (i = 0; i < bounties.Count; i++)
+            {
+                buttonListRight[i].GetComponentInChildren<Text>().text = bounties[i].Target.name;
+                buttonListRight[i].gameObject.SetActive(true);
+                String s = bounties[i].Target.name;
+                Faction f = planet.Faction;
+                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+            }
+        }
+        else if( bounties.Count > 0 && bounties.Count > buttonListRight.Count)
+        {
+            for(i = 0; i< buttonListRight.Count; i++)
+            {
+                buttonListRight[i].GetComponentInChildren<Text>().text = bounties[i].Target.name;
+                buttonListRight[i].gameObject.SetActive(true);
+                String s = bounties[i].Target.name;
+                Faction f = planet.Faction;
+                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+            }
+        }
+    }
+
+    private void DisplayBounty(string s, Faction f)
+    {
+        // Bounty information
     }
 
     private void OpenInventoryShip(String otherName)
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        isRightOff = false;
+        menuLevel = 2;
 
         otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
 
@@ -388,6 +448,7 @@ public class TradeMenuMk2 : MonoBehaviour
         int myCargoSize = myHold.GetCargoItems().Count;
 
         leftTitleBar.gameObject.SetActive(true);
+        rightTitleBar.gameObject.SetActive(true);
 
         int i = 0;
 
@@ -409,7 +470,7 @@ public class TradeMenuMk2 : MonoBehaviour
             buttonListRight[i].colors = cb;
         }
 
-        clearPanel(buttonListLeft);
+        ClearPanel(buttonListLeft);
 
         for (i = 0; i < myCargoSize; i++)
         {
@@ -434,7 +495,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        isRightOff = false;
+        menuLevel = 2;
 
         planet = GameObject.Find(otherName).GetComponent<Planet>();
 
@@ -445,6 +506,7 @@ public class TradeMenuMk2 : MonoBehaviour
         int myCargoSize = myHold.GetCargoItems().Count;
 
         leftTitleBar.gameObject.SetActive(true);
+        rightTitleBar.gameObject.SetActive(true);
 
         int i = 0;
 
@@ -466,7 +528,7 @@ public class TradeMenuMk2 : MonoBehaviour
             buttonListRight[i].colors = cb;
         }
 
-        clearPanel(buttonListLeft);
+        ClearPanel(buttonListLeft);
 
         for (i = 0; i < myCargoSize; i++)
         {
@@ -638,16 +700,16 @@ public class TradeMenuMk2 : MonoBehaviour
         }
         if (traded)
         {
-            clearPanel(buttonElementListFrom);
-            clearPanel(buttonElementListTo);
-            clearPanel(theirSelectorListDown);
-            clearPanel(theirSelectorListUp);
-            clearPanel(mySelectorListDown);
-            clearPanel(mySelectorListUp);
-            clearNumberPanel(myAmountSelect);
-            clearNumberPanel(theirAmountSelect);
-            clearNumberPanel(theirPrices);
-            clearNumberPanel(myPrices);
+            ClearPanel(buttonElementListFrom);
+            ClearPanel(buttonElementListTo);
+            ClearPanel(theirSelectorListDown);
+            ClearPanel(theirSelectorListUp);
+            ClearPanel(mySelectorListDown);
+            ClearPanel(mySelectorListUp);
+            ClearNumberPanel(myAmountSelect);
+            ClearNumberPanel(theirAmountSelect);
+            ClearNumberPanel(theirPrices);
+            ClearNumberPanel(myPrices);
         }
 
         for (i = 0; i < myInventoryAmounts.Count; i++)
@@ -666,19 +728,19 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void MassClear()
     {
-        clearPanel(buttonElementListFrom);
-        clearPanel(buttonElementListTo);
-        clearPanel(theirSelectorListDown);
-        clearPanel(theirSelectorListUp);
-        clearPanel(mySelectorListDown);
-        clearPanel(mySelectorListUp);
+        ClearPanel(buttonElementListFrom);
+        ClearPanel(buttonElementListTo);
+        ClearPanel(theirSelectorListDown);
+        ClearPanel(theirSelectorListUp);
+        ClearPanel(mySelectorListDown);
+        ClearPanel(mySelectorListUp);
 
-        clearNumberPanel(theirAmountSelect);
-        clearNumberPanel(myAmountSelect);
-        clearNumberPanel(theirInventoryAmounts);
-        clearNumberPanel(myInventoryAmounts);
-        clearNumberPanel(myValues);
-        clearNumberPanel(theirValues);
+        ClearNumberPanel(theirAmountSelect);
+        ClearNumberPanel(myAmountSelect);
+        ClearNumberPanel(theirInventoryAmounts);
+        ClearNumberPanel(myInventoryAmounts);
+        ClearNumberPanel(myValues);
+        ClearNumberPanel(theirValues);
     }
 }
 
@@ -687,7 +749,6 @@ public class TradeMenuMk2 : MonoBehaviour
 
 
 /* TODO:
- *  Create degree of separation between greeting and trade.
- *  Incorporate combat menu.
  *  Create and incorporate bounty menu.
+ *  Look into blocking menu during combat.
  */

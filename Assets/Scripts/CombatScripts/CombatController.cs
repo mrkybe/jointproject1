@@ -69,7 +69,7 @@ public class CombatController : MonoBehaviour {
 	public void CombatStart(Spaceship player, Spaceship enemy)
 	{
 		o.PauseOvermap ();
-		o.gameState = 2; 
+		o.gameState = GameState.InCombat; 
 		//
 //		enum GameStates in overseer
 //		{
@@ -106,7 +106,7 @@ public class CombatController : MonoBehaviour {
 	{
 		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
-		o.gameState = 1;
+		o.gameState = GameState.InOverMap;
 		flag = false;
 		mainCam.SetActive (true);
 		combatCam.SetActive (false);
