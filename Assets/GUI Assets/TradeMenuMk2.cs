@@ -193,6 +193,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 else if (menuLevel == 1)
                 {
                     Overseer.Main.UnpauseOvermap();
+                    o.gameState = GameState.InOverMap;
                     leftPanel.anchoredPosition = leftOffPosition;
                     menuLevel = 0;
                     ClearPanel(buttonListLeft);
@@ -276,6 +277,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void ShowAgentsInRange()
     {
+        o.gameState = GameState.UI;
         if (!o.IsOvermapPaused())                   // it was definitely overmap_pause_count getting too high, but I didn't want to fiddle with Overseer.
         {
             Overseer.Main.PauseOvermap();
