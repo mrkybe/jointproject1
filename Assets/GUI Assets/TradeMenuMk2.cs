@@ -180,7 +180,6 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         if (o.gameState == GameState.InOverMap)
         {
-            print(menuLevel);
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {
                 if (menuLevel == 0)
@@ -277,7 +276,10 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void ShowAgentsInRange()
     {
-        Overseer.Main.PauseOvermap();
+        if (!o.IsOvermapPaused())                   // it was definitely overmap_pause_count getting too high, but I didn't want to fiddle with Overseer.
+        {
+            Overseer.Main.PauseOvermap();
+        }
         leftPanel.anchoredPosition = on;
         menuLevel = 1;
 
