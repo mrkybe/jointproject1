@@ -99,8 +99,6 @@ namespace Assets.Scripts.Classes.Helper
             Load("syl", out basic_syllables, out total_basic);
             Load("ranks", out ranks, out total_ranks);
             Load("honor", out honor, out total_honor);
-            for (int i = 0; i < 100; i++)
-                Debug.Log(RandomPerson());
         }
 
         public Tuple<string, string> RandomFirstLastName()
