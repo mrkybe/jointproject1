@@ -22,11 +22,10 @@ public class EnemySpawner : MonoBehaviour {
 
 	void Start () {
 		count = 0;
-
-		StartCoroutine (SpawnWaves ());
-
-		
+		//StartSpawn ();
 	}
+
+
 	///<summary>
 	/// Spawning enemies waves at random locations around the player. Different enemies are defined in the hazards.
 	///</summary>
@@ -61,5 +60,15 @@ public class EnemySpawner : MonoBehaviour {
 
 	public void Disable() {
 		enabled = false; 
+	}
+
+	public void Stop()
+	{
+		StopAllCoroutines ();
+	}
+
+	public void StartSpawn()
+	{
+		StartCoroutine (SpawnWaves ());
 	}
 }
