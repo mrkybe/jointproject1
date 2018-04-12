@@ -22,14 +22,18 @@ public class Move : MonoBehaviour {
 
 	void Update()
 	{
-		timeMove ();
+		//timeMove ();
+		if (rb.velocity.magnitude >= 50) {
+			Vector3 balance = rb.velocity * -1;
+			rb.AddForce (balance);
+		}
 	}
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		//ForceMove ();
+		ForceMove ();
 		look();
-		rb.velocity = velocity;
+		//rb.velocity = velocity;
     }
 
 	///<summary>
@@ -53,6 +57,7 @@ public class Move : MonoBehaviour {
 		transform.rotation = Quaternion.EulerAngles (0,angle * rotateSpeed,0);
         */
 		velocity = move.normalized * speed;
+
 	}
 	void ForceMove()
 	{

@@ -30,7 +30,7 @@ public class AI_Enemy : MonoBehaviour {
 	public AudioClip shootSound;
 
 	private AudioSource source;
-
+	private Rigidbody rigidBody;
 	private ParticleSystem ps;
 	private GameObject overseerObject;
 	private Overseer overseer;
@@ -45,6 +45,7 @@ public class AI_Enemy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		rigidBody = GetComponent<Rigidbody> ();
 		overseerObject = GameObject.Find ("Overseer");
 		overseer = overseerObject.GetComponent<Overseer> ();
 		x = Random.Range(-velocidadMax, velocidadMax);
@@ -127,6 +128,11 @@ public class AI_Enemy : MonoBehaviour {
 
 	}
 
+	void OnCollisionEnter(Collision other)
+	{
+		Vector3 push = other.impulse * -1;
+		rigidBody.AddForce(push);
+	}
 
 	void OnTriggerEnter(Collider other)
 	{
@@ -136,9 +142,6 @@ public class AI_Enemy : MonoBehaviour {
 			overseer.DoExplosion(transform.position, 12, 2);
 			health = health - kineticDMG;
 			Destroy (other.gameObject);
-			if (health < 0) {
-				Destroy (gameObject);
-			}
 		}
 
 		if (other.gameObject.CompareTag("Laser"))
@@ -147,28 +150,20 @@ public class AI_Enemy : MonoBehaviour {
 			overseer.DoExplosion(transform.position, 12, 2);
 			health = health - laserDMG;
 			Destroy (other.gameObject);
-			if (health < 0) {
-				overseer.DoExplosion(transform.position, 12, 8);
-				Destroy (gameObject);
-			}
 		}
 		if (other.gameObject.CompareTag("Rocket"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12, 4);
+			overseer.DoExplosion(transform.position, 12, 6);
 			health = health - rocketDMG;
 			Destroy (other.gameObject);
-			if (health < 0) {
-				overseer.DoExplosion(transform.position, 12, 8);
-				Destroy (gameObject);
-			}
-
 		}
 	}
 
 	private void KillYourself()
 	{
 		if (health <= 0) {
+			overseer.DoExplosion(transform.position, 12, 12);
 			if (gameObject.name.Equals ("Bob")) {
 				CombatController.instance.CombatEnd (CombatController.COMBAT_RESULT.ENEMY_DEATH);
 			}
