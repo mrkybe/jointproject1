@@ -45,12 +45,17 @@ namespace Assets.Editor
                         string s3  = "Speed       : ";
                         string s4  = "Hull        : ";
                         string s5  = "Money       : ";
+                        string s6  = "Captain     : ";
 
                         s1 += string.Format("{0:0.00}", myTarget.Throttle);
                         s2 += string.Format("{0:0.00}", myTarget.TargetSpeed.Value);
                         s3 += string.Format("{0:0.00}", myTarget.Speed);
                         s4 += string.Format("{0:0.00}", mySpaceship.HullHealth);
                         s5 += string.Format("{0:0.00}", myTarget.Money);
+                        if (Application.isPlaying)
+                        {
+                            s6 += string.Format(myTarget.Identity.ToString());
+                        }
                         string holdString = "";
                         if (mySpaceship != null)
                         {
@@ -66,6 +71,7 @@ namespace Assets.Editor
                             s3 + "\n" +
                             s4 + "\n" +
                             s5 + "\n" +
+                            s6 + "\n" +
                             holdString, style);
                     }
                 }
