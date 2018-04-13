@@ -89,7 +89,8 @@ namespace Assets.Scripts.Classes.Static {
             glowColor.a = 0.5f;
             mr.material.color = glowColor;
 
-            transform.GetChild(2).GetComponent<TextMesh>().text = this.MyName;
+            transform.GetChild(2).GetChild(0).GetComponent<TextMesh>().text = this.MyName;
+            transform.GetChild(2).GetChild(1).GetComponent<TextMesh>().text = this.Faction.Name;
         }
 
         /// <summary>
