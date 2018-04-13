@@ -76,7 +76,10 @@ public class AI_Enemy : MonoBehaviour {
 		if (dist < radius) {
 			
 			gameObject.transform.LookAt (Player.transform);
-			f.enemyFire ();
+		    if (f)
+            {
+                f.enemyFire();
+            }
 			source.PlayOneShot (shootSound);
 			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
 		} else {

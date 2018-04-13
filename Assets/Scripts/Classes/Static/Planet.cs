@@ -86,7 +86,7 @@ namespace Assets.Scripts.Classes.Static {
 
             MeshRenderer mr = transform.GetChild(0).GetComponent<MeshRenderer>();
             Color glowColor = f.ColorPrimary;
-            glowColor.a = 45f / 255f;
+            glowColor.a = 0.5f;
             mr.material.color = glowColor;
         }
 
