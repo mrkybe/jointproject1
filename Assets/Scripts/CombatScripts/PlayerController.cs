@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 	public void Depletion(int damage)
 	{
 		health -= damage;
-		float ratio = health;
+		float ratio = health/15;
 		Debug.Log ("health: " + health); 
 		Debug.Log ("Ratio: " + ratio); 
 		currentHealthbar.rectTransform.localScale = new Vector3 (ratio, 1, 1);
