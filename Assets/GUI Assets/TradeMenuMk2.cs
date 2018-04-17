@@ -54,7 +54,8 @@ public class TradeMenuMk2 : MonoBehaviour
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
 
-    private int menuLevel;
+    private bool isRightOff;
+    private bool isLeftOff;
 
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
@@ -120,7 +121,8 @@ public class TradeMenuMk2 : MonoBehaviour
         leftOffPosition = new Vector2(-675, 0);
         rightOffPosition = new Vector2(675, 0);
 
-        menuLevel = 0;
+        isLeftOff = true;
+        isRightOff = true;
 
         buttonListLeft = new List<Button>();
         buttonListRight = new List<Button>();
@@ -178,11 +180,14 @@ public class TradeMenuMk2 : MonoBehaviour
 
     void Update()
     {
-        if (o.gameState == GameState.InOverMap)
+        print(isLeftOff + " " + isRightOff);
+        if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
+            
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {
-                if (menuLevel == 0)
+                
+                if (isLeftOff && isRightOff)
                 {
                     MassClear();
                     ShowAgentsInRange();
@@ -190,22 +195,24 @@ public class TradeMenuMk2 : MonoBehaviour
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
-                else if (menuLevel == 1)
+                else if (!isLeftOff && isRightOff)
                 {
+                    print("HEY");
                     Overseer.Main.UnpauseOvermap();
                     o.gameState = GameState.InOverMap;
                     leftPanel.anchoredPosition = leftOffPosition;
-                    menuLevel = 0;
+                    isLeftOff = true;
                     ClearPanel(buttonListLeft);
                     ClearNumberPanel(myInventoryAmounts);
                     centerPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
-                else if (menuLevel > 1)
+                else if (!isLeftOff && !isRightOff)
                 {
+                    print("hey");
                     rightPanel.anchoredPosition = rightOffPosition;
-                    menuLevel = menuLevel - 1;
+                    isRightOff = true;
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
@@ -283,7 +290,7 @@ public class TradeMenuMk2 : MonoBehaviour
             Overseer.Main.PauseOvermap();
         }
         leftPanel.anchoredPosition = on;
-        menuLevel = 1;
+        isLeftOff = false;
 
         List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
         List<Planet> planetsInRange = ship.GetInInteractionRange<Planet>();
@@ -375,7 +382,9 @@ public class TradeMenuMk2 : MonoBehaviour
 
         centerPanel.gameObject.SetActive(false);
 
-        menuLevel = 0;
+        isLeftOff = true;
+        isRightOff = true;
+        
         MassClear();
     }
 
@@ -405,7 +414,7 @@ public class TradeMenuMk2 : MonoBehaviour
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
 
         int i = 0;
         if (bounties.Count > 0 && bounties.Count <= buttonListRight.Count)
@@ -441,7 +450,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
 
         otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
 
@@ -499,7 +508,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
 
         planet = GameObject.Find(otherName).GetComponent<Planet>();
 
