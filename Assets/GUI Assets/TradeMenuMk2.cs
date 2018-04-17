@@ -11,11 +11,11 @@ using Assets.Scripts.Classes.WorldSingleton;
 
 /// <summary>
 /// Press Space to open list of nearby moons and ships.
-/// Click on one to open inventory.
-/// Click on items in inventory to place on center panel.
+/// Click on one to open menu.
+/// Choose combat, bounties, or trade.
+/// If trading, click on items in inventory to place on center panel.
 /// Click buttons in center panel to increase or decrease amount to be traded.
 /// Click submit button to confirm trade.
-/// Press Space to return to list of nearby agents.
 /// Press Space again to close menu.
 /// </summary>
 public class TradeMenuMk2 : MonoBehaviour
@@ -180,7 +180,6 @@ public class TradeMenuMk2 : MonoBehaviour
 
     void Update()
     {
-        print(isLeftOff + " " + isRightOff);
         if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
             
@@ -197,7 +196,6 @@ public class TradeMenuMk2 : MonoBehaviour
                 }
                 else if (!isLeftOff && isRightOff)
                 {
-                    print("HEY");
                     Overseer.Main.UnpauseOvermap();
                     o.gameState = GameState.InOverMap;
                     leftPanel.anchoredPosition = leftOffPosition;
@@ -210,7 +208,6 @@ public class TradeMenuMk2 : MonoBehaviour
                 }
                 else if (!isLeftOff && !isRightOff)
                 {
-                    print("hey");
                     rightPanel.anchoredPosition = rightOffPosition;
                     isRightOff = true;
                     ShowAgentsInRange();
@@ -762,6 +759,6 @@ public class TradeMenuMk2 : MonoBehaviour
 
 
 /* TODO:
- *  Create and incorporate bounty menu.
- *  Look into blocking menu during combat.
+ *  Listener for bounty buttons.
+ *  Make sure buttons are all the right color.
  */
