@@ -83,11 +83,14 @@ namespace Assets.Scripts.Classes.Static {
 
             Faction = f;
             f.Own(this);
-
+            
             MeshRenderer mr = transform.GetChild(0).GetComponent<MeshRenderer>();
             Color glowColor = f.ColorPrimary;
-            glowColor.a = 45f / 255f;
+            glowColor.a = 0.5f;
             mr.material.color = glowColor;
+
+            transform.GetChild(2).GetChild(0).GetComponent<TextMesh>().text = this.MyName;
+            transform.GetChild(2).GetChild(1).GetComponent<TextMesh>().text = this.Faction.Name;
         }
 
         /// <summary>
@@ -124,7 +127,8 @@ namespace Assets.Scripts.Classes.Static {
             Radius = (float)(random.NextDouble() * 1) + 2f;
             Mass = (float)(4 * Math.PI * Math.Pow(Radius / 2, 3));
 
-            transform.localScale += (new Vector3(Radius * 2f, Radius * 2f, Radius * 2f) - transform.localScale);
+            transform.GetChild(0).transform.localScale = new Vector3(3,1,3);
+            transform.GetChild(1).transform.localScale = new Vector3(Radius * 2f, Radius * 2f, Radius * 2f);
         }
 	
         // Update is called once per frame

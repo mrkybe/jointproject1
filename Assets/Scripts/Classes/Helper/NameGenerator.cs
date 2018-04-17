@@ -9,70 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Classes.Helper
 {
-    public class Person
-    {
-        public string FirstName = "";
-        public string LastName = "";
-        public string MiddleName = "";
-        public string Honorific = "";
-        public string Title = "";
-        public string Rank = "";
-
-        public Person()
-        {
-        }
-
-        public override string ToString()
-        {
-            string result = "";
-            if (Rank != "")
-            {
-                result += Rank + ", ";
-            }
-            if (Honorific != "")
-            {
-                if (Honorific.EndsWith("."))
-                {
-                    result += Honorific + " ";
-                }
-                else
-                {
-                    result += Honorific + " ";
-                }
-            }
-            if (FirstName != "")
-            {
-                result += FirstName + " ";
-            }
-            if (MiddleName != "")
-            {
-                result += MiddleName + " ";
-            }
-            if (LastName != "")
-            {
-                result += LastName + " ";
-            }
-            return result;
-        }
-    }
-
-    public class Tuple<T1, T2>
-    {
-        public T1 Item1 { get; private set; }
-        public T2 Item2 { get; private set; }
-        internal Tuple(T1 first, T2 second)
-        {
-            Item1 = first;
-            Item2 = second;
-        }
-
-        public override string ToString()
-        {
-            return Item1.ToString() + " " + Item2.ToString();
-        }
-    }
-
-    class NameGenerator : MonoBehaviour
+    public class NameGenerator : MonoBehaviour
     {
         public TextAsset basic_syl_processed = null;
 
@@ -99,8 +36,6 @@ namespace Assets.Scripts.Classes.Helper
             Load("syl", out basic_syllables, out total_basic);
             Load("ranks", out ranks, out total_ranks);
             Load("honor", out honor, out total_honor);
-            for (int i = 0; i < 100; i++)
-                Debug.Log(RandomPerson());
         }
 
         public Tuple<string, string> RandomFirstLastName()
@@ -260,7 +195,6 @@ namespace Assets.Scripts.Classes.Helper
                     break;
                 }
             }
-
             return Capitalize(result);
         }
 

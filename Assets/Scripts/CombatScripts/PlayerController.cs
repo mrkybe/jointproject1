@@ -14,7 +14,7 @@ using UnityEngine;
 ///</summary>
 public class PlayerController : MonoBehaviour
 {
-	public int health;
+	public int health = 100;
 	public Image currentHealthbar;
 	public Text ratioText;
 
@@ -80,10 +80,11 @@ public class PlayerController : MonoBehaviour
 	public void Depletion(int damage)
 	{
 		health -= damage;
-		float ratio = health / 100;
-		//Debug.Log ("health: " + health); 
+		float ratio = health/15;
+		Debug.Log ("health: " + health); 
+		Debug.Log ("Ratio: " + ratio); 
 		currentHealthbar.rectTransform.localScale = new Vector3 (ratio, 1, 1);
-		ratioText.text = (ratio * 100).ToString () + '%';
+		ratioText.text = (health).ToString () + '%';
 		//Debug.Log ("Health: " + health);
 	}
 

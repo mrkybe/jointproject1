@@ -9,7 +9,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         public enum ControlMode { CONTROLLER, KEYBOARD};
         private Spaceship myShip = null;
 
-        public ControlMode controlMode = ControlMode.CONTROLLER;
+        public ControlMode controlMode = ControlMode.KEYBOARD;
         // Use this for initialization
         new void Start ()
         {

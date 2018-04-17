@@ -32,6 +32,8 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private SharedFloat CruiseSpeed;
         private SharedFloat EmergencySpeed;
 
+        public Person Identity;
+
         public SharedFloat TargetSpeed;
 
         private BehaviorTree behaviorTree;
@@ -74,6 +76,10 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         {
             base.Start();
             InitializeBehaviorTreeVariableReferences();
+            if (Identity == null)
+            {
+                Identity = NameGenerator.Main.RandomPerson();
+            }
         }
 
         public new void Update()

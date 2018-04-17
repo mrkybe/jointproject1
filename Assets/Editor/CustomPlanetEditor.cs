@@ -86,13 +86,22 @@ namespace Assets.Editor {
 
                         string holdString = hold.ToString();
                         string reserveString = myTarget.GetReserveCargoHold.ToString();
-                        string goodsValue = hold.GetMoneyValue().ToString();
-                        string reserveGoodsValue = myTarget.GetReserveCargoHold.GetMoneyValue().ToString();
+
+                        string goodsValue = "";
+                        string reserveGoodsValue = "";
                         Handles.color = Color.blue;
                         string s1 = holdString;
                         string s2 = reserveString;
                         string s3 = myTarget.BuildingsToString();
                         string s1x = "== Main Cargohold ======\n" + s1;
+
+
+                        if (Application.isPlaying)
+                        {
+                            goodsValue = hold.GetMoneyValue().ToString();
+                            reserveGoodsValue = myTarget.GetReserveCargoHold.GetMoneyValue().ToString(); ;
+                        }
+
                         string s11 = "== Money : " + myTarget.Money + " | " + goodsValue + " | " + reserveGoodsValue;
                         string s2x = "== Reserved Cargohold ==\n" + s2;
                         string s3x = "== Buildings ===========\n" + s3;

@@ -6,7 +6,7 @@ namespace Assets.Scripts.Classes {
         [SerializeField]
         private GameObject followTarget;
         [SerializeField]
-        private Vector3 offset;
+        private float offset;
         [SerializeField]
         private float floatieness_start;  // floats... for floatieness
         private float floatieness;  // floats... for floatieness
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Classes {
             if (followTarget != null)
             {
                 floatieness = floatieness_start * ((zoom / zoomMax) * (zoom / zoomMax));
-                targetPosition = (followTarget.transform.position + offset);
+                targetPosition = (followTarget.transform.position + offset * transform.forward * -1);
                 transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1);
 
                 zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;

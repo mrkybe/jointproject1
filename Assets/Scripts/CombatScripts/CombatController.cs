@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
+using Assets.Scripts.Classes.Helper.Pilot;
+using Assets.Behavior_Designer.Runtime;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
@@ -95,10 +97,13 @@ public class CombatController : MonoBehaviour {
 		//combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
 		combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y + 20, combatCam.transform.position.z);
 		for (int i = 0; i < spawnerCount; i++) {
-			enemySpawners[i].GetComponent<EnemySpawner> ().enabled = true;
+			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
+			spawn.enabled = true;
+			spawn.StartSpawn ();
 		}
 		playerSpaceship = player;
 		enemySpaceship = enemy;
+		SpawnLeader ();
 		pc.health = playerSpaceship.HullHealth;
 	}
 
@@ -115,13 +120,42 @@ public class CombatController : MonoBehaviour {
 		//combatField.SetActive (false);
 		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
 		for (int i = 0; i < spawnerCount; i++) {
-			enemySpawners[i].GetComponent<EnemySpawner> ().enabled = false;
+			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
+			spawn.Stop ();
+			spawn.enabled = false;
 		}
 		depletion = playerSpaceship.HullHealth - pc.health;
 		playerSpaceship.TakeDamage (depletion, enemySpaceship);
-		enemySpaceship.TakeDamage (1000, playerSpaceship);
+		//enemySpaceship.TakeDamage (1000, playerSpaceship);
 
 		foreach (GameObject enemy in enemies)
 			Destroy(enemy);
+	}
+
+	public void CowardsWay()
+	{
+
+	}
+
+	private void SpawnLeader()
+	{
+		GameObject baddy = enemySpaceship.gameObject;
+		int x = Random.Range (10, 30);
+		int z = Random.Range (10, 30);
+		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z);
+
+		GameObject clone = Instantiate (baddy, position, Quaternion.identity);
+		clone.layer = 12;
+		for (int i = 0; i < clone.transform.childCount; i++) {
+			clone.transform.GetChild (i).gameObject.layer = 12;
+		}
+		clone.GetComponent<AI_Patrol> ().enabled = false;
+		clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
+		clone.GetComponent<Spaceship> ().enabled = false; 
+
+		clone.AddComponent<Fire> ();
+		clone.AddComponent<AI_Enemy> ();
+
+			
 	}
 }
