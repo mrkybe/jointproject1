@@ -85,7 +85,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private Overseer o;
 
     // Use this for initialization
-    void Awake()
+    void Start()
     {
         leftPanel = GameObject.Find("Left Panel").GetComponent<RectTransform>();
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
