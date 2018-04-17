@@ -17,6 +17,7 @@ using Assets.Scripts.Classes.WorldSingleton;
 /// Click buttons in center panel to increase or decrease amount to be traded.
 /// Click submit button to confirm trade.
 /// Press Space again to close menu.
+/// Press Space again to close menu.
 /// </summary>
 public class TradeMenuMk2 : MonoBehaviour
 {
@@ -299,9 +300,9 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             for (i = 0; i < planetsInRange.Count; i++)
             {
-                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].name;
+                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].MyName;
                 buttonListLeft[i].gameObject.SetActive(true);
-                String t = buttonListLeft[i].GetComponentInChildren<Text>().text;
+                String t = planetsInRange[i].name;
                 buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(t); });
                 if (planetsInRange[i].Faction.HostileWith(myFaction))
                 {
