@@ -149,33 +149,40 @@ public class CombatController : MonoBehaviour {
 		}
 	}
 
+	//need to fix enemies rotation
+
 	private void SpawnLeader()
 	{
-		GameObject baddy = enemySpaceship.gameObject;
+		GameObject baddy = enemySpaceship.gameObject.transform.GetChild(1).gameObject;
 		int x = Random.Range (10, 30);
 		int z = Random.Range (10, 30);
 		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z + 50f);
-
-		GameObject clone = Instantiate (baddy, position, Quaternion.identity);
-		clone.transform.LookAt (combat_player.transform);
+		GameObject parent = new GameObject ();
+		parent.name = enemySpaceship.gameObject.name + "(Combat)";
+	
+		parent.transform.position = position;
+		//Quaternion rot = Quaternion.Euler(-90,0,0);
+		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
+		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
 		clone.layer = 12;
 		clone.tag = "Enemy";
+
 		for (int i = 0; i < clone.transform.childCount; i++) 
 		{
 			clone.transform.GetChild (i).gameObject.layer = 12;
 		}
 
-		clone.GetComponent<AI_Patrol> ().enabled = false;
-		clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
-		clone.GetComponent<Spaceship> ().enabled = false; 
+		//clone.GetComponent<AI_Patrol> ().enabled = false;
+		//clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
+		//clone.GetComponent<Spaceship> ().enabled = false; 
 
 
-		clone.AddComponent<Fire> ();
-		clone.AddComponent<AI_Enemy> ();
+		parent.AddComponent<Fire> ();
+		parent.AddComponent<AI_Enemy> ();
 
-		AI_Enemy leaderAI = clone.GetComponent<AI_Enemy> ();
+		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
 		leaderAI.health = enemySpaceship.HullHealth;
 
-		leader = clone;
+		leader = parent;
 	}
 }
