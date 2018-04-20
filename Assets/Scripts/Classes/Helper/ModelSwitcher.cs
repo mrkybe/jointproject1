@@ -41,6 +41,7 @@ namespace Assets.Scripts.Classes.Helper
         private SphereCollider mySensorCollider;
         private States State = States.ALIVE;
         private Quaternion initialRotation;
+        private GameObject myIndicator;
 
         
         private void Awake()
@@ -51,6 +52,13 @@ namespace Assets.Scripts.Classes.Helper
             mySpaceshipScript = this.transform.parent.GetComponent<Spaceship>();
             mySensorCollider = this.GetComponent<SphereCollider>();
             mySpaceshipParentRigidbody = mySpaceshipScript.GetComponent<Rigidbody>();
+            for (int i = 0; i < this.transform.parent.transform.childCount; i++)
+            {
+                if (this.transform.parent.transform.GetChild(i).gameObject.name == "Indicator")
+                {
+                    myIndicator = this.transform.parent.transform.GetChild(i).gameObject;
+                }
+            }
             initialRotation = transform.localRotation;
             myParticleSystem.Stop();
 
@@ -103,6 +111,10 @@ namespace Assets.Scripts.Classes.Helper
         public void SetColor(Color color)
         {
             myMeshRenderer.material.color = color;
+            if (myIndicator != null)
+            {
+                myIndicator.GetComponent<MeshRenderer>().material.color = color;
+            }
         }
 
         public void SetSensorRange(float radius)
