@@ -26,6 +26,36 @@ namespace Assets.Scripts.Classes.Helper
         [SerializeField]
         public List<GameObject> Meshes = new List<GameObject>();
 
+        private List<GameObject> Trails = new List<GameObject>();
+
+
+        [SerializeField]
+        public List<Vector3> TrailPositionsM0 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM1 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM2 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM3 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM4 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM5 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM6 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM7 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM8 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM9 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM10 = new List<Vector3>();
+        [SerializeField]
+        public List<Vector3> TrailPositionsM11 = new List<Vector3>();
+
+        private List<List<Vector3>> TrailPositions = new List<List<Vector3>>();
+
         /// <summary>
         /// Which model to use.
         /// </summary>
@@ -43,6 +73,8 @@ namespace Assets.Scripts.Classes.Helper
         private Quaternion initialRotation;
         private GameObject myIndicator;
 
+        private GameObject myTrailsSource;
+
         
         private void Awake()
         {
@@ -59,8 +91,33 @@ namespace Assets.Scripts.Classes.Helper
                     myIndicator = this.transform.parent.transform.GetChild(i).gameObject;
                 }
             }
+
+            for (int i = 0; i < this.transform.childCount; i++)
+            {
+                if (this.transform.GetChild(i).gameObject.name == "TrailSource")
+                {
+                    myTrailsSource = this.transform.GetChild(i).gameObject;
+                    Trails.Add(myTrailsSource);
+                }
+            }
             initialRotation = transform.localRotation;
             myParticleSystem.Stop();
+
+            TrailPositions = new List<List<Vector3>>
+            {
+                TrailPositionsM0,
+                TrailPositionsM1,
+                TrailPositionsM2,
+                TrailPositionsM3,
+                TrailPositionsM4,
+                TrailPositionsM5,
+                TrailPositionsM6,
+                TrailPositionsM7,
+                TrailPositionsM8,
+                TrailPositionsM9,
+                TrailPositionsM10,
+                TrailPositionsM11
+            };
 
             /*if (modelNumber < Meshes.Count)
             {
@@ -74,6 +131,32 @@ namespace Assets.Scripts.Classes.Helper
             if (mySpaceshipScript.Pilot != null && mySpaceshipScript.Pilot.Faction != null)
             {
                 SetColor(mySpaceshipScript.Pilot.Faction.ColorPrimary);
+            }
+        }
+
+        private void ConfigureTrails(List<Vector3> Positions)
+        {
+            int count = 0;
+            foreach (Vector3 pos in Positions)
+            {
+                if (count < Trails.Count)
+                {
+                    Trails[count].transform.localPosition = pos;
+                }
+                else
+                {
+                    GameObject newTrail = Instantiate(myTrailsSource, transform.position, Quaternion.identity);
+                    newTrail.transform.parent = this.transform;
+                    newTrail.transform.localPosition = pos;
+                    Trails.Add(newTrail);
+                }
+                count++;
+            }
+            while (Trails.Count > Positions.Count)
+            {
+                GameObject last = Trails[Trails.Count - 1];
+                Trails.RemoveAt(Trails.Count - 1);
+                Destroy(last);
             }
         }
 
@@ -106,6 +189,12 @@ namespace Assets.Scripts.Classes.Helper
             {
                 SetColor(mySpaceshipScript.Pilot.Faction.ColorPrimary);
             }
+
+            if (TrailPositions[modelNumber].Count != 0)
+            {
+                ConfigureTrails(TrailPositions[modelNumber]);
+            }
+            
         }
 
         public void SetColor(Color color)

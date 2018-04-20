@@ -11,6 +11,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         protected Vector3 targetFaceDirection;
         protected Vector3 targetVelocity;
         protected float throttle = 0f;
+        public Person Identity;
 
         // Use this for initialization
         protected void Start()
