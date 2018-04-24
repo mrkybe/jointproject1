@@ -740,11 +740,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 String myResource = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
                 if (myAmount <= myHold.GetAmountInHold(myResource))
                 {
-                    if (otherHold.Contains(myResource))
-                    {
-                        trade.Value += otherHold.GetCargoItemValue(myResource) * myAmount;
-                        trade.Volume += myHold.CargoItems.First(x => x.Name == myResource).Size * myAmount;
-                    }
+                    trade.Value += otherHold.GetCargoItemValue(myResource) * myAmount;
+                    trade.Volume += myHold.CargoItems.First(x => x.Name == myResource).Size * myAmount;
                 }
                 else // You can't try to buy more than there is
                 {
@@ -768,11 +765,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 String theirResource = buttonElementListTo[j].GetComponentInChildren<Text>().text;
                 if (theirAmount <= otherHold.GetAmountInHold(theirResource))
                 {
-                    if (myHold.Contains(theirResource))
-                    {
-                        trade.Value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
-                        trade.Volume += otherHold.CargoItems.First(x => x.Name == theirResource).Size * theirAmount;
-                    }
+                    trade.Value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
+                    trade.Volume += otherHold.CargoItems.First(x => x.Name == theirResource).Size * theirAmount;
                 }
                 else
                 {
@@ -851,12 +845,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
                 if (x <= myHold.GetAmountInHold(e))
                 {
-                    if (otherHold.Contains(e))
-                    {
-                        myHold.AddToHold(e, -x);
-                        otherHold.AddToHold(e, x);
-                        traded = true;
-                    }
+                    otherHold.Credit(e, myHold, x, true);
+                    traded = true;
                 }
             }
         }
@@ -869,12 +859,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
                 if (y <= otherHold.GetAmountInHold(f))
                 {
-                    if (myHold.Contains(f))
-                    {
-                        myHold.AddToHold(f, y);
-                        otherHold.AddToHold(f, -y);
-                        traded = true;
-                    }
+                    myHold.Credit(f, otherHold, y, true);
+                    traded = true;
                 }
             }
         }
