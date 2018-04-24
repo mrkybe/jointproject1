@@ -445,6 +445,18 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 UnpauseOvermap();
                 pausekey = false;
             }
+
+            if (gameState == GameState.InOverMap)
+            {
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                {
+                    Time.timeScale = 4.0f;
+                }
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                {
+                    Time.timeScale = 1.0f;
+                }
+            }
         }
         
         private int overmap_pause_count = 0;
