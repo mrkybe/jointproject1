@@ -446,7 +446,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 pausekey = false;
             }
 
-            if (gameState == GameState.InOverMap)
+            if (gameState == GameState.InOverMap && !IsOvermapPaused())
             {
                 if (Input.GetKeyDown(KeyCode.LeftShift))
                 {
