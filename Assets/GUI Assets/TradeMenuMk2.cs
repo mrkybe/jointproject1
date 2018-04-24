@@ -26,7 +26,9 @@ public class TradeMenuMk2 : MonoBehaviour
     public Button submitButton;
     public Button elementButton;
     public Button selectorButton;
+    public Button bountyButton;
     public Text textPrefab;
+    
 
     private RectTransform leftPanel;
     private RectTransform rightPanel;
@@ -43,6 +45,9 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform rightButtonPanel;
     private RectTransform leftValuesPanel;
     private RectTransform rightValuesPanel;
+    private RectTransform bountyPanel;
+    private RectTransform bountyDisplay;
+    private RectTransform bountyRewards;
 
     private RectTransform leftTitleBar;
     private RectTransform rightTitleBar;
@@ -67,6 +72,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Button> mySelectorListDown;
     private List<Button> theirSelectorListUp;
     private List<Button> theirSelectorListDown;
+    private List<Button> bountyList;
 
     private List<Text> myAmountSelect;
     private List<Text> theirAmountSelect;
@@ -76,6 +82,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Text> theirValues;
     private List<Text> myPrices;
     private List<Text> theirPrices;
+    private List<Text> bountyRewardsList;
 
     private Spaceship otherShip;
     private Spaceship playerShip;
@@ -109,6 +116,9 @@ public class TradeMenuMk2 : MonoBehaviour
         theirPricesPanel = GameObject.Find("Their Price").GetComponent<RectTransform>();
         leftTitleBar = GameObject.Find("Left Title Bar").GetComponent<RectTransform>();
         rightTitleBar = GameObject.Find("Right Title Bar").GetComponent<RectTransform>();
+        bountyPanel = GameObject.Find("Bounty Panel").GetComponent<RectTransform>();
+        bountyDisplay = GameObject.Find("Bounty Display List").GetComponent<RectTransform>();
+        bountyRewards = GameObject.Find("Bounty Rewards").GetComponent<RectTransform>();
 
         leftTitleBar.gameObject.SetActive(false);
         rightTitleBar.gameObject.SetActive(false);
@@ -118,6 +128,7 @@ public class TradeMenuMk2 : MonoBehaviour
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
 
         centerPanel.gameObject.SetActive(false);
+        bountyPanel.gameObject.SetActive(false);
 
         on = new Vector2(0, 0);
         leftOffPosition = new Vector2(-675, 0);
@@ -134,6 +145,7 @@ public class TradeMenuMk2 : MonoBehaviour
         mySelectorListDown = new List<Button>();
         theirSelectorListDown = new List<Button>();
         theirSelectorListUp = new List<Button>();
+        bountyList = new List<Button>();
 
         myAmountSelect = new List<Text>();
         theirAmountSelect = new List<Text>();
@@ -143,6 +155,7 @@ public class TradeMenuMk2 : MonoBehaviour
         theirValues = new List <Text>();
         myPrices = new List<Text>();
         theirPrices = new List<Text>();
+        bountyRewardsList = new List<Text>();
 
         otherShip = new Spaceship();
         planet = new Planet();
@@ -158,6 +171,7 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulatePanel(mySelectorListUp, selectorButton, mySelectorUp, 10);
         PopulatePanel(theirSelectorListDown, selectorButton, theirSelectorDown, 10);
         PopulatePanel(theirSelectorListUp, selectorButton, theirSelectorUp, 10);
+        PopulatePanel(bountyList, buttonPrefab, bountyDisplay, 1);
 
         PopulateNumberPanel(myAmountSelect, textPrefab, myAmountPanel, 10);
         PopulateNumberPanel(theirAmountSelect, textPrefab, theirAmountPanel, 10);
@@ -167,8 +181,10 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(theirValues, textPrefab, rightValuesPanel, 15);
         PopulateNumberPanel(myPrices, textPrefab, myPricesPanel, 10);
         PopulateNumberPanel(theirPrices, textPrefab, theirPricesPanel, 10);
+        PopulateNumberPanel(bountyRewardsList, textPrefab, bountyRewards, 1);
 
         submitButton.onClick.AddListener(SubmitTrade);
+        bountyButton.onClick.AddListener(ConfirmBounty);
 
         MassClear();
 
@@ -178,7 +194,6 @@ public class TradeMenuMk2 : MonoBehaviour
         myHold.AddToHold("Dirt", 100);
         //</FOR TESTING>
     }
-
 
     void Update()
     {
@@ -193,6 +208,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     MassClear();
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
@@ -205,6 +221,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     ClearPanel(buttonListLeft);
                     ClearNumberPanel(myInventoryAmounts);
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
@@ -214,6 +231,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     isRightOff = true;
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
 
@@ -380,6 +398,7 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel.anchoredPosition = rightOffPosition;
 
         centerPanel.gameObject.SetActive(false);
+        bountyPanel.gameObject.SetActive(false);
 
         isLeftOff = true;
         isRightOff = true;
@@ -414,6 +433,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
+        bountyPanel.gameObject.SetActive(true);
+
 
         int i = 0;
         if (bounties.Count > 0 && bounties.Count <= buttonListRight.Count)
@@ -442,7 +463,17 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void DisplayBounty(string s, Faction f)
     {
-        // Bounty information
+        bountyList[0].gameObject.SetActive(true);
+        bountyList[0].GetComponentInChildren<Text>().text = s;
+        bountyRewardsList[0].gameObject.SetActive(true);
+        int i = 0;
+        for (i=0; i<f.BountyBoard.Count; i++)
+        {
+            if (s.Equals(f.BountyBoard[i].Target.name))
+            {
+                bountyRewardsList[0].text = f.BountyBoard[i].Value.ToString();
+            }
+        }
     }
 
     private void OpenInventoryShip(String otherName)
@@ -747,6 +778,12 @@ public class TradeMenuMk2 : MonoBehaviour
         TryTrade();
     }
 
+    private void ConfirmBounty()
+    {
+        ClearPanel(bountyList);
+        ClearNumberPanel(bountyRewardsList);
+    }
+
     private bool TryTrade()
     {
         TradeTotal sellTrade = CalculatePlayerGoodsSellValue(); // Value of goods being sold by the player
@@ -873,6 +910,7 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearNumberPanel(myValues);
         ClearNumberPanel(theirValues);
     }
+    
 }
 
 
