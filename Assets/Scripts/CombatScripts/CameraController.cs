@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Classes.WorldSingleton;
 
 ///<summary>
 /// CameraController is put on the camera object in order to follow the player as they move.
@@ -10,6 +11,9 @@ public class CameraController : MonoBehaviour {
 
 	public GameObject player;       //Public variable to store a reference to the player game object
 	public float y_value = 100f;//Private variable to store the offset distance between the player and camera
+	private GameObject enemy;
+	private CombatController controller;
+	private GameObject overseer;
 
 	private float y_distance;
 	// Use this for initialization
@@ -21,6 +25,9 @@ public class CameraController : MonoBehaviour {
 		//Calculate and store the offset value by getting the distance between the player's position and camera's position.
 		y_distance = player.transform.position.y + y_value;
 		transform.rotation = Quaternion.Euler (90, 0, 0);
+		overseer = GameObject.Find ("Overseer");
+		controller = overseer.GetComponent<CombatController> ();
+		enemy = controller.combat_player;
 	}
 	///<summary>
 	/// Check the player's distance and move the camera accordingly.
@@ -28,9 +35,19 @@ public class CameraController : MonoBehaviour {
 	// LateUpdate is called after Update each frame
 	void FixedUpdate () 
 	{
+		FollowPlayer ();
+	}
+
+	void FollowPlayer()
+	{
 		y_distance = player.transform.position.y + y_value;
 		// Set the position of the camera's transform to be the same as the player's, but offset by the calculated offset distance.
 		transform.position = new Vector3(player.transform.position.x, y_distance, player.transform.position.z);
+	}
+
+	void FollowEnemy()
+	{
+		
 	}
 }
 

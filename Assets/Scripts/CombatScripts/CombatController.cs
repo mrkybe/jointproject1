@@ -15,7 +15,7 @@ public class CombatController : MonoBehaviour {
     public GameObject ai_player;
     public GameObject combat_player;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
-
+	public GameObject leader;
 
     private bool flag = false;
 	private int player_depletion = 0;
@@ -33,7 +33,7 @@ public class CombatController : MonoBehaviour {
 	private Spaceship[] enemyTesters;
 	private Overseer o;
 	private GameObject[] enemies;
-	private GameObject leader;
+
 
 	public static CombatController instance;
     // Use this for initialization
