@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 using UnityEngine.Events;
@@ -678,10 +679,16 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    // TODO: FIX FABLE BUG
-    private int CalculatePlayerGoodsSellValue()
+    protected struct TradeTotal
     {
-        int value = 0;
+        public int Value;
+        public int Volume;
+    }
+
+    // TODO: FIX FABLE BUG
+    private TradeTotal CalculatePlayerGoodsSellValue()
+    {
+        TradeTotal trade = new TradeTotal();
         for (int i = 0; i < myAmountSelect.Count; i++)
         {
             if (myAmountSelect[i].gameObject.activeInHierarchy)
@@ -692,23 +699,24 @@ public class TradeMenuMk2 : MonoBehaviour
                 {
                     if (otherHold.Contains(myResource))
                     {
-                        value += otherHold.GetCargoItemValue(myResource) * myAmount;
+                        trade.Value += otherHold.GetCargoItemValue(myResource) * myAmount;
+                        trade.Volume += myHold.CargoItems.First(x => x.Name == myResource).Size * myAmount;
                     }
                 }
                 else // You can't try to buy more than there is
                 {
-                    return -1;
+                    return new TradeTotal(){Value = -1, Volume = -1};
                 }
             }
         }
-        Debug.Log("Player Goods Sell Value: " + value);
-        return value;
+        Debug.Log("Player Goods Sell Value: " + trade.Value);
+        return trade;
     }
 
     // TODO: FIX FABLE BUG
-    private int CalculatePlayerGoodsBuyingCost()
+    private TradeTotal CalculatePlayerGoodsBuyingCost()
     {
-        int value = 0;
+        TradeTotal trade = new TradeTotal();
         for (int j = 0; j < theirAmountSelect.Count; j++)
         {
             if (theirAmountSelect[j].gameObject.activeInHierarchy)
@@ -719,17 +727,18 @@ public class TradeMenuMk2 : MonoBehaviour
                 {
                     if (myHold.Contains(theirResource))
                     {
-                        value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
+                        trade.Value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
+                        trade.Volume += otherHold.CargoItems.First(x => x.Name == theirResource).Size * theirAmount;
                     }
                 }
                 else
                 {
-                    return -1;
+                    return new TradeTotal() { Value = -1, Volume = -1 };
                 }
             }
         }
-        Debug.Log("Player Buying Cost: " + value);
-        return value;
+        Debug.Log("Player Buying Cost: " + trade.Value);
+        return trade;
     }
 
     private void SubmitTrade()
@@ -740,14 +749,24 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private bool TryTrade()
     {
-        int sellValue = CalculatePlayerGoodsSellValue(); // Value of goods being sold by the player
-        int buyValue = CalculatePlayerGoodsBuyingCost(); // Value of goods being bought by the player
-        if (buyValue == -1 || sellValue == -1)
+        TradeTotal sellTrade = CalculatePlayerGoodsSellValue(); // Value of goods being sold by the player
+        TradeTotal buyTrade = CalculatePlayerGoodsBuyingCost(); // Value of goods being bought by the player
+        if (sellTrade.Value == -1 || buyTrade.Value == -1)
         {
             Debug.Log("Trade Failed! Tried to buy/sell more than there is.");
             return false; // Tried to buy/sell more than there is
         }
-        int costToPlayer = buyValue - sellValue;
+        // Check that the player has enough room to carry the goods after removing theirs
+        // Check that the reciever has enough room to carry the goods after removing theirs
+        int playerSpace = myHold.GetRemainingSpace() - sellTrade.Volume;
+        int recieverSpace = otherHold.GetRemainingSpace() - buyTrade.Volume;
+        if (playerSpace < buyTrade.Volume || recieverSpace < sellTrade.Volume)
+        {
+            Debug.Log("One party has insufficient space to complete the trade.");
+            return false;
+        }
+
+        int costToPlayer = buyTrade.Value - sellTrade.Value;
         if (costToPlayer > 0)
         {
             Debug.Log(costToPlayer + " > 0, trying to charge player's funds.");
@@ -777,24 +796,35 @@ public class TradeMenuMk2 : MonoBehaviour
 
         for (int i = 0; i < myAmountSelect.Count; i++)
         {
-            for (int j = 0; j < theirAmountSelect.Count; j++)
+            if (myAmountSelect[i].gameObject.activeInHierarchy)
             {
-                if (myAmountSelect[i].gameObject.activeInHierarchy && theirAmountSelect[j].gameObject.activeInHierarchy)
+                int x = int.Parse(myAmountSelect[i].text);
+                String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
+                if (x <= myHold.GetAmountInHold(e))
                 {
-                    int x = int.Parse(myAmountSelect[i].text);
-                    int y = int.Parse(theirAmountSelect[j].text);
-                    String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
-                    String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
-                    if (x <= myHold.GetAmountInHold(e) && y <= otherHold.GetAmountInHold(f))
+                    if (otherHold.Contains(e))
                     {
-                        if (otherHold.Contains(e) && myHold.Contains(f))
-                        {
-                            myHold.AddToHold(e, -x);
-                            otherHold.AddToHold(e, x);
-                            myHold.AddToHold(f, y);
-                            otherHold.AddToHold(f, -y);
-                            traded = true;
-                        }
+                        myHold.AddToHold(e, -x);
+                        otherHold.AddToHold(e, x);
+                        traded = true;
+                    }
+                }
+            }
+        }
+
+        for (int j = 0; j < theirAmountSelect.Count; j++)
+        {
+            if (theirAmountSelect[j].gameObject.activeInHierarchy)
+            {
+                int y = int.Parse(theirAmountSelect[j].text);
+                String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
+                if (y <= otherHold.GetAmountInHold(f))
+                {
+                    if (myHold.Contains(f))
+                    {
+                        myHold.AddToHold(f, y);
+                        otherHold.AddToHold(f, -y);
+                        traded = true;
                     }
                 }
             }

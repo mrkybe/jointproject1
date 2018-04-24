@@ -108,11 +108,13 @@ public class CombatController : MonoBehaviour {
 		enemySpaceship = enemy;
 		SpawnLeader ();
 		pc.health = playerSpaceship.HullHealth;
-	}
+        Time.timeScale = 1.0f;
+    }
 
 	public void CombatEnd(COMBAT_RESULT result)
-	{
-		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+    {
+        Time.timeScale = 0.0f;
+        enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
 		o.gameState = GameState.InOverMap;
 		flag = false;

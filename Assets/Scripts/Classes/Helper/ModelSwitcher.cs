@@ -135,7 +135,7 @@ namespace Assets.Scripts.Classes.Helper
             {
                 SetColor(mySpaceshipScript.Pilot.Faction.ColorPrimary);
             }
-            InvokeRepeating("UpdateTrailRenderers", 1f, (0.1f));
+            //InvokeRepeating("UpdateTrailRenderers", 1f, (0.1f));
         }
 
         private void ConfigureTrails(List<Vector3> Positions)
@@ -245,6 +245,7 @@ namespace Assets.Scripts.Classes.Helper
             }
             else
             {
+                UpdateTrailRenderers();
                 //Vector3 angVel = mySpaceshipParentRigidbody.angularVelocity;
                 //transform.Rotate(Vector3.up, angVel.y * Time.deltaTime * -75f);
                 //transform.localRotation = Quaternion.Lerp(transform.localRotation, initialRotation, Time.deltaTime);

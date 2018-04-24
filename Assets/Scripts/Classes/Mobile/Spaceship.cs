@@ -85,7 +85,7 @@ namespace Assets.Scripts.Classes.Mobile {
             {
                 targetSpeed = 0;
             }
-            myStorage = new CargoHold(this, 100);
+            myStorage = new CargoHold(this, 1000);
         }
 
         private void Start ()
