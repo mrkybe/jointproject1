@@ -35,7 +35,14 @@ namespace Assets.Editor
                     mySpaceship = myTarget.GetComponent<Spaceship>();
                     if (GUILayout.Button("What are you doing?"))
                     {
-                        Debug.Log(mySpaceship.BlackBox.Read());
+                        if (mySpaceship.BlackBox != null)
+                        {
+                            Debug.Log(mySpaceship.BlackBox.Read());
+                        }
+                        else
+                        {
+                            Debug.Log("BlackBox is null!");
+                        }
                     }
                 }
             }
