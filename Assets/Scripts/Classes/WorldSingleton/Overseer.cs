@@ -46,6 +46,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
         public float worldSize = 800f;
+        public float planetTickFrequency = 10;
 
         private static GameObject Saturn;
         private static List<GameObject> Moons = new List<GameObject>();
@@ -86,7 +87,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateMarket();
             LoadExplosions();
 
-            InvokeRepeating("TickPlanets", 1f, 1f);
+            InvokeRepeating("TickPlanets", 1f, planetTickFrequency);
+            //Invoke("TickPlanets", 1f);
             InvokeRepeating("ManagePirateCount", 1f, 1f);
         }
 
@@ -339,17 +341,19 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private IEnumerator TickPlanetsCoroutine()
         {
             int counter = 0;
-            int planets_to_do_per_iteration = 10;
+            int numPlanets = Moons.Count;
+            int planetsToDoPerIteration = 10;
+            float timeBetweenIterations = ((((float)numPlanets / planetsToDoPerIteration)) / planetTickFrequency) / 2f;
             if (IsOvermapPaused())
             {
-                yield return null;
+                yield break;
             }
             foreach (Planet p in Planet.listOfPlanetObjects)
             {
-                if (counter > planets_to_do_per_iteration)
+                if (counter > planetsToDoPerIteration)
                 {
                     counter = 0;
-                    yield return null;
+                    yield return new WaitForSeconds(timeBetweenIterations);
                 }
                 else
                 {
@@ -362,7 +366,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
         public void ManagePirateCount()
         {
-            if (IsOvermapPaused() == true)
+            if (IsOvermapPaused())
             {
                 return;
             }
@@ -441,6 +445,18 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 UnpauseOvermap();
                 pausekey = false;
             }
+
+            if (gameState == GameState.InOverMap && !IsOvermapPaused())
+            {
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                {
+                    Time.timeScale = 4.0f;
+                }
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                {
+                    Time.timeScale = 1.0f;
+                }
+            }
         }
         
         private int overmap_pause_count = 0;
@@ -453,6 +469,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             if (!IsOvermapPaused())
             {
+                Time.timeScale = 0.0f;
                 foreach (Spaceship ship in FindObjectsOfType(typeof(Spaceship)))
                 {
                     ship.Pause();
@@ -473,6 +490,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         {
             if (overmap_pause_count == 1)
             {
+                Time.timeScale = 1.0f;
                 foreach (Spaceship ship in FindObjectsOfType(typeof(Spaceship)))
                 {
                     ship.Unpause();

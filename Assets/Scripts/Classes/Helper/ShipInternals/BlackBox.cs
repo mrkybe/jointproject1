@@ -19,7 +19,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         // Ship location in Combat map at time of entry.
         public Vector3 LPS = Vector3.zero;
 
-        BlackBoxEntry()
+        public BlackBoxEntry()
         {
             Timestamp = Time.time;
         }
@@ -28,9 +28,26 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
     /// <summary>
     /// Captain's log.
     /// </summary>
-    class BlackBox : ScriptableObject
+    public class BlackBox
     {
         public string ShipName;
-        public string CaptainName;
+
+        private List<BlackBoxEntry> entries;
+
+        public BlackBox()
+        {
+            entries = new List<BlackBoxEntry>();
+        }
+
+        public void Write(string message, Vector3 GPS, Vector3 LPS = new Vector3())
+        {
+            BlackBoxEntry newEntry = new BlackBoxEntry
+            {
+                GPS = GPS,
+                LPS = LPS,
+                Message = message
+            };
+            entries.Add(newEntry);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Classes.Mobile;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,11 +12,12 @@ using Assets.Scripts.Classes.WorldSingleton;
 
 /// <summary>
 /// Press Space to open list of nearby moons and ships.
-/// Click on one to open inventory.
-/// Click on items in inventory to place on center panel.
+/// Click on one to open menu.
+/// Choose combat, bounties, or trade.
+/// If trading, click on items in inventory to place on center panel.
 /// Click buttons in center panel to increase or decrease amount to be traded.
 /// Click submit button to confirm trade.
-/// Press Space to return to list of nearby agents.
+/// Press Space again to close menu.
 /// Press Space again to close menu.
 /// </summary>
 public class TradeMenuMk2 : MonoBehaviour
@@ -24,7 +26,9 @@ public class TradeMenuMk2 : MonoBehaviour
     public Button submitButton;
     public Button elementButton;
     public Button selectorButton;
+    public Button bountyButton;
     public Text textPrefab;
+    
 
     private RectTransform leftPanel;
     private RectTransform rightPanel;
@@ -41,6 +45,9 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform rightButtonPanel;
     private RectTransform leftValuesPanel;
     private RectTransform rightValuesPanel;
+    private RectTransform bountyPanel;
+    private RectTransform bountyDisplay;
+    private RectTransform bountyRewards;
 
     private RectTransform leftTitleBar;
     private RectTransform rightTitleBar;
@@ -54,7 +61,8 @@ public class TradeMenuMk2 : MonoBehaviour
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
 
-    private int menuLevel;
+    private bool isRightOff;
+    private bool isLeftOff;
 
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
@@ -64,6 +72,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Button> mySelectorListDown;
     private List<Button> theirSelectorListUp;
     private List<Button> theirSelectorListDown;
+    private List<Button> bountyList;
 
     private List<Text> myAmountSelect;
     private List<Text> theirAmountSelect;
@@ -73,9 +82,10 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Text> theirValues;
     private List<Text> myPrices;
     private List<Text> theirPrices;
+    private List<Text> bountyRewardsList;
 
     private Spaceship otherShip;
-    private Spaceship ship;
+    private Spaceship playerShip;
     private Planet planet;
     private CargoHold myHold;
     private CargoHold otherHold;
@@ -83,7 +93,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private Overseer o;
 
     // Use this for initialization
-    void Awake()
+    void Start()
     {
         leftPanel = GameObject.Find("Left Panel").GetComponent<RectTransform>();
         rightPanel = GameObject.Find("Right Panel").GetComponent<RectTransform>();
@@ -106,21 +116,26 @@ public class TradeMenuMk2 : MonoBehaviour
         theirPricesPanel = GameObject.Find("Their Price").GetComponent<RectTransform>();
         leftTitleBar = GameObject.Find("Left Title Bar").GetComponent<RectTransform>();
         rightTitleBar = GameObject.Find("Right Title Bar").GetComponent<RectTransform>();
+        bountyPanel = GameObject.Find("Bounty Panel").GetComponent<RectTransform>();
+        bountyDisplay = GameObject.Find("Bounty Display List").GetComponent<RectTransform>();
+        bountyRewards = GameObject.Find("Bounty Rewards").GetComponent<RectTransform>();
 
         leftTitleBar.gameObject.SetActive(false);
         rightTitleBar.gameObject.SetActive(false);
 
-        ship = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
+        playerShip = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
 
         centerPanel.gameObject.SetActive(false);
+        bountyPanel.gameObject.SetActive(false);
 
         on = new Vector2(0, 0);
         leftOffPosition = new Vector2(-675, 0);
         rightOffPosition = new Vector2(675, 0);
 
-        menuLevel = 0;
+        isLeftOff = true;
+        isRightOff = true;
 
         buttonListLeft = new List<Button>();
         buttonListRight = new List<Button>();
@@ -130,6 +145,7 @@ public class TradeMenuMk2 : MonoBehaviour
         mySelectorListDown = new List<Button>();
         theirSelectorListDown = new List<Button>();
         theirSelectorListUp = new List<Button>();
+        bountyList = new List<Button>();
 
         myAmountSelect = new List<Text>();
         theirAmountSelect = new List<Text>();
@@ -139,11 +155,12 @@ public class TradeMenuMk2 : MonoBehaviour
         theirValues = new List <Text>();
         myPrices = new List<Text>();
         theirPrices = new List<Text>();
+        bountyRewardsList = new List<Text>();
 
         otherShip = new Spaceship();
         planet = new Planet();
         otherHold = new CargoHold(GetComponent<MonoBehaviour>(), 0);
-        myHold = ship.GetCargoHold;
+        myHold = playerShip.GetCargoHold;
 
 
         PopulatePanel(buttonListLeft, buttonPrefab, leftButtonPanel, 15);
@@ -154,6 +171,7 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulatePanel(mySelectorListUp, selectorButton, mySelectorUp, 10);
         PopulatePanel(theirSelectorListDown, selectorButton, theirSelectorDown, 10);
         PopulatePanel(theirSelectorListUp, selectorButton, theirSelectorUp, 10);
+        PopulatePanel(bountyList, buttonPrefab, bountyDisplay, 1);
 
         PopulateNumberPanel(myAmountSelect, textPrefab, myAmountPanel, 10);
         PopulateNumberPanel(theirAmountSelect, textPrefab, theirAmountPanel, 10);
@@ -163,10 +181,13 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(theirValues, textPrefab, rightValuesPanel, 15);
         PopulateNumberPanel(myPrices, textPrefab, myPricesPanel, 10);
         PopulateNumberPanel(theirPrices, textPrefab, theirPricesPanel, 10);
+        PopulateNumberPanel(bountyRewardsList, textPrefab, bountyRewards, 1);
 
-        submitButton.onClick.AddListener(MakeTrade);
+        submitButton.onClick.AddListener(SubmitTrade);
+        bountyButton.onClick.AddListener(ConfirmBounty);
 
         MassClear();
+
 
         //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
@@ -175,39 +196,43 @@ public class TradeMenuMk2 : MonoBehaviour
         //</FOR TESTING>
     }
 
-
     void Update()
     {
-        if (o.gameState == GameState.InOverMap)
+        if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
+            
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {
-                if (menuLevel == 0)
+                
+                if (isLeftOff && isRightOff)
                 {
                     MassClear();
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
-                else if (menuLevel == 1)
+                else if (!isLeftOff && isRightOff)
                 {
                     Overseer.Main.UnpauseOvermap();
                     o.gameState = GameState.InOverMap;
                     leftPanel.anchoredPosition = leftOffPosition;
-                    menuLevel = 0;
+                    isLeftOff = true;
                     ClearPanel(buttonListLeft);
                     ClearNumberPanel(myInventoryAmounts);
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
                 }
-                else if (menuLevel > 1)
+                else if (!isLeftOff && !isRightOff)
                 {
                     rightPanel.anchoredPosition = rightOffPosition;
-                    menuLevel = menuLevel - 1;
+                    isRightOff = true;
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
+                    bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
 
@@ -283,11 +308,11 @@ public class TradeMenuMk2 : MonoBehaviour
             Overseer.Main.PauseOvermap();
         }
         leftPanel.anchoredPosition = on;
-        menuLevel = 1;
+        isLeftOff = false;
 
-        List<Spaceship> shipsInRange = ship.GetInInteractionRange<Spaceship>();
-        List<Planet> planetsInRange = ship.GetInInteractionRange<Planet>();
-        Faction myFaction = ship.Pilot.Faction;
+        List<Spaceship> shipsInRange = playerShip.GetInInteractionRange<Spaceship>();
+        List<Planet> planetsInRange = playerShip.GetInInteractionRange<Planet>();
+        Faction myFaction = playerShip.Pilot.Faction;
 
         int i = 0;
 
@@ -295,9 +320,9 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             for (i = 0; i < planetsInRange.Count; i++)
             {
-                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].name;
+                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].MyName;
                 buttonListLeft[i].gameObject.SetActive(true);
-                String t = buttonListLeft[i].GetComponentInChildren<Text>().text;
+                String t = planetsInRange[i].name;
                 buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(t); });
                 if (planetsInRange[i].Faction.HostileWith(myFaction))
                 {
@@ -361,21 +386,25 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(t); });
 
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
+
     }
 
     private void StartCombat(string t)
     {
         otherShip = GameObject.Find(t).GetComponent<Spaceship>();
 
-        Overseer.Main.ResolveShipCombat(ship, otherShip);
+        Overseer.Main.ResolveShipCombat(playerShip, otherShip);
 
         leftPanel.anchoredPosition = leftOffPosition;
         
         rightPanel.anchoredPosition = rightOffPosition;
 
         centerPanel.gameObject.SetActive(false);
+        bountyPanel.gameObject.SetActive(false);
 
-        menuLevel = 0;
+        isLeftOff = true;
+        isRightOff = true;
+        
         MassClear();
     }
 
@@ -405,7 +434,9 @@ public class TradeMenuMk2 : MonoBehaviour
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
+        //bountyPanel.gameObject.SetActive(true);
+
 
         int i = 0;
         if (bounties.Count > 0 && bounties.Count <= buttonListRight.Count)
@@ -417,6 +448,10 @@ public class TradeMenuMk2 : MonoBehaviour
                 String s = bounties[i].Target.name;
                 Faction f = planet.Faction;
                 buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+
+                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].gameObject.SetActive(true);
+
             }
         }
         else if( bounties.Count > 0 && bounties.Count > buttonListRight.Count)
@@ -427,23 +462,39 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListRight[i].gameObject.SetActive(true);
                 String s = bounties[i].Target.name;
                 Faction f = planet.Faction;
-                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+                //buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+
+                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].gameObject.SetActive(true);
+
             }
         }
     }
 
     private void DisplayBounty(string s, Faction f)
     {
-        // Bounty information
+        bountyList[0].gameObject.SetActive(true);
+        bountyList[0].GetComponentInChildren<Text>().text = s;
+        bountyRewardsList[0].gameObject.SetActive(true);
+        int i = 0;
+        for (i=0; i<f.BountyBoard.Count; i++)
+        {
+            if (s.Equals(f.BountyBoard[i].Target.name))
+            {
+                bountyRewardsList[0].text = f.BountyBoard[i].Value.ToString();
+            }
+        }
     }
 
     private void OpenInventoryShip(String otherName)
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
 
         otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
+
+        o.GetFaction("Duty").AddBounty(new Bounty(otherShip, 100));
 
         otherHold = otherShip.GetCargoHold;
 
@@ -499,7 +550,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
-        menuLevel = 2;
+        isRightOff = false;
 
         planet = GameObject.Find(otherName).GetComponent<Planet>();
 
@@ -671,34 +722,145 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
+    protected struct TradeTotal
+    {
+        public int Value;
+        public int Volume;
+    }
+
+    // TODO: FIX FABLE BUG
+    private TradeTotal CalculatePlayerGoodsSellValue()
+    {
+        TradeTotal trade = new TradeTotal();
+        for (int i = 0; i < myAmountSelect.Count; i++)
+        {
+            if (myAmountSelect[i].gameObject.activeInHierarchy)
+            {
+                int myAmount = int.Parse(myAmountSelect[i].text);
+                String myResource = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
+                if (myAmount <= myHold.GetAmountInHold(myResource))
+                {
+                    trade.Value += otherHold.GetCargoItemValue(myResource) * myAmount;
+                    trade.Volume += myHold.CargoItems.First(x => x.Name == myResource).Size * myAmount;
+                }
+                else // You can't try to buy more than there is
+                {
+                    return new TradeTotal(){Value = -1, Volume = -1};
+                }
+            }
+        }
+        Debug.Log("Player Goods Sell Value: " + trade.Value);
+        return trade;
+    }
+
+    // TODO: FIX FABLE BUG
+    private TradeTotal CalculatePlayerGoodsBuyingCost()
+    {
+        TradeTotal trade = new TradeTotal();
+        for (int j = 0; j < theirAmountSelect.Count; j++)
+        {
+            if (theirAmountSelect[j].gameObject.activeInHierarchy)
+            {
+                int theirAmount = int.Parse(theirAmountSelect[j].text);
+                String theirResource = buttonElementListTo[j].GetComponentInChildren<Text>().text;
+                if (theirAmount <= otherHold.GetAmountInHold(theirResource))
+                {
+                    trade.Value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
+                    trade.Volume += otherHold.CargoItems.First(x => x.Name == theirResource).Size * theirAmount;
+                }
+                else
+                {
+                    return new TradeTotal() { Value = -1, Volume = -1 };
+                }
+            }
+        }
+        Debug.Log("Player Buying Cost: " + trade.Value);
+        return trade;
+    }
+
+    private void SubmitTrade()
+    {
+        Debug.Log("Trying to trade!");
+        TryTrade();
+    }
+
+    private void ConfirmBounty()
+    {
+        ClearPanel(bountyList);
+        ClearNumberPanel(bountyRewardsList);
+    }
+
+    private bool TryTrade()
+    {
+        TradeTotal sellTrade = CalculatePlayerGoodsSellValue(); // Value of goods being sold by the player
+        TradeTotal buyTrade = CalculatePlayerGoodsBuyingCost(); // Value of goods being bought by the player
+        if (sellTrade.Value == -1 || buyTrade.Value == -1)
+        {
+            Debug.Log("Trade Failed! Tried to buy/sell more than there is.");
+            return false; // Tried to buy/sell more than there is
+        }
+        // Check that the player has enough room to carry the goods after removing theirs
+        // Check that the reciever has enough room to carry the goods after removing theirs
+        int playerSpace = myHold.GetRemainingSpace() - sellTrade.Volume;
+        int recieverSpace = otherHold.GetRemainingSpace() - buyTrade.Volume;
+        if (playerSpace < buyTrade.Volume || recieverSpace < sellTrade.Volume)
+        {
+            Debug.Log("One party has insufficient space to complete the trade.");
+            return false;
+        }
+
+        int costToPlayer = buyTrade.Value - sellTrade.Value;
+        if (costToPlayer > 0)
+        {
+            Debug.Log(costToPlayer + " > 0, trying to charge player's funds.");
+            // Check player has enough money to cover the transaction
+            if (playerShip.Pilot.TryChargeMoney(costToPlayer))
+            {
+                Debug.Log("Charged player " + costToPlayer);
+                // Give them the goods, take their sold goods
+                MakeTrade();
+            }
+        }
+        else // costToPlayer <= 0
+        {
+            Debug.Log(costToPlayer + " < 0, giving player money.");
+            // Credit their $
+            playerShip.Pilot.GiveMoney(-costToPlayer);
+            // Give them the goods, take their sold goods
+            MakeTrade();
+            return true;
+        }
+        return false;
+    }
+
     private void MakeTrade()
     {
-        int i = 0;
-        int j = 0;
         bool traded = false;
-        int x = 0;
-        int y = 0;
-        for (i = 0; i < myAmountSelect.Count; i++)
+
+        for (int i = 0; i < myAmountSelect.Count; i++)
         {
-            for (j = 0; j < theirAmountSelect.Count; j++)
+            if (myAmountSelect[i].gameObject.activeInHierarchy)
             {
-                if (myAmountSelect[i].gameObject.activeInHierarchy && theirAmountSelect[j].gameObject.activeInHierarchy)
+                int x = int.Parse(myAmountSelect[i].text);
+                String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
+                if (x <= myHold.GetAmountInHold(e))
                 {
-                    x = int.Parse(myAmountSelect[i].text);
-                    y = int.Parse(theirAmountSelect[j].text);
-                    String e = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
-                    String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
-                    if (x <= myHold.GetAmountInHold(e) && y <= otherHold.GetAmountInHold(f))
-                    {
-                        if (otherHold.Contains(e) && myHold.Contains(f))
-                        {
-                            myHold.AddToHold(e, -x);
-                            otherHold.AddToHold(e, x);
-                            myHold.AddToHold(f, y);
-                            otherHold.AddToHold(f, -y);
-                            traded = true;
-                        }
-                    }
+                    otherHold.Credit(e, myHold, x, true);
+                    traded = true;
+                }
+            }
+        }
+
+        for (int j = 0; j < theirAmountSelect.Count; j++)
+        {
+            if (theirAmountSelect[j].gameObject.activeInHierarchy)
+            {
+                int y = int.Parse(theirAmountSelect[j].text);
+                String f = buttonElementListTo[j].GetComponentInChildren<Text>().text;
+                if (y <= otherHold.GetAmountInHold(f))
+                {
+                    myHold.Credit(f, otherHold, y, true);
+                    traded = true;
                 }
             }
         }
@@ -716,13 +878,13 @@ public class TradeMenuMk2 : MonoBehaviour
             ClearNumberPanel(myPrices);
         }
 
-        for (i = 0; i < myInventoryAmounts.Count; i++)
+        for (int i = 0; i < myInventoryAmounts.Count; i++)
         {
             String e = buttonListLeft[i].GetComponentInChildren<Text>().text;
             int a = myHold.GetAmountInHold(e);
             myInventoryAmounts[i].text = a.ToString();
         }
-        for (i = 0; i < theirInventoryAmounts.Count; i++)
+        for (int i = 0; i < theirInventoryAmounts.Count; i++)
         {
             String e = buttonListRight[i].GetComponentInChildren<Text>().text;
             int a = otherHold.GetAmountInHold(e);
@@ -746,6 +908,7 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearNumberPanel(myValues);
         ClearNumberPanel(theirValues);
     }
+    
 }
 
 
@@ -753,6 +916,6 @@ public class TradeMenuMk2 : MonoBehaviour
 
 
 /* TODO:
- *  Create and incorporate bounty menu.
- *  Look into blocking menu during combat.
+ *  Listener for bounty buttons.
+ *  Make sure buttons are all the right color.
  */

@@ -11,7 +11,9 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         protected Vector3 targetFaceDirection;
         protected Vector3 targetVelocity;
         protected float throttle = 0f;
+        public Person Identity;
 
+        
         // Use this for initialization
         protected void Start()
         {
@@ -19,6 +21,7 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
             targetFaceDirection = transform.forward;
             targetVelocity = Vector3.zero;
             throttle = 0f;
+            Money = 0;
         }
 
         protected void Update()
@@ -38,6 +41,27 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
                 return targetFaceDirection;
             }
             set { targetFaceDirection = value; }
+        }
+
+        public int Money
+        {
+            get;
+            private set;
+        }
+
+        public void GiveMoney(int amount)
+        {
+            Money += amount;
+        }
+
+        public bool TryChargeMoney(int amount)
+        {
+            if (Money >= amount)
+            {
+                Money -= amount;
+                return true;
+            }
+            return false;
         }
 
         public abstract void Die(Spaceship killer = null);

@@ -178,6 +178,14 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             Debug.Log(ToString());
         }
 
+        /// <summary>
+        /// Moves 'amount' of a resource into this cargohold from another.  Returns the amount of the resource transfered.
+        /// </summary>
+        /// <param name="type">Resource name</param>
+        /// <param name="source">Cargohold to take from</param>
+        /// <param name="amount"></param>
+        /// <param name="AutoCreateHold">Automatically add the type of hold necessary to store the resource?</param>
+        /// <returns></returns>
         public int Credit(String type, CargoHold source, int amount, bool AutoCreateHold = false)
         {
             if (AutoCreateHold)

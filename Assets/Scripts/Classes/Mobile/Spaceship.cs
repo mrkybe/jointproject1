@@ -71,6 +71,7 @@ namespace Assets.Scripts.Classes.Mobile {
         private void Awake()
         {
             pilot = GetComponent<PilotInterface>();
+            BlackBox = new BlackBox();
 
             targetSpeed = -999;
             throttle_input = 0;
@@ -84,7 +85,7 @@ namespace Assets.Scripts.Classes.Mobile {
             {
                 targetSpeed = 0;
             }
-            myStorage = new CargoHold(this, 100);
+            myStorage = new CargoHold(this, 1000);
         }
 
         private void Start ()
@@ -364,6 +365,12 @@ namespace Assets.Scripts.Classes.Mobile {
         public bool Alive
         {
             get; internal set;
+        }
+
+        public BlackBox BlackBox
+        {
+            get;
+            private set;
         }
 
         /// <summary>

@@ -45,6 +45,7 @@ public class AI_Enemy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Player = GameObject.FindGameObjectWithTag("Player");
 		rigidBody = GetComponent<Rigidbody> ();
 		overseerObject = GameObject.Find ("Overseer");
 		overseer = overseerObject.GetComponent<Overseer> ();
@@ -52,13 +53,13 @@ public class AI_Enemy : MonoBehaviour {
 		z = Random.Range(-velocidadMax, velocidadMax);
 		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
 		transform.localRotation = Quaternion.Euler( 0, angulo, 0);
-		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
+		dist = Vector3.Distance (Player.transform.position, transform.position);
 		f = GetComponent<Fire> ();
 
 		Debug.DrawLine (transform.position, transform.forward);
 
-		ps = GetComponent<ParticleSystem> ();
-		ps.Stop ();
+		//ps = GetComponent<ParticleSystem> ();
+		//ps.Stop ();
 
 	}
 

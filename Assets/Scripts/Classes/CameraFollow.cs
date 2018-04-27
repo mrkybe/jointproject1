@@ -17,6 +17,17 @@ namespace Assets.Scripts.Classes {
         private Vector3 targetPosition;
         [SerializeField]
         private float zoomSpeed;
+        [SerializeField]
+        private float minShakeVel = 1;
+        [SerializeField]
+        private float maxShakeVel = 10;
+        [SerializeField]
+        private float shakeIntensity = 1;
+
+
+        private Rigidbody followRigidbody;
+
+        private Quaternion normalRotation;
         // Use this for initialization
         void Start ()
         {
@@ -26,7 +37,9 @@ namespace Assets.Scripts.Classes {
             if (followTarget == null)
             {
                 followTarget = GameObject.Find("PlayerShip");
+                followRigidbody = followTarget.GetComponent<Rigidbody>();
             }
+            normalRotation = transform.rotation;
         }
 	
         // Update is called once per frame
@@ -36,8 +49,22 @@ namespace Assets.Scripts.Classes {
             {
                 floatieness = floatieness_start * ((zoom / zoomMax) * (zoom / zoomMax));
                 targetPosition = (followTarget.transform.position + offset * transform.forward * -1);
-                transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1);
 
+                float intensity = Mathf.Clamp(followRigidbody.velocity.magnitude - maxShakeVel, 0, maxShakeVel) * shakeIntensity;
+                intensity *= intensity;
+                intensity /= 200f;
+
+                float rx = (Random.value - 0.5f) * shakeIntensity;
+                float ry = (Random.value - 0.5f) * shakeIntensity;
+                float rz = (Random.value - 0.5f) * shakeIntensity;
+
+                Vector3 shake = new Vector3(rx, ry, rz);
+
+                transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1) + shake * intensity;
+
+                
+
+                
                 zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;
                 zoom = Mathf.Clamp(zoom, 1, zoomMax);
                 //transform.position = followTarget.transform.position + offset;

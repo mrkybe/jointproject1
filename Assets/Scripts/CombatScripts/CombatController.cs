@@ -15,10 +15,11 @@ public class CombatController : MonoBehaviour {
     public GameObject ai_player;
     public GameObject combat_player;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
-
+	public GameObject leader;
 
     private bool flag = false;
-	private int depletion = 0;
+	private int player_depletion = 0;
+	private int enemy_depletion = 0;
     private Move move;
     private Fire fire;
     private CameraController cc;
@@ -32,6 +33,7 @@ public class CombatController : MonoBehaviour {
 	private Spaceship[] enemyTesters;
 	private Overseer o;
 	private GameObject[] enemies;
+
 
 	public static CombatController instance;
     // Use this for initialization
@@ -63,6 +65,7 @@ public class CombatController : MonoBehaviour {
 		} else if (Input.GetButtonDown ("Y") && flag == true) {
 			CombatEnd (COMBAT_RESULT.TESTING);
 		}
+		CowardsWay ();
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
@@ -105,28 +108,32 @@ public class CombatController : MonoBehaviour {
 		enemySpaceship = enemy;
 		SpawnLeader ();
 		pc.health = playerSpaceship.HullHealth;
-	}
+        Time.timeScale = 1.0f;
+    }
 
 	public void CombatEnd(COMBAT_RESULT result)
-	{
-		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+    {
+        Time.timeScale = 0.0f;
+        enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
 		o.gameState = GameState.InOverMap;
 		flag = false;
 		mainCam.SetActive (true);
 		combatCam.SetActive (false);
-		//ai_player.SetActive(true);
 		combat_player.SetActive (false);
-		//combatField.SetActive (false);
-		//cameraObject.transform.position = new Vector3 (cameraObject.transform.position.x, cameraObject.transform.position.z - 20, cameraObject.transform.position.z);
+
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
 			spawn.Stop ();
 			spawn.enabled = false;
 		}
-		depletion = playerSpaceship.HullHealth - pc.health;
-		playerSpaceship.TakeDamage (depletion, enemySpaceship);
-		//enemySpaceship.TakeDamage (1000, playerSpaceship);
+
+		player_depletion = playerSpaceship.HullHealth - pc.health;
+		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
+
+		AI_Enemy leaderAI = leader.GetComponent<AI_Enemy>();
+		enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
+		enemySpaceship.TakeDamage(enemy_depletion, playerSpaceship);
 
 		foreach (GameObject enemy in enemies)
 			Destroy(enemy);
@@ -134,28 +141,50 @@ public class CombatController : MonoBehaviour {
 
 	public void CowardsWay()
 	{
-
+		//check distance between player and enemy leader.
+		if (leader != null) 
+		{
+			float dist = Vector3.Distance (combat_player.transform.position, leader.transform.position);
+			//if distance is to great then player escapes.
+			if (dist > 300)
+				CombatEnd (COMBAT_RESULT.PLAYER_ESCAPE);
+		}
 	}
+
+	//need to fix enemies rotation
 
 	private void SpawnLeader()
 	{
-		GameObject baddy = enemySpaceship.gameObject;
+		GameObject baddy = enemySpaceship.gameObject.transform.GetChild(1).gameObject;
 		int x = Random.Range (10, 30);
 		int z = Random.Range (10, 30);
-		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z);
-
-		GameObject clone = Instantiate (baddy, position, Quaternion.identity);
+		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z + 50f);
+		GameObject parent = new GameObject ();
+		parent.name = enemySpaceship.gameObject.name + "(Combat)";
+	
+		parent.transform.position = position;
+		//Quaternion rot = Quaternion.Euler(-90,0,0);
+		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
+		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
 		clone.layer = 12;
-		for (int i = 0; i < clone.transform.childCount; i++) {
+		clone.tag = "Enemy";
+
+		for (int i = 0; i < clone.transform.childCount; i++) 
+		{
 			clone.transform.GetChild (i).gameObject.layer = 12;
 		}
-		clone.GetComponent<AI_Patrol> ().enabled = false;
-		clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
-		clone.GetComponent<Spaceship> ().enabled = false; 
 
-		clone.AddComponent<Fire> ();
-		clone.AddComponent<AI_Enemy> ();
+		//clone.GetComponent<AI_Patrol> ().enabled = false;
+		//clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
+		//clone.GetComponent<Spaceship> ().enabled = false; 
 
-			
+
+		parent.AddComponent<Fire> ();
+		parent.AddComponent<AI_Enemy> ();
+
+		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
+		leaderAI.health = enemySpaceship.HullHealth;
+
+		leader = parent;
 	}
 }

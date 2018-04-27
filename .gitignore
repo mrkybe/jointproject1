@@ -72,3 +72,4 @@ sysinfo.txt
 !/Assets/ShaderForge/Editor/ShaderForge.dll
 *.prefab
 *.prefab
+*.meta
