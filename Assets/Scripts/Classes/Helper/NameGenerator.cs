@@ -121,6 +121,52 @@ namespace Assets.Scripts.Classes.Helper
             return ranks[0].Item2;
         }
 
+        public string RandomShipTailNumber()
+        {
+            int num = Random.Range(1, 99);
+            if (Random.value > 0.5f)
+            {
+                num = Random.Range(1, 999);
+            }
+            string letters = "XCVBNERTQAZIPM";
+            int ind = Random.Range(0, letters.Length);
+            string letterTag = letters[ind].ToString();
+            if (Random.value > 0.75f)
+            {
+                ind = Random.Range(0, letters.Length);
+                letterTag += letters[ind].ToString();
+            }
+            return letterTag + "-" + num;
+        }
+
+        public string RandomShipName()
+        {
+            int ind = Random.Range(0, total_ship_words);
+            string name = ship_words[ind].Item2;
+            if (Random.value > 0.5f)
+            {
+                if (Random.value > 0.5f)
+                {
+                    name += "-" + RandomName();
+                }
+                else
+                {
+                    name = RandomName();
+                    if (Random.value > 0.5f)
+                    {
+                        name += "-" + RandomName();
+                    }
+                }
+            }
+            bool tailNum = true;//Random.value > 0.5f;
+            string result = "";
+            if (tailNum)
+            {
+                result = RandomShipTailNumber() + " " + name;
+            }
+            return result;
+        }
+
         public string RandomRank()
         {
             int weighted = Random.Range(0, total_ranks);

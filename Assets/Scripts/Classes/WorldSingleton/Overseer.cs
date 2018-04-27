@@ -42,6 +42,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
         
         public static GameObject[] Explosions;
 
+        public DateTime InUniverseDateTime;
+
         private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
@@ -86,6 +88,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateSky();
             CreateMarket();
             LoadExplosions();
+
+            InUniverseDateTime = new DateTime(2087,1,1,0,0,0);
 
             InvokeRepeating("TickPlanets", 1f, planetTickFrequency);
             //Invoke("TickPlanets", 1f);
@@ -456,6 +460,11 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 {
                     Time.timeScale = 1.0f;
                 }
+            }
+
+            if (gameState == GameState.InOverMap)
+            {
+                InUniverseDateTime = InUniverseDateTime.AddHours(Time.deltaTime);
             }
         }
         

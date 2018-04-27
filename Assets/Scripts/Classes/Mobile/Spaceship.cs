@@ -15,6 +15,8 @@ namespace Assets.Scripts.Classes.Mobile {
     public class Spaceship : MonoBehaviour
     {
         [SerializeField]
+        public string ShipName = String.Empty;
+        [SerializeField]
         private float engineAcceleration;
         [SerializeField]
         private float maxSpeed;
@@ -93,6 +95,7 @@ namespace Assets.Scripts.Classes.Mobile {
             MyRigidbody = GetComponent<Rigidbody>();
             myModelSwitcher = GetComponentInChildren<ModelSwitcher>();
             myModelSwitcher.SetSensorRange(SensorRange);
+            ShipName = NameGenerator.Main.RandomShipName();
             if (Overseer.Main.IsOvermapPaused())
             {
                 Pause();

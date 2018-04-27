@@ -26,6 +26,20 @@ namespace Assets.Editor
                 style.font = Resources.Load<Font>("Fonts/VeraMono");
             }
 
+
+            public override void OnInspectorGUI()
+            {
+                if (Application.isPlaying && target)
+                {
+                    AI_Patrol myTarget = target as AI_Patrol;
+                    mySpaceship = myTarget.GetComponent<Spaceship>();
+                    if (GUILayout.Button("What are you doing?"))
+                    {
+                        Debug.Log(mySpaceship.BlackBox.Read());
+                    }
+                }
+            }
+
             public void OnSceneGUI()
             {
                 if (target)
@@ -46,6 +60,7 @@ namespace Assets.Editor
                         string s4  = "Hull        : ";
                         string s5  = "Money       : ";
                         string s6  = "Captain     : ";
+                        string s7  = "Ship Name   : ";
 
                         s1 += string.Format("{0:0.00}", myTarget.Throttle);
                         s2 += string.Format("{0:0.00}", myTarget.TargetSpeed.Value);
@@ -55,6 +70,7 @@ namespace Assets.Editor
                         if (Application.isPlaying)
                         {
                             s6 += string.Format(myTarget.Identity.ToString());
+                            s7 += string.Format(mySpaceship.ShipName);
                         }
                         string holdString = "";
                         if (mySpaceship != null)
@@ -72,6 +88,7 @@ namespace Assets.Editor
                             s4 + "\n" +
                             s5 + "\n" +
                             s6 + "\n" +
+                            s7 + "\n" +
                             holdString, style);
                     }
                 }
