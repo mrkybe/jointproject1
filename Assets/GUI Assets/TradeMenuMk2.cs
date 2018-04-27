@@ -188,6 +188,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         MassClear();
 
+
         //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
         myHold.AddHoldType("Water");
@@ -385,6 +386,7 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(t); });
 
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
+
     }
 
     private void StartCombat(string t)
@@ -433,7 +435,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
-        bountyPanel.gameObject.SetActive(true);
+        //bountyPanel.gameObject.SetActive(true);
 
 
         int i = 0;
@@ -446,6 +448,10 @@ public class TradeMenuMk2 : MonoBehaviour
                 String s = bounties[i].Target.name;
                 Faction f = planet.Faction;
                 buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+
+                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].gameObject.SetActive(true);
+
             }
         }
         else if( bounties.Count > 0 && bounties.Count > buttonListRight.Count)
@@ -456,7 +462,11 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListRight[i].gameObject.SetActive(true);
                 String s = bounties[i].Target.name;
                 Faction f = planet.Faction;
-                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+                //buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+
+                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].gameObject.SetActive(true);
+
             }
         }
     }
@@ -483,6 +493,8 @@ public class TradeMenuMk2 : MonoBehaviour
         isRightOff = false;
 
         otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
+
+        o.GetFaction("Duty").AddBounty(new Bounty(otherShip, 100));
 
         otherHold = otherShip.GetCargoHold;
 
