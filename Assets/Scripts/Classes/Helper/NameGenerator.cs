@@ -17,9 +17,11 @@ namespace Assets.Scripts.Classes.Helper
         private List<Tuple<int, string>> basic_syllables = null;
         private List<Tuple<int, string>> honor = null;
         private List<Tuple<int, string>> ranks = null;
+        private List<Tuple<int, string>> ship_words = null;
         private int total_basic = 0;
         private int total_ranks = 0;
         private int total_honor = 0;
+        private int total_ship_words = 0;
 
         public void InitializeNameGenerator()
         {
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Classes.Helper
             Load("syl", out basic_syllables, out total_basic);
             Load("ranks", out ranks, out total_ranks);
             Load("honor", out honor, out total_honor);
+            Load("shipwords", out ship_words, out total_ship_words);
         }
 
         public Tuple<string, string> RandomFirstLastName()
