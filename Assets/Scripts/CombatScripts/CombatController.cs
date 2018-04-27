@@ -9,15 +9,15 @@ using Assets.Behavior_Designer.Runtime;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
-	public int spawnerCount = 0;
     public GameObject mainCam;
 	public GameObject combatCam;
     public GameObject ai_player;
     public GameObject combat_player;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
-	public GameObject leader;
+	public bool showEnemy = false;
 
     private bool flag = false;
+	private int spawnerCount = 0;
 	private int player_depletion = 0;
 	private int enemy_depletion = 0;
     private Move move;
@@ -33,7 +33,7 @@ public class CombatController : MonoBehaviour {
 	private Spaceship[] enemyTesters;
 	private Overseer o;
 	private GameObject[] enemies;
-
+	private GameObject leader;
 
 	public static CombatController instance;
     // Use this for initialization
@@ -41,6 +41,7 @@ public class CombatController : MonoBehaviour {
     {
 		instance = this;
 		o = GetComponent<Overseer> ();
+		cc = combatCam.GetComponent<CameraController> ();
         move = combat_player.GetComponent<Move>();
         fire = combat_player.GetComponent<Fire>();
 		rk = combat_player.GetComponent<Rocket> ();
@@ -66,6 +67,7 @@ public class CombatController : MonoBehaviour {
 			CombatEnd (COMBAT_RESULT.TESTING);
 		}
 		CowardsWay ();
+		//ShowEnemy ();
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
@@ -99,6 +101,7 @@ public class CombatController : MonoBehaviour {
 		//combatField.SetActive(true);
 		//combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
 		combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y + 20, combatCam.transform.position.z);
+		spawnerCount = enemySpawners.Length;
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
 			spawn.enabled = true;
@@ -107,6 +110,7 @@ public class CombatController : MonoBehaviour {
 		playerSpaceship = player;
 		enemySpaceship = enemy;
 		SpawnLeader ();
+		showEnemy = true;
 		pc.health = playerSpaceship.HullHealth;
         Time.timeScale = 1.0f;
     }
@@ -186,5 +190,31 @@ public class CombatController : MonoBehaviour {
 		leaderAI.health = enemySpaceship.HullHealth;
 
 		leader = parent;
+
+		//need to add components
+	}
+
+	private void ShowEnemy()
+	{
+		if (showEnemy) 
+		{
+			Time.timeScale = 0;
+			float x = combatCam.transform.position.x;
+			Vector3 position = combatCam.transform.position;
+				//Vector3.Lerp(combat_player.transform.position, leader.transform.position, 5f * Time.deltaTime);
+			StartCoroutine ("UnPause");
+		}
+			
+	}
+
+	private IEnumerator UnPause()
+	{
+		Time.timeScale = 0.1f;
+		float pauseEndTime = Time.realtimeSinceStartup + 5;
+		while (Time.realtimeSinceStartup < pauseEndTime)
+		{
+			yield return 0;
+		}
+		Time.timeScale = 1;
 	}
 }
