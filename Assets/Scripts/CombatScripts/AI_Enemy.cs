@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Classes.WorldSingleton;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner;
+
 
 public class AI_Enemy : MonoBehaviour {
 
@@ -34,9 +37,11 @@ public class AI_Enemy : MonoBehaviour {
 	private ParticleSystem ps;
 	private GameObject overseerObject;
 	private Overseer overseer;
+	private BehaviorTree tree; 
 
 	void Awake(){
 		source = GetComponent <AudioSource> ();
+		tree = GetComponent<BehaviorTree> ();
 	}
 
 
@@ -53,7 +58,7 @@ public class AI_Enemy : MonoBehaviour {
 		z = Random.Range(-velocidadMax, velocidadMax);
 		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
 		transform.localRotation = Quaternion.Euler( 0, angulo, 0);
-		dist = Vector3.Distance (Player.transform.position, transform.position);
+		//dist = Vector3.Distance (Player.transform.position, transform.position);
 		f = GetComponent<Fire> ();
 
 		Debug.DrawLine (transform.position, transform.forward);
@@ -66,69 +71,68 @@ public class AI_Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		KillYourself ();
-		if (count == 0) {
-			
-			Player = GameObject.FindGameObjectWithTag("Player");
-			count++;
-		}
+//		if (count == 0) {
+//			
+//			Player = GameObject.FindGameObjectWithTag("Player");
+//			count++;
+//		}
 		//Debug.Log (Player.transform.position);
-		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
-		float step = speed * Time.deltaTime;
-		if (dist < radius) {
+////		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
+//		float step = speed * Time.deltaTime;
 			
-			gameObject.transform.LookAt (Player.transform);
-		    if (f)
-            {
-                f.enemyFire();
-            }
-			source.PlayOneShot (shootSound);
+			//gameObject.transform.LookAt (Player.transform);
+//		  if (f)
+//           {
+//                f.enemyFire();
+//           }
+//		source.PlayOneShot (shootSound);
 			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
-		} else {
-
-			xMax = Player.transform.position.x + xMax;
-
-			zMax = Player.transform.position.z + xMax;
-			xMin = Player.transform.position.x - xMin;
-			zMin = Player.transform.position.x - zMin;
-			tiempo += Time.deltaTime;
-
-			if (transform.localPosition.x > xMax) {
-				x = Random.Range (-velocidadMax, 0.0f);
-				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-				tiempo = 0.0f; 
-			}
-			if (transform.localPosition.x < xMin) {
-				x = Random.Range (0.0f, velocidadMax);
-				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
-				tiempo = 0.0f; 
-			}
-			if (transform.localPosition.z > zMax) {
-				z = Random.Range (-velocidadMax, 0.0f);
-				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
-				tiempo = 0.0f; 
-			}
-			if (transform.localPosition.z < zMin) {
-				z = Random.Range (0.0f, velocidadMax);
-				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-				tiempo = 0.0f; 
-			}
 
 
-			if (tiempo > 1.0f) {
-				x = Random.Range (-velocidadMax, velocidadMax);
-				z = Random.Range (-velocidadMax, velocidadMax);
-				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-				tiempo = 0.0f;
-			}
+//			xMax = Player.transform.position.x + xMax;
+//
+//			zMax = Player.transform.position.z + xMax;
+//			xMin = Player.transform.position.x - xMin;
+//			zMin = Player.transform.position.x - zMin;
+//			tiempo += Time.deltaTime;
+//
+//			if (transform.localPosition.x > xMax) {
+//				x = Random.Range (-velocidadMax, 0.0f);
+//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
+//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
+//				tiempo = 0.0f; 
+//			}
+//			if (transform.localPosition.x < xMin) {
+//				x = Random.Range (0.0f, velocidadMax);
+//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
+//				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
+//				tiempo = 0.0f; 
+//			}
+//			if (transform.localPosition.z > zMax) {
+//				z = Random.Range (-velocidadMax, 0.0f);
+//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
+//				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
+//				tiempo = 0.0f; 
+//			}
+//			if (transform.localPosition.z < zMin) {
+//				z = Random.Range (0.0f, velocidadMax);
+//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
+//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
+//				tiempo = 0.0f; 
+//			}
+//
+//
+//			if (tiempo > 1.0f) {
+//				x = Random.Range (-velocidadMax, velocidadMax);
+//				z = Random.Range (-velocidadMax, velocidadMax);
+//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
+//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
+//				tiempo = 0.0f;
+//			}
+//
+//			transform.localPosition = new Vector3 (transform.localPosition.x + x, transform.localPosition.y, transform.localPosition.z + z);
 
-			transform.localPosition = new Vector3 (transform.localPosition.x + x, transform.localPosition.y, transform.localPosition.z + z);
-
-		}
+	
 
 	}
 
@@ -172,6 +176,8 @@ public class AI_Enemy : MonoBehaviour {
 				CombatController.instance.CombatEnd (CombatController.COMBAT_RESULT.ENEMY_DEATH);
 			}
 			Destroy (gameObject);
+			tree.enabled = false;
+
 		}
 		
 	}

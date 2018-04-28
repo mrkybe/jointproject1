@@ -45,7 +45,7 @@ public class FindPlayer : Conditional
 	{
 		Vector3 direction = targetTransform.position - transform.position;
 
-		gameObject.transform.LookAt (targetTransform);
+
 
 		return Vector3.Angle(direction, transform.forward) < fieldOfViewAngle.Value;
 	}
