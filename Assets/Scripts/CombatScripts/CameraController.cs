@@ -35,11 +35,10 @@ public class CameraController : MonoBehaviour {
 	// LateUpdate is called after Update each frame
 	void FixedUpdate () 
 	{
-		/*
 		if (controller.showEnemy.Equals(false))
 			FollowPlayer ();
-		*/
-		FollowPlayer ();
+		
+		//FollowPlayer ();
 	}
 
 	void FollowPlayer()

@@ -68,7 +68,7 @@ public class CombatController : MonoBehaviour {
 			CombatEnd (COMBAT_RESULT.TESTING);
 		}
 		CowardsWay ();
-		//ShowEnemy ();
+		ShowEnemy ();
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
@@ -202,9 +202,16 @@ public class CombatController : MonoBehaviour {
 	{
 		if (showEnemy) 
 		{
-			Time.timeScale = 0;
-			float x = combatCam.transform.position.x;
+			//Time.timeScale = 0;
+			float z = leader.transform.position.z;
+			bool move = false;
 			Vector3 position = combatCam.transform.position;
+			//combatCam.transform.position = combat_player.transform.position;
+			combatCam.transform.position += new Vector3 (0, 0, .5f);
+			if (combatCam.transform.position.z >= z) 
+			{
+				combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y, leader.transform.position.z);
+			}
 				//Vector3.Lerp(combat_player.transform.position, leader.transform.position, 5f * Time.deltaTime);
 			StartCoroutine ("UnPause");
 		}
@@ -213,12 +220,13 @@ public class CombatController : MonoBehaviour {
 
 	private IEnumerator UnPause()
 	{
-		Time.timeScale = 0.1f;
+		Time.timeScale = 0f;
 		float pauseEndTime = Time.realtimeSinceStartup + 5;
 		while (Time.realtimeSinceStartup < pauseEndTime)
 		{
 			yield return 0;
 		}
+		showEnemy = false;
 		Time.timeScale = 1;
 	}
 }
