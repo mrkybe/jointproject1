@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Classes.WorldSingleton;
 
 ///<summary>
 /// The Move class is responsible for controlling how the player moves and the associated factors of speed and velocity.
@@ -14,10 +15,12 @@ public class Move : MonoBehaviour {
     private Rigidbody rb;
 	private Vector3 lookPos;
     private Vector3 velocity;
+	private CombatController manager;
     // Use this for initialization
     void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+		manager = GameObject.Find ("Overseer").GetComponent<CombatController> ();
     }
 
 	void Update()
@@ -31,8 +34,11 @@ public class Move : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-		ForceMove ();
-		look();
+		if (manager.playerCanMove.Equals (true))
+		{
+			ForceMove ();
+			look ();
+		}
 		//rb.velocity = velocity;
     }
 
@@ -61,12 +67,12 @@ public class Move : MonoBehaviour {
 	}
 	void ForceMove()
 	{
-		float x = Input.GetAxis("Horizontal");
-		float z = Input.GetAxis("Vertical");
+		float x = Input.GetAxis ("Horizontal");
+		float z = Input.GetAxis ("Vertical");
 
 		Vector3 move = new Vector3 (x, 0, z);
 
-		rb.AddForce (move * speed,ForceMode.Force);
+		rb.AddForce (move * speed, ForceMode.Force);
 	}
 		
 	///<summary>

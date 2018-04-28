@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Classes.WorldSingleton;
 
 public class Rocket : MonoBehaviour {
 
@@ -10,17 +11,18 @@ public class Rocket : MonoBehaviour {
 	public float nextFire;
 	public Transform shotSpawn;
 	public AudioClip shootSound;
-
+	private CombatController manager;
 	private AudioSource source;
 
 
 	void Awake(){
 
 		source = GetComponent <AudioSource> ();
+		manager = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 	}
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButtonDown ("Fire1") && Time.time > nextFire && amount != 0) 
+		if (Input.GetButtonDown ("Fire1") && Time.time > nextFire && amount != 0 && manager.playerCanMove.Equals(true)) 
 		{
 			nextFire = Time.time + fireRate;
 			Instantiate (ammo, shotSpawn.position, shotSpawn.rotation);
