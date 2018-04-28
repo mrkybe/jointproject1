@@ -13,7 +13,7 @@ public class CombatMoveTowards : Action
 	public override TaskStatus OnUpdate()
 	{
 		// Return a task status of success once we've reached the target
-		if (Vector3.SqrMagnitude(transform.position - target.Value.position) < 3f) {
+		if (Vector3.SqrMagnitude(transform.position - target.Value.position) < 130f) {
 			shouldFire.Value = true;
 			//gameObject.transform.LookAt (target.Value);
 			return TaskStatus.Success;
@@ -23,4 +23,8 @@ public class CombatMoveTowards : Action
 		transform.position = Vector3.MoveTowards(transform.position, target.Value.position, speed.Value * Time.deltaTime);
 		return TaskStatus.Running;
 	}
+
+
+
+
 }

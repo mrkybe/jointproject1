@@ -44,9 +44,19 @@ public class FindPlayer : Conditional
 	public bool FoundPlayer(Transform targetTransform, SharedFloat fieldOfViewAngle)
 	{
 		Vector3 direction = targetTransform.position - transform.position;
+		bool result = false;
 
+		bool inDistance = false; 
+		if (Vector3.SqrMagnitude (transform.position - target.Value.position) < 300f) {
+			inDistance = true; 
+		}
 
+		bool inAngle = false; 
+		if (Vector3.Angle (direction, transform.forward) < fieldOfViewAngle.Value) {
+			inAngle = true;
+		}
+		result = inAngle & inDistance;
 
-		return Vector3.Angle(direction, transform.forward) < fieldOfViewAngle.Value;
+		return result;
 	}
 }
