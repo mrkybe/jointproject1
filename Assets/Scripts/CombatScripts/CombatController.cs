@@ -202,7 +202,7 @@ public class CombatController : MonoBehaviour {
 	{
 		if (showEnemy) 
 		{
-			Time.timeScale = 0;
+			//Time.timeScale = 0;
 			float z = leader.transform.position.z;
 			bool move = false;
 			Vector3 position = combatCam.transform.position;
@@ -210,7 +210,7 @@ public class CombatController : MonoBehaviour {
 			combatCam.transform.position += new Vector3 (0, 0, .5f);
 			if (combatCam.transform.position.z >= z) 
 			{
-				combatCam.transform.position = leader.transform.position;
+				combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y, leader.transform.position.z);
 			}
 				//Vector3.Lerp(combat_player.transform.position, leader.transform.position, 5f * Time.deltaTime);
 			StartCoroutine ("UnPause");
