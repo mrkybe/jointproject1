@@ -94,6 +94,26 @@ namespace Assets.Scripts.Classes.WorldSingleton
             InvokeRepeating("TickPlanets", 1f, planetTickFrequency);
             //Invoke("TickPlanets", 1f);
             InvokeRepeating("ManagePirateCount", 1f, 1f);
+            Invoke("InitializeDelayed", 1f);
+        }
+
+        public void InitializeDelayed()
+        {
+            SetBehaviorManagerTickrate(gameState);
+        }
+
+        public void SetBehaviorManagerTickrate(GameState st)
+        {
+            if (st == GameState.InOverMap)
+            {
+                BehaviorManager.instance.UpdateIntervalSeconds = 0.2f;
+                BehaviorManager.instance.MaxTaskExecutionsPerTick = 1;
+            }
+            else if (st == GameState.InCombat)
+            {
+                BehaviorManager.instance.UpdateIntervalSeconds = 0;
+                BehaviorManager.instance.MaxTaskExecutionsPerTick = 0;
+            }
         }
 
         private Queue<GameObject> listOfExplosionObjects = new Queue<GameObject>();

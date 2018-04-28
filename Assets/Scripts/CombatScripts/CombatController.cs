@@ -6,6 +6,7 @@ using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
 using Assets.Scripts.Classes.Helper.Pilot;
 using Assets.Behavior_Designer.Runtime;
+using BehaviorDesigner.Runtime;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
@@ -113,6 +114,7 @@ public class CombatController : MonoBehaviour {
 		showEnemy = true;
 		pc.health = playerSpaceship.HullHealth;
         Time.timeScale = 1.0f;
+        o.SetBehaviorManagerTickrate(o.gameState);
     }
 
 	public void CombatEnd(COMBAT_RESULT result)
@@ -141,7 +143,9 @@ public class CombatController : MonoBehaviour {
 
 		foreach (GameObject enemy in enemies)
 			Destroy(enemy);
-	}
+
+        o.SetBehaviorManagerTickrate(o.gameState);
+    }
 
 	public void CowardsWay()
 	{
