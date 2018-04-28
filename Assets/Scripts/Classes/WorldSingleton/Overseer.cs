@@ -81,7 +81,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
 
 			gameState = GameState.InOverMap;
 
-            SetBehaviorManagerTickrate(gameState);
             CreateResourceTypes();
             CreateFactions();
             CreateSaturnSystem();
@@ -95,6 +94,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
             InvokeRepeating("TickPlanets", 1f, planetTickFrequency);
             //Invoke("TickPlanets", 1f);
             InvokeRepeating("ManagePirateCount", 1f, 1f);
+            Invoke("InitializeDelayed", 1f);
+        }
+
+        public void InitializeDelayed()
+        {
+            SetBehaviorManagerTickrate(gameState);
         }
 
         public void SetBehaviorManagerTickrate(GameState st)
