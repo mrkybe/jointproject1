@@ -399,12 +399,14 @@ public class TradeMenuMk2 : MonoBehaviour
             int j = 0;
             for (j = 0; j < shipsInRange.Count; j++)
             {
-                String t = shipsInRange[j].name;
+
+                String t = shipsInRange[j].ShipName;
                 if (t.Length > 10)
                 {
                     t = t.Remove(10) + "...";
                 }
                 buttonListLeft[j + i].GetComponentInChildren<Text>().text = t;
+
                 buttonListLeft[j + i].gameObject.SetActive(true);
                 String s = shipsInRange[j].name;
                 buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(s); });
