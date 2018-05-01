@@ -75,14 +75,15 @@ public class PlayerController : MonoBehaviour
 			rk.enabled = false;
 			source.PlayOneShot (shootSound);
 		}
+		Dead ();
     }
 
 	public void Depletion(int damage)
 	{
 		health -= damage;
 		float ratio = health/15;
-		Debug.Log ("health: " + health); 
-		Debug.Log ("Ratio: " + ratio); 
+		//Debug.Log ("health: " + health); 
+		//Debug.Log ("Ratio: " + ratio); 
 		currentHealthbar.rectTransform.localScale = new Vector3 (ratio, 1, 1);
 		ratioText.text = (health).ToString () + '%';
 		//Debug.Log ("Health: " + health);

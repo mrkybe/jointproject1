@@ -32,7 +32,6 @@ namespace Assets.Scripts.Classes.Helper.Pilot {
         private SharedFloat CruiseSpeed;
         private SharedFloat EmergencySpeed;
 
-
         public SharedFloat TargetSpeed;
 
         private BehaviorTree behaviorTree;

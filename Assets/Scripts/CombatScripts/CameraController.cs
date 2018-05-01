@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour {
 		transform.rotation = Quaternion.Euler (90, 0, 0);
 		overseer = GameObject.Find ("Overseer");
 		controller = overseer.GetComponent<CombatController> ();
-		enemy = controller.combat_player;
+		//enemy = controller.leader;
 	}
 	///<summary>
 	/// Check the player's distance and move the camera accordingly.
@@ -35,7 +35,10 @@ public class CameraController : MonoBehaviour {
 	// LateUpdate is called after Update each frame
 	void FixedUpdate () 
 	{
-		FollowPlayer ();
+		if (controller.showEnemy.Equals(false))
+			FollowPlayer ();
+		
+		//FollowPlayer ();
 	}
 
 	void FollowPlayer()
@@ -45,9 +48,24 @@ public class CameraController : MonoBehaviour {
 		transform.position = new Vector3(player.transform.position.x, y_distance, player.transform.position.z);
 	}
 
-	void FollowEnemy()
+	public void ShowEnemy(GameObject leader)
 	{
-		
+		//Pause
+		Time.timeScale = 0;
+		y_distance = player.transform.position.y + y_value;
+		float x = transform.position.x;
+		x = Mathf.Lerp(player.transform.position.x, leader.transform.position.x, 5f * Time.deltaTime);
+		//transform.position = new Vector3 (transform.position.x, y_distance, transform.position.z);
+		//Vector3 dist = Vector3.Distance (enemy.transform.position, player.transform.position);
+
+
+		//UnPause
+		//wInvoke("UnPause", 5f);
 	}
+	void Lerp()
+	{
+
+	}
+
 }
 

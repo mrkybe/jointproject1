@@ -11,6 +11,8 @@ namespace Assets.Editor {
             serializedObject.Update();
 
             Overseer myTarget = (Overseer)target;
+            GUILayout.TextField(myTarget.InUniverseDateTime.ToLongDateString() + "\n" +
+                                myTarget.InUniverseDateTime.ToLongTimeString());
 
             if (GUILayout.Button("Match Orders"))
             {
