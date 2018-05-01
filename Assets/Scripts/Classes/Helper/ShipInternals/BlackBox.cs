@@ -9,7 +9,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
     /// <summary>
     /// One time-stamped entry in a Blackbox recorder.
     /// </summary>
-    public class BlackBoxEntry
+    class BlackBoxEntry
     {
         public float Timestamp;
         public string Title;
@@ -22,11 +22,6 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         public BlackBoxEntry()
         {
             Timestamp = Time.time;
-        }
-
-        public override string ToString()
-        {
-            return "T: " + Timestamp + " | " + Title + " | " + Message;
         }
     }
 
@@ -53,11 +48,6 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
                 Message = message
             };
             entries.Add(newEntry);
-        }
-
-        public BlackBoxEntry Read()
-        {
-            return entries[entries.Count - 1];
         }
     }
 }

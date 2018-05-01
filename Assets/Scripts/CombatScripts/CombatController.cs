@@ -6,20 +6,18 @@ using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
 using Assets.Scripts.Classes.Helper.Pilot;
 using Assets.Behavior_Designer.Runtime;
-using BehaviorDesigner.Runtime;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
+	public int spawnerCount = 0;
     public GameObject mainCam;
 	public GameObject combatCam;
     public GameObject ai_player;
     public GameObject combat_player;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
-	public bool showEnemy = false;
-	public bool playerCanMove = false;
+	public GameObject leader;
 
     private bool flag = false;
-	private int spawnerCount = 0;
 	private int player_depletion = 0;
 	private int enemy_depletion = 0;
     private Move move;
@@ -35,7 +33,7 @@ public class CombatController : MonoBehaviour {
 	private Spaceship[] enemyTesters;
 	private Overseer o;
 	private GameObject[] enemies;
-	private GameObject leader;
+
 
 	public static CombatController instance;
     // Use this for initialization
@@ -43,7 +41,6 @@ public class CombatController : MonoBehaviour {
     {
 		instance = this;
 		o = GetComponent<Overseer> ();
-		cc = combatCam.GetComponent<CameraController> ();
         move = combat_player.GetComponent<Move>();
         fire = combat_player.GetComponent<Fire>();
 		rk = combat_player.GetComponent<Rocket> ();
@@ -65,13 +62,10 @@ public class CombatController : MonoBehaviour {
 		Spaceship tempEnemy = enemyTesters [rando];
 		if (Input.GetButtonDown ("Y") && flag == false) {
 			CombatStart (playerTester, tempEnemy);
-			flag = true;
 		} else if (Input.GetButtonDown ("Y") && flag == true) {
 			CombatEnd (COMBAT_RESULT.TESTING);
-			flag = false;
 		}
 		CowardsWay ();
-		ShowEnemy ();
     }
     ///<summary>
     /// After Every fixed amount of frames we will check if combat has initiated. For testing purposes combat can be initiated by
@@ -80,7 +74,7 @@ public class CombatController : MonoBehaviour {
 	public void CombatStart(Spaceship player, Spaceship enemy)
 	{
 		o.PauseOvermap ();
-		o.gameState = GameState.InCombat;
+		o.gameState = GameState.InCombat; 
 		//
 //		enum GameStates in overseer
 //		{
@@ -93,7 +87,6 @@ public class CombatController : MonoBehaviour {
 		flag = true;
 		mainCam.SetActive (false);
 		combatCam.SetActive (true);
-		combat_player.GetComponent<Rigidbody> ().isKinematic = false;
 		//ai_player.SetActive(false);
 		combat_player.SetActive(true);
 		lr.enabled = false;
@@ -106,7 +99,6 @@ public class CombatController : MonoBehaviour {
 		//combatField.SetActive(true);
 		//combat_player.transform.position = new Vector3(combatField.transform.position.x, combatField.transform.position.y + 2f, combatField.transform.position.z);
 		combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y + 20, combatCam.transform.position.z);
-		spawnerCount = enemySpawners.Length;
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
 			spawn.enabled = true;
@@ -115,30 +107,20 @@ public class CombatController : MonoBehaviour {
 		playerSpaceship = player;
 		enemySpaceship = enemy;
 		SpawnLeader ();
-		showEnemy = true;
 		pc.health = playerSpaceship.HullHealth;
         Time.timeScale = 1.0f;
-        o.SetBehaviorManagerTickrate(o.gameState);
     }
 
 	public void CombatEnd(COMBAT_RESULT result)
     {
-		//RESET PLAYER
-		playerCanMove = false;
-		combat_player.GetComponent<Rigidbody> ().velocity = new Vector3(0,0,0);
-		combat_player.GetComponent<Rigidbody> ().isKinematic = true;
-		combat_player.transform.Rotate (new Vector3 (0, 0, 0));
-		combat_player.transform.position = new Vector3 (0, 10, 0);
-		//
         Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
 		o.gameState = GameState.InOverMap;
-
+		flag = false;
 		mainCam.SetActive (true);
-		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
 		combatCam.SetActive (false);
-		//combat_player.SetActive (false);
+		combat_player.SetActive (false);
 
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
@@ -155,9 +137,7 @@ public class CombatController : MonoBehaviour {
 
 		foreach (GameObject enemy in enemies)
 			Destroy(enemy);
-
-        o.SetBehaviorManagerTickrate(o.gameState);
-    }
+	}
 
 	public void CowardsWay()
 	{
@@ -206,40 +186,5 @@ public class CombatController : MonoBehaviour {
 		leaderAI.health = enemySpaceship.HullHealth;
 
 		leader = parent;
-
-		//need to add components
-	}
-
-	private void ShowEnemy()
-	{
-		if (showEnemy) 
-		{
-			//Time.timeScale = 0;
-			float z = leader.transform.position.z;
-			bool move = false;
-			Vector3 position = combatCam.transform.position;
-			//combatCam.transform.position = combat_player.transform.position;
-			combatCam.transform.position += new Vector3 (0, 0, .5f);
-			if (combatCam.transform.position.z >= z) 
-			{
-				combatCam.transform.position = new Vector3(combatCam.transform.position.x, combatCam.transform.position.y, leader.transform.position.z);
-			}
-				//Vector3.Lerp(combat_player.transform.position, leader.transform.position, 5f * Time.deltaTime);
-			StartCoroutine ("UnPause");
-		}
-			
-	}
-
-	private IEnumerator UnPause()
-	{
-		Time.timeScale = 0f;
-		float pauseEndTime = Time.realtimeSinceStartup + 5;
-		while (Time.realtimeSinceStartup < pauseEndTime)
-		{
-			yield return 0;
-		}
-		showEnemy = false;
-		playerCanMove = true;
-		Time.timeScale = 1;
 	}
 }

@@ -42,8 +42,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
         
         public static GameObject[] Explosions;
 
-        public DateTime InUniverseDateTime;
-
         private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
@@ -89,31 +87,9 @@ namespace Assets.Scripts.Classes.WorldSingleton
             CreateMarket();
             LoadExplosions();
 
-            InUniverseDateTime = new DateTime(2087,1,1,0,0,0);
-
             InvokeRepeating("TickPlanets", 1f, planetTickFrequency);
             //Invoke("TickPlanets", 1f);
             InvokeRepeating("ManagePirateCount", 1f, 1f);
-            Invoke("InitializeDelayed", 1f);
-        }
-
-        public void InitializeDelayed()
-        {
-            SetBehaviorManagerTickrate(gameState);
-        }
-
-        public void SetBehaviorManagerTickrate(GameState st)
-        {
-            if (st == GameState.InOverMap)
-            {
-                BehaviorManager.instance.UpdateIntervalSeconds = 0.2f;
-                BehaviorManager.instance.MaxTaskExecutionsPerTick = 1;
-            }
-            else if (st == GameState.InCombat)
-            {
-                BehaviorManager.instance.UpdateIntervalSeconds = 0;
-                BehaviorManager.instance.MaxTaskExecutionsPerTick = 0;
-            }
         }
 
         private Queue<GameObject> listOfExplosionObjects = new Queue<GameObject>();
@@ -480,11 +456,6 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 {
                     Time.timeScale = 1.0f;
                 }
-            }
-
-            if (gameState == GameState.InOverMap)
-            {
-                InUniverseDateTime = InUniverseDateTime.AddHours(Time.deltaTime);
             }
         }
         

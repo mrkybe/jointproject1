@@ -29,10 +29,6 @@ namespace Assets.Editor {
                     {
                         Debug.Log(myTarget.RandomPerson());
                     }
-                    if (GUILayout.Button("Random Ship Name"))
-                    {
-                        Debug.Log(myTarget.RandomShipName());
-                    }
                 }
             }
 
