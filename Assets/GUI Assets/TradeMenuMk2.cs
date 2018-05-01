@@ -48,6 +48,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform bountyPanel;
     private RectTransform bountyDisplay;
     private RectTransform bountyRewards;
+    private RectTransform walletPanel;
 
     private RectTransform leftTitleBar;
     private RectTransform rightTitleBar;
@@ -83,6 +84,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Text> myPrices;
     private List<Text> theirPrices;
     private List<Text> bountyRewardsList;
+    private List<Text> walletList;
 
     private Spaceship otherShip;
     private Spaceship playerShip;
@@ -119,6 +121,7 @@ public class TradeMenuMk2 : MonoBehaviour
         bountyPanel = GameObject.Find("Bounty Panel").GetComponent<RectTransform>();
         bountyDisplay = GameObject.Find("Bounty Display List").GetComponent<RectTransform>();
         bountyRewards = GameObject.Find("Bounty Rewards").GetComponent<RectTransform>();
+        walletPanel = GameObject.Find("Wallet").GetComponent<RectTransform>();
 
         leftTitleBar.gameObject.SetActive(false);
         rightTitleBar.gameObject.SetActive(false);
@@ -146,6 +149,7 @@ public class TradeMenuMk2 : MonoBehaviour
         theirSelectorListDown = new List<Button>();
         theirSelectorListUp = new List<Button>();
         bountyList = new List<Button>();
+        walletList = new List<Text>();
 
         myAmountSelect = new List<Text>();
         theirAmountSelect = new List<Text>();
@@ -182,16 +186,20 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(myPrices, textPrefab, myPricesPanel, 10);
         PopulateNumberPanel(theirPrices, textPrefab, theirPricesPanel, 10);
         PopulateNumberPanel(bountyRewardsList, textPrefab, bountyRewards, 1);
+        PopulateNumberPanel(walletList, textPrefab, walletPanel, 1);
 
         submitButton.onClick.AddListener(SubmitTrade);
         bountyButton.onClick.AddListener(ConfirmBounty);
+
+        walletPanel.gameObject.SetActive(false);
+
+        walletPanel.transform.position = new Vector3(-1500, -450, 0);
 
         MassClear();
 
 
         //<FOR TESTING:> 
         myHold.AddHoldType("Dirt");
-        myHold.AddHoldType("Water");
         myHold.AddToHold("Dirt", 100);
         //</FOR TESTING>
     }
@@ -200,10 +208,10 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
-            
+            walletList[0].text = myHold.GetMoneyValue().ToString();
+
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
-            {
-                
+            {       
                 if (isLeftOff && isRightOff)
                 {
                     MassClear();
@@ -212,6 +220,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
+                    walletPanel.gameObject.SetActive(false);
                 }
                 else if (!isLeftOff && isRightOff)
                 {
@@ -225,6 +234,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
+                    walletPanel.gameObject.SetActive(false);
                 }
                 else if (!isLeftOff && !isRightOff)
                 {
@@ -235,11 +245,58 @@ public class TradeMenuMk2 : MonoBehaviour
                     bountyPanel.gameObject.SetActive(false);
                     leftTitleBar.gameObject.SetActive(false);
                     rightTitleBar.gameObject.SetActive(false);
+                    walletPanel.gameObject.SetActive(false);
 
                     MassClear();
-
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.I))
+            {
+                if (isLeftOff)
+                {
+                    showMyInventory();
+                }
+                else
+                {
+                    leftPanel.anchoredPosition = leftOffPosition;
+                    isLeftOff = true;
+                    o.UnpauseOvermap();
+                }
+            }
+        }
+    }
+
+    private void showMyInventory()
+    {
+        o.gameState = GameState.UI;
+        leftPanel.anchoredPosition = on;
+        isLeftOff = false;
+        walletPanel.gameObject.SetActive(true);
+        leftTitleBar.gameObject.SetActive(true);
+
+        if (!o.IsOvermapPaused())                   // it was definitely overmap_pause_count getting too high, but I didn't want to fiddle with Overseer.
+        {
+            Overseer.Main.PauseOvermap();
+        }
+
+        int i = 0;
+        
+        for (i=0; i < myHold.GetCargoItems().Count; i++)
+        {
+            buttonListLeft[i].gameObject.SetActive(true);
+            buttonListLeft[i].GetComponentInChildren<Text>().text
+                = myHold.GetCargoItems()[i];
+            myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
+            myInventoryAmounts[i].gameObject.SetActive(true);
+            String s = myHold.GetCargoItems()[i];
+            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+            myValues[i].gameObject.SetActive(true);
+            buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
+
+            ColorBlock cb = buttonListLeft[i].colors;
+            cb.normalColor = Color.white;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListLeft[i].colors = cb;
         }
     }
 
@@ -320,10 +377,15 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             for (i = 0; i < planetsInRange.Count; i++)
             {
-                buttonListLeft[i].GetComponentInChildren<Text>().text = planetsInRange[i].MyName;
+                String t = planetsInRange[i].MyName;
+                if (t.Length > 10)
+                {
+                    t = t.Remove(10) + "...";
+                }
+                buttonListLeft[i].GetComponentInChildren<Text>().text = t;
                 buttonListLeft[i].gameObject.SetActive(true);
-                String t = planetsInRange[i].name;
-                buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(t); });
+                String s = planetsInRange[i].name;
+                buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(s); });
                 if (planetsInRange[i].Faction.HostileWith(myFaction))
                 {
                     buttonListLeft[i].interactable = false;
@@ -337,10 +399,17 @@ public class TradeMenuMk2 : MonoBehaviour
             int j = 0;
             for (j = 0; j < shipsInRange.Count; j++)
             {
-                buttonListLeft[j + i].GetComponentInChildren<Text>().text = shipsInRange[j].ShipName;
+
+                String t = shipsInRange[j].ShipName;
+                if (t.Length > 10)
+                {
+                    t = t.Remove(10) + "...";
+                }
+                buttonListLeft[j + i].GetComponentInChildren<Text>().text = t;
+
                 buttonListLeft[j + i].gameObject.SetActive(true);
-                String t = buttonListLeft[i + i].GetComponentInChildren<Text>().text;
-                buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(t); });
+                String s = shipsInRange[j].name;
+                buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(s); });
                 if (shipsInRange[j].Pilot.Faction.HostileWith(myFaction))
                 {
                     buttonListLeft[i + j].interactable = false;
@@ -443,11 +512,16 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             for (i = 0; i < bounties.Count; i++)
             {
-                buttonListRight[i].GetComponentInChildren<Text>().text = bounties[i].Target.name;
-                buttonListRight[i].gameObject.SetActive(true);
                 String s = bounties[i].Target.name;
+                if (s.Length > 10)
+                {
+                    s = s.Remove(10) + "...";
+                }
+                buttonListRight[i].GetComponentInChildren<Text>().text = s;
+                buttonListRight[i].gameObject.SetActive(true);
+                String r = bounties[i].Target.name;
                 Faction f = planet.Faction;
-                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
+                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(r, f); });
 
                 theirValues[i].text = bounties[i].Value.ToString();
                 theirValues[i].gameObject.SetActive(true);
@@ -504,6 +578,10 @@ public class TradeMenuMk2 : MonoBehaviour
 
         leftTitleBar.gameObject.SetActive(true);
         rightTitleBar.gameObject.SetActive(true);
+
+        walletPanel.gameObject.SetActive(true);
+
+        walletList[0].gameObject.SetActive(true);
 
         int i = 0;
 
@@ -562,6 +640,11 @@ public class TradeMenuMk2 : MonoBehaviour
 
         leftTitleBar.gameObject.SetActive(true);
         rightTitleBar.gameObject.SetActive(true);
+
+        walletPanel.gameObject.SetActive(true);
+
+        
+        walletList[0].gameObject.SetActive(true);
 
         int i = 0;
 
@@ -900,15 +983,17 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearPanel(theirSelectorListUp);
         ClearPanel(mySelectorListDown);
         ClearPanel(mySelectorListUp);
-
+        ClearPanel(bountyList);
+        
         ClearNumberPanel(theirAmountSelect);
         ClearNumberPanel(myAmountSelect);
         ClearNumberPanel(theirInventoryAmounts);
         ClearNumberPanel(myInventoryAmounts);
         ClearNumberPanel(myValues);
         ClearNumberPanel(theirValues);
+        ClearNumberPanel(walletList);
+        ClearNumberPanel(bountyRewardsList);
     }
-    
 }
 
 
@@ -916,6 +1001,9 @@ public class TradeMenuMk2 : MonoBehaviour
 
 
 /* TODO:
- *  Listener for bounty buttons.
  *  Make sure buttons are all the right color.
+ *  Inventory menu
+ *  Chat menu (ships)
+ *  Chat menu (planets)
+ *  
  */
