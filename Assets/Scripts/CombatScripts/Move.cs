@@ -11,6 +11,7 @@ public class Move : MonoBehaviour {
 
     public float speed = 10f;
 	public bool controller;
+	public float maxSpeed = 25f;
 
     private Rigidbody rb;
 	private Vector3 lookPos;
@@ -26,9 +27,9 @@ public class Move : MonoBehaviour {
 	void Update()
 	{
 		//timeMove ();
-		if (rb.velocity.magnitude >= 50) {
-			Vector3 balance = rb.velocity * -1;
-			rb.AddForce (balance);
+		if (rb.velocity.magnitude >= maxSpeed) 
+		{
+			rb.velocity = rb.velocity.normalized * maxSpeed;
 		}
 	}
 	// Update is called once per frame

@@ -230,6 +230,18 @@ public class CombatController : MonoBehaviour {
 			
 	}
 
+	public GameObject GetLeader()
+	{
+		if (leader != null)
+		{
+			return leader;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	private IEnumerator UnPause()
 	{
 		Time.timeScale = 0f;
