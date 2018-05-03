@@ -38,10 +38,12 @@ public class AI_Enemy : MonoBehaviour {
 	private GameObject overseerObject;
 	private Overseer overseer;
 	private BehaviorTree tree; 
+	private CombatController combatController;
 
 	void Awake(){
 		source = GetComponent <AudioSource> ();
 		tree = GetComponent<BehaviorTree> ();
+		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 	}
 
 
@@ -61,7 +63,7 @@ public class AI_Enemy : MonoBehaviour {
 		//dist = Vector3.Distance (Player.transform.position, transform.position);
 		f = GetComponent<Fire> ();
 
-		Debug.DrawLine (transform.position, transform.forward);
+		//Debug.DrawLine (transform.position, transform.forward);
 
 		//ps = GetComponent<ParticleSystem> ();
 		//ps.Stop ();
@@ -147,44 +149,51 @@ public class AI_Enemy : MonoBehaviour {
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12, 2);
-			health = health - kineticDMG;
+			//overseer.DoExplosion(transform.position, 12, 2);
+			DepleteHealth (kineticDMG);
 			Destroy (other.gameObject);
 		}
 
 		if (other.gameObject.CompareTag("Laser"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12, 2);
-			health = health - laserDMG;
+			//overseer.DoExplosion(transform.position, 12, 2);
+			DepleteHealth (laserDMG);
 			Destroy (other.gameObject);
 		}
 		if (other.gameObject.CompareTag("Rocket"))
 		{
 			//ps.Play ();
-			overseer.DoExplosion(transform.position, 12, 6);
-			health = health - rocketDMG;
+			//overseer.DoExplosion(transform.position, 12, 6);
+			DepleteHealth (rocketDMG);
 			Destroy (other.gameObject);
 		}
 	}
 
 	private void KillYourself()
 	{
-		if (health <= 0) {
-			overseer.DoExplosion(transform.position, 12, 12);
-			if (gameObject.name.Equals ("Bob")) {
-				CombatController.instance.CombatEnd (CombatController.COMBAT_RESULT.ENEMY_DEATH);
-			}
-			Destroy (gameObject);
-			tree.enabled = false;
 
-		}
-		
 	}
-
 	public void DepleteHealth(int dmg)
 	{
 		health -= dmg;
+
+		if (health <= 0) {
+			overseer.DoExplosion(transform.position, 12, 12);
+			tree.enabled = false;
+			gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
+
+			gameObject.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
+
+			gameObject.GetComponent<Rigidbody> ().AddForce (new Vector3 (0, -10, 0));
+			if (gameObject == combatController.GetLeader ()) 
+			{
+				combatController.deadLeader = true;
+			}
+			//Destroy (gameObject);
+			//gameObject.SetActive(false);
+
+		}
 	}
 		
 }

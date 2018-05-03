@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
-using Assets.Scripts.Classes.Helper.Pilot;
+using Assets.Scripts.Classes.Helper;
 using Assets.Behavior_Designer.Runtime;
 using BehaviorDesigner.Runtime;
+using System.Reflection;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
@@ -17,6 +18,7 @@ public class CombatController : MonoBehaviour {
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
 	public bool showEnemy = false;
 	public bool playerCanMove = false;
+	public bool deadLeader = false;
 
     private bool flag = false;
 	private int spawnerCount = 0;
@@ -71,6 +73,7 @@ public class CombatController : MonoBehaviour {
 			flag = false;
 		}
 		CowardsWay ();
+		Victory ();
 		ShowEnemy ();
     }
     ///<summary>
@@ -130,6 +133,7 @@ public class CombatController : MonoBehaviour {
 		combat_player.transform.Rotate (new Vector3 (0, 0, 0));
 		combat_player.transform.position = new Vector3 (0, 10, 0);
 		//
+
         Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
@@ -139,7 +143,7 @@ public class CombatController : MonoBehaviour {
 		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
 		combatCam.SetActive (false);
 		//combat_player.SetActive (false);
-
+		//cleaning up enemies
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
 			spawn.Stop ();
@@ -150,6 +154,7 @@ public class CombatController : MonoBehaviour {
 		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
 
 		AI_Enemy leaderAI = leader.GetComponent<AI_Enemy>();
+		//handle health
 		enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
 		enemySpaceship.TakeDamage(enemy_depletion, playerSpaceship);
 
@@ -159,55 +164,70 @@ public class CombatController : MonoBehaviour {
         o.SetBehaviorManagerTickrate(o.gameState);
     }
 
-	public void CowardsWay()
-	{
-		//check distance between player and enemy leader.
-		if (leader != null) 
-		{
-			float dist = Vector3.Distance (combat_player.transform.position, leader.transform.position);
-			//if distance is to great then player escapes.
-			if (dist > 300)
-				CombatEnd (COMBAT_RESULT.PLAYER_ESCAPE);
-		}
-	}
-
 	//need to fix enemies rotation
-
 	private void SpawnLeader()
 	{
 		GameObject baddy = enemySpaceship.gameObject.transform.GetChild(1).gameObject;
-		int x = Random.Range (10, 30);
-		int z = Random.Range (10, 30);
+		//int x = Random.Range (10, 30);
+		//int z = Random.Range (10, 30);
 		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z + 50f);
 		GameObject parent = new GameObject ();
 		parent.name = enemySpaceship.gameObject.name + "(Combat)";
 	
 		parent.transform.position = position;
-		//Quaternion rot = Quaternion.Euler(-90,0,0);
 		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
 		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
 		clone.layer = 12;
 		clone.tag = "Enemy";
 
+		//Strip models children
 		for (int i = 0; i < clone.transform.childCount; i++) 
 		{
-			clone.transform.GetChild (i).gameObject.layer = 12;
+			//clone.transform.GetChild (i).gameObject.layer = 12;
+			Destroy (clone.transform.GetChild(i).gameObject);
 		}
+		//get rid of models components
+		Destroy (clone.GetComponent<SphereCollider> ());
+		Destroy (clone.GetComponent<Rigidbody> ());
+		Destroy (clone.GetComponent<ParticleSystem> ());
+		Destroy (clone.GetComponent<ModelSwitcher> ());
+			
+		//adding components
+		//parent.AddComponent<Fire> ();
+		//parent.AddComponent<AI_Enemy> ();
+		//parent.AddComponent<BehaviorTree> ();
+		//assigning values to components
+		GameObject enemy = Resources.Load("Prefabs/Enemy1") as GameObject;
+		Component[] components = enemy.GetComponents<Component>();
 
-		//clone.GetComponent<AI_Patrol> ().enabled = false;
-		//clone.GetComponent<BehaviorDesigner.Runtime.BehaviorTree> ().enabled = false;
-		//clone.GetComponent<Spaceship> ().enabled = false; 
+		foreach (Component component in components) {
+			Component parentsComp = parent.AddComponent(component.GetType());
 
-
-		parent.AddComponent<Fire> ();
-		parent.AddComponent<AI_Enemy> ();
+			foreach (FieldInfo f in component.GetType().GetFields())
+				f.SetValue (parentsComp, f.GetValue(component));
+		}
+			
+		//adding more components
+		//parent.AddComponent<Rigidbody> ();
+		//parent.AddComponent<BoxCollider> ();
+		parent.GetComponent<BoxCollider> ().size = new Vector3(1,1,2.5f);
 
 		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
 		leaderAI.health = enemySpaceship.HullHealth;
 
 		leader = parent;
+	}
 
-		//need to add components
+	public GameObject GetLeader()
+	{
+		if (leader != null)
+		{
+			return leader;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	private void ShowEnemy()
@@ -230,18 +250,6 @@ public class CombatController : MonoBehaviour {
 			
 	}
 
-	public GameObject GetLeader()
-	{
-		if (leader != null)
-		{
-			return leader;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
 	private IEnumerator UnPause()
 	{
 		Time.timeScale = 0f;
@@ -253,5 +261,25 @@ public class CombatController : MonoBehaviour {
 		showEnemy = false;
 		playerCanMove = true;
 		Time.timeScale = 1;
+	}
+
+	public void CowardsWay()
+	{
+		//check distance between player and enemy leader.
+		if (leader != null) 
+		{
+			float dist = Vector3.Distance (combat_player.transform.position, leader.transform.position);
+			//if distance is to great then player escapes.
+			if (dist > 300)
+				CombatEnd (COMBAT_RESULT.PLAYER_ESCAPE);
+		}
+	}
+
+	public void Victory()
+	{
+		if (deadLeader && leader == null) 
+		{
+			CombatEnd (COMBAT_RESULT.ENEMY_DEATH);
+		}
 	}
 }
