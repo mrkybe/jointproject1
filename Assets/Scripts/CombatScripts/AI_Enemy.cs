@@ -30,7 +30,7 @@ public class AI_Enemy : MonoBehaviour {
 	private float dist;
 	private Fire f;
 	private int count = 0 ;
-	public AudioClip shootSound;
+	public AudioClip ExplosionSound;
 
 	private AudioSource source;
 	private Rigidbody rigidBody;
@@ -180,6 +180,7 @@ public class AI_Enemy : MonoBehaviour {
 
 		if (health <= 0) {
 			overseer.DoExplosion(transform.position, 12, 12);
+			source.PlayOneShot (ExplosionSound);
 			tree.enabled = false;
 			gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 
