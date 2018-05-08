@@ -25,7 +25,8 @@ public class TradeMenuMk2 : MonoBehaviour
     public Button buttonPrefab;
     public Button submitButton;
     public Button elementButton;
-    public Button selectorButton;
+    public Button selectorUpButton;
+    public Button selectorDownButton;
     public Button bountyButton;
     public Text textPrefab;
     
@@ -52,6 +53,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private RectTransform leftTitleBar;
     private RectTransform rightTitleBar;
+    private RectTransform leftNameBar;
+    private RectTransform rightNameBar;
 
     private RectTransform myPricesPanel;
     private RectTransform theirPricesPanel;
@@ -86,6 +89,9 @@ public class TradeMenuMk2 : MonoBehaviour
     private List<Text> bountyRewardsList;
     private List<Text> walletList;
 
+    private List<Text> leftName;
+    private List<Text> rightName;
+
     private Spaceship otherShip;
     private Spaceship playerShip;
     private Planet planet;
@@ -118,20 +124,19 @@ public class TradeMenuMk2 : MonoBehaviour
         theirPricesPanel = GameObject.Find("Their Price").GetComponent<RectTransform>();
         leftTitleBar = GameObject.Find("Left Title Bar").GetComponent<RectTransform>();
         rightTitleBar = GameObject.Find("Right Title Bar").GetComponent<RectTransform>();
-        bountyPanel = GameObject.Find("Bounty Panel").GetComponent<RectTransform>();
-        bountyDisplay = GameObject.Find("Bounty Display List").GetComponent<RectTransform>();
-        bountyRewards = GameObject.Find("Bounty Rewards").GetComponent<RectTransform>();
+        //bountyPanel = GameObject.Find("Bounty Panel").GetComponent<RectTransform>();
+        //bountyDisplay = GameObject.Find("Bounty Display List").GetComponent<RectTransform>();
+        //bountyRewards = GameObject.Find("Bounty Rewards").GetComponent<RectTransform>();
         walletPanel = GameObject.Find("Wallet").GetComponent<RectTransform>();
-
-        leftTitleBar.gameObject.SetActive(false);
-        rightTitleBar.gameObject.SetActive(false);
+        leftNameBar = GameObject.Find("Left Name Bar").GetComponent<RectTransform>();
+        rightNameBar = GameObject.Find("Right Name Bar").GetComponent<RectTransform>();
 
         playerShip = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
 
         centerPanel.gameObject.SetActive(false);
-        bountyPanel.gameObject.SetActive(false);
+        //bountyPanel.gameObject.SetActive(false);
 
         on = new Vector2(0, 0);
         leftOffPosition = new Vector2(-675, 0);
@@ -150,6 +155,8 @@ public class TradeMenuMk2 : MonoBehaviour
         theirSelectorListUp = new List<Button>();
         bountyList = new List<Button>();
         walletList = new List<Text>();
+        leftName = new List<Text>();
+        rightName = new List<Text>();
 
         myAmountSelect = new List<Text>();
         theirAmountSelect = new List<Text>();
@@ -171,10 +178,10 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulatePanel(buttonListRight, buttonPrefab, rightButtonPanel, 15);
         PopulatePanel(buttonElementListFrom, elementButton, myElementPanel, 10);
         PopulatePanel(buttonElementListTo, elementButton, theirElementPanel, 10);
-        PopulatePanel(mySelectorListDown, selectorButton, mySelectorDown, 10);
-        PopulatePanel(mySelectorListUp, selectorButton, mySelectorUp, 10);
-        PopulatePanel(theirSelectorListDown, selectorButton, theirSelectorDown, 10);
-        PopulatePanel(theirSelectorListUp, selectorButton, theirSelectorUp, 10);
+        PopulatePanel(mySelectorListDown, selectorUpButton, mySelectorDown, 10);
+        PopulatePanel(mySelectorListUp, selectorUpButton, mySelectorUp, 10);
+        PopulatePanel(theirSelectorListDown, selectorDownButton, theirSelectorDown, 10);
+        PopulatePanel(theirSelectorListUp, selectorDownButton, theirSelectorUp, 10);
         PopulatePanel(bountyList, buttonPrefab, bountyDisplay, 1);
 
         PopulateNumberPanel(myAmountSelect, textPrefab, myAmountPanel, 10);
@@ -187,13 +194,17 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(theirPrices, textPrefab, theirPricesPanel, 10);
         PopulateNumberPanel(bountyRewardsList, textPrefab, bountyRewards, 1);
         PopulateNumberPanel(walletList, textPrefab, walletPanel, 1);
+        PopulateNumberPanel(leftName, textPrefab, leftNameBar, 1);
+        PopulateNumberPanel(rightName, textPrefab, rightNameBar, 1);
 
         submitButton.onClick.AddListener(SubmitTrade);
         bountyButton.onClick.AddListener(ConfirmBounty);
 
-        walletPanel.gameObject.SetActive(false);
-
-        walletPanel.transform.position = new Vector3(-1500, -450, 0);
+        walletList[0].gameObject.SetActive(false);
+        leftName[0].text = playerShip.ShipName;
+        rightName[0].gameObject.SetActive(false);
+        leftName[0].gameObject.SetActive(false);
+        
 
         MassClear();
 
@@ -217,10 +228,18 @@ public class TradeMenuMk2 : MonoBehaviour
                     MassClear();
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
-                    bountyPanel.gameObject.SetActive(false);
-                    leftTitleBar.gameObject.SetActive(false);
-                    rightTitleBar.gameObject.SetActive(false);
-                    walletPanel.gameObject.SetActive(false);
+                    //bountyPanel.gameObject.SetActive(false);
+                    foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    foreach (RectTransform child in rightTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    walletList[0].gameObject.SetActive(false);
+                    leftName[0].gameObject.SetActive(false);
+                    rightName[0].gameObject.SetActive(false);
                 }
                 else if (!isLeftOff && isRightOff)
                 {
@@ -231,10 +250,16 @@ public class TradeMenuMk2 : MonoBehaviour
                     ClearPanel(buttonListLeft);
                     ClearNumberPanel(myInventoryAmounts);
                     centerPanel.gameObject.SetActive(false);
-                    bountyPanel.gameObject.SetActive(false);
-                    leftTitleBar.gameObject.SetActive(false);
-                    rightTitleBar.gameObject.SetActive(false);
-                    walletPanel.gameObject.SetActive(false);
+                    //bountyPanel.gameObject.SetActive(false);
+                    foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    foreach (RectTransform child in rightTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    walletList[0].gameObject.SetActive(false);
                 }
                 else if (!isLeftOff && !isRightOff)
                 {
@@ -242,10 +267,16 @@ public class TradeMenuMk2 : MonoBehaviour
                     isRightOff = true;
                     ShowAgentsInRange();
                     centerPanel.gameObject.SetActive(false);
-                    bountyPanel.gameObject.SetActive(false);
-                    leftTitleBar.gameObject.SetActive(false);
-                    rightTitleBar.gameObject.SetActive(false);
-                    walletPanel.gameObject.SetActive(false);
+                    //bountyPanel.gameObject.SetActive(false);
+                    foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    foreach (RectTransform child in rightTitleBar.GetComponentInChildren<RectTransform>())
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    walletList[0].gameObject.SetActive(false);
 
                     MassClear();
                 }
@@ -272,7 +303,12 @@ public class TradeMenuMk2 : MonoBehaviour
         leftPanel.anchoredPosition = on;
         isLeftOff = false;
         walletPanel.gameObject.SetActive(true);
-        leftTitleBar.gameObject.SetActive(true);
+        walletList[0].gameObject.SetActive(true);
+        leftName[0].gameObject.SetActive(true);
+        foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+        {
+            child.gameObject.SetActive(true);
+        }
 
         if (!o.IsOvermapPaused())                   // it was definitely overmap_pause_count getting too high, but I didn't want to fiddle with Overseer.
         {
@@ -378,9 +414,9 @@ public class TradeMenuMk2 : MonoBehaviour
             for (i = 0; i < planetsInRange.Count; i++)
             {
                 String t = planetsInRange[i].MyName;
-                if (t.Length > 10)
+                if (t.Length > 30)
                 {
-                    t = t.Remove(10) + "...";
+                    t = t.Remove(30) + "...";
                 }
                 buttonListLeft[i].GetComponentInChildren<Text>().text = t;
                 buttonListLeft[i].gameObject.SetActive(true);
@@ -401,9 +437,9 @@ public class TradeMenuMk2 : MonoBehaviour
             {
 
                 String t = shipsInRange[j].ShipName;
-                if (t.Length > 10)
+                if (t.Length > 30)
                 {
-                    t = t.Remove(10) + "...";
+                    t = t.Remove(30) + "...";
                 }
                 buttonListLeft[j + i].GetComponentInChildren<Text>().text = t;
 
@@ -444,7 +480,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
-        leftTitleBar.gameObject.SetActive(false);
+        //leftTitleBar.gameObject.SetActive(false);
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
@@ -469,7 +505,7 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel.anchoredPosition = rightOffPosition;
 
         centerPanel.gameObject.SetActive(false);
-        bountyPanel.gameObject.SetActive(false);
+        //bountyPanel.gameObject.SetActive(false);
 
         isLeftOff = true;
         isRightOff = true;
@@ -481,7 +517,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
-        leftTitleBar.gameObject.SetActive(false);
+        //leftTitleBar.gameObject.SetActive(false);
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
@@ -502,6 +538,9 @@ public class TradeMenuMk2 : MonoBehaviour
 
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
+        rightName[0].gameObject.SetActive(true);
+        rightName[0].text = planet.Faction.ToString();
+
         rightPanel.anchoredPosition = on;
         isRightOff = false;
         //bountyPanel.gameObject.SetActive(true);
@@ -513,9 +552,9 @@ public class TradeMenuMk2 : MonoBehaviour
             for (i = 0; i < bounties.Count; i++)
             {
                 String s = bounties[i].Target.name;
-                if (s.Length > 10)
+                if (s.Length > 30)
                 {
-                    s = s.Remove(10) + "...";
+                    s = s.Remove(30) + "...";
                 }
                 buttonListRight[i].GetComponentInChildren<Text>().text = s;
                 buttonListRight[i].gameObject.SetActive(true);
@@ -566,9 +605,14 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel.anchoredPosition = on;
         isRightOff = false;
 
-        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
+        walletPanel.gameObject.SetActive(true);
+        walletList[0].gameObject.SetActive(true);
+        leftName[0].gameObject.SetActive(true);
 
-        o.GetFaction("Duty").AddBounty(new Bounty(otherShip, 100));
+        rightName[0].gameObject.SetActive(true);
+        rightName[0].text = GameObject.Find(otherName).GetComponent<Spaceship>().ShipName;
+
+        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
 
         otherHold = otherShip.GetCargoHold;
 
@@ -630,6 +674,13 @@ public class TradeMenuMk2 : MonoBehaviour
         rightPanel.anchoredPosition = on;
         isRightOff = false;
 
+        walletPanel.gameObject.SetActive(true);
+        walletList[0].gameObject.SetActive(true);
+        leftName[0].gameObject.SetActive(true);
+
+        rightName[0].gameObject.SetActive(true);
+        rightName[0].text = GameObject.Find(otherName).GetComponent<Planet>().MyName;
+
         planet = GameObject.Find(otherName).GetComponent<Planet>();
 
         otherHold = planet.GetCargoHold;
@@ -642,8 +693,6 @@ public class TradeMenuMk2 : MonoBehaviour
         rightTitleBar.gameObject.SetActive(true);
 
         walletPanel.gameObject.SetActive(true);
-
-        
         walletList[0].gameObject.SetActive(true);
 
         int i = 0;
