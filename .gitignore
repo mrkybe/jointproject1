@@ -70,6 +70,3 @@ sysinfo.txt
 !/Assets/Behavior Designer/Editor/BehaviorDesignerEditor.dll
 !/Assets/Behavior Designer/Runtime/BehaviorDesignerRuntime.dll
 !/Assets/ShaderForge/Editor/ShaderForge.dll
-*.prefab
-*.prefab
-*.meta
