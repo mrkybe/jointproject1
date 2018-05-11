@@ -39,11 +39,23 @@ public class AI_Enemy : MonoBehaviour {
 	private Overseer overseer;
 	private BehaviorTree tree; 
 	private CombatController combatController;
+	private BehaviorTree behaviorTree;
+	public GameObject player;
 
 	void Awake(){
+		player = GameObject.Find("Combat_ship_player");
 		source = GetComponent <AudioSource> ();
+
 		tree = GetComponent<BehaviorTree> ();
 		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
+		behaviorTree = transform.GetComponent<BehaviorTree>();
+		if (!behaviorTree)
+		{
+			behaviorTree = gameObject.AddComponent<BehaviorTree>();
+			behaviorTree.StartWhenEnabled = true;
+
+			behaviorTree.GetVariable("PlayerTransform").SetValue(player.transform);
+		}
 	}
 
 
@@ -63,79 +75,12 @@ public class AI_Enemy : MonoBehaviour {
 		//dist = Vector3.Distance (Player.transform.position, transform.position);
 		f = GetComponent<Fire> ();
 
-		//Debug.DrawLine (transform.position, transform.forward);
-
-		//ps = GetComponent<ParticleSystem> ();
-		//ps.Stop ();
-
 	}
+		
 
 	// Update is called once per frame
 	void Update () {
 		KillYourself ();
-//		if (count == 0) {
-//			
-//			Player = GameObject.FindGameObjectWithTag("Player");
-//			count++;
-//		}
-		//Debug.Log (Player.transform.position);
-////		dist = Vector3.Distance (Player.transform.position, gameObject.transform.position);
-//		float step = speed * Time.deltaTime;
-			
-			//gameObject.transform.LookAt (Player.transform);
-//		  if (f)
-//           {
-//                f.enemyFire();
-//           }
-//		source.PlayOneShot (shootSound);
-			//gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, Player.transform.position, step);
-
-
-//			xMax = Player.transform.position.x + xMax;
-//
-//			zMax = Player.transform.position.z + xMax;
-//			xMin = Player.transform.position.x - xMin;
-//			zMin = Player.transform.position.x - zMin;
-//			tiempo += Time.deltaTime;
-//
-//			if (transform.localPosition.x > xMax) {
-//				x = Random.Range (-velocidadMax, 0.0f);
-//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-//				tiempo = 0.0f; 
-//			}
-//			if (transform.localPosition.x < xMin) {
-//				x = Random.Range (0.0f, velocidadMax);
-//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-//				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
-//				tiempo = 0.0f; 
-//			}
-//			if (transform.localPosition.z > zMax) {
-//				z = Random.Range (-velocidadMax, 0.0f);
-//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-//				transform.localRotation = Quaternion.Euler (0, angulo, 0); 
-//				tiempo = 0.0f; 
-//			}
-//			if (transform.localPosition.z < zMin) {
-//				z = Random.Range (0.0f, velocidadMax);
-//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-//				tiempo = 0.0f; 
-//			}
-//
-//
-//			if (tiempo > 1.0f) {
-//				x = Random.Range (-velocidadMax, velocidadMax);
-//				z = Random.Range (-velocidadMax, velocidadMax);
-//				angulo = Mathf.Atan2 (x, z) * (180 / 3.141592f) + 90;
-//				transform.localRotation = Quaternion.Euler (0, angulo, 0);
-//				tiempo = 0.0f;
-//			}
-//
-//			transform.localPosition = new Vector3 (transform.localPosition.x + x, transform.localPosition.y, transform.localPosition.z + z);
-
-	
-
 	}
 
 	void OnCollisionEnter(Collision other)
