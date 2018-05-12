@@ -314,7 +314,7 @@ public class TradeMenuMk2 : MonoBehaviour
             child.gameObject.SetActive(true);
         }
 
-        if (!o.IsOvermapPaused())                   // it was definitely overmap_pause_count getting too high, but I didn't want to fiddle with Overseer.
+        if (!o.IsOvermapPaused())
         {
             Overseer.Main.PauseOvermap();
         }
@@ -418,9 +418,9 @@ public class TradeMenuMk2 : MonoBehaviour
             for (i = 0; i < planetsInRange.Count; i++)
             {
                 String t = planetsInRange[i].MyName;
-                if (t.Length > 30)
+                if (t.Length > 15)
                 {
-                    t = t.Remove(30) + "...";
+                    t = t.Remove(15) + "...";
                 }
                 buttonListLeft[i].GetComponentInChildren<Text>().text = t;
                 buttonListLeft[i].gameObject.SetActive(true);
@@ -441,9 +441,9 @@ public class TradeMenuMk2 : MonoBehaviour
             {
 
                 String t = shipsInRange[j].ShipName;
-                if (t.Length > 30)
+                if (t.Length > 15)
                 {
-                    t = t.Remove(30) + "...";
+                    t = t.Remove(15) + "...";
                 }
                 buttonListLeft[j + i].GetComponentInChildren<Text>().text = t;
 
@@ -556,9 +556,9 @@ public class TradeMenuMk2 : MonoBehaviour
             for (i = 0; i < bounties.Count; i++)
             {
                 String s = bounties[i].Target.name;
-                if (s.Length > 30)
+                if (s.Length > 15)
                 {
-                    s = s.Remove(30) + "...";
+                    s = s.Remove(15) + "...";
                 }
                 buttonListRight[i].GetComponentInChildren<Text>().text = s;
                 buttonListRight[i].gameObject.SetActive(true);
@@ -1004,16 +1004,46 @@ public class TradeMenuMk2 : MonoBehaviour
         }
         if (traded)
         {
-            ClearPanel(buttonElementListFrom);
-            ClearPanel(buttonElementListTo);
-            ClearPanel(theirSelectorListDown);
-            ClearPanel(theirSelectorListUp);
-            ClearPanel(mySelectorListDown);
-            ClearPanel(mySelectorListUp);
-            ClearNumberPanel(myAmountSelect);
-            ClearNumberPanel(theirAmountSelect);
-            ClearNumberPanel(theirPrices);
-            ClearNumberPanel(myPrices);
+            MassClear();
+
+            walletList[0].gameObject.SetActive(true);
+
+            for (int i = 0; i < myHold.GetCargoItems().Count; i++)
+            {
+                buttonListLeft[i].gameObject.SetActive(true);
+                buttonListLeft[i].GetComponentInChildren<Text>().text
+                    = myHold.GetCargoItems()[i];
+                myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
+                myInventoryAmounts[i].gameObject.SetActive(true);
+                String s = myHold.GetCargoItems()[i];
+                myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+                myValues[i].gameObject.SetActive(true);
+                buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
+
+                ColorBlock cb = buttonListLeft[i].colors;
+                cb.normalColor = Color.white;
+                cb.disabledColor = cb.normalColor * 0.5f;
+                buttonListLeft[i].colors = cb;
+            }
+
+            for (int i = 0; i < otherHold.GetCargoItems().Count; i++)
+            {
+                buttonListRight[i].gameObject.SetActive(true);
+                buttonListRight[i].GetComponentInChildren<Text>().text
+                    = otherHold.GetCargoItems()[i];
+                theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
+                theirInventoryAmounts[i].gameObject.SetActive(true);
+                String s = otherHold.GetCargoItems()[i];
+                theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
+                theirValues[i].gameObject.SetActive(true);
+                buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
+
+                ColorBlock cb = buttonListRight[i].colors;
+                cb.normalColor = Color.white;
+                cb.disabledColor = cb.normalColor * 0.5f;
+                buttonListRight[i].colors = cb;
+            }
+
         }
 
         for (int i = 0; i < myInventoryAmounts.Count; i++)
@@ -1046,7 +1076,9 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearNumberPanel(myInventoryAmounts);
         ClearNumberPanel(myValues);
         ClearNumberPanel(theirValues);
-        ClearNumberPanel(walletList);
+        ClearNumberPanel(myPrices);
+        ClearNumberPanel(theirPrices);
+        //ClearNumberPanel(walletList);
         ClearNumberPanel(bountyRewardsList);
     }
 }
