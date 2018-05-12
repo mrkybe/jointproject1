@@ -496,6 +496,16 @@ public class TradeMenuMk2 : MonoBehaviour
 
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
 
+        int i = 0;
+
+        for (i = 0; i < buttonListLeft.Count; i++)
+        {
+            ColorBlock cb = buttonListLeft[i].colors;
+            cb.normalColor = GameObject.Find(t).GetComponent<Spaceship>().Pilot.Faction.ColorPrimary;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListLeft[i].colors = cb;
+        }
+
     }
 
     private void StartCombat(string t)
@@ -535,6 +545,17 @@ public class TradeMenuMk2 : MonoBehaviour
 
         buttonListLeft[1].onClick.AddListener(() => { ShowBounties(t); });
         buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(t); });
+
+
+        int i = 0;
+
+        for (i = 0; i < buttonListLeft.Count; i++)
+        {
+            ColorBlock cb = buttonListLeft[i].colors;
+            cb.normalColor = planet.Faction.ColorPrimary;
+            cb.disabledColor = cb.normalColor * 0.5f;
+            buttonListLeft[i].colors = cb;
+        }
 
     }
 
