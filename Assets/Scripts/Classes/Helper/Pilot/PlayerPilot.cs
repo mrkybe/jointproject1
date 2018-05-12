@@ -2,8 +2,15 @@
 using Assets.Scripts.Classes.Mobile;
 using Assets.Scripts.Classes.WorldSingleton;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Classes.Helper.Pilot {
+
+	public AudioClip shootSound;
+	private AudioSource source;
+
+
     public class PlayerPilot : PilotInterface
     {
         public enum ControlMode { CONTROLLER, KEYBOARD};
