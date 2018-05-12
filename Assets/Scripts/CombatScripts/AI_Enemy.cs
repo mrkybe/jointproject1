@@ -127,16 +127,18 @@ public class AI_Enemy : MonoBehaviour {
 			overseer.DoExplosion(transform.position, 12, 12);
 			source.PlayOneShot (ExplosionSound);
 			tree.enabled = false;
-			gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
+			//gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 
-			gameObject.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
+			//gameObject.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 
-			gameObject.GetComponent<Rigidbody> ().AddForce (new Vector3 (0, -10, 0));
+			//gameObject.GetComponent<Rigidbody> ().AddForce (new Vector3 (0, -10, 0));
+
 			if (gameObject == combatController.GetLeader ()) 
 			{
 				combatController.deadLeader = true;
 			}
-			//Destroy (gameObject);
+			else 
+				Destroy (gameObject);
 			//gameObject.SetActive(false);
 
 		}
