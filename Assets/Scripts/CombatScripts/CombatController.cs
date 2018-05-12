@@ -119,6 +119,7 @@ public class CombatController : MonoBehaviour {
 		enemySpaceship = enemy;
 		SpawnLeader ();
 		showEnemy = true;
+
 		pc.health = playerSpaceship.HullHealth;
         Time.timeScale = 1.0f;
         o.SetBehaviorManagerTickrate(o.gameState);
@@ -134,7 +135,10 @@ public class CombatController : MonoBehaviour {
 		combat_player.transform.position = new Vector3 (0, 10, 0);
 		//
 
-        Time.timeScale = 0.0f;
+		//leader is no longer dead
+		deadLeader = false;
+
+        //Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		o.UnpauseOvermap ();
 		o.gameState = GameState.InOverMap;
@@ -142,19 +146,19 @@ public class CombatController : MonoBehaviour {
 		mainCam.SetActive (true);
 		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
 		combatCam.SetActive (false);
-		//combat_player.SetActive (false);
+
 		//cleaning up enemies
 		for (int i = 0; i < spawnerCount; i++) {
 			EnemySpawner spawn = enemySpawners [i].GetComponent<EnemySpawner> ();
 			spawn.Stop ();
 			spawn.enabled = false;
 		}
-
+		//handle player health
 		player_depletion = playerSpaceship.HullHealth - pc.health;
 		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
 
 		AI_Enemy leaderAI = leader.GetComponent<AI_Enemy>();
-		//handle health
+		//handle enemy health
 		enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
 		enemySpaceship.TakeDamage(enemy_depletion, playerSpaceship);
 
@@ -162,6 +166,7 @@ public class CombatController : MonoBehaviour {
 			Destroy(enemy);
 
         o.SetBehaviorManagerTickrate(o.gameState);
+		Debug.Log ("Combat end");
     }
 
 	//need to fix enemies rotation
@@ -170,17 +175,23 @@ public class CombatController : MonoBehaviour {
 		GameObject baddy = enemySpaceship.gameObject.transform.GetChild(1).gameObject;
 		//int x = Random.Range (10, 30);
 		//int z = Random.Range (10, 30);
-		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z + 50f);
-		GameObject parent = new GameObject ();
-		parent.name = enemySpaceship.gameObject.name + "(Combat)";
-	
-		parent.transform.position = position;
+		Vector3 position = new Vector3(combat_player.transform.position.x, combat_player.transform.position.y, combat_player.transform.position.z + 50f); 
+		GameObject enemy = Resources.Load("Prefabs/Combat_Leader") as GameObject;
+		GameObject parent = Instantiate (enemy, position, Quaternion.identity);
+
+		parent.GetComponent<BoxCollider> ().size = new Vector3(1,1,2.5f);
+		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
+		leaderAI.health = enemySpaceship.HullHealth;
+		//parent.name = enemySpaceship.gameObject.name + "(Combat)";
+		
+		//parent.transform.position = position;
 		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
 		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
 		clone.layer = 12;
 		clone.tag = "Enemy";
 
 		//Strip models children
+
 		for (int i = 0; i < clone.transform.childCount; i++) 
 		{
 			//clone.transform.GetChild (i).gameObject.layer = 12;
@@ -197,7 +208,9 @@ public class CombatController : MonoBehaviour {
 		//parent.AddComponent<AI_Enemy> ();
 		//parent.AddComponent<BehaviorTree> ();
 		//assigning values to components
-		GameObject enemy = Resources.Load("Prefabs/Enemy1") as GameObject;
+
+
+		/*
 		Component[] components = enemy.GetComponents<Component>();
 
 		foreach (Component component in components) {
@@ -206,16 +219,15 @@ public class CombatController : MonoBehaviour {
 			foreach (FieldInfo f in component.GetType().GetFields())
 				f.SetValue (parentsComp, f.GetValue(component));
 		}
-			
+		*/
 		//adding more components
 		//parent.AddComponent<Rigidbody> ();
 		//parent.AddComponent<BoxCollider> ();
-		parent.GetComponent<BoxCollider> ().size = new Vector3(1,1,2.5f);
-
-		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
-		leaderAI.health = enemySpaceship.HullHealth;
+	
 
 		leader = parent;
+
+
 	}
 
 	public GameObject GetLeader()
@@ -236,7 +248,6 @@ public class CombatController : MonoBehaviour {
 		{
 			//Time.timeScale = 0;
 			float z = leader.transform.position.z;
-			bool move = false;
 			Vector3 position = combatCam.transform.position;
 			//combatCam.transform.position = combat_player.transform.position;
 			combatCam.transform.position += new Vector3 (0, 0, .5f);
@@ -277,7 +288,7 @@ public class CombatController : MonoBehaviour {
 
 	public void Victory()
 	{
-		if (deadLeader && leader == null) 
+		if (deadLeader) 
 		{
 			CombatEnd (COMBAT_RESULT.ENEMY_DEATH);
 		}
