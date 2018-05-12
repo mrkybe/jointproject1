@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Classes.Helper.Pilot {
 
-	public AudioClip shootSound;
-	private AudioSource source;
 
 
     public class PlayerPilot : PilotInterface
