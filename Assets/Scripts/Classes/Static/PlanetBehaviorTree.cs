@@ -51,11 +51,16 @@ namespace Assets.Scripts.Classes.Static {
         private void CalculateSupplyDemand()
         {
             CargoHold net = CalculateNetDemand();
+
             foreach (CargoItem i in net.CargoItems)
             {
-                myStorage.SetCostModifier(i.Name, 1 - Mathf.Clamp(i.Count / 10.0f, 0.5f, 1.0f));
-                reservedStorage.SetCostModifier(i.Name, 1 - Mathf.Clamp(i.Count / 10.0f, 0.5f, 1.0f));
+                float costMod = 1.0f - Mathf.Clamp(i.Count / 4.0f, -0.5f, 0.5f);
+                myStorage.SetCostModifier(i.Name, costMod);
+                reservedStorage.SetCostModifier(i.Name, costMod);
+                //Debug.Log(costMod.ToString() + " | " + myStorage.GetCargoItemUnitCost(i.Name));
             }
+
+            //Debug.Log("test");
         }
 
         public Dictionary<string, float> GetCostModifier()
@@ -65,6 +70,7 @@ namespace Assets.Scripts.Classes.Static {
 
         private void UpdateEverything()
         {
+            CalculateSupplyDemand();
             CalculateConsumableResources();
             CalculateUnwantedResource();
             UpdateMarketSellingBuyingOrders();
