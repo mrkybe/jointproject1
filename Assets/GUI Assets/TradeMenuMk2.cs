@@ -220,7 +220,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
-            walletList[0].text = myHold.GetMoneyValue().ToString();
+            walletList[0].text = playerShip.Pilot.Money.ToString();
 
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {       
