@@ -185,6 +185,16 @@ namespace Assets.Scripts.Classes.Static {
         }
 
         /// <summary>
+        /// Returns the list of the buildings in the planet.
+        /// </summary>
+        /// <param name="seperator"></param>
+        /// <returns></returns>
+        public List<Building> Buildings()
+        {
+            return myBuildings;
+        }
+
+        /// <summary>
         /// Sets the name of the Planet.
         /// </summary>
         /// <param name="val"></param>
