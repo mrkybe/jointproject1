@@ -111,6 +111,11 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             get { return Count * myResource.BaseValue; }
         }
 
+        public int UnitCost
+        {
+            get { return myResource.BaseValue; }
+        }
+
         /// <summary>
         /// Are these the same kind of CargoItem?
         /// </summary>

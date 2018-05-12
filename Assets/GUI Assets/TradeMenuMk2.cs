@@ -820,7 +820,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x + 1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (myHold.GetCargoItemValue(c)*x).ToString(); /// REPLACE
+                myPrices[i].text = (otherHold.GetCargoItemUnitCost(c)*x).ToString(); /// REPLACE
             }
         }
         else
@@ -830,7 +830,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x+1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (otherHold.GetCargoItemValue(c)*x).ToString();  /// REPLACE
+                theirPrices[i].text = (otherHold.GetCargoItemUnitCost(c)*x).ToString();  /// REPLACE
             }
         }
     }
@@ -845,7 +845,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x-1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (myHold.GetCargoItemValue(c) * x).ToString();   /// REPLACE
+                myPrices[i].text = (otherHold.GetCargoItemUnitCost(c) * x).ToString();   /// REPLACE
             }
         }
         else
@@ -855,7 +855,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x = x - 1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (otherHold.GetCargoItemValue(c)* x).ToString();   /// REPLACE
+                theirPrices[i].text = (otherHold.GetCargoItemUnitCost(c)* x).ToString();   /// REPLACE
             }
         }
     }
@@ -878,7 +878,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 String myResource = buttonElementListFrom[i].GetComponentInChildren<Text>().text;
                 if (myAmount <= myHold.GetAmountInHold(myResource))
                 {
-                    trade.Value += otherHold.GetCargoItemValue(myResource) * myAmount;
+                    trade.Value += otherHold.GetCargoItemUnitCost(myResource) * myAmount;
                     trade.Volume += myHold.CargoItems.First(x => x.Name == myResource).Size * myAmount;
                 }
                 else // You can't try to buy more than there is
@@ -903,7 +903,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 String theirResource = buttonElementListTo[j].GetComponentInChildren<Text>().text;
                 if (theirAmount <= otherHold.GetAmountInHold(theirResource))
                 {
-                    trade.Value += otherHold.GetCargoItemValue(theirResource) * theirAmount;
+                    trade.Value += otherHold.GetCargoItemUnitCost(theirResource) * theirAmount;
                     trade.Volume += otherHold.CargoItems.First(x => x.Name == theirResource).Size * theirAmount;
                 }
                 else

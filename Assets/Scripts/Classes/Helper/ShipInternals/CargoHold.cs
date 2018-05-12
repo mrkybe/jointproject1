@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes.Static;
+using Assets.Scripts.Classes.WorldSingleton;
 using ShaderForge;
 using UnityEngine;
 
@@ -250,6 +251,14 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         {
             if (Contains(name))
                 return (int) (supplyDemandCostModifier[name] * _cargoItems.First(x => x.Name == name).Cost);
+            else
+                return 0;
+        }
+
+        public int GetCargoItemUnitCost(string name)
+        {
+            if (Contains(name))
+                return (int)(supplyDemandCostModifier[name] * _cargoItems.First(x => x.Name == name).UnitCost);
             else
                 return 0;
         }
