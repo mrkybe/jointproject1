@@ -426,11 +426,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[i].gameObject.SetActive(true);
                 String s = planetsInRange[i].name;
                 buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(s); });
-                if (planetsInRange[i].Faction.HostileWith(myFaction))
-                {
-                    buttonListLeft[i].interactable = false;
 
-                }
                 ColorBlock cb = buttonListLeft[i].colors;
                 cb.normalColor = planetsInRange[i].Faction.ColorPrimary;
                 cb.disabledColor = cb.normalColor * 0.5f;
@@ -450,11 +446,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[j + i].gameObject.SetActive(true);
                 String s = shipsInRange[j].name;
                 buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(s); });
-                if (shipsInRange[j].Pilot.Faction.HostileWith(myFaction))
-                {
-                    buttonListLeft[i + j].interactable = false;
-                    
-                }
+
                 ColorBlock cb = buttonListLeft[i + j].colors;
                 cb.normalColor = shipsInRange[j].Pilot.Faction.ColorPrimary;
                 cb.disabledColor = cb.normalColor * 0.5f;
@@ -495,6 +487,13 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(t); });
 
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
+
+
+        if (GameObject.Find(t).GetComponent<Spaceship>().Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
+        {
+            buttonListLeft[1].interactable = false;
+        }
+
 
         int i = 0;
 
@@ -545,6 +544,15 @@ public class TradeMenuMk2 : MonoBehaviour
 
         buttonListLeft[1].onClick.AddListener(() => { ShowBounties(t); });
         buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(t); });
+
+        if (GameObject.Find(t).GetComponent<Planet>().Faction.HostileWith(playerShip.Pilot.Faction))
+        {
+            int k = 0;
+            for (k = 0; k < buttonListLeft.Count; k++)
+            {
+                buttonListLeft[k].interactable = false;
+            }
+        }
 
 
         int i = 0;
