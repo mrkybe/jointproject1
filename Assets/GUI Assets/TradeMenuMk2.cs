@@ -525,14 +525,40 @@ public class TradeMenuMk2 : MonoBehaviour
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
+        buttonListLeft[2].gameObject.SetActive(true);
 
         buttonListLeft[0].GetComponentInChildren<Text>().text = "Trade";
         buttonListLeft[1].GetComponentInChildren<Text>().text = "Bounties";
+        buttonListLeft[2].GetComponentInChildren<Text>().text = "View Industry";
 
         buttonListLeft[0].onClick.AddListener(() => { OpenInventoryPlanet(t); });
 
         buttonListLeft[1].onClick.AddListener(() => { ShowBounties(t); });
+        buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(t); });
 
+    }
+
+    private void ShowIndustry(string t)
+    {
+        // Planet has a Faction, Faction has a list of bounties.
+        planet = GameObject.Find(t).GetComponent<Planet>();
+
+        List<Building> buildings = planet.Buildings();
+
+        rightName[0].gameObject.SetActive(true);
+        rightName[0].text = planet.MyName;
+
+        rightPanel.anchoredPosition = on;
+        isRightOff = false;
+        //bountyPanel.gameObject.SetActive(true);
+        
+        int reps = Mathf.Min(buttonListRight.Count, buildings.Count);
+        for (int i = 0; i < reps; i++)
+        {
+            String s = buildings[i].Name;
+            buttonListRight[i].GetComponentInChildren<Text>().text = s;
+            buttonListRight[i].gameObject.SetActive(true);
+        }
     }
 
     private void ShowBounties(string t)
@@ -543,7 +569,7 @@ public class TradeMenuMk2 : MonoBehaviour
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
         rightName[0].gameObject.SetActive(true);
-        rightName[0].text = planet.Faction.ToString();
+        rightName[0].text = planet.MyName;
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
