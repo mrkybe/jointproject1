@@ -260,7 +260,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             if (Contains(name))
                 return (int)(supplyDemandCostModifier[name] * _cargoItems.First(x => x.Name == name).UnitCost);
             else
-                return 0;
+                return CargoItem.resources_in_use.First(x => x.Name == name).BaseValue;
         }
     }
 }

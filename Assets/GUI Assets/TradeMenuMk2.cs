@@ -697,7 +697,7 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
+            theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
             theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
 
@@ -717,7 +717,7 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
-            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+            myValues[i].text = myHold.GetCargoItemUnitCost(s).ToString();
             myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
 
@@ -766,7 +766,7 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
+            theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
             theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
 
@@ -786,7 +786,7 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
-            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+            myValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
             myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(()=> { Trade1(s); });
 
@@ -1071,7 +1071,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
                 myInventoryAmounts[i].gameObject.SetActive(true);
                 String s = myHold.GetCargoItems()[i];
-                myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+                myValues[i].text = myHold.GetCargoItemUnitCost(s).ToString();
                 myValues[i].gameObject.SetActive(true);
                 buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
 
@@ -1089,7 +1089,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
                 theirInventoryAmounts[i].gameObject.SetActive(true);
                 String s = otherHold.GetCargoItems()[i];
-                theirValues[i].text = otherHold.GetCargoItemValue(s).ToString();
+                theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
                 theirValues[i].gameObject.SetActive(true);
                 buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
 
