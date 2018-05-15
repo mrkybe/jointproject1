@@ -51,6 +51,10 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform bountyRewards;
     private RectTransform walletPanel;
 
+    private RectTransform chatPanel;
+    private RectTransform chatName;
+    private RectTransform chatText;
+
     private RectTransform leftTitleBar;
     private RectTransform rightTitleBar;
     private RectTransform leftNameBar;
@@ -91,6 +95,9 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private List<Text> leftName;
     private List<Text> rightName;
+    private List<Text> chatNameText;
+
+    private List<Text> chat;
 
     private Spaceship otherShip;
     private Spaceship playerShip;
@@ -131,6 +138,10 @@ public class TradeMenuMk2 : MonoBehaviour
         leftNameBar = GameObject.Find("Left Name Panel").GetComponent<RectTransform>();
         rightNameBar = GameObject.Find("Right Name Panel").GetComponent<RectTransform>();
 
+        chatPanel = GameObject.Find("Chat Panel").GetComponent<RectTransform>();
+        chatName = GameObject.Find("Chat Name Panel").GetComponent<RectTransform>();
+        chatText = GameObject.Find("Chat Text Panel").GetComponent<RectTransform>();
+
         playerShip = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
@@ -168,6 +179,9 @@ public class TradeMenuMk2 : MonoBehaviour
         theirPrices = new List<Text>();
         bountyRewardsList = new List<Text>();
 
+        chat = new List<Text>();
+        chatNameText = new List<Text>();
+
         otherShip = new Spaceship();
         planet = new Planet();
         otherHold = new CargoHold(GetComponent<MonoBehaviour>(), 0);
@@ -197,6 +211,11 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(leftName, textPrefab, leftNameBar, 1);
         PopulateNumberPanel(rightName, textPrefab, rightNameBar, 1);
 
+        PopulateNumberPanel(chatNameText, textPrefab, chatName, 1);
+        PopulateNumberPanel(chat, textPrefab, chatText, 15);
+
+
+        leftName[0].text = playerShip.ShipName;
 
         submitButton.onClick.AddListener(SubmitTrade);
         bountyButton.onClick.AddListener(ConfirmBounty);
@@ -205,6 +224,7 @@ public class TradeMenuMk2 : MonoBehaviour
        
         rightName[0].gameObject.SetActive(false);
         leftName[0].gameObject.SetActive(false);
+
         
 
         MassClear();
@@ -243,6 +263,8 @@ public class TradeMenuMk2 : MonoBehaviour
                     ClearNumberPanel(leftName);
                     rightName[0].gameObject.SetActive(false);
                     ClearNumberPanel(rightName);
+                    ClearNumberPanel(chat);
+                    chatPanel.anchoredPosition = rightOffPosition;
                 }
                 else if (!isLeftOff && isRightOff)
                 {
@@ -263,6 +285,8 @@ public class TradeMenuMk2 : MonoBehaviour
                         child.gameObject.SetActive(false);
                     }
                     walletList[0].gameObject.SetActive(false);
+                    ClearNumberPanel(chat);
+                    chatPanel.anchoredPosition = rightOffPosition;
                 }
                 else if (!isLeftOff && !isRightOff)
                 {
@@ -281,6 +305,7 @@ public class TradeMenuMk2 : MonoBehaviour
                     }
                     walletList[0].gameObject.SetActive(false);
 
+                    chatPanel.anchoredPosition = rightOffPosition;
                     MassClear();
                 }
             }
@@ -472,7 +497,7 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void SelectShip(string t)
+    private void SelectShip(string s)
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
@@ -484,12 +509,12 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[0].GetComponentInChildren<Text>().text = "Trade";
         buttonListLeft[1].GetComponentInChildren<Text>().text = "Combat";
 
-        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(t); });
+        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(s); });
 
-        buttonListLeft[1].onClick.AddListener(() => { StartCombat(t); });
+        buttonListLeft[1].onClick.AddListener(() => { StartCombat(s); });
 
 
-        if (GameObject.Find(t).GetComponent<Spaceship>().Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
+        if (GameObject.Find(s).GetComponent<Spaceship>().Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
         {
             buttonListLeft[1].interactable = false;
         }
@@ -500,21 +525,49 @@ public class TradeMenuMk2 : MonoBehaviour
         for (i = 0; i < buttonListLeft.Count; i++)
         {
             ColorBlock cb = buttonListLeft[i].colors;
-            cb.normalColor = GameObject.Find(t).GetComponent<Spaceship>().Pilot.Faction.ColorPrimary;
+            cb.normalColor = GameObject.Find(s).GetComponent<Spaceship>().Pilot.Faction.ColorPrimary;
             cb.disabledColor = cb.normalColor * 0.5f;
             buttonListLeft[i].colors = cb;
         }
 
+        ShowChatMenu(s);
+
     }
 
-    private void StartCombat(string t)
+    private void ShowChatMenu(string s)
     {
-        otherShip = GameObject.Find(t).GetComponent<Spaceship>();
+        chatPanel.anchoredPosition = on;
+        otherShip = GameObject.Find(s).GetComponent<Spaceship>();
+        BlackBox bb = otherShip.BlackBox;
+
+        leftName[0].text = playerShip.ShipName;
+        leftName[0].gameObject.SetActive(true);
+
+        chatNameText[0].gameObject.SetActive(true);
+        chatNameText[0].text = otherShip.ShipName;
+
+        int i = 0;
+
+        for (i = 0; i < chat.Count; i++)
+        {
+            chat[i].GetComponent<RectTransform>().sizeDelta = new Vector2(1200,100);
+            chat[i].text = bb.Read().ToString();
+            chat[i].gameObject.SetActive(true);
+
+            chat[i].horizontalOverflow = HorizontalWrapMode.Wrap;
+            chat[i].alignment = TextAnchor.UpperLeft;
+        }
+    }
+
+    private void StartCombat(string s)
+    {
+
+        otherShip = GameObject.Find(s).GetComponent<Spaceship>();
 
         Overseer.Main.ResolveShipCombat(playerShip, otherShip);
 
         leftPanel.anchoredPosition = leftOffPosition;
-        
+        chatPanel.anchoredPosition = rightOffPosition;
         rightPanel.anchoredPosition = rightOffPosition;
 
         centerPanel.gameObject.SetActive(false);
@@ -526,11 +579,13 @@ public class TradeMenuMk2 : MonoBehaviour
         MassClear();
     }
 
-    private void SelectPlanet(string t)
+    private void SelectPlanet(string p)
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
         //leftTitleBar.gameObject.SetActive(false);
+
+        planet = GameObject.Find(p).GetComponent<Planet>();
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
@@ -540,12 +595,12 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[1].GetComponentInChildren<Text>().text = "Bounties";
         buttonListLeft[2].GetComponentInChildren<Text>().text = "View Industry";
 
-        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryPlanet(t); });
+        buttonListLeft[0].onClick.AddListener(() => { OpenInventoryPlanet(p); });
 
-        buttonListLeft[1].onClick.AddListener(() => { ShowBounties(t); });
-        buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(t); });
+        buttonListLeft[1].onClick.AddListener(() => { ShowBounties(p); });
+        buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(p); });
 
-        if (GameObject.Find(t).GetComponent<Planet>().Faction.HostileWith(playerShip.Pilot.Faction))
+        if (GameObject.Find(p).GetComponent<Planet>().Faction.HostileWith(playerShip.Pilot.Faction))
         {
             int k = 0;
             for (k = 0; k < buttonListLeft.Count; k++)
@@ -567,10 +622,10 @@ public class TradeMenuMk2 : MonoBehaviour
 
     }
 
-    private void ShowIndustry(string t)
+    private void ShowIndustry(string p)
     {
         // Planet has a Faction, Faction has a list of bounties.
-        planet = GameObject.Find(t).GetComponent<Planet>();
+        planet = GameObject.Find(p).GetComponent<Planet>();
 
         List<Building> buildings = planet.Buildings();
 
@@ -579,6 +634,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
+        chatPanel.anchoredPosition = rightOffPosition;
         //bountyPanel.gameObject.SetActive(true);
         
         int reps = Mathf.Min(buttonListRight.Count, buildings.Count);
@@ -590,10 +646,10 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void ShowBounties(string t)
+    private void ShowBounties(string p)
     {
         // Planet has a Faction, Faction has a list of bounties.
-        planet = GameObject.Find(t).GetComponent<Planet>();
+        planet = GameObject.Find(p).GetComponent<Planet>();
 
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
@@ -602,6 +658,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
+        chatPanel.anchoredPosition = rightOffPosition;
         //bountyPanel.gameObject.SetActive(true);
 
 
@@ -663,6 +720,9 @@ public class TradeMenuMk2 : MonoBehaviour
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
         isRightOff = false;
+        chatPanel.anchoredPosition = rightOffPosition;
+
+        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
 
         walletPanel.gameObject.SetActive(true);
         walletList[0].gameObject.SetActive(true);
@@ -670,9 +730,9 @@ public class TradeMenuMk2 : MonoBehaviour
         leftName[0].gameObject.SetActive(true);
 
         rightName[0].gameObject.SetActive(true);
-        rightName[0].text = GameObject.Find(otherName).GetComponent<Spaceship>().ShipName;
+        rightName[0].text = otherShip.ShipName;
 
-        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
+        
 
         otherHold = otherShip.GetCargoHold;
 
@@ -733,6 +793,7 @@ public class TradeMenuMk2 : MonoBehaviour
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
         isRightOff = false;
+        chatPanel.anchoredPosition = rightOffPosition;
 
         walletPanel.gameObject.SetActive(true);
         walletList[0].gameObject.SetActive(true);
@@ -1135,6 +1196,7 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearNumberPanel(theirPrices);
         //ClearNumberPanel(walletList);
         ClearNumberPanel(bountyRewardsList);
+        ClearNumberPanel(chat);
     }
 }
 
