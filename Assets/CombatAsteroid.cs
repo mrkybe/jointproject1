@@ -12,7 +12,7 @@ public class CombatAsteroid : MonoBehaviour
     private MeshCollider mc;
     private Rigidbody rb;
 
-    void Awake()
+    public void Initialize()
     {
         mr = GetComponent<MeshRenderer>();
         mf = GetComponent<MeshFilter>();
@@ -28,18 +28,8 @@ public class CombatAsteroid : MonoBehaviour
         this.transform.rotation = Random.rotation;
         transform.localScale = scale;
         rb.mass = scale.sqrMagnitude;
-    }
 
-    // Use this for initialization
-    void Start()
-    {
         mf.mesh = AsteroidModels[Random.Range(0, AsteroidModels.Count)];
         mc.sharedMesh = mf.mesh;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

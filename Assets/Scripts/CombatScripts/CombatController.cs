@@ -11,6 +11,7 @@ using System.Reflection;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
+    public GameObject AsteriodsSpawner;
     public GameObject mainCam;
 	public GameObject combatCam;
     public GameObject ai_player;
@@ -116,6 +117,7 @@ public class CombatController : MonoBehaviour {
 			spawn.enabled = true;
 			spawn.StartSpawn ();
 		}
+	    AsteriodsSpawner.GetComponent<AsteroidsGeneration>().enabled = true;
 		playerSpaceship = player;
 		enemySpaceship = enemy;
 		SpawnLeader ();
