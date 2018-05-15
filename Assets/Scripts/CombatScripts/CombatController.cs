@@ -15,6 +15,7 @@ public class CombatController : MonoBehaviour {
 	public GameObject combatCam;
     public GameObject ai_player;
     public GameObject combat_player;
+	public GameObject miniMap;
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
 	public bool showEnemy = false;
 	public bool playerCanMove = false;
@@ -121,6 +122,7 @@ public class CombatController : MonoBehaviour {
 		showEnemy = true;
 
 		pc.health = playerSpaceship.HullHealth;
+		miniMap.SetActive (true);
         Time.timeScale = 1.0f;
         o.SetBehaviorManagerTickrate(o.gameState);
     }
@@ -140,6 +142,7 @@ public class CombatController : MonoBehaviour {
 
         //Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+		miniMap.SetActive (false);
 		o.UnpauseOvermap ();
 		o.gameState = GameState.InOverMap;
 
