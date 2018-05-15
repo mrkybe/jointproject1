@@ -29,7 +29,7 @@ public class As : MonoBehaviour {
 	private void GenerateAsteroids (int count)
 	{
 		GameObject prefab;
-		Vector3 pos;
+		Vector3 pos = Vector3.zero;
 		for (int i = 0; i < count; i++) {
 			prefab = asteroids [Random.Range (0, asteroids.Length)];
 
@@ -39,7 +39,7 @@ public class As : MonoBehaviour {
 				pos += origin;
 				pos.y = origin.y;
 
-				if (!Physics.CheckSphere (pos, size / 2.0)) {
+				if (!Physics.CheckSphere (pos, size / 2.0f)) {
 					break;
 				}
 			}
