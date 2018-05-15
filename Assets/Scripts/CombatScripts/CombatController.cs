@@ -187,9 +187,29 @@ public class CombatController : MonoBehaviour {
 		parent.GetComponent<BoxCollider> ().size = new Vector3(1,1,2.5f);
 		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
 		leaderAI.health = enemySpaceship.HullHealth;
-		//parent.name = enemySpaceship.gameObject.name + "(Combat)";
+
+		//creating ship model as child
+		GameObject child = new GameObject();
+		child.name = "ShipModel";
+		child.layer = 12;
+		child.transform.parent = parent.transform;
+		child.transform.position = parent.transform.position;
+		child.transform.Rotate (new Vector3 (-90, 0, 0));
+		child.transform.localScale = new Vector3 (6, 6, 6);
+
+		Mesh shipMesh = baddy.GetComponent<MeshFilter> ().mesh;
+		Material shipMat = baddy.GetComponent<MeshRenderer> ().material;
+
+		MeshFilter meshFilter = child.AddComponent<MeshFilter> ();
+		MeshRenderer meshRenderer = child.AddComponent<MeshRenderer> ();
+
+		meshFilter.mesh = shipMesh;
+		meshRenderer.material = shipMat;
+
+
 		
 		//parent.transform.position = position;
+		/*
 		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
 		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
 		clone.layer = 12;
@@ -207,7 +227,7 @@ public class CombatController : MonoBehaviour {
 		Destroy (clone.GetComponent<Rigidbody> ());
 		Destroy (clone.GetComponent<ParticleSystem> ());
 		Destroy (clone.GetComponent<ModelSwitcher> ());
-			
+		*/	
 		//adding components
 		//parent.AddComponent<Fire> ();
 		//parent.AddComponent<AI_Enemy> ();
