@@ -6,7 +6,7 @@ using Assets.Scripts.Classes.WorldSingleton;
 public class Rocket : MonoBehaviour {
 
 	public GameObject ammo;
-	public float amount = 3;
+	private float amount = 5;
 	public float fireRate = 5;
 	public float nextFire;
 	public Transform shotSpawn;
