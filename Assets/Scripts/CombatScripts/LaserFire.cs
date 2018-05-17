@@ -39,9 +39,10 @@ public class LaserFire : MonoBehaviour {
 			source.PlayOneShot (shootSound);
         }
 
+		/*
 		if (!rayhit)
 			StopCoroutine("FireLaser");
-
+	*/
 	}
 
 	///<summary>

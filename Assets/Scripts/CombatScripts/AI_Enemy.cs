@@ -87,6 +87,11 @@ public class AI_Enemy : MonoBehaviour {
 	{
 		Vector3 push = other.impulse * -1;
 		rigidBody.AddForce(push);
+
+		if (other.gameObject.CompareTag ("CombatAsteroid")) {
+			DepleteHealth(1);
+			overseer.DoExplosion (transform.position, 12, .1f);
+		}
 	}
 
 	void OnTriggerEnter(Collider other)
