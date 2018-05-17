@@ -138,7 +138,7 @@ public class CombatController : MonoBehaviour {
 		combat_player.GetComponent<Rigidbody> ().velocity = new Vector3(0,0,0);
 		combat_player.GetComponent<Rigidbody> ().isKinematic = true;
 		combat_player.transform.Rotate (new Vector3 (0, 0, 0));
-		combat_player.transform.position = new Vector3 (0, 10, 0);
+		combat_player.transform.position = new Vector3 (0, 100, 0);
 		//
 
 		//leader is no longer dead
@@ -147,8 +147,10 @@ public class CombatController : MonoBehaviour {
         //Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		miniMap.SetActive (false);
-		o.UnpauseOvermap ();
+
 		o.gameState = GameState.InOverMap;
+		o.UnpauseOvermap ();
+
 
 		mainCam.SetActive (true);
 		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
@@ -176,7 +178,7 @@ public class CombatController : MonoBehaviour {
 			Destroy(enemy);
 
         o.SetBehaviorManagerTickrate(o.gameState);
-		Debug.Log ("Combat end");
+		//Debug.Log (Time.timeScale);
     }
 
 	//need to fix enemies rotation
