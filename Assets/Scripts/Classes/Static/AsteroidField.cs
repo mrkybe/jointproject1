@@ -15,6 +15,27 @@ namespace Assets.Scripts.Classes.Static {
         public static List<AsteroidField> listOfAsteroidFields = new List<AsteroidField>();
         // Use this for initialization
 
+        [SerializeField]
+        private List<Mesh> AsteroidModels;
+        
+        private MeshFilter mf;
+
+        public void Initialize()
+        {
+            mf = GetComponent<MeshFilter>();
+
+            float rx = 1 + Random.value;
+            float ry = 1 + Random.value;
+            float rz = 1 + Random.value;
+            float rs = 1 + Random.value;
+            Vector3 scale = new Vector3(rx, ry, rz) * rs * rs;
+
+            this.transform.rotation = Random.rotation;
+            transform.localScale = scale;
+
+            mf.mesh = AsteroidModels[Random.Range(0, AsteroidModels.Count)];
+        }
+
         private bool AmPaused = false;
         protected new void Start ()
         {
@@ -25,10 +46,7 @@ namespace Assets.Scripts.Classes.Static {
             float size = ((float) r.NextDouble() + 0.5f) * 2.5f;
             rotationSpeed = (1 / size)*10f;
             GetComponent<SphereCollider>().radius = size/1.125f;
-            /*transform.position += Vector3.up;
-        transform.position -= (Vector3.up * size);*/
-            var m = GenerateAsteroid((float)size, Vector3.zero);
-            GetComponent<MeshFilter>().mesh = m;
+            Initialize();
             listOfAsteroidFields.Add(this);
         }
 
