@@ -100,9 +100,17 @@ public class PlayerController : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.name.Contains("EnemyBullet")) {
-			overseer.DoExplosion (transform.position, 12, 8);
+			overseer.DoExplosion (transform.position, 12, .1f);
 			Depletion (1);
 			Destroy (other.gameObject);
+		}
+	}
+
+	void OnCollisionEnter(Collision other)
+	{
+		if (other.gameObject.CompareTag ("CombatAsteroid") || other.gameObject.CompareTag("Enemy")) {
+			Depletion (1);
+			overseer.DoExplosion (transform.position, 12, .1f);
 		}
 	}
 }
