@@ -99,12 +99,9 @@ public class PlayerController : MonoBehaviour
     public void Depletion(int damage)
     {
         health -= damage;
-        float ratio = health / 15;
-        //Debug.Log ("health: " + health); 
-        //Debug.Log ("Ratio: " + ratio); 
-        currentHealthbar.rectTransform.localScale = new Vector3(ratio, 1, 1);
+
+        currentHealthbar.rectTransform.localScale = new Vector3(health / 100f, 1, 1);
         healthBarText.text = (health).ToString() + '%';
-        //Debug.Log ("Health: " + health);
     }
 
     public void Dead()
