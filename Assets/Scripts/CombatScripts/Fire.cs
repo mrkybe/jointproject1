@@ -15,12 +15,14 @@ public class Fire : MonoBehaviour {
 	public AudioClip shootSound;
 	private AudioSource source;
 	private CombatController manager;
+    private Rigidbody myRigidbody;
 
 	void Awake()
 	{
 		source = GetComponent <AudioSource> ();
 		manager = GameObject.Find ("Overseer").GetComponent<CombatController> ();
-	}
+	    myRigidbody = this.GetComponent<Rigidbody>();
+    }
 		
 
 
@@ -30,7 +32,10 @@ public class Fire : MonoBehaviour {
 		{
 			source.PlayOneShot (shootSound);
 			nextFire = Time.time + fireRate;
-			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+			GameObject bullet = Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+		    Rigidbody brb = bullet.GetComponent<Rigidbody>();
+            bullet.transform.RotateAround(bullet.transform.position, Vector3.up, Random.value * Random.value * 6f - 3f);
+            brb.velocity += myRigidbody.velocity;
 		}
 	}
 
@@ -40,9 +45,10 @@ public class Fire : MonoBehaviour {
 		{
 			source.PlayOneShot (shootSound);
 			nextFire = Time.time + fireRate;
-			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+		    GameObject bullet = Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+		    bullet.GetComponent<Rigidbody>().velocity += this.GetComponent<Rigidbody>().velocity;
 
-		}
+        }
 
 	}
 

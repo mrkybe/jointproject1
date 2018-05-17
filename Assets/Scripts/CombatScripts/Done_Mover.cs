@@ -11,7 +11,7 @@ public class Done_Mover : MonoBehaviour
 	{
 		startTime = Time.time;
 		Destroy (gameObject, 3f);
-		GetComponent<Rigidbody>().velocity = transform.forward * speed;
+		GetComponent<Rigidbody>().velocity += transform.forward * speed;
 	}
 
 	void Update()
