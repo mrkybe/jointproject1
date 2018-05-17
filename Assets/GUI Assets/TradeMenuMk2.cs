@@ -651,6 +651,7 @@ public class TradeMenuMk2 : MonoBehaviour
         // Planet has a Faction, Faction has a list of bounties.
         planet = GameObject.Find(p).GetComponent<Planet>();
 
+        ClearPanel(buttonListRight);
         List<Bounty> bounties = planet.Faction.BountyBoard;
 
         rightName[0].gameObject.SetActive(true);
@@ -717,6 +718,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void OpenInventoryShip(String otherName)
     {
+        ClearPanel(buttonListRight);
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
         isRightOff = false;
@@ -790,6 +792,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void OpenInventoryPlanet(String otherName)
     {
+        ClearPanel(buttonListRight);
         centerPanel.gameObject.SetActive(true);
         rightPanel.anchoredPosition = on;
         isRightOff = false;
@@ -1205,9 +1208,5 @@ public class TradeMenuMk2 : MonoBehaviour
 
 
 /* TODO:
- *  Make sure buttons are all the right color.
- *  Inventory menu
- *  Chat menu (ships)
- *  Chat menu (planets)
  *  
  */
