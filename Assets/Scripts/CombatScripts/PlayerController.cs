@@ -14,103 +14,123 @@ using UnityEngine;
 ///</summary>
 public class PlayerController : MonoBehaviour
 {
-	public int health = 100;
-	public Image currentHealthbar;
-	public Text ratioText;
+    public int health = 100;
+    public Image currentHealthbar;
+    public Text ratioText;
+    public Text weaponUIText;
 
     private Fire fire;
-	private LaserFire lf;
-	private Rocket rk;
+    private LaserFire lf;
+    private Rocket rk;
     // Use this for initialization
-	public AudioClip shootSound;
+    public AudioClip shootSound;
 
-	private AudioSource source;
-	private CombatController combatController;
-	private ParticleSystem particleSystem;
-	private GameObject overseerObject;
-	private Overseer overseer;
+    private AudioSource source;
+    private CombatController combatController;
+    private ParticleSystem particleSystem;
+    private GameObject overseerObject;
+    private Overseer overseer;
 
-	void Awake(){
+    private enum Weapon { M2_MG, LASER, ROCKET }
+    private Weapon currentWeapon = Weapon.M2_MG;
 
-		source = GetComponent <AudioSource> ();
-	}
+
+    void Awake()
+    {
+
+        source = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
-		overseerObject = GameObject.Find ("Overseer");
-		overseer = overseerObject.GetComponent<Overseer> ();
+        overseerObject = GameObject.Find("Overseer");
+        overseer = overseerObject.GetComponent<Overseer>();
         fire = GetComponent<Fire>();
         lf = GetComponent<LaserFire>();
-		rk = GetComponent<Rocket> ();
-		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
-		//Debug.Log ("Health is:" + health);
-		particleSystem = GetComponent<ParticleSystem>();
+        rk = GetComponent<Rocket>();
+        combatController = GameObject.Find("Overseer").GetComponent<CombatController>();
+        weaponUIText = GameObject.Find("WeaponUI").GetComponent<Text>();
+        //Debug.Log ("Health is:" + health);
+        particleSystem = GetComponent<ParticleSystem>();
+        SwitchWeapon(currentWeapon);
     }
+
+    private void SwitchWeapon(Weapon switchTo)
+    {
+        fire.enabled = lf.enabled = rk.enabled = false;
+
+        switch (switchTo)
+        {
+            case Weapon.M2_MG:
+                weaponUIText.text = "Machine Gun";
+                fire.enabled = true;
+                break;
+            case Weapon.LASER:
+                weaponUIText.text = "Laser";
+                lf.enabled = true;
+                break;
+            case Weapon.ROCKET:
+                weaponUIText.text = "Rockets";
+                rk.enabled = true;
+                break;
+        }
+    }
+
     private void Update()
     {
-		//&& fire.enabled == true)
-		if (Input.GetButtonDown ("LB") && fire.enabled == true) {
-			//Debug.Log ("Switching");
-			source.PlayOneShot (shootSound);
-			fire.enabled = false;
-			lf.enabled = true;
-			rk.enabled = false;
-			//fire.speed = 15f;
-			//fire.ammo = fire.laser;
+        //&& fire.enabled == true)
+        if (Input.GetButtonDown("LB") && fire.enabled == true)
+        {
+            SwitchWeapon(Weapon.LASER);
 
-		} else if (Input.GetButtonDown ("LB") && lf.enabled == true) {
-			//Debug.Log ("Switching");
-			fire.enabled = false;
-			lf.enabled = false;
-			rk.enabled = true;
-			source.PlayOneShot (shootSound);
-			//fire.speed = 3f;
-			//fire.ammo = fire.bullet;
-		}
-		else if (Input.GetButtonDown ("LB") && rk.enabled == true) 
-		{
-			//Debug.Log ("Switching");
-			fire.enabled = true;
-			lf.enabled = false;
-			rk.enabled = false;
-			source.PlayOneShot (shootSound);
-		}
-		Dead ();
+        }
+        else if (Input.GetButtonDown("LB") && lf.enabled == true)
+        {
+            SwitchWeapon(Weapon.ROCKET);
+        }
+        else if (Input.GetButtonDown("LB") && rk.enabled == true)
+        {
+            SwitchWeapon(Weapon.M2_MG);
+        }
+        Dead();
     }
 
-	public void Depletion(int damage)
-	{
-		health -= damage;
-		float ratio = health/15;
-		//Debug.Log ("health: " + health); 
-		//Debug.Log ("Ratio: " + ratio); 
-		currentHealthbar.rectTransform.localScale = new Vector3 (ratio, 1, 1);
-		ratioText.text = (health).ToString () + '%';
-		//Debug.Log ("Health: " + health);
-	}
+    public void Depletion(int damage)
+    {
+        health -= damage;
+        float ratio = health / 15;
+        //Debug.Log ("health: " + health); 
+        //Debug.Log ("Ratio: " + ratio); 
+        currentHealthbar.rectTransform.localScale = new Vector3(ratio, 1, 1);
+        ratioText.text = (health).ToString() + '%';
+        //Debug.Log ("Health: " + health);
+    }
 
-	public void Dead()
-	{
-		if (health <= 0) {
-			health = 0;
-			combatController.CombatEnd (CombatController.COMBAT_RESULT.PLAYER_DEATH);
-		}
-	}
+    public void Dead()
+    {
+        if (health <= 0)
+        {
+            health = 0;
+            combatController.CombatEnd(CombatController.COMBAT_RESULT.PLAYER_DEATH);
+        }
+    }
 
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.name.Contains("EnemyBullet")) {
-			overseer.DoExplosion (transform.position, 12, .1f);
-			Depletion (1);
-			Destroy (other.gameObject);
-		}
-	}
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name.Contains("EnemyBullet"))
+        {
+            overseer.DoExplosion(transform.position, 12, .1f);
+            Depletion(1);
+            Destroy(other.gameObject);
+        }
+    }
 
-	void OnCollisionEnter(Collision other)
-	{
-		if (other.gameObject.CompareTag ("CombatAsteroid") || other.gameObject.CompareTag("Enemy")) {
-			Depletion (1);
-			overseer.DoExplosion (transform.position, 12, .1f);
-		}
-	}
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("CombatAsteroid") || other.gameObject.CompareTag("Enemy"))
+        {
+            Depletion(1);
+            overseer.DoExplosion(transform.position, 12, .1f);
+        }
+    }
 }
