@@ -18,23 +18,52 @@ public class AsteroidsGeneration : MonoBehaviour {
 	private float minDistance = 0f;
 
 	private Vector3 origin = Vector3.zero;
+
+    private List<GameObject> AsteroidList;
 	// Use this for initialization
+    void Awake()
+    {
+        AsteroidList = new List<GameObject>();
+        origin = transform.position;
+    }
+
+
 	void Start () {
-		origin = transform.position;
+	}
+
+    public void SetupCombatAsteroids()
+    {
         GenerateAsteroids(count);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    public void HideAsteroids()
+    {
+        foreach (var a in AsteroidList)
+        {
+            a.transform.position = new Vector3(0,10000,0);
+
+            a.SetActive(false);
+        }
+    }
 
 	private void GenerateAsteroids (int count)
 	{
 		GameObject prefab = asteroidPrefab;
 		Vector3 pos = Vector3.zero;
-		for (int i = 0; i < count; i++) {
-		    GameObject createdAsteroid = Instantiate(prefab, Vector3.zero, Random.rotation);
+		for (int i = 0; i < count; i++)
+		{
+		    GameObject createdAsteroid;
+            if (AsteroidList.Count > i && AsteroidList.Count < count)
+            {
+                createdAsteroid = AsteroidList[i];
+                createdAsteroid.SetActive(true);
+            }
+            else
+            {
+                createdAsteroid = Instantiate(prefab, Vector3.zero, Random.rotation);
+                AsteroidList.Add(createdAsteroid);
+            }
+
 		    createdAsteroid.GetComponent<CombatAsteroid>().Initialize();
 		    var bounds = createdAsteroid.GetComponent<MeshRenderer>().bounds;
 
@@ -50,10 +79,6 @@ public class AsteroidsGeneration : MonoBehaviour {
 					break;
 				}
 			}
-
 		}
-
-
-
 	}
 }

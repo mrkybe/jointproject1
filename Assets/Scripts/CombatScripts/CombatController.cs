@@ -117,8 +117,10 @@ public class CombatController : MonoBehaviour {
 			spawn.enabled = true;
 			spawn.StartSpawn ();
 		}
-	    AsteriodsSpawner.GetComponent<AsteroidsGeneration>().enabled = true;
-		playerSpaceship = player;
+	    AsteroidsGeneration asteroidManager = AsteriodsSpawner.GetComponent<AsteroidsGeneration>();
+	    asteroidManager.enabled = true;
+        asteroidManager.SetupCombatAsteroids();
+        playerSpaceship = player;
 		enemySpaceship = enemy;
 		SpawnLeader ();
 		showEnemy = true;
@@ -158,6 +160,9 @@ public class CombatController : MonoBehaviour {
 			spawn.Stop ();
 			spawn.enabled = false;
 		}
+        //clean up asteroids
+        AsteriodsSpawner.GetComponent<AsteroidsGeneration>().HideAsteroids();
+
 		//handle player health
 		player_depletion = playerSpaceship.HullHealth - pc.health;
 		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
