@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
 {
     public int health = 100;
     public Image currentHealthbar;
-    public Text ratioText;
-    public Text weaponUIText;
+    private Text healthBarText;
+    private Text weaponUIText;
 
     private Fire fire;
     private LaserFire lf;
@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
         rk = GetComponent<Rocket>();
         combatController = GameObject.Find("Overseer").GetComponent<CombatController>();
         weaponUIText = GameObject.Find("WeaponUI").GetComponent<Text>();
+        healthBarText = GameObject.Find("HealthBarText").GetComponent<Text>();
         //Debug.Log ("Health is:" + health);
         particleSystem = GetComponent<ParticleSystem>();
         SwitchWeapon(currentWeapon);
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log ("health: " + health); 
         //Debug.Log ("Ratio: " + ratio); 
         currentHealthbar.rectTransform.localScale = new Vector3(ratio, 1, 1);
-        ratioText.text = (health).ToString() + '%';
+        healthBarText.text = (health).ToString() + '%';
         //Debug.Log ("Health: " + health);
     }
 
