@@ -516,7 +516,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         if (GameObject.Find(s).GetComponent<Spaceship>().Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
         {
-            buttonListLeft[1].interactable = false;
+            buttonListLeft[0].interactable = false;
         }
 
 
@@ -602,8 +602,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
         if (GameObject.Find(p).GetComponent<Planet>().Faction.HostileWith(playerShip.Pilot.Faction))
         {
-            int k = 0;
-            for (k = 0; k < buttonListLeft.Count; k++)
+            //int k = 0;
+            for (int k = 0; k < buttonListLeft.Count; k++)
             {
                 buttonListLeft[k].interactable = false;
             }

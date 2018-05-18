@@ -19,7 +19,7 @@ public class FindPlayer : Conditional
 
 	public override void OnAwake()
 	{
-
+		Debug.Log (target);
 		var targets = GameObject.FindGameObjectsWithTag(targetTag);
 		possibleTargets = new Transform[targets.Length];
 		for (int i = 0; i < targets.Length; ++i) {
