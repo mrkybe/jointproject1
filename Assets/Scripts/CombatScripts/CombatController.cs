@@ -150,7 +150,7 @@ public class CombatController : MonoBehaviour {
 
 		o.gameState = GameState.InOverMap;
 		o.UnpauseOvermap ();
-
+		o.UnpauseOvermap ();
 
 		mainCam.SetActive (true);
 		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
