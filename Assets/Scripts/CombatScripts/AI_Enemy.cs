@@ -45,15 +45,16 @@ public class AI_Enemy : MonoBehaviour {
 	void Awake(){
 		player = GameObject.Find("Combat_ship_player");
 		source = GetComponent <AudioSource> ();
-
+		Debug.Log (player);
 		tree = GetComponent<BehaviorTree> ();
 		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 		overseer = GameObject.Find ("Overseer").GetComponent<Overseer> ();
 		behaviorTree = transform.GetComponent<BehaviorTree>();
+		Debug.Log (behaviorTree);
 		rigidBody = GetComponent<Rigidbody> ();
-		if (!behaviorTree)
+		if (behaviorTree)
 		{
-			behaviorTree = gameObject.AddComponent<BehaviorTree>();
+			Debug.Log ("ffff");
 			behaviorTree.StartWhenEnabled = true;
 
 			behaviorTree.GetVariable("PlayerTransform").SetValue(player.transform);
@@ -79,10 +80,9 @@ public class AI_Enemy : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log ("fff");
+
 		if (other.gameObject.CompareTag("Bullet"))
 		{
-			Debug.Log ("ggg");
 			//ps.Play ();
 			//overseer.DoExplosion(transform.position, 12, 2);
 			DepleteHealth (kineticDMG);
