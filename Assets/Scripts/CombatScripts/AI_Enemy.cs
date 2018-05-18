@@ -40,41 +40,25 @@ public class AI_Enemy : MonoBehaviour {
 	private BehaviorTree tree; 
 	private CombatController combatController;
 	private BehaviorTree behaviorTree;
-	public GameObject player;
+	private GameObject player;
 
 	void Awake(){
 		player = GameObject.Find("Combat_ship_player");
 		source = GetComponent <AudioSource> ();
-
+		Debug.Log (player);
 		tree = GetComponent<BehaviorTree> ();
 		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
+		overseer = GameObject.Find ("Overseer").GetComponent<Overseer> ();
 		behaviorTree = transform.GetComponent<BehaviorTree>();
-		if (!behaviorTree)
+		Debug.Log (behaviorTree);
+		rigidBody = GetComponent<Rigidbody> ();
+		if (behaviorTree)
 		{
-			behaviorTree = gameObject.AddComponent<BehaviorTree>();
+			Debug.Log ("ffff");
 			behaviorTree.StartWhenEnabled = true;
 
 			behaviorTree.GetVariable("PlayerTransform").SetValue(player.transform);
 		}
-	}
-
-
-
-	public GameObject Player;
-
-	// Use this for initialization
-	void Start () {
-		Player = GameObject.FindGameObjectWithTag("Player");
-		rigidBody = GetComponent<Rigidbody> ();
-		overseerObject = GameObject.Find ("Overseer");
-		overseer = overseerObject.GetComponent<Overseer> ();
-		x = Random.Range(-velocidadMax, velocidadMax);
-		z = Random.Range(-velocidadMax, velocidadMax);
-		angulo = Mathf.Atan2(x, z) * (180 / 3.141592f) + 90;
-		transform.localRotation = Quaternion.Euler( 0, angulo, 0);
-		//dist = Vector3.Distance (Player.transform.position, transform.position);
-		f = GetComponent<Fire> ();
-
 	}
 		
 
@@ -82,15 +66,27 @@ public class AI_Enemy : MonoBehaviour {
 	void Update () {
 		KillYourself ();
 	}
-
+    
 	void OnCollisionEnter(Collision other)
 	{
 		Vector3 push = other.impulse * -1;
 		rigidBody.AddForce(push);
 	}
 
+//	void OnCollisionEnter(Collision other)
+//	{
+//		Vector3 push = other.impulse * -1;
+//		rigidBody.AddForce(push);
+//
+//		if (other.gameObject.CompareTag ("CombatAsteroid")) {
+//			DepleteHealth(1);
+//			overseer.DoExplosion (transform.position, 12, .1f);
+//		}
+//	}
+
 	void OnTriggerEnter(Collider other)
 	{
+
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 			//ps.Play ();
