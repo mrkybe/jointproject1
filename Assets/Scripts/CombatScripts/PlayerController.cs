@@ -115,7 +115,8 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Contains("EnemyBullet"))
+		Debug.Log ("Player got shot");
+		if (other.gameObject.CompareTag("EnemyBullet"))
         {
             overseer.DoExplosion(transform.position, 12, .1f);
             Depletion(1);
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+		Debug.Log ("Player got shot1");
         if (other.gameObject.CompareTag("CombatAsteroid") || other.gameObject.CompareTag("Enemy"))
         {
             Depletion(1);
