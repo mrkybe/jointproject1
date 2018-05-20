@@ -32,10 +32,16 @@ public class MainMenuNew : MonoBehaviour {
 	public GameObject lineGeneral;
 
 	public void  PlayCampaign (){
+		int scene = 1;
+		LoadScene (scene);
 		areYouSure.gameObject.active = false;
-		continueBtn.gameObject.active = true;
-		newGameBtn.gameObject.active = true;
-		loadGameBtn.gameObject.active = true;
+		continueBtn.gameObject.active = false;
+		newGameBtn.gameObject.active = false;
+		loadGameBtn.gameObject.active = false;
+	}
+
+	public void LoadScene(int level){
+		Application.LoadLevel (level);
 	}
 
 	public void  DisablePlayCampaign (){
@@ -44,10 +50,10 @@ public class MainMenuNew : MonoBehaviour {
 		loadGameBtn.gameObject.active = false;
 	}
 
-	public void  Position2 (){
+	/*public void  Position2 (){
 		DisablePlayCampaign();
 		CameraObject.SetFloat("Animate",1);
-	}
+	}*/
 
 	public void  Position1 (){
 		CameraObject.SetFloat("Animate",0);
