@@ -29,7 +29,11 @@ public class TradeMenuMk2 : MonoBehaviour
     public Button selectorDownButton;
     public Button bountyButton;
     public Text textPrefab;
-    
+
+    public Button escapeButton;
+    public Button resumeButton;
+
+    private CombatController cc;
 
     private RectTransform leftPanel;
     private RectTransform rightPanel;
@@ -65,12 +69,16 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform myAmountPanel;
     private RectTransform theirAmountPanel;
 
+    private RectTransform escapePanel;
+    private Text escapeStat;
+
     private Vector2 on;
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
 
     private bool isRightOff;
     private bool isLeftOff;
+    private bool isEscapeOff;
 
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
@@ -142,9 +150,14 @@ public class TradeMenuMk2 : MonoBehaviour
         chatName = GameObject.Find("Chat Name Panel").GetComponent<RectTransform>();
         chatText = GameObject.Find("Chat Text Panel").GetComponent<RectTransform>();
 
+        escapePanel = GameObject.Find("Escape Panel").GetComponent<RectTransform>();
+        escapeStat = GameObject.Find("Escape Status Text").GetComponent<Text>();
+
         playerShip = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
+
+        cc = GameObject.Find("Overseer").GetComponent<CombatController>();
 
         centerPanel.gameObject.SetActive(false);
         //bountyPanel.gameObject.SetActive(false);
@@ -225,7 +238,11 @@ public class TradeMenuMk2 : MonoBehaviour
         rightName[0].gameObject.SetActive(false);
         leftName[0].gameObject.SetActive(false);
 
-        
+        escapePanel.gameObject.SetActive(false);
+        escapeButton.onClick.AddListener(EscapeCombat);
+        resumeButton.onClick.AddListener(ResumeCombat);
+        escapeStat.text = "";
+
 
         MassClear();
 
@@ -235,6 +252,7 @@ public class TradeMenuMk2 : MonoBehaviour
         myHold.AddToHold("Dirt", 100);
         //</FOR TESTING>
     }
+
 
     void Update()
     {
@@ -265,6 +283,8 @@ public class TradeMenuMk2 : MonoBehaviour
                     ClearNumberPanel(rightName);
                     ClearNumberPanel(chat);
                     chatPanel.anchoredPosition = rightOffPosition;
+                    escapePanel.gameObject.SetActive(false);
+                    isEscapeOff = true;
                 }
                 else if (!isLeftOff && isRightOff)
                 {
@@ -287,6 +307,8 @@ public class TradeMenuMk2 : MonoBehaviour
                     walletList[0].gameObject.SetActive(false);
                     ClearNumberPanel(chat);
                     chatPanel.anchoredPosition = rightOffPosition;
+                    escapePanel.gameObject.SetActive(false);
+                    isEscapeOff = true;
                 }
                 else if (!isLeftOff && !isRightOff)
                 {
@@ -306,6 +328,8 @@ public class TradeMenuMk2 : MonoBehaviour
                     walletList[0].gameObject.SetActive(false);
 
                     chatPanel.anchoredPosition = rightOffPosition;
+                    escapePanel.gameObject.SetActive(false);
+                    isEscapeOff = true;
                     MassClear();
                 }
             }
@@ -323,7 +347,51 @@ public class TradeMenuMk2 : MonoBehaviour
                 }
             }
         }
+        else if (o.gameState == GameState.InCombat)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                if(isEscapeOff)
+                {
+                    escapePanel.gameObject.SetActive(true);
+                    if (cc.getLeader() != null)
+                    {
+                        float dist = Vector3.Distance(cc.combat_player.transform.position, cc.getLeader().transform.position);
+                        //if distance is to great then player escapes.
+                        if (dist > 300)
+                            escapeStat.text = "Far Enough";
+                        else
+                            escapeStat.text = "Too Close";
+                    }
+                }
+                else
+                {
+                    escapePanel.gameObject.SetActive(false);
+                }
+                isEscapeOff = !isEscapeOff;
+            }
+        }
     }
+
+    private void EscapeCombat()
+    {
+        if (cc.getLeader() != null)
+        {
+            float dist = Vector3.Distance(cc.combat_player.transform.position, cc.getLeader().transform.position);
+            //if distance is to great then player escapes.
+            if (dist > 300)
+                cc.CombatEnd(CombatController.COMBAT_RESULT.PLAYER_ESCAPE);
+        }
+        escapePanel.gameObject.SetActive(false);
+        isEscapeOff = true;
+    }
+
+    private void ResumeCombat()
+    {
+        escapePanel.gameObject.SetActive(false);
+        isEscapeOff = true;
+    }
+
 
     private void showMyInventory()
     {

@@ -74,7 +74,7 @@ public class CombatController : MonoBehaviour {
 			CombatEnd (COMBAT_RESULT.TESTING);
 			flag = false;
 		}
-		CowardsWay ();
+		//CowardsWay ();
 		Victory ();
 		ShowEnemy ();
     }
@@ -325,4 +325,9 @@ public class CombatController : MonoBehaviour {
 			CombatEnd (COMBAT_RESULT.ENEMY_DEATH);
 		}
 	}
+
+    public GameObject getLeader()
+    {
+        return leader;
+    }
 }
