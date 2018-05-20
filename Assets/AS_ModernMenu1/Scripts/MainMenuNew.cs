@@ -44,6 +44,10 @@ public class MainMenuNew : MonoBehaviour {
 		Application.LoadLevel (level);
 	}
 
+	public void ReturnMainMenu (int menu){
+		Application.LoadLevel (0);
+	}
+
 	public void  DisablePlayCampaign (){
 		continueBtn.gameObject.active = false;
 		newGameBtn.gameObject.active = false;
