@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using Assets.Scripts.Classes.Helper.ShipInternals;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Press Space to open list of nearby moons and ships.
@@ -31,7 +32,9 @@ public class TradeMenuMk2 : MonoBehaviour
     public Text textPrefab;
 
     public Button escapeButton;
-    public Button resumeButton;
+    public Button resumeCButton;
+    public Button exitButton;
+    public Button resumeOButton;
 
     private CombatController cc;
 
@@ -72,6 +75,8 @@ public class TradeMenuMk2 : MonoBehaviour
     private RectTransform escapePanel;
     private Text escapeStat;
 
+    private RectTransform menuPanel;
+
     private Vector2 on;
     private Vector2 leftOffPosition;
     private Vector2 rightOffPosition;
@@ -79,6 +84,7 @@ public class TradeMenuMk2 : MonoBehaviour
     private bool isRightOff;
     private bool isLeftOff;
     private bool isEscapeOff;
+    private bool isMenuOff;
 
     private List<Button> buttonListLeft;
     private List<Button> buttonListRight;
@@ -153,6 +159,9 @@ public class TradeMenuMk2 : MonoBehaviour
         escapePanel = GameObject.Find("Escape Panel").GetComponent<RectTransform>();
         escapeStat = GameObject.Find("Escape Status Text").GetComponent<Text>();
 
+        menuPanel = GameObject.Find("Menu Panel").GetComponent<RectTransform>();
+
+
         playerShip = GameObject.Find("PlayerShip").GetComponent<Spaceship>();
 
         o = GameObject.Find("Overseer").GetComponent<Overseer>();
@@ -168,6 +177,8 @@ public class TradeMenuMk2 : MonoBehaviour
 
         isLeftOff = true;
         isRightOff = true;
+        isEscapeOff = true;
+        isMenuOff = true;
 
         buttonListLeft = new List<Button>();
         buttonListRight = new List<Button>();
@@ -240,9 +251,12 @@ public class TradeMenuMk2 : MonoBehaviour
 
         escapePanel.gameObject.SetActive(false);
         escapeButton.onClick.AddListener(EscapeCombat);
-        resumeButton.onClick.AddListener(ResumeCombat);
+        resumeCButton.onClick.AddListener(ResumeCombat);
         escapeStat.text = "";
 
+        menuPanel.gameObject.SetActive(false);
+        exitButton.onClick.AddListener(ExitGame);
+        resumeOButton.onClick.AddListener(ResumeOvermap);
 
         MassClear();
 
@@ -346,13 +360,19 @@ public class TradeMenuMk2 : MonoBehaviour
                     o.UnpauseOvermap();
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ShowEscapeMenu();
+            }
         }
         else if (o.gameState == GameState.InCombat)
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
+                
                 if(isEscapeOff)
                 {
+                    cc.PauseCombat();
                     escapePanel.gameObject.SetActive(true);
                     if (cc.getLeader() != null)
                     {
@@ -366,11 +386,36 @@ public class TradeMenuMk2 : MonoBehaviour
                 }
                 else
                 {
+                    cc.PauseCombat();
                     escapePanel.gameObject.SetActive(false);
                 }
                 isEscapeOff = !isEscapeOff;
             }
         }
+    }
+
+    private void ShowEscapeMenu()
+    {
+        if (isMenuOff)
+        {
+            menuPanel.gameObject.SetActive(true);
+            isMenuOff = false;
+        }
+        else
+        {
+            menuPanel.gameObject.SetActive(false);
+            isMenuOff = true;
+        }
+    }
+
+    private void ResumeOvermap()
+    {
+        ShowEscapeMenu();
+    }
+
+    private void ExitGame()
+    {
+        SceneManager.LoadScene("Menu_Scene");
     }
 
     private void EscapeCombat()
@@ -383,11 +428,13 @@ public class TradeMenuMk2 : MonoBehaviour
                 cc.CombatEnd(CombatController.COMBAT_RESULT.PLAYER_ESCAPE);
         }
         escapePanel.gameObject.SetActive(false);
+        cc.PauseCombat();
         isEscapeOff = true;
     }
 
     private void ResumeCombat()
     {
+        cc.PauseCombat();
         escapePanel.gameObject.SetActive(false);
         isEscapeOff = true;
     }
