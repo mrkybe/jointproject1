@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour
     public void Depletion(int damage)
     {
         health -= damage;
+		CameraShake.Shake ();
 
         currentHealthbar.rectTransform.localScale = new Vector3(health / 100f, 1, 1);
         healthBarText.text = (health).ToString() + '%';
