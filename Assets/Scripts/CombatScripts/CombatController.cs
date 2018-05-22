@@ -125,7 +125,7 @@ public class CombatController : MonoBehaviour {
 		}
 	    AsteroidsGeneration asteroidManager = AsteriodsSpawner.GetComponent<AsteroidsGeneration>();
 	    asteroidManager.enabled = true;
-        //asteroidManager.SetupCombatAsteroids();
+        asteroidManager.SetupCombatAsteroids();
         playerSpaceship = player;
 		enemySpaceship = enemy;
 		SpawnLeader ();
