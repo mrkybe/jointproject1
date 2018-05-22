@@ -74,6 +74,12 @@ public class CombatController : MonoBehaviour {
 			CombatEnd (COMBAT_RESULT.TESTING);
 			flag = false;
 		}
+		// testing
+		if (Input.GetKeyDown (KeyCode.P)) 
+		{
+			PauseCombat ();
+		}
+		//
 		//CowardsWay ();
 		Victory ();
 		ShowEnemy ();
@@ -330,4 +336,18 @@ public class CombatController : MonoBehaviour {
     {
         return leader;
     }
+
+	public void PauseCombat()
+	{
+		if (Time.timeScale != 0) 
+		{
+			Time.timeScale = 0;
+			playerCanMove = false;
+		} 
+		else if (Time.timeScale == 0) 
+		{
+			Time.timeScale = 1;
+			playerCanMove = true;
+		}
+	}
 }
