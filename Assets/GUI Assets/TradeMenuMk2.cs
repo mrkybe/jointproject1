@@ -398,11 +398,13 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         if (isMenuOff)
         {
+            Overseer.Main.PauseOvermap();
             menuPanel.gameObject.SetActive(true);
             isMenuOff = false;
         }
         else
         {
+            Overseer.Main.UnpauseOvermap();
             menuPanel.gameObject.SetActive(false);
             isMenuOff = true;
         }
