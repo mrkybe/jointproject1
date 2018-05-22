@@ -32,4 +32,10 @@ public class CombatAsteroid : MonoBehaviour
         mf.mesh = AsteroidModels[Random.Range(0, AsteroidModels.Count)];
         mc.sharedMesh = mf.mesh;
     }
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.CompareTag ("EnemyBullet") || other.gameObject.CompareTag ("Bullet") || other.gameObject.CompareTag ("Rocket"))
+			Destroy (other.gameObject);
+	}
 }
