@@ -207,7 +207,7 @@ public class CombatController : MonoBehaviour {
 		child.layer = 12;
 		child.transform.parent = parent.transform;
 		child.transform.position = parent.transform.position;
-		child.transform.Rotate (new Vector3 (-90, 0, 0));
+		child.transform.Rotate (new Vector3 (-90, 180, 0));
 		child.transform.localScale = new Vector3 (6, 6, 6);
 
 		Mesh shipMesh = baddy.GetComponent<MeshFilter> ().mesh;
