@@ -30,4 +30,9 @@ public class Rocket : MonoBehaviour {
 			amount--;
 		}
 	}
+
+	public void ResetAmmo()
+	{
+		amount = 5;
+	}
 }

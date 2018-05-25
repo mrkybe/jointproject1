@@ -139,12 +139,25 @@ public class CombatController : MonoBehaviour {
 
 	public void CombatEnd(COMBAT_RESULT result)
     {
+		if (leader != null) {
+			AI_Enemy leaderAI = leader.GetComponent<AI_Enemy> ();
+			//handle enemy health
+			enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
+			enemySpaceship.TakeDamage (enemy_depletion, playerSpaceship);
+		}
+
+		//handle player health
+		player_depletion = playerSpaceship.HullHealth - pc.health;
+		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
+
 		//RESET PLAYER
 		playerCanMove = false;
 		combat_player.GetComponent<Rigidbody> ().velocity = new Vector3(0,0,0);
 		combat_player.GetComponent<Rigidbody> ().isKinematic = true;
 		combat_player.transform.Rotate (new Vector3 (0, 0, 0));
 		combat_player.transform.position = new Vector3 (0, 100, 0);
+		combat_player.GetComponent<Rocket> ().ResetAmmo ();
+		pc.SwitchWeapon (PlayerController.Weapon.M2_MG);
 		//
 
 		//leader is no longer dead
@@ -171,15 +184,7 @@ public class CombatController : MonoBehaviour {
         //clean up asteroids
         AsteriodsSpawner.GetComponent<AsteroidsGeneration>().HideAsteroids();
 
-		//handle player health
-		player_depletion = playerSpaceship.HullHealth - pc.health;
-		playerSpaceship.TakeDamage (player_depletion, enemySpaceship);
-
-		AI_Enemy leaderAI = leader.GetComponent<AI_Enemy>();
-		//handle enemy health
-		enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
-		enemySpaceship.TakeDamage(enemy_depletion, playerSpaceship);
-
+		//clean up enemies
 		foreach (GameObject enemy in enemies)
 			Destroy(enemy);
 
@@ -209,6 +214,7 @@ public class CombatController : MonoBehaviour {
 		child.transform.position = parent.transform.position;
 		child.transform.Rotate (new Vector3 (-90, 180, 0));
 		child.transform.localScale = new Vector3 (6, 6, 6);
+		child.AddComponent<MeshCollider> ();
 
 		Mesh shipMesh = baddy.GetComponent<MeshFilter> ().mesh;
 		Material shipMat = baddy.GetComponent<MeshRenderer> ().material;

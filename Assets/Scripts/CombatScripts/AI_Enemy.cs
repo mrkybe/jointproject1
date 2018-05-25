@@ -64,19 +64,19 @@ public class AI_Enemy : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		KillYourself ();
+		//KillYourself ();
 	}
 
-//	void OnCollisionEnter(Collision other)
-//	{
-//		Vector3 push = other.impulse * -1;
-//		rigidBody.AddForce(push);
-//
-//		if (other.gameObject.CompareTag ("CombatAsteroid")) {
-//			DepleteHealth(1);
-//			overseer.DoExplosion (transform.position, 12, .1f);
-//		}
-//	}
+	void OnCollisionEnter(Collision other)
+	{
+		//Vector3 push = other.impulse * -1;
+		//rigidBody.AddForce(push);
+
+		if (other.gameObject.CompareTag ("CombatAsteroid") || other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy")) {
+			DepleteHealth(1);
+			overseer.DoExplosion (transform.position, 12, .1f);
+		}
+	}
 
 	void OnTriggerEnter(Collider other)
 	{

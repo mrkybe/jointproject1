@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private GameObject overseerObject;
     private Overseer overseer;
 
-    private enum Weapon { M2_MG, LASER, ROCKET }
+    public enum Weapon { M2_MG, LASER, ROCKET }
     private Weapon currentWeapon = Weapon.M2_MG;
 
 
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         SwitchWeapon(currentWeapon);
     }
 
-    private void SwitchWeapon(Weapon switchTo)
+    public void SwitchWeapon(Weapon switchTo)
     {
         fire.enabled = lf.enabled = rk.enabled = false;
 
@@ -127,7 +127,8 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-		Debug.Log ("Player got shot1");
+		//Debug.Log ("Player got shot1");
+		//taking damage.
         if (other.gameObject.CompareTag("CombatAsteroid") || other.gameObject.CompareTag("Enemy"))
         {
             Depletion(1);
