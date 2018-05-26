@@ -125,7 +125,7 @@ public class AI_Enemy : MonoBehaviour {
 
 			if (gameObject == combatController.GetLeader ()) 
 			{
-				combatController.deadLeader = true;
+				combatController.CombatEnd (CombatController.COMBAT_RESULT.ENEMY_DEATH);
 			}
 			else 
 				Destroy (gameObject);
