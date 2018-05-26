@@ -171,6 +171,9 @@ public class TradeMenuMk2 : MonoBehaviour
         centerPanel.gameObject.SetActive(false);
         //bountyPanel.gameObject.SetActive(false);
 
+        selectorDownButton.GetComponentInChildren<Text>().text = "-";
+        selectorUpButton.GetComponentInChildren<Text>().text = "+";
+
         on = new Vector2(0, 0);
         leftOffPosition = new Vector2(-675, 0);
         rightOffPosition = new Vector2(675, 0);
@@ -216,10 +219,10 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulatePanel(buttonListRight, buttonPrefab, rightButtonPanel, 15);
         PopulatePanel(buttonElementListFrom, elementButton, myElementPanel, 10);
         PopulatePanel(buttonElementListTo, elementButton, theirElementPanel, 10);
-        PopulatePanel(mySelectorListDown, selectorUpButton, mySelectorDown, 10);
+        PopulatePanel(mySelectorListDown, selectorDownButton, mySelectorDown, 10);
         PopulatePanel(mySelectorListUp, selectorUpButton, mySelectorUp, 10);
         PopulatePanel(theirSelectorListDown, selectorDownButton, theirSelectorDown, 10);
-        PopulatePanel(theirSelectorListUp, selectorDownButton, theirSelectorUp, 10);
+        PopulatePanel(theirSelectorListUp, selectorUpButton, theirSelectorUp, 10);
         PopulatePanel(bountyList, buttonPrefab, bountyDisplay, 1);
 
         PopulateNumberPanel(myAmountSelect, textPrefab, myAmountPanel, 10);
@@ -1014,7 +1017,9 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonElementListFrom[i].GetComponentInChildren<Text>().text = c;
 
                 mySelectorListDown[i].gameObject.SetActive(true);
+                mySelectorListDown[i].GetComponentInChildren<Text>().text = "-";
                 mySelectorListUp[i].gameObject.SetActive(true);
+                mySelectorListUp[i].GetComponentInChildren<Text>().text = "+";
 
                 myAmountSelect[i].gameObject.SetActive(true);
                 myAmountSelect[i].text = "0";
@@ -1047,8 +1052,9 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonElementListTo[i].GetComponentInChildren<Text>().text = c;
 
                 theirSelectorListDown[i].gameObject.SetActive(true);
+                theirSelectorListDown[i].GetComponentInChildren<Text>().text = "-";
                 theirSelectorListUp[i].gameObject.SetActive(true);
-                
+                theirSelectorListUp[i].GetComponentInChildren<Text>().text = "+";
 
                 theirAmountSelect[i].gameObject.SetActive(true);
                 theirAmountSelect[i].text = "0";
