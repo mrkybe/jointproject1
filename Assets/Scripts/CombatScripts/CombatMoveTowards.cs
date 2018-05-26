@@ -25,7 +25,7 @@ public class CombatMoveTowards : Action
 		if (Vector3.SqrMagnitude(transform.position - target.Value.position) < fireRange.Value) {
 			shouldFire.Value = true;
 			//gameObject.transform.LookAt (target.Value);
-			Debug.Log("Close enough");
+			//Debug.Log("Close enough");
 			return TaskStatus.Success;
 		}
 		// We haven't reached the target yet so keep moving towards it

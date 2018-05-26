@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private AudioSource source;
     private CombatController combatController;
+    private CameraController cameraController;
     private ParticleSystem particleSystem;
     private GameObject overseerObject;
     private Overseer overseer;
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour
         combatController = GameObject.Find("Overseer").GetComponent<CombatController>();
         weaponUIText = GameObject.Find("WeaponUI").GetComponent<Text>();
         healthBarText = GameObject.Find("HealthBarText").GetComponent<Text>();
+        cameraController = GameObject.Find("CombatCam").GetComponent<CameraController>();
         //Debug.Log ("Health is:" + health);
         particleSystem = GetComponent<ParticleSystem>();
         SwitchWeapon(currentWeapon);
@@ -99,7 +101,7 @@ public class PlayerController : MonoBehaviour
     public void Depletion(int damage)
     {
         health -= damage;
-		CameraShake.Shake ();
+        cameraController.HitShake(damage);
 
         currentHealthbar.rectTransform.localScale = new Vector3(health / 100f, 1, 1);
         healthBarText.text = (health).ToString() + '%';
@@ -116,7 +118,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-		Debug.Log ("Player got shot");
 		if (other.gameObject.CompareTag("EnemyBullet"))
         {
             overseer.DoExplosion(transform.position, 12, .1f);
