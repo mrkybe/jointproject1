@@ -211,7 +211,6 @@ public class CombatController : MonoBehaviour {
 		GameObject enemy = Resources.Load("Prefabs/Combat_Leader") as GameObject;
 		GameObject parent = Instantiate (enemy, position, Quaternion.identity);
 
-		parent.GetComponent<BoxCollider> ().size = new Vector3(1,1,2.5f);
 		AI_Enemy leaderAI = parent.GetComponent<AI_Enemy> ();
 		leaderAI.health = enemySpaceship.HullHealth;
 
@@ -223,7 +222,8 @@ public class CombatController : MonoBehaviour {
 		child.transform.position = parent.transform.position;
 		child.transform.Rotate (new Vector3 (-90, 180, 0));
 		child.transform.localScale = new Vector3 (6, 6, 6);
-		child.AddComponent<MeshCollider> ();
+
+		MeshCollider shipCollider = child.AddComponent<MeshCollider> ();
 
 		Mesh shipMesh = baddy.GetComponent<MeshFilter> ().mesh;
 		Material shipMat = baddy.GetComponent<MeshRenderer> ().material;
@@ -233,6 +233,8 @@ public class CombatController : MonoBehaviour {
 
 		meshFilter.mesh = shipMesh;
 		meshRenderer.material = shipMat;
+		shipCollider.convex = true;
+		shipCollider.sharedMesh = shipMesh;
 
 		leader = parent;
 

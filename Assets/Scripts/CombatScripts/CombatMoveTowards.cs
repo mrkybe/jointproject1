@@ -10,6 +10,7 @@ public class CombatMoveTowards : Action
 	public SharedTransform target;
 	public SharedBool shouldFire = false;
 	public SharedFloat fireRange = 0f;
+	public SharedVector3 steeringDirection;
 
 
 	public override void OnAwake ()
@@ -30,7 +31,11 @@ public class CombatMoveTowards : Action
 		}
 		// We haven't reached the target yet so keep moving towards it
 		gameObject.transform.LookAt (target.Value);
-		transform.position = Vector3.MoveTowards(transform.position, target.Value.position, speed.Value * Time.deltaTime);
+
+		Vector3 playerDirection = target.Value.position - transform.position;
+		Vector3 moveDirection = steeringDirection.Value + playerDirection.normalized * 10;
+		Debug.DrawLine (transform.position, transform.position + moveDirection, Color.red);
+		transform.position = Vector3.MoveTowards(transform.position,transform.position + moveDirection, speed.Value * Time.deltaTime * 0.5f);
 		return TaskStatus.Running;
 	}
 

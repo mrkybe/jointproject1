@@ -50,11 +50,11 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
                 {
                     if (h.transform == null)
                     {
-                        Debug.DrawLine(transform.position + direction * CastDistance.Value, transform.position, Color.green, 0.2f);
+                        Debug.DrawLine(transform.position + direction * CastDistance.Value, transform.position, Color.green);
                     }
                     else
                     {
-                        Debug.DrawLine(h.point, transform.position, Color.green, 0.2f);
+                        Debug.DrawLine(h.point, transform.position, Color.green);
                     }
                 }
                 Hits[i] = h;
@@ -72,7 +72,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
                     if (ShowDebugLines.Value)
                     {
-                        Debug.DrawLine(h.transform.position, h.transform.position - circle, Color.red, 0.2f);
+                        Debug.DrawLine(h.transform.position, h.transform.position - circle, Color.red);
                     }
                 }
                 else
@@ -86,7 +86,7 @@ namespace Assets.Behavior_Designer.Runtime.Actions.Custom
 
             if (ShowDebugLines.Value)
             {
-                Debug.DrawLine(this.transform.position, this.transform.position + offSteer, Color.yellow, 0.2f);
+                Debug.DrawLine(this.transform.position, this.transform.position + offSteer, Color.yellow);
             }
 
             SteeringOutput.Value = offSteer;

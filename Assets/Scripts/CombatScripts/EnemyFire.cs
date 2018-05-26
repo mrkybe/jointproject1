@@ -16,6 +16,7 @@ public class EnemyFire : Action
 	public SharedGameObject shot;
 	private SharedFloat nextFire = 2;
 
+
 	// The transform that the object is moving towards
 	public SharedTransform target;
 
