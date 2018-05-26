@@ -165,6 +165,7 @@ public class CombatController : MonoBehaviour {
 
 		//RESET PLAYER
 		playerCanMove = false;
+		combat_player.SetActive (false);
 		combat_player.GetComponent<Rigidbody> ().velocity = new Vector3(0,0,0);
 		combat_player.GetComponent<Rigidbody> ().isKinematic = true;
 		combat_player.transform.Rotate (new Vector3 (0, 0, 0));
