@@ -45,18 +45,14 @@ public class AI_Enemy : MonoBehaviour {
 	void Awake(){
 		player = GameObject.Find("Combat_ship_player");
 		source = GetComponent <AudioSource> ();
-		Debug.Log (player);
 		tree = GetComponent<BehaviorTree> ();
 		combatController = GameObject.Find ("Overseer").GetComponent<CombatController> ();
 		overseer = GameObject.Find ("Overseer").GetComponent<Overseer> ();
 		behaviorTree = transform.GetComponent<BehaviorTree>();
-		Debug.Log (behaviorTree);
 		rigidBody = GetComponent<Rigidbody> ();
 		if (behaviorTree)
 		{
-			Debug.Log ("ffff");
 			behaviorTree.StartWhenEnabled = true;
-
 			behaviorTree.GetVariable("PlayerTransform").SetValue(player.transform);
 		}
 	}

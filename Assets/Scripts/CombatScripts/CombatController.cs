@@ -186,7 +186,6 @@ public class CombatController : MonoBehaviour {
 			Destroy(enemy);
 
         o.SetBehaviorManagerTickrate(o.gameState);
-		//Debug.Log (Time.timeScale);
     }
 
 	//need to fix enemies rotation
