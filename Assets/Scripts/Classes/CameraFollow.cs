@@ -61,9 +61,6 @@ namespace Assets.Scripts.Classes {
                 Vector3 shake = new Vector3(rx, ry, rz);
 
                 transform.position = transform.position + ((targetPosition - transform.forward * zoom) - transform.position) / (floatieness + 1) + shake * intensity;
-
-                
-
                 
                 zoom += zoomSpeed * zoom * Input.GetAxis("Mouse ScrollWheel") * -1 * 60;
                 zoom = Mathf.Clamp(zoom, 1, zoomMax);
