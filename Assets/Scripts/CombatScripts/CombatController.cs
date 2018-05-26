@@ -8,6 +8,7 @@ using Assets.Scripts.Classes.Helper;
 using Assets.Behavior_Designer.Runtime;
 using BehaviorDesigner.Runtime;
 using System.Reflection;
+using Assets.Scripts.Classes.Helper.ShipInternals;
 
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
@@ -144,6 +145,19 @@ public class CombatController : MonoBehaviour {
 			enemy_depletion = enemySpaceship.HullHealth - leaderAI.health;
 			enemySpaceship.TakeDamage (enemy_depletion, playerSpaceship);
 		}
+
+        if(result == COMBAT_RESULT.ENEMY_DEATH)
+        {
+            CargoHold loot = enemySpaceship.GetCargoHold;
+            CargoHold hold = playerSpaceship.GetCargoHold;
+
+            List<string> lootItems = loot.GetCargoItems();
+            foreach(string item in lootItems)
+            {
+                int amount = loot.GetAmountInHold(item);
+                hold.Credit(item, loot, amount, true);
+            }
+        }
 
 		//handle player health
 		player_depletion = playerSpaceship.HullHealth - pc.health;
