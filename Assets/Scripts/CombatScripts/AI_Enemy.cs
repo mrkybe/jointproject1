@@ -54,6 +54,8 @@ public class AI_Enemy : MonoBehaviour {
 		{
 			behaviorTree.StartWhenEnabled = true;
 			behaviorTree.GetVariable("PlayerTransform").SetValue(player.transform);
+			behaviorTree.GetVariable ("enemy_AudioSource").SetValue (source);
+
 		}
 	}
 		
