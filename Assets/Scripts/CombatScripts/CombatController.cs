@@ -20,7 +20,6 @@ public class CombatController : MonoBehaviour {
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
 	public bool showEnemy = false;
 	public bool playerCanMove = false;
-	public bool deadLeader = false;
 
     private bool flag = false;
 	private int spawnerCount = 0;
@@ -81,7 +80,7 @@ public class CombatController : MonoBehaviour {
 		}
 		//
 		//CowardsWay ();
-		Victory ();
+		//Victory ();
 		ShowEnemy ();
     }
     ///<summary>
@@ -160,8 +159,6 @@ public class CombatController : MonoBehaviour {
 		pc.SwitchWeapon (PlayerController.Weapon.M2_MG);
 		//
 
-		//leader is no longer dead
-		deadLeader = false;
 
         //Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
@@ -225,52 +222,7 @@ public class CombatController : MonoBehaviour {
 		meshFilter.mesh = shipMesh;
 		meshRenderer.material = shipMat;
 
-
-		
-		//parent.transform.position = position;
-		/*
-		GameObject clone = Instantiate (baddy, position, Quaternion.identity, parent.transform);
-		clone.transform.localRotation = Quaternion.Euler (-270, 0, 0);
-		clone.layer = 12;
-		clone.tag = "Enemy";
-
-		//Strip models children
-
-		for (int i = 0; i < clone.transform.childCount; i++) 
-		{
-			//clone.transform.GetChild (i).gameObject.layer = 12;
-			Destroy (clone.transform.GetChild(i).gameObject);
-		}
-		//get rid of models components
-		Destroy (clone.GetComponent<SphereCollider> ());
-		Destroy (clone.GetComponent<Rigidbody> ());
-		Destroy (clone.GetComponent<ParticleSystem> ());
-		Destroy (clone.GetComponent<ModelSwitcher> ());
-		*/	
-		//adding components
-		//parent.AddComponent<Fire> ();
-		//parent.AddComponent<AI_Enemy> ();
-		//parent.AddComponent<BehaviorTree> ();
-		//assigning values to components
-
-
-		/*
-		Component[] components = enemy.GetComponents<Component>();
-
-		foreach (Component component in components) {
-			Component parentsComp = parent.AddComponent(component.GetType());
-
-			foreach (FieldInfo f in component.GetType().GetFields())
-				f.SetValue (parentsComp, f.GetValue(component));
-		}
-		*/
-		//adding more components
-		//parent.AddComponent<Rigidbody> ();
-		//parent.AddComponent<BoxCollider> ();
-	
-
 		leader = parent;
-
 
 	}
 
@@ -330,13 +282,6 @@ public class CombatController : MonoBehaviour {
 		}
 	}
 
-	public void Victory()
-	{
-		if (deadLeader) 
-		{
-			CombatEnd (COMBAT_RESULT.ENEMY_DEATH);
-		}
-	}
 
     public GameObject getLeader()
     {

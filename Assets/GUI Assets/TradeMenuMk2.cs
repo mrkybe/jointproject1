@@ -340,10 +340,11 @@ public class TradeMenuMk2 : MonoBehaviour
                         child.gameObject.SetActive(false);
                     }
                     walletList[0].gameObject.SetActive(false);
-
+                    leftName[0].gameObject.SetActive(false);
                     chatPanel.anchoredPosition = rightOffPosition;
                     escapePanel.gameObject.SetActive(false);
                     isEscapeOff = true;
+                    ClearPanel(buttonListLeft);
                     MassClear();
                 }
             }
@@ -357,7 +358,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 {
                     leftPanel.anchoredPosition = leftOffPosition;
                     isLeftOff = true;
-                    o.UnpauseOvermap();
+                    Overseer.Main.UnpauseOvermap();
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
@@ -490,6 +491,7 @@ public class TradeMenuMk2 : MonoBehaviour
             buttonList[i].GetComponentInChildren<Text>().text = "";
             buttonList[i].gameObject.SetActive(false);
             buttonList[i].onClick.RemoveAllListeners();
+            buttonList[i].interactable = true;
         }
     }
 
@@ -553,6 +555,9 @@ public class TradeMenuMk2 : MonoBehaviour
         List<Planet> planetsInRange = playerShip.GetInInteractionRange<Planet>();
         Faction myFaction = playerShip.Pilot.Faction;
 
+        ClearPanel(buttonListLeft);
+        ClearPanel(buttonListRight);
+
         int i = 0;
 
         if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)       // THIS WILL PROBABLY NEVER CAUSE A PROBLEM, BUT IF IT DOES, BLAME MARK WAHLBERG.
@@ -612,6 +617,7 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             Debug.Log("TOO MANY NEARBY AGENTS.  HONESTLY, I DON'T KNOW HOW THAT MANY GOT THERE");
         }
+        
     }
 
     private void SelectShip(string s)
@@ -635,7 +641,19 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             buttonListLeft[0].interactable = false;
         }
+        else
+        {
+            buttonListLeft[0].interactable = true;
+        }
 
+        if (!GameObject.Find(s).GetComponent<Spaceship>().Alive)
+        {
+            buttonListLeft[1].interactable = false;
+        }
+        else
+        {
+            buttonListLeft[1].interactable = true;
+        }
 
         int i = 0;
 
@@ -723,6 +741,13 @@ public class TradeMenuMk2 : MonoBehaviour
             for (int k = 0; k < buttonListLeft.Count; k++)
             {
                 buttonListLeft[k].interactable = false;
+            }
+        }
+        else
+        {
+            for (int k = 0; k< buttonListLeft.Count; k++)
+            {
+                buttonListLeft[k].interactable = true;
             }
         }
 
@@ -1304,6 +1329,8 @@ public class TradeMenuMk2 : MonoBehaviour
         ClearPanel(theirSelectorListUp);
         ClearPanel(mySelectorListDown);
         ClearPanel(mySelectorListUp);
+        ClearPanel(buttonListLeft);
+        ClearPanel(buttonListRight);
         ClearPanel(bountyList);
         
         ClearNumberPanel(theirAmountSelect);
