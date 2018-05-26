@@ -15,8 +15,6 @@ public class EnemyFire : Action
 	public SharedFloat fireRate = 4;
 	public SharedGameObject shot;
 	private SharedFloat nextFire = 2;
-	//public AudioClip shootSound;
-
 
 	// The transform that the object is moving towards
 	public SharedTransform target;
@@ -38,7 +36,7 @@ public class EnemyFire : Action
 	{
 		if (Time.time > nextFire.Value) 
 		{
-			//source.PlayOneShot (shootSound);
+			
 			nextFire.Value = Time.time + fireRate.Value;
 			UnityEngine.GameObject.Instantiate(shot.Value, shotSpawn.position, shotSpawn.rotation);
 
