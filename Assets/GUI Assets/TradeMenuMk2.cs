@@ -418,7 +418,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
     private void ExitGame()
     {
-        SceneManager.LoadScene("Menu_Scene");
+        SceneManager.LoadScene(0);
     }
 
     private void EscapeCombat()
