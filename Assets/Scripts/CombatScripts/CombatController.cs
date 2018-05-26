@@ -174,13 +174,11 @@ public class CombatController : MonoBehaviour {
 		pc.SwitchWeapon (PlayerController.Weapon.M2_MG);
 		//
 
-
         //Time.timeScale = 0.0f;
         enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		miniMap.SetActive (false);
 
 		o.gameState = GameState.InOverMap;
-		o.UnpauseOvermap ();
 		o.UnpauseOvermap ();
 
 		mainCam.SetActive (true);
