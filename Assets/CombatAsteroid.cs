@@ -35,7 +35,15 @@ public class CombatAsteroid : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.CompareTag ("EnemyBullet") || other.gameObject.CompareTag ("Bullet") || other.gameObject.CompareTag ("Rocket"))
+		if (other.gameObject.CompareTag ("EnemyBullet") || other.gameObject.CompareTag ("Bullet")) 
+		{
+			gameObject.GetComponent<Rigidbody>().AddForce (10 * other.attachedRigidbody.velocity);
 			Destroy (other.gameObject);
+		}
+		else if (other.gameObject.CompareTag ("Rocket"))
+		{
+			gameObject.GetComponent<Rigidbody>().AddForce (500 * other.attachedRigidbody.velocity);
+			Destroy (other.gameObject);
+		}
 	}
 }
