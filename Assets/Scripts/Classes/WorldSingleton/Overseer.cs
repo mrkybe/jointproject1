@@ -65,6 +65,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
         //float timeScale;
         private void Awake()
         {
+			Time.timeScale = 1f;
             if (Main == null)
             {
                 Main = this;
