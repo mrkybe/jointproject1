@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Classes.WorldSingleton;
+using BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation;
 
 ///<summary>
 /// LaserFire class is used for firing a laser by utilizing Unity's LineRenderer component.
@@ -42,8 +43,11 @@ public class LaserFire : MonoBehaviour
         {
             //StopCoroutine("FireLaser");
             StartCoroutine("FireLaser");
-            source.PlayOneShot(shootSound);
+			GetComponent <AudioSource>().Play();
         }
+		if (Input.GetMouseButtonUp (0) == true) {
+			GetComponent<AudioSource> ().Stop ();
+		}
 
         /*
 		if (!rayhit)
