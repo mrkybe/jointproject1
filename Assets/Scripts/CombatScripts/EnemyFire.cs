@@ -25,7 +25,6 @@ public class EnemyFire : Action
 	{
 		base.OnAwake ();
 		shotSpawn = this.transform.GetChild (1).transform;
-		source = gameObject.GetComponent<AudioSource>();
 
 	}
 
