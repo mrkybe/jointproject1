@@ -511,10 +511,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
                     st.OvermapPause();
                 }
                 overmap_pause_count++;
+                Debug.Log("Pausing Overmap");
             }
             else
             {
                 overmap_pause_count++;
+                Debug.Log("Pausing Overmap++");
             }
         }
 
@@ -532,10 +534,12 @@ namespace Assets.Scripts.Classes.WorldSingleton
                     st.OvermapUnpause();
                 }
                 overmap_pause_count--;
+                Debug.Log("Unpausing Overmap");
             }
             else
             {
                 overmap_pause_count--;
+                Debug.Log("Unpausing Overmap--");
             }
         }
 

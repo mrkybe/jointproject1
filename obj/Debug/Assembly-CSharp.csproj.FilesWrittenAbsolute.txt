@@ -113,3 +113,4 @@
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/UnityEditor.iOS.Extensions.Xcode.xml
 /Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/ShaderForge.dll
 /Users/SYZYGYZ/Documents/GitHub/jointproject1/Temp/bin/Debug/ShaderForge.dll
+/Users/alan90011/Documents/Senior Design/jointproject1/Temp/bin/Debug/Facebook.Unity.Settings.dll
