@@ -141,7 +141,7 @@ public class CombatController : MonoBehaviour {
 
 	public void CombatEnd(COMBAT_RESULT result)
     {
-		resultText.GetComponent<Text>().text = "Combat Result:\n"  + result.ToString ();
+		resultText.GetComponent<Text>().text = result.ToString ();
 
 		StartCoroutine ("Delay");
 		if (leader != null) {
