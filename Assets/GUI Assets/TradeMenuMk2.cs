@@ -633,31 +633,38 @@ public class TradeMenuMk2 : MonoBehaviour
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
+        buttonListLeft[2].gameObject.SetActive(true);
 
         buttonListLeft[0].GetComponentInChildren<Text>().text = "Trade";
         buttonListLeft[1].GetComponentInChildren<Text>().text = "Combat";
+        buttonListLeft[2].GetComponentInChildren<Text>().text = "Chat";
 
         buttonListLeft[0].onClick.AddListener(() => { OpenInventoryShip(s); });
 
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(s); });
 
-
+        buttonListLeft[2].onClick.AddListener(() => { ShowChatMenu(s); });
+        
         if (s.Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
         {
             buttonListLeft[0].interactable = false;
+            buttonListLeft[2].interactable = false;
         }
         else
         {
             buttonListLeft[0].interactable = true;
+            buttonListLeft[2].interactable = true;
         }
 
         if (s.Alive)
         {
             buttonListLeft[1].interactable = true;
+            buttonListLeft[2].interactable = true;
         }
         else
         {
             buttonListLeft[1].interactable = false;
+            buttonListLeft[2].interactable = false;
         }
 
         int i = 0;
@@ -670,7 +677,7 @@ public class TradeMenuMk2 : MonoBehaviour
             buttonListLeft[i].colors = cb;
         }
 
-        ShowChatMenu(s);
+        //ShowChatMenu(s);
 
     }
 
