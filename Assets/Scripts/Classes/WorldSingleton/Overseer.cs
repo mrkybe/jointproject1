@@ -47,7 +47,10 @@ namespace Assets.Scripts.Classes.WorldSingleton
         private float timeScaleOriginal;
         public bool MatchOrdersAuto = true;
         public static GameObject RootNode;
-        public float worldSize = 800f;
+        [SerializeField]
+        public float worldSize = 1600f;
+        [SerializeField]
+        int NumberOfAsteroidFields = 250;
         public float planetTickFrequency = 10;
 
         private static GameObject Saturn;
@@ -274,7 +277,7 @@ namespace Assets.Scripts.Classes.WorldSingleton
             Saturn.name = "Saturn";
             int numMoons = 50;
             Queue<string> moon_names = new Queue<string>(ListOfSaturnMoonNames());
-            List<Vector3> moon_positions = GenerateMoonPositions(numMoons, 10);
+            List<Vector3> moon_positions = GenerateMoonPositions(numMoons, 15);
             List<Planet> moon_scripts = new List<Planet>();
             for (int i = 0; i < (numMoons); i++)
             {
@@ -330,9 +333,8 @@ namespace Assets.Scripts.Classes.WorldSingleton
                 iter++;
             }
 
-            int numAsteroidFields = 25;
-            List<Vector3> asteroid_positions = GenerateMoonPositions(numAsteroidFields, 5, moon_positions);
-            for (int i = 0; i < numAsteroidFields; i++)
+            List<Vector3> asteroid_positions = GenerateMoonPositions(NumberOfAsteroidFields, 2, moon_positions);
+            for (int i = 0; i < NumberOfAsteroidFields; i++)
             {
                 GameObject asteroidField = Instantiate((GameObject)Resources.Load("Prefabs/AsteroidField"), asteroid_positions[i], Quaternion.identity);
                 asteroidField.name = "AsteroidField" + i;
