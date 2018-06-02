@@ -275,7 +275,7 @@ public class TradeMenuMk2 : MonoBehaviour
     {
         if (o.gameState == GameState.InOverMap || o.gameState == GameState.UI)
         {
-            walletList[0].text = playerShip.Pilot.Money.ToString();
+            walletList[0].text = "$ " + playerShip.Pilot.Money.ToString();
 
             if (Input.GetKeyDown(KeyCode.Space))                            //  Remember to change to Gamepad controls.
             {       
@@ -360,6 +360,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 else
                 {
                     leftPanel.anchoredPosition = leftOffPosition;
+                    MassClear();
+                    ClearNumberPanel(leftName);
                     isLeftOff = true;
                     Overseer.Main.UnpauseOvermap();
                 }
@@ -887,8 +889,14 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int myCargoSize = myHold.GetCargoItems().Count;
 
-        leftTitleBar.gameObject.SetActive(true);
-        rightTitleBar.gameObject.SetActive(true);
+        foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+        {
+            child.gameObject.SetActive(true);
+        }
+        foreach (RectTransform child in rightTitleBar.GetComponentInChildren<RectTransform>())
+        {
+            child.gameObject.SetActive(true);
+        }
 
         walletPanel.gameObject.SetActive(true);
 
@@ -959,8 +967,14 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int myCargoSize = myHold.GetCargoItems().Count;
 
-        leftTitleBar.gameObject.SetActive(true);
-        rightTitleBar.gameObject.SetActive(true);
+        foreach (RectTransform child in leftTitleBar.GetComponentInChildren<RectTransform>())
+        {
+            child.gameObject.SetActive(true);
+        }
+        foreach (RectTransform child in rightTitleBar.GetComponentInChildren<RectTransform>())
+        {
+            child.gameObject.SetActive(true);
+        }
 
         walletPanel.gameObject.SetActive(true);
         walletList[0].gameObject.SetActive(true);
