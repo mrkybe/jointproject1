@@ -143,7 +143,6 @@ public class CombatController : MonoBehaviour {
     {
 		resultText.GetComponent<Text>().text = "Combat result:\n" + result.ToString ();
 
-		StartCoroutine ("Delay");
 		if (leader != null) {
 			AI_Enemy leaderAI = leader.GetComponent<AI_Enemy> ();
 			//handle enemy health
@@ -184,7 +183,7 @@ public class CombatController : MonoBehaviour {
 		miniMap.SetActive (false);
 
 		o.gameState = GameState.InOverMap;
-		o.UnpauseOvermap ();
+		//o.UnpauseOvermap ();
 
 		mainCam.SetActive (true);
 		combatCam.transform.position = new Vector3 (combat_player.transform.position.x, combatCam.transform.position.y, combat_player.transform.position.z);
@@ -205,7 +204,7 @@ public class CombatController : MonoBehaviour {
 
         o.SetBehaviorManagerTickrate(o.gameState);
 
-
+		StartCoroutine ("Delay");
 
     }
 
@@ -304,13 +303,13 @@ public class CombatController : MonoBehaviour {
 		alpha += 0.01f * Time.realtimeSinceStartup;
 		if (alpha >= 1)
 			alpha = 1f;
+		
 		while (Time.realtimeSinceStartup < pauseEndTime)
 		{
 			yield return 0;
 		}
-
-		//combatCam.SetActive (false);
 		resultScreen.active = false;
+
 		o.UnpauseOvermap ();
 		Time.timeScale = 1f;
 	}
