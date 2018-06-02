@@ -297,12 +297,10 @@ public class CombatController : MonoBehaviour {
 
 		float pauseEndTime = Time.realtimeSinceStartup + 2f;
 
-		float alpha = resultScreen.GetComponent<Image> ().color.a;
-		alpha = 0;
 		resultScreen.active = true;
-		alpha += 0.01f * Time.realtimeSinceStartup;
-		if (alpha >= 1)
-			alpha = 1f;
+		resultScreen.GetComponent<CanvasGroup> ().alpha -= 0.05f * Time.realtimeSinceStartup;
+		if (resultScreen.GetComponent<CanvasGroup> ().alpha <= 0)
+			resultScreen.GetComponent<CanvasGroup> ().alpha = 0f;
 		
 		while (Time.realtimeSinceStartup < pauseEndTime)
 		{

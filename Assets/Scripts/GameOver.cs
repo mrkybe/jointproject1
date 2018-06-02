@@ -8,11 +8,11 @@ public class GameOver : MonoBehaviour {
 
 	public GameObject resultScreen;
 	public Text resultText;
-	public Color color;
+	public float alpha;
 	public Spaceship player;
 	// Use this for initialization
 	void Start () {
-		color = resultScreen.GetComponent<Image> ().color;
+		alpha = resultScreen.GetComponent<CanvasGroup> ().alpha;
 	}
 	
 	// Update is called once per frame
@@ -24,16 +24,18 @@ public class GameOver : MonoBehaviour {
 	void ItsOver()
 	{
 		resultText.text = "GAME OVER";
-		color.a = 0f;
+		resultScreen.GetComponent<CanvasGroup>().alpha = 0f;
 		resultScreen.SetActive (true);
+		//alpha += .1f;
 		StartCoroutine("FadeIn");
 	}
 
 	IEnumerator FadeIn()
 	{
-		for (float i = 0; i < 1f; i += .01f) {
-			color.a = i;
-			yield return new WaitForSeconds (.01f);
+		while (resultScreen.GetComponent<CanvasGroup>().alpha < 1) {
+			resultScreen.GetComponent<CanvasGroup>().alpha += Time.deltaTime / 1;
+			Debug.Log (resultScreen.GetComponent<CanvasGroup>().alpha);
+			yield return null;
 		}
 	}
 		
