@@ -311,6 +311,7 @@ public class CombatController : MonoBehaviour {
 
 		//combatCam.SetActive (false);
 		resultScreen.active = false;
+		o.UnpauseOvermap ();
 		Time.timeScale = 1f;
 	}
 
