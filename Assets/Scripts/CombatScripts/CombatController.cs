@@ -295,8 +295,15 @@ public class CombatController : MonoBehaviour {
 	private IEnumerator Delay()
 	{
 		Time.timeScale = 0f;
+
 		float pauseEndTime = Time.realtimeSinceStartup + 2f;
+
+		float alpha = resultScreen.GetComponent<Image> ().color.a;
+		alpha = 0;
 		resultScreen.active = true;
+		alpha += 0.1f * Time.realtimeSinceStartup;
+		if (alpha >= 1)
+			alpha = 1f;
 		while (Time.realtimeSinceStartup < pauseEndTime)
 		{
 			yield return 0;
