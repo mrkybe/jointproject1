@@ -239,7 +239,7 @@ public class TradeMenuMk2 : MonoBehaviour
         PopulateNumberPanel(rightName, textPrefab, rightNameBar, 1);
 
         PopulateNumberPanel(chatNameText, textPrefab, chatName, 1);
-        PopulateNumberPanel(chat, textPrefab, chatText, 15);
+        PopulateNumberPanel(chat, textPrefab, chatText, 1);
 
 
         leftName[0].text = playerShip.ShipName;
@@ -477,7 +477,7 @@ public class TradeMenuMk2 : MonoBehaviour
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
             String s = myHold.GetCargoItems()[i];
-            myValues[i].text = myHold.GetCargoItemValue(s).ToString();
+            myValues[i].text = "$ " + myHold.GetCargoItemValue(s).ToString();
             myValues[i].gameObject.SetActive(true);
             buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
 
@@ -565,7 +565,7 @@ public class TradeMenuMk2 : MonoBehaviour
 
         int i = 0;
 
-        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)       // THIS WILL PROBABLY NEVER CAUSE A PROBLEM, BUT IF IT DOES, BLAME MARK WAHLBERG.
+        if (shipsInRange.Count + planetsInRange.Count <= buttonListLeft.Count)
         {
             for (i = 0; i < planetsInRange.Count; i++)
             {
@@ -576,8 +576,8 @@ public class TradeMenuMk2 : MonoBehaviour
                 }
                 buttonListLeft[i].GetComponentInChildren<Text>().text = t;
                 buttonListLeft[i].gameObject.SetActive(true);
-                String s = planetsInRange[i].name;
-                buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(s); });
+                Planet p = planetsInRange[i];
+                buttonListLeft[i].onClick.AddListener(() => {SelectPlanet(p); });
 
                 ColorBlock cb = buttonListLeft[i].colors;
                 cb.normalColor = planetsInRange[i].Faction.ColorPrimary;
@@ -596,7 +596,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 buttonListLeft[j + i].GetComponentInChildren<Text>().text = t;
 
                 buttonListLeft[j + i].gameObject.SetActive(true);
-                String s = shipsInRange[j].name;
+                Spaceship s = shipsInRange[j];
                 buttonListLeft[j + i].onClick.AddListener(() => { SelectShip(s); });
 
                 ColorBlock cb = buttonListLeft[i + j].colors;
@@ -625,7 +625,7 @@ public class TradeMenuMk2 : MonoBehaviour
         
     }
 
-    private void SelectShip(string s)
+    private void SelectShip(Spaceship s)
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
@@ -642,7 +642,7 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[1].onClick.AddListener(() => { StartCombat(s); });
 
 
-        if (GameObject.Find(s).GetComponent<Spaceship>().Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
+        if (s.Pilot.Faction.HostileWith(playerShip.Pilot.Faction))
         {
             buttonListLeft[0].interactable = false;
         }
@@ -651,13 +651,13 @@ public class TradeMenuMk2 : MonoBehaviour
             buttonListLeft[0].interactable = true;
         }
 
-        if (!GameObject.Find(s).GetComponent<Spaceship>().Alive)
+        if (s.Alive)
         {
-            buttonListLeft[1].interactable = false;
+            buttonListLeft[1].interactable = true;
         }
         else
         {
-            buttonListLeft[1].interactable = true;
+            buttonListLeft[1].interactable = false;
         }
 
         int i = 0;
@@ -665,7 +665,7 @@ public class TradeMenuMk2 : MonoBehaviour
         for (i = 0; i < buttonListLeft.Count; i++)
         {
             ColorBlock cb = buttonListLeft[i].colors;
-            cb.normalColor = GameObject.Find(s).GetComponent<Spaceship>().Pilot.Faction.ColorPrimary;
+            cb.normalColor = s.Pilot.Faction.ColorPrimary;
             cb.disabledColor = cb.normalColor * 0.5f;
             buttonListLeft[i].colors = cb;
         }
@@ -674,23 +674,24 @@ public class TradeMenuMk2 : MonoBehaviour
 
     }
 
-    private void ShowChatMenu(string s)
+    private void ShowChatMenu(Spaceship s)
     {
         chatPanel.anchoredPosition = on;
-        otherShip = GameObject.Find(s).GetComponent<Spaceship>();
-        BlackBox bb = otherShip.BlackBox;
+
+        BlackBox bb = s.BlackBox;
 
         leftName[0].text = playerShip.ShipName;
         leftName[0].gameObject.SetActive(true);
 
         chatNameText[0].gameObject.SetActive(true);
-        chatNameText[0].text = otherShip.ShipName;
+        chatNameText[0].text = s.ShipName;
 
         int i = 0;
 
         for (i = 0; i < chat.Count; i++)
         {
-            chat[i].GetComponent<RectTransform>().sizeDelta = new Vector2(1200,100);
+            chat[i].GetComponent<RectTransform>().sizeDelta = new Vector2(500, 100);
+            chat[i].GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             chat[i].text = bb.Read().ToString();
             chat[i].gameObject.SetActive(true);
 
@@ -699,12 +700,13 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void StartCombat(string s)
+    private void StartCombat(Spaceship s)
     {
 
-        otherShip = GameObject.Find(s).GetComponent<Spaceship>();
 
-        Overseer.Main.ResolveShipCombat(playerShip, otherShip);
+        Overseer.Main.UnpauseOvermap();
+
+        Overseer.Main.ResolveShipCombat(playerShip, s);
 
         leftPanel.anchoredPosition = leftOffPosition;
         chatPanel.anchoredPosition = rightOffPosition;
@@ -715,17 +717,18 @@ public class TradeMenuMk2 : MonoBehaviour
 
         isLeftOff = true;
         isRightOff = true;
-        
+
+
+
         MassClear();
     }
 
-    private void SelectPlanet(string p)
+    private void SelectPlanet(Planet p)
     {
         ClearPanel(buttonListLeft);
         ClearPanel(buttonListRight);
         //leftTitleBar.gameObject.SetActive(false);
 
-        planet = GameObject.Find(p).GetComponent<Planet>();
 
         buttonListLeft[0].gameObject.SetActive(true);
         buttonListLeft[1].gameObject.SetActive(true);
@@ -740,7 +743,7 @@ public class TradeMenuMk2 : MonoBehaviour
         buttonListLeft[1].onClick.AddListener(() => { ShowBounties(p); });
         buttonListLeft[2].onClick.AddListener(() => { ShowIndustry(p); });
 
-        if (GameObject.Find(p).GetComponent<Planet>().Faction.HostileWith(playerShip.Pilot.Faction))
+        if (p.Faction.HostileWith(playerShip.Pilot.Faction))
         {
             //int k = 0;
             for (int k = 0; k < buttonListLeft.Count; k++)
@@ -769,12 +772,11 @@ public class TradeMenuMk2 : MonoBehaviour
 
     }
 
-    private void ShowIndustry(string p)
+    private void ShowIndustry(Planet p)
     {
         // Planet has a Faction, Faction has a list of bounties.
-        planet = GameObject.Find(p).GetComponent<Planet>();
 
-        List<Building> buildings = planet.Buildings();
+        List<Building> buildings = p.Buildings();
 
         rightName[0].gameObject.SetActive(true);
         rightName[0].text = planet.MyName;
@@ -793,16 +795,15 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void ShowBounties(string p)
+    private void ShowBounties(Planet p)
     {
         // Planet has a Faction, Faction has a list of bounties.
-        planet = GameObject.Find(p).GetComponent<Planet>();
 
         ClearPanel(buttonListRight);
-        List<Bounty> bounties = planet.Faction.BountyBoard;
+        List<Bounty> bounties = p.Faction.BountyBoard;
 
         rightName[0].gameObject.SetActive(true);
-        rightName[0].text = planet.MyName;
+        rightName[0].text = p.MyName;
 
         rightPanel.anchoredPosition = on;
         isRightOff = false;
@@ -815,18 +816,18 @@ public class TradeMenuMk2 : MonoBehaviour
         {
             for (i = 0; i < bounties.Count; i++)
             {
-                String s = bounties[i].Target.name;
-                if (s.Length > 15)
+                String t = bounties[i].Target.name;
+                if (t.Length > 15)
                 {
-                    s = s.Remove(15) + "...";
+                    t = t.Remove(15) + "...";
                 }
-                buttonListRight[i].GetComponentInChildren<Text>().text = s;
+                buttonListRight[i].GetComponentInChildren<Text>().text = t;
                 buttonListRight[i].gameObject.SetActive(true);
-                String r = bounties[i].Target.name;
+                Spaceship s = bounties[i].Target;
                 Faction f = planet.Faction;
-                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(r, f); });
+                buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
 
-                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].text = "$ " + bounties[i].Value.ToString();
                 theirValues[i].gameObject.SetActive(true);
 
             }
@@ -841,17 +842,17 @@ public class TradeMenuMk2 : MonoBehaviour
                 Faction f = planet.Faction;
                 //buttonListRight[i].onClick.AddListener(() => { DisplayBounty(s, f); });
 
-                theirValues[i].text = bounties[i].Value.ToString();
+                theirValues[i].text = "$ "+  bounties[i].Value.ToString();
                 theirValues[i].gameObject.SetActive(true);
 
             }
         }
     }
 
-    private void DisplayBounty(string s, Faction f)
+    private void DisplayBounty(Spaceship s, Faction f)
     {
         bountyList[0].gameObject.SetActive(true);
-        bountyList[0].GetComponentInChildren<Text>().text = s;
+        bountyList[0].GetComponentInChildren<Text>().text = s.ShipName;
         bountyRewardsList[0].gameObject.SetActive(true);
         int i = 0;
         for (i=0; i<f.BountyBoard.Count; i++)
@@ -863,7 +864,7 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void OpenInventoryShip(String otherName)
+    private void OpenInventoryShip(Spaceship s)
     {
         ClearPanel(buttonListRight);
         centerPanel.gameObject.SetActive(true);
@@ -871,19 +872,15 @@ public class TradeMenuMk2 : MonoBehaviour
         isRightOff = false;
         chatPanel.anchoredPosition = rightOffPosition;
 
-        otherShip = GameObject.Find(otherName).GetComponent<Spaceship>();
-
         walletPanel.gameObject.SetActive(true);
         walletList[0].gameObject.SetActive(true);
         leftName[0].text = playerShip.ShipName;
         leftName[0].gameObject.SetActive(true);
 
         rightName[0].gameObject.SetActive(true);
-        rightName[0].text = otherShip.ShipName;
+        rightName[0].text = s.ShipName;
 
-        
-
-        otherHold = otherShip.GetCargoHold;
+        otherHold = s.GetCargoHold;
 
         int otherCargoSize = otherHold.GetCargoItems().Count;
 
@@ -911,10 +908,10 @@ public class TradeMenuMk2 : MonoBehaviour
                 = otherHold.GetCargoItems()[i];
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
-            String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
+            String t = otherHold.GetCargoItems()[i];
+            theirValues[i].text = "$ " +  otherHold.GetCargoItemUnitCost(t).ToString();
             theirValues[i].gameObject.SetActive(true);
-            buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
+            buttonListRight[i].onClick.AddListener(() => { Trade2(t); });
 
             ColorBlock cb = buttonListRight[i].colors;
             cb.normalColor = Color.white;
@@ -931,10 +928,10 @@ public class TradeMenuMk2 : MonoBehaviour
                 =  myHold.GetCargoItems()[i];
             myInventoryAmounts[i].text = myHold.GetAmountInHold(myHold.GetCargoItems()[i]).ToString();
             myInventoryAmounts[i].gameObject.SetActive(true);
-            String s = myHold.GetCargoItems()[i];
-            myValues[i].text = myHold.GetCargoItemUnitCost(s).ToString();
+            String t = myHold.GetCargoItems()[i];
+            myValues[i].text = myHold.GetCargoItemUnitCost(t).ToString();
             myValues[i].gameObject.SetActive(true);
-            buttonListLeft[i].onClick.AddListener(() => { Trade1(s); });
+            buttonListLeft[i].onClick.AddListener(() => { Trade1(t); });
 
             ColorBlock cb = buttonListLeft[i].colors;
             cb.normalColor = Color.white;
@@ -943,7 +940,7 @@ public class TradeMenuMk2 : MonoBehaviour
         }
     }
 
-    private void OpenInventoryPlanet(String otherName)
+    private void OpenInventoryPlanet(Planet p)
     {
         ClearPanel(buttonListRight);
         centerPanel.gameObject.SetActive(true);
@@ -957,11 +954,9 @@ public class TradeMenuMk2 : MonoBehaviour
         leftName[0].gameObject.SetActive(true);
 
         rightName[0].gameObject.SetActive(true);
-        rightName[0].text = GameObject.Find(otherName).GetComponent<Planet>().MyName;
+        rightName[0].text = p.MyName;
 
-        planet = GameObject.Find(otherName).GetComponent<Planet>();
-
-        otherHold = planet.GetCargoHold;
+        otherHold = p.GetCargoHold;
 
         int otherCargoSize = otherHold.GetCargoItems().Count;
 
@@ -989,7 +984,7 @@ public class TradeMenuMk2 : MonoBehaviour
             theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
             theirInventoryAmounts[i].gameObject.SetActive(true);
             String s = otherHold.GetCargoItems()[i];
-            theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
+            theirValues[i].text = "$ " + otherHold.GetCargoItemUnitCost(s).ToString();
             theirValues[i].gameObject.SetActive(true);
             buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
 
@@ -1039,7 +1034,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 myAmountSelect[i].text = "0";
 
                 myPrices[i].gameObject.SetActive(true);
-                myPrices[i].text = "0";
+                myPrices[i].text = "$ 0";
 
                 int j = i;
 
@@ -1074,7 +1069,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 theirAmountSelect[i].text = "0";
 
                 theirPrices[i].gameObject.SetActive(true);
-                theirPrices[i].text = "0";
+                theirPrices[i].text = "$ 0";
 
                 int j = i;
 
@@ -1111,7 +1106,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x+1;
                 theirAmountSelect[i].text = x.ToString();
-                theirPrices[i].text = (otherHold.GetCargoItemUnitCost(c)*x).ToString();  /// REPLACE
+                theirPrices[i].text = "$ " +  (otherHold.GetCargoItemUnitCost(c)*x).ToString();  /// REPLACE
             }
         }
     }
@@ -1126,7 +1121,7 @@ public class TradeMenuMk2 : MonoBehaviour
             {
                 x=x-1;
                 myAmountSelect[i].text = x.ToString();
-                myPrices[i].text = (otherHold.GetCargoItemUnitCost(c) * x).ToString();   /// REPLACE
+                myPrices[i].text = "$ " + (otherHold.GetCargoItemUnitCost(c) * x).ToString();   /// REPLACE
             }
         }
         else
@@ -1315,7 +1310,7 @@ public class TradeMenuMk2 : MonoBehaviour
                 theirInventoryAmounts[i].text = otherHold.GetAmountInHold(otherHold.GetCargoItems()[i]).ToString();
                 theirInventoryAmounts[i].gameObject.SetActive(true);
                 String s = otherHold.GetCargoItems()[i];
-                theirValues[i].text = otherHold.GetCargoItemUnitCost(s).ToString();
+                theirValues[i].text = "$ "+ otherHold.GetCargoItemUnitCost(s).ToString();
                 theirValues[i].gameObject.SetActive(true);
                 buttonListRight[i].onClick.AddListener(() => { Trade2(s); });
 
