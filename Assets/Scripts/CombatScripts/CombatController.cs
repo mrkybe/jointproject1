@@ -9,7 +9,7 @@ using Assets.Behavior_Designer.Runtime;
 using BehaviorDesigner.Runtime;
 using System.Reflection;
 using Assets.Scripts.Classes.Helper.ShipInternals;
-
+using UnityEngine.UI;
 public class CombatController : MonoBehaviour {
 	public GameObject [] enemySpawners;
     public GameObject AsteriodsSpawner;
@@ -21,6 +21,8 @@ public class CombatController : MonoBehaviour {
 	public enum COMBAT_RESULT {PLAYER_DEATH,ENEMY_DEATH,PLAYER_ESCAPE,ENEMY_ESCAPE,TESTING};
 	public bool showEnemy = false;
 	public bool playerCanMove = false;
+	public GameObject resultScreen;
+	public GameObject resultText;
 
     private bool flag = false;
 	private int spawnerCount = 0;
@@ -139,6 +141,9 @@ public class CombatController : MonoBehaviour {
 
 	public void CombatEnd(COMBAT_RESULT result)
     {
+		resultText.GetComponent<Text>().text = result.ToString ();
+
+		StartCoroutine ("Delay");
 		if (leader != null) {
 			AI_Enemy leaderAI = leader.GetComponent<AI_Enemy> ();
 			//handle enemy health
@@ -199,6 +204,9 @@ public class CombatController : MonoBehaviour {
 			Destroy(enemy);
 
         o.SetBehaviorManagerTickrate(o.gameState);
+
+
+
     }
 
 	//need to fix enemies rotation
@@ -282,6 +290,21 @@ public class CombatController : MonoBehaviour {
 		showEnemy = false;
 		playerCanMove = true;
 		Time.timeScale = 1;
+	}
+
+	private IEnumerator Delay()
+	{
+		Time.timeScale = 0f;
+		float pauseEndTime = Time.realtimeSinceStartup + 2f;
+		resultScreen.active = true;
+		while (Time.realtimeSinceStartup < pauseEndTime)
+		{
+			yield return 0;
+		}
+
+		//combatCam.SetActive (false);
+		resultScreen.active = false;
+		Time.timeScale = 1f;
 	}
 
 	public void CowardsWay()
