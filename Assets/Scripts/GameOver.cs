@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Classes.Mobile;
+using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour {
 
@@ -23,20 +24,32 @@ public class GameOver : MonoBehaviour {
 
 	void ItsOver()
 	{
+		Time.timeScale = 1.0f;
 		resultText.text = "GAME OVER";
 		resultScreen.GetComponent<CanvasGroup>().alpha = 0f;
 		resultScreen.SetActive (true);
 		//alpha += .1f;
 		StartCoroutine("FadeIn");
+		StartCoroutine ("LoadScene");
 	}
 
 	IEnumerator FadeIn()
 	{
+
 		while (resultScreen.GetComponent<CanvasGroup>().alpha < 1) {
-			resultScreen.GetComponent<CanvasGroup>().alpha += Time.deltaTime / 1;
-			Debug.Log (resultScreen.GetComponent<CanvasGroup>().alpha);
-			yield return null;
+			resultScreen.GetComponent<CanvasGroup> ().alpha += .5f;
+			yield return new WaitForSeconds (5);
 		}
+		//resultScreen.GetComponent<CanvasGroup> ().alpha += .1f;
+		yield return new WaitForSeconds (5);
+
+		//Debug.Log (resultScreen.GetComponent<CanvasGroup> ().alpha);
+	}
+
+	IEnumerator LoadScene()
+	{
+		yield return new WaitForSeconds (5);
+		SceneManager.LoadScene (0);
 	}
 		
 }

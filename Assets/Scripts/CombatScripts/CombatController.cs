@@ -298,9 +298,6 @@ public class CombatController : MonoBehaviour {
 		float pauseEndTime = Time.realtimeSinceStartup + 2f;
 
 		resultScreen.active = true;
-		resultScreen.GetComponent<CanvasGroup> ().alpha -= 0.05f * Time.realtimeSinceStartup;
-		if (resultScreen.GetComponent<CanvasGroup> ().alpha <= 0)
-			resultScreen.GetComponent<CanvasGroup> ().alpha = 0f;
 		
 		while (Time.realtimeSinceStartup < pauseEndTime)
 		{
