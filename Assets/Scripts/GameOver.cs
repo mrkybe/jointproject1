@@ -11,6 +11,9 @@ public class GameOver : MonoBehaviour {
 	public Text resultText;
 	public float alpha;
 	public Spaceship player;
+
+
+	private bool isReady = false;
 	// Use this for initialization
 	void Start () {
 		alpha = resultScreen.GetComponent<CanvasGroup> ().alpha;
@@ -24,21 +27,25 @@ public class GameOver : MonoBehaviour {
 
 	void ItsOver()
 	{
+		isReady = true;
 		Time.timeScale = 1.0f;
 		resultText.text = "GAME OVER";
-		resultScreen.GetComponent<CanvasGroup>().alpha = 0f;
+		//resultScreen.GetComponent<CanvasGroup>().alpha = 0f;
 		resultScreen.SetActive (true);
 		//alpha += .1f;
-		StartCoroutine("FadeIn");
-		StartCoroutine ("LoadScene");
+		if (isReady) {
+			StartCoroutine ("FadeIn");
+			StartCoroutine ("LoadScene");
+		}
 	}
 
 	IEnumerator FadeIn()
 	{
-
-		while (resultScreen.GetComponent<CanvasGroup>().alpha < 1) {
-			resultScreen.GetComponent<CanvasGroup> ().alpha += .5f;
-			yield return new WaitForSeconds (5);
+		isReady = false;
+		while (resultScreen.GetComponent<CanvasGroup>().alpha < 1) 
+		{
+			resultScreen.GetComponent<CanvasGroup> ().alpha += .01f;
+			yield return new WaitForSeconds (1);
 		}
 		//resultScreen.GetComponent<CanvasGroup> ().alpha += .1f;
 		yield return new WaitForSeconds (5);
@@ -48,6 +55,7 @@ public class GameOver : MonoBehaviour {
 
 	IEnumerator LoadScene()
 	{
+		isReady = false;	
 		yield return new WaitForSeconds (5);
 		SceneManager.LoadScene (0);
 	}
