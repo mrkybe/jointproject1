@@ -1,8 +1,4 @@
 ﻿using System.Collections.Generic;
-using Assets.Scripts.Classes.Helper.ShipInternals;
-using System.Security.Cryptography;
-using System.Linq;
-using NUnit.Framework;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals {
     public class Building

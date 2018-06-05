@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes.Static;
 using Assets.Scripts.Classes.WorldSingleton;
-using ShaderForge;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes.Helper.ShipInternals
@@ -22,7 +21,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
         private int _maxHold;
         private MonoBehaviour _owner;
         private List<CargoItem> _cargoItems;
-        private SerializableDictionary<string, float> supplyDemandCostModifier;
+        private Dictionary<string, float> supplyDemandCostModifier;
 
         // CargoHolds should always be declared with the maximum amount of space they contain in units.
         public CargoHold(MonoBehaviour owner, int maxHold_in)
@@ -30,7 +29,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             _maxHold = maxHold_in;
             _cargoItems = new List<CargoItem>();
             _owner = owner;
-            supplyDemandCostModifier = new SerializableDictionary<string, float>();
+            supplyDemandCostModifier = new Dictionary<string, float>();
         }
 
         private CargoHold(MonoBehaviour owner, List<CargoItem> items)
@@ -38,7 +37,7 @@ namespace Assets.Scripts.Classes.Helper.ShipInternals
             _cargoItems = items;
             _maxHold = GetTotalHold();
             _owner = owner;
-            supplyDemandCostModifier = new SerializableDictionary<string, float>();
+            supplyDemandCostModifier = new Dictionary<string, float>();
         }
 
         public IEnumerable<CargoItem> CargoItems
